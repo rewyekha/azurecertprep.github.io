@@ -229,4 +229,4 @@ This project is licensed under the MIT License — see the [LICENSE](LICENSE) fi
 
 **Disclaimer:** This is an independent, personal project — not an official Microsoft publication. The views and content are solely the author's own. Microsoft, Azure, and related trademarks are property of Microsoft Corporation.
 
-Created by **[Ricardo Martins](https://rmmartins.com)**
+Created by **[Ricardo Martins](https://rmmartins.com)** and Contributed by **[Reyas Khan M](https://rmmartins.com)**
