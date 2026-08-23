@@ -1,6 +1,8 @@
 ---
-sidebar_position: 92
+sidebar_position: 2.5
+toc_max_heading_level: 2
 title: "Challenge 20: exam questions"
+sidebar_label: "Exam questions (48 Q)"
 ---
 
 # Challenge 20 — AZ-400 exam questions
@@ -47,6 +49,9 @@ Which expression correctly reads it?
 - C. `${{ stageDependencies.Build.BuildJob.outputs['setVersion.buildVersion'] }}`
 - D. `$(Build.BuildJob.setVersion.buildVersion)`
 
+<details>
+<summary>Show answer</summary>
+
 ### Answer: B
 
 **In `challenge-20.md`:** lines **636–647** (Break & fix Exercise 2 solution).
@@ -80,6 +85,8 @@ Which expression correctly reads it?
 
 **Term:** *runtime expression*. `$[ ]` is the only one that can read another stage's output.
 
+</details>
+
 ---
 
 ## Q2
@@ -90,6 +97,9 @@ What is the difference between `${{ }}` and `$[ ]` in Azure Pipelines?
 - B. `${{ }}` is evaluated at compile time and `$[ ]` is evaluated at runtime
 - C. `${{ }}` is for YAML pipelines and `$[ ]` is for classic pipelines
 - D. There is no difference; they are interchangeable
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: B
 
@@ -123,6 +133,8 @@ What is the difference between `${{ }}` and `$[ ]` in Azure Pipelines?
 **Memorise the ordering:** `${{ }}` before the run exists → `$[ ]` as the run begins → `$( )` while a
 step runs.
 
+</details>
+
 ---
 
 ## Q3
@@ -134,6 +146,9 @@ it?
 - B. `$(SqlConnectionString)`
 - C. `${{ variables.SqlConnectionString }}`
 - D. `$(secrets.SqlConnectionString)`
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: B
 
@@ -164,6 +179,8 @@ no namespace.
 
 **Term:** *secrets become variables of the same name.* Also note they are **masked** in logs.
 
+</details>
+
 ---
 
 ## Q4
@@ -174,6 +191,9 @@ Which Azure Pipelines construct is required for a job to use an environment with
 - B. `deployment:` with an `environment` property
 - C. `stage:` with a `dependsOn` on the environment
 - D. `job:` with a `pool` scoped to the environment
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: B
 
@@ -201,6 +221,8 @@ approvals and checks, and it requires a `strategy`.
 **Term:** *deployment job*. Regular job = do work. Deployment job = record a deployment against an
 environment.
 
+</details>
+
 ---
 
 ## Q5
@@ -211,6 +233,9 @@ Which strategy keyword is required inside a `deployment` job in Challenge 20's p
 - B. `runOnce`
 - C. `parallel`
 - D. `maxParallel`
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: B
 
@@ -236,6 +261,8 @@ Which strategy keyword is required inside a `deployment` job in Challenge 20's p
 **Also know:** `rolling` and `canary` are the other two deployment-job strategies. They appear in
 Challenge 25.
 
+</details>
+
 ---
 
 ## Q6
@@ -246,6 +273,9 @@ Where is a build artifact available to a later stage?
 - B. `$(Pipeline.Workspace)`
 - C. `$(System.DefaultWorkingDirectory)`
 - D. `$(Agent.TempDirectory)`
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: B
 
@@ -274,6 +304,8 @@ A deployment job **downloads artifacts automatically** into `$(Pipeline.Workspac
 
 **Term:** *publish from the staging directory, consume from the pipeline workspace.*
 
+</details>
+
 ---
 
 ## Q7
@@ -286,6 +318,9 @@ Which condition is correct?
 - B. `condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))`
 - C. `condition: succeeded() && variables.Build.SourceBranch == 'main'`
 - D. `condition: ${{ eq(variables['Build.SourceBranch'], 'refs/heads/main') }}`
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: B
 
@@ -310,6 +345,8 @@ Which condition is correct?
 **Two variables to keep straight:** `Build.SourceBranch` = `refs/heads/main`.
 `Build.SourceBranchName` = `main`.
 
+</details>
+
 ---
 
 ## Q8
@@ -322,6 +359,9 @@ Which configuration achieves this?
 - B. `condition: always()` on the publish task
 - C. `dependsOn: []` on the publish task
 - D. `enabled: true` on the publish task
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: B
 
@@ -350,6 +390,8 @@ results you most need to see**.
 
 **Term:** *step condition*. `always()`, `succeeded()`, `failed()`, `succeededOrFailed()`.
 
+</details>
+
 ---
 
 ## Q9
@@ -363,6 +405,9 @@ Which configuration is correct?
 - B. `trigger:` with `branches: include:` and `paths: exclude:`
 - C. `pr:` with `branches: include:` and `paths: exclude:`
 - D. `trigger: none` plus a scheduled trigger filtered by path
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: B
 
@@ -390,6 +435,8 @@ trigger:
 
 **Term:** *`trigger` = CI (push). `pr` = PR validation.* In GitHub Actions both live under `on:`.
 
+</details>
+
 ---
 
 ## Q10
@@ -400,6 +447,9 @@ Which template type allows a template to contribute **jobs** rather than steps?
 - B. A template whose root key is `jobs:`
 - C. A template referenced with `extends:`
 - D. A template referenced with `resources:`
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: B
 
@@ -431,6 +481,8 @@ The root key decides where the template can be inserted. A `steps:` template goe
 
 **Four template types to know:** steps, jobs, stages, variables.
 
+</details>
+
 ---
 
 ## Q11
@@ -443,6 +495,9 @@ Which parameter definition enforces that?
 - B. `type: enum` with an `options` list
 - C. `type: choice` with an `options` list
 - D. `type: string` with a `default` list
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -469,6 +524,8 @@ before a single agent is used.
   different keywords
 - **D** — `default` provides a fallback value; it does not restrict what is allowed
 
+</details>
+
 ---
 
 ## Q12
@@ -481,6 +538,9 @@ What is the correct type name?
 - B. `boolean`
 - C. `flag`
 - D. `switch`
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: B
 
@@ -512,6 +572,8 @@ None of `binary`, `flag` or `switch` exist. The valid parameter types are: `stri
 A quoted `'true'` is a string, and a boolean never equals a string. The condition is silently always
 false, so the steps simply never appear.
 
+</details>
+
 ---
 
 ## Q13
@@ -525,6 +587,9 @@ Why?
 - B. Variables must be defined in a variable group to be readable
 - C. The `Deploy` stage is missing a `dependsOn` on `Build`
 - D. Variables must use `${{ }}` syntax to cross stages
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -559,6 +624,8 @@ Variable **scope** is pipeline → stage → job. A stage variable does not esca
 **The fix (lines 636–647):** turn it into an **output variable** with `isOutput=true` and read it via
 `stageDependencies` with `$[ ]`.
 
+</details>
+
 ---
 
 ## Q14
@@ -571,6 +638,9 @@ What must be declared first?
 - B. A `variables: group:` entry pointing to the repository
 - C. A `pool:` entry naming the external repository
 - D. A `checkout:` step for the external repository
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -602,6 +672,8 @@ Note the `@templates` suffix — it refers back to the **alias** defined under `
 **Term:** *repository resource*. The `type` can be `git` (Azure Repos, line 478), `github`, or
 `bitbucket`.
 
+</details>
+
 ---
 
 ## Q15
@@ -613,6 +685,9 @@ produces?
 - B. `PublishCodeCoverageResults@2` with a cobertura summary file
 - C. `PublishPipelineArtifact@1` with the coverage folder
 - D. `PublishBuildArtifacts@1` with `publishLocation: "Container"`
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: B
 
@@ -635,6 +710,8 @@ local `dotnet test` run on `contoso-webapi` produced.
 **Remember the pairing:** `--logger trx` → `PublishTestResults@2`.
 `--collect:"XPlat Code Coverage"` → `PublishCodeCoverageResults@2`.
 
+</details>
+
 ---
 
 ## Q16
@@ -645,6 +722,9 @@ Azure Pipelines must build from a GitHub repository. What must exist in Azure De
 - B. A GitHub personal access token stored in a variable group
 - C. A GitHub Actions workflow that dispatches to Azure Pipelines
 - D. A repository resource of `type: git`
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -676,6 +756,8 @@ resources:
 
 **Term:** *service connection*. This is the object Challenge 41 secures in depth.
 
+</details>
+
 ---
 
 # Section B — Multiple answer
@@ -694,6 +776,9 @@ three.)
 - E. `#[ ]` — template time
 - F. `@( )` — variable group time
 
+<details>
+<summary>Show answer</summary>
+
 ### Answer: A, B, C
 
 **In `challenge-20.md`:** `${{ }}` line **333**, `$[ ]` line **643**, `$( )` line **98**.
@@ -711,6 +796,8 @@ real ones or are pattern-matching on brackets.
 
 **The rule:** `${{ }}` before the run exists → `$[ ]` as the run begins → `$( )` while a step runs.
 
+</details>
+
 ---
 
 ## Q18
@@ -722,6 +809,9 @@ Which **two** items are required to share a value from one stage to another? (Ch
 - C. The consuming stage must use `${{ }}` to read it
 - D. Both stages must run on the same agent pool
 - E. The value must be published as a pipeline artifact
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A, B
 
@@ -749,6 +839,8 @@ step **name** is part of the address.
 **Note:** `dependsOn` is also required in practice (line 641) — it was left out of the options here,
 but the exam sometimes includes it as a third correct answer.
 
+</details>
+
 ---
 
 ## Q19
@@ -760,6 +852,9 @@ Which **two** statements about `deployment` jobs are correct? (Choose two.)
 - C. They automatically check out the source repository
 - D. They can use the `matrix` strategy
 - E. They cannot reference variable groups
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A, B
 
@@ -786,6 +881,8 @@ Nothing in that job downloads the artifact — it arrives automatically.
 - **D** — `matrix` is for regular jobs. Deployment strategies are `runOnce`, `rolling`, `canary`
 - **E** — false. Lines 174–175 attach `contoso-staging` to the stage containing a deployment job
 
+</details>
+
 ---
 
 ## Q20
@@ -797,6 +894,9 @@ Which **two** are valid ways to restrict when a stage runs? (Choose two.)
 - C. `trigger` on the stage
 - D. `pool` on the stage
 - E. `pr` on the stage
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A, B
 
@@ -823,6 +923,8 @@ They do different jobs and you usually need both:
 **replaced**. That is why line 173 spells out `and(succeeded(), ...)` — omit it and the stage would
 run even after a failure.
 
+</details>
+
 ---
 
 ## Q21
@@ -835,6 +937,9 @@ Which **two** template features let a template include or exclude blocks based o
 - C. `condition:` on the step
 - D. `$[ ]` runtime expression
 - E. `continueOnError`
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A, B
 
@@ -864,6 +969,8 @@ not just whole steps.
 **The distinction the exam tests:** `${{ if }}` removes the step from the pipeline. `condition:`
 keeps it and skips it.
 
+</details>
+
 ---
 
 ## Q22
@@ -875,6 +982,9 @@ Which **two** resource types can be declared under `resources:`? (Choose two.)
 - C. `environments`
 - D. `variables`
 - E. `pools`
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A, B
 
@@ -907,6 +1017,8 @@ resources:
 `pipelines` trigger at lines 485–489 is how one pipeline starts another — and it is the correct
 answer whenever a question says "trigger after another pipeline completes".
 
+</details>
+
 ---
 
 ## Q23
@@ -918,6 +1030,9 @@ Which **two** GitHub Actions concepts map to Azure Pipelines templates? (Choose 
 - C. Starter workflow
 - D. Repository dispatch
 - E. Environment
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A, B
 
@@ -949,6 +1064,8 @@ Both are "reuse" mechanisms; Azure Pipelines covers the same ground with templat
   `pipelines` resource trigger, not a template
 - **E** — environments exist on **both** platforms with the same name and purpose
 
+</details>
+
 ---
 
 # Section C — Repeated scenario
@@ -964,7 +1081,10 @@ stage that must use it. `Deploy` currently receives an empty value.
 give the step a `name`, add `dependsOn: Build` to the Deploy stage, and read it with
 `$[ stageDependencies.Build.BuildJob.outputs['setVersion.buildVersion'] ]`.
 
-Does this meet the goal? **Yes / No**
+Does this meet the goal?
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: Yes
 
@@ -987,6 +1107,8 @@ Does this meet the goal? **Yes / No**
 
 All four parts are present: `isOutput=true`, the step `name`, the `dependsOn`, and `$[ ]`.
 
+</details>
+
 ---
 
 ## Q25
@@ -994,7 +1116,10 @@ All four parts are present: `isOutput=true`, the step `name`, the `dependsOn`, a
 **Proposed solution:** Define `buildVersion` as a stage-level variable in `Build` and reference it as
 `$(buildVersion)` in `Deploy`.
 
-Does this meet the goal? **No**
+Does this meet the goal?
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: No
 
@@ -1016,6 +1141,8 @@ Variable scope is pipeline → stage → job. A stage variable is invisible outs
 
 **Term:** *variable scope*. Only **output variables** cross stages.
 
+</details>
+
 ---
 
 ## Q26
@@ -1023,7 +1150,10 @@ Variable scope is pipeline → stage → job. A stage variable is invisible outs
 **Proposed solution:** Write the version to a file, publish it as a pipeline artifact from `Build`,
 and read the file in `Deploy`.
 
-Does this meet the goal? **Yes**
+Does this meet the goal?
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: Yes
 
@@ -1040,6 +1170,8 @@ It is clumsy, but it genuinely works. Deployment jobs download artifacts automat
 **The lesson:** on "does this meet the goal" questions, judge whether it **works**, not whether it is
 elegant. Two different proposals can both be Yes.
 
+</details>
+
 ---
 
 # Section D — Yes/No statement grid
@@ -1047,6 +1179,16 @@ elegant. Two different proposals can both be Yes.
 ---
 
 ## Q27 — expressions
+
+| # | Statement | Answer |
+|---|---|---|
+| 1 | `${{ }}` can read an output variable from a previous stage |  |
+| 2 | `$[ ]` is evaluated when the stage or job begins |  |
+| 3 | `$( )` can be used inside a task input |  |
+| 4 | `${{ }}` can add or remove steps from the pipeline |  |
+
+<details>
+<summary>Show answer</summary>
 
 | # | Statement | Answer |
 |---|---|---|
@@ -1068,9 +1210,21 @@ Row 4 is the flip side and the reason `${{ }}` exists:
       - task: DotNetCoreCLI@2
 ```
 
+</details>
+
 ---
 
 ## Q28 — deployment jobs and environments
+
+| # | Statement | Answer |
+|---|---|---|
+| 1 | A `deployment` job requires a `strategy` |  |
+| 2 | A `deployment` job checks out the source repository by default |  |
+| 3 | The `environment` property enables approvals and checks |  |
+| 4 | The `environment` property provisions Azure resources |  |
+
+<details>
+<summary>Show answer</summary>
 
 | # | Statement | Answer |
 |---|---|---|
@@ -1088,9 +1242,21 @@ Row 4 matters because the name suggests otherwise. An Azure DevOps *environment*
 record** for tracking deployments and attaching checks. It creates nothing in Azure. Your `infra`
 artifact (line 133) and Bicep are what provision resources.
 
+</details>
+
 ---
 
 ## Q29 — variables and variable groups
+
+| # | Statement | Answer |
+|---|---|---|
+| 1 | A stage-level variable is visible in later stages |  |
+| 2 | A variable group can be scoped to a single stage |  |
+| 3 | Key Vault secrets become variables of the same name |  |
+| 4 | Secrets fetched from Key Vault are masked in logs |  |
+
+<details>
+<summary>Show answer</summary>
 
 | # | Statement | Answer |
 |---|---|---|
@@ -1116,9 +1282,21 @@ Row 2 is worth noticing in the real pipeline:
 That is how one pipeline uses `$(SqlConnectionString)` for two different databases — same expression,
 different group per stage.
 
+</details>
+
 ---
 
 ## Q30 — triggers
+
+| # | Statement | Answer |
+|---|---|---|
+| 1 | `trigger:` controls continuous integration on push |  |
+| 2 | `pr:` controls pull request validation |  |
+| 3 | `trigger: none` disables CI triggering |  |
+| 4 | Path filters can be applied to the array form `trigger: [main]` |  |
+
+<details>
+<summary>Show answer</summary>
 
 | # | Statement | Answer |
 |---|---|---|
@@ -1146,6 +1324,8 @@ trigger:                             # full form - branches AND paths (lines 54-
 **Also know:** `pr: none` disables PR validation, and `drafts: false` (line 554) stops draft PRs from
 triggering builds.
 
+</details>
+
 ---
 
 # Section E — Drag and drop
@@ -1157,6 +1337,9 @@ triggering builds.
 Arrange the Azure Pipelines hierarchy from outermost to innermost.
 
 **Items:** `steps` · `stages` · `jobs` · `tasks`
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: `stages` → `jobs` → `steps` → `tasks`
 
@@ -1175,11 +1358,30 @@ stages:                     # line 87
 Azure Pipelines can gate an entire stage with a `condition` while GitHub Actions must condition each
 job.
 
+</details>
+
 ---
 
 ## Q32
 
 Match each GitHub Actions keyword to its Azure Pipelines equivalent.
+
+| GitHub Actions | Azure Pipelines |
+|---|---|
+| `on: push` |  |
+| `on: pull_request` |  |
+| `runs-on:` |  |
+| `needs:` |  |
+| `run:` |  |
+| `uses:` |  |
+| `${{ secrets.NAME }}` |  |
+| reusable workflow |  |
+| `environment:` |  |
+
+**Options:** `dependsOn:` · `environment:` · `$(NAME)` · `pool: vmImage` · `pr:` · `script:` · `task:` · `template:` · `trigger:`
+
+<details>
+<summary>Show answer</summary>
 
 | GitHub Actions | Azure Pipelines |
 |---|---|
@@ -1227,6 +1429,8 @@ stages:
 Note the last row: `environment:` is the **same word on both platforms** for the same idea. That is
 rare, and the exam uses it as a comfortable anchor before asking something harder.
 
+</details>
+
 ---
 
 ## Q33
@@ -1234,6 +1438,9 @@ rare, and the exam uses it as a comfortable anchor before asking something harde
 Arrange the stages of Challenge 20's pipeline in execution order.
 
 **Items:** `DeployProduction` · `Test` · `Build` · `DeployStaging`
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: `Build` → `Test` → `DeployStaging` → `DeployProduction`
 
@@ -1253,6 +1460,8 @@ Arrange the stages of Challenge 20's pipeline in execution order.
 before it. Writing `dependsOn: []` makes a stage run **immediately, in parallel** with the first
 stage — which is how you fan out.
 
+</details>
+
 ---
 
 ## Q34
@@ -1261,6 +1470,9 @@ Arrange the steps of the production deployment in the order Challenge 20 defines
 
 **Items:** Swap canary to production · Fetch secrets from Key Vault · Validate canary slot ·
 Deploy to the canary slot
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: Fetch secrets → Deploy to canary slot → Validate canary → Swap to production
 
@@ -1279,11 +1491,25 @@ step 3 exits non-zero (line 262), the swap never happens and production is untou
 Compare with staging (lines 184–218), which has no slot and no swap — staging **is** the test
 environment.
 
+</details>
+
 ---
 
 ## Q35
 
 Match each item to where it belongs.
+
+| Item | Where |
+|---|---|
+| Files needed by a later stage |  |
+| A string produced by one stage, needed by another |  |
+| A secret shared by all stages |  |
+| A value that differs per stage |  |
+
+**Options:** output variable · pipeline **artifact** · stage-scoped variable group · variable group linked to Key Vault
+
+<details>
+<summary>Show answer</summary>
 
 | Item | Where |
 |---|---|
@@ -1311,6 +1537,8 @@ variables:
 **The decision rule:** *files* → artifact. *A single value* → output variable. *A secret* → Key Vault
 via a variable group. *Differs per environment* → scope the group to the stage.
 
+</details>
+
 ---
 
 # Section F — Hot area
@@ -1328,6 +1556,9 @@ via a variable group. *Differs per environment* → scope the group to the stage
 - **BLANK 1:** `dependsOn` / `needs` / `after` / `requires`
 - **BLANK 2:** `condition` / `if` / `when` / `filter`
 
+<details>
+<summary>Show answer</summary>
+
 ### Answer: `dependsOn`, `condition`
 
 **In `challenge-20.md`:** lines **172–173**.
@@ -1335,6 +1566,8 @@ via a variable group. *Differs per environment* → scope the group to the stage
 `needs` and `if` are **GitHub Actions** keywords — offered here because the exam constantly tests
 whether you can keep the two platforms apart. `after`, `requires`, `when` and `filter` do not exist
 on either platform.
+
+</details>
 
 ---
 
@@ -1353,12 +1586,17 @@ on either platform.
 - **BLANK 2:** `environment` / `pool` / `container` / `resource`
 - **BLANK 3:** `runOnce` / `matrix` / `parallel` / `single`
 
+<details>
+<summary>Show answer</summary>
+
 ### Answer: `deployment`, `environment`, `runOnce`
 
 **In `challenge-20.md`:** lines **177–181**.
 
 A plain `job` has no `environment` property, so BLANK 1 and BLANK 2 must go together. `matrix` is for
 regular jobs; `parallel` applies only to VM resources; `single` does not exist.
+
+</details>
 
 ---
 
@@ -1377,6 +1615,9 @@ regular jobs; `parallel` applies only to VM resources; `single` does not exist.
 - **BLANK 2:** `$(SqlConnectionString)` / `$(keyVault.SqlConnectionString)` /
   `${{ secrets.SqlConnectionString }}` / `$(secrets.SqlConnectionString)`
 
+<details>
+<summary>Show answer</summary>
+
 ### Answer: `AzureKeyVault@2`, `$(SqlConnectionString)`
 
 **In `challenge-20.md`:** lines **184–189** and **201**.
@@ -1384,6 +1625,8 @@ regular jobs; `parallel` applies only to VM resources; `single` does not exist.
 The secret becomes a pipeline variable of the **same name**, with no prefix. The `secrets.` forms are
 GitHub Actions syntax, and `${{ }}` is compile time so it could not hold a runtime-fetched value
 anyway.
+
+</details>
 
 ---
 
@@ -1403,6 +1646,9 @@ steps:
 - **BLANK 1:** `bool` / `boolean` / `binary` / `flag`
 - **BLANK 2:** `true` / `'true'` / `"true"` / `$(true)`
 
+<details>
+<summary>Show answer</summary>
+
 ### Answer: `boolean`, `true`
 
 **In `challenge-20.md`:** the errors at lines **573** and **578**; the fixes at **593** and **598**.
@@ -1410,6 +1656,8 @@ steps:
 Both blanks are the same trap in two forms. `bool` is not a valid type name, and `'true'` is a
 **string** — a boolean never equals a string, so the condition is silently always false and the steps
 just never appear. No error, no warning.
+
+</details>
 
 ---
 
@@ -1435,6 +1683,9 @@ stages:
 - **BLANK 2:** `endpoint` / `connection` / `serviceConnection` / `auth`
 - **BLANK 3:** `@templates` / `#templates` / `:templates` / `/templates`
 
+<details>
+<summary>Show answer</summary>
+
 ### Answer: `resources`, `endpoint`, `@templates`
 
 **In `challenge-20.md`:** lines **470–476** and **502**.
@@ -1442,6 +1693,8 @@ stages:
 The `@alias` suffix is the part people forget. Without it, Azure Pipelines looks for
 `dotnet/build.yml` in the **current** repository and fails with a file-not-found error at compile
 time.
+
+</details>
 
 ---
 
@@ -1466,6 +1719,9 @@ time.
 - **BLANK 2:** `name` / `id` / `displayName` / `label`
 - **BLANK 3:** `$[` / `${{` / `$(` / `@[`
 
+<details>
+<summary>Show answer</summary>
+
 ### Answer: `isOutput=true`, `name`, `$[`
 
 **In `challenge-20.md`:** lines **637–643**.
@@ -1477,6 +1733,8 @@ Three separate traps in one block:
 - `${{` is compile time and would evaluate before Build ran
 
 **This block is the single most valuable thing to memorise from Challenge 20.**
+
+</details>
 
 ---
 
@@ -1520,6 +1778,9 @@ configure?
 - C. A `condition` on the Build stage checking changed files
 - D. `trigger: none` with a scheduled build
 
+<details>
+<summary>Show answer</summary>
+
 ### Answer: A
 
 **In `challenge-20.md`:** lines **59–62**.
@@ -1541,6 +1802,8 @@ trigger:
   billed. Path filters stop the run from starting at all
 - **D** — disables CI entirely, which breaks the other build requirements
 
+</details>
+
 ---
 
 ## Q43
@@ -1553,6 +1816,9 @@ You must meet the requirement for test results and coverage. Which **two** confi
 - C. `PublishPipelineArtifact@1` with the test folder
 - D. `continueOnError: true` on the test task
 - E. A `Test` stage with `dependsOn: []`
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A, B
 
@@ -1577,6 +1843,8 @@ You must meet the requirement for test results and coverage. Which **two** confi
   which is the opposite of what the requirement wants
 - **E** — `dependsOn: []` would run Test in parallel with Build, so there would be nothing to test
 
+</details>
+
 ---
 
 ## Q44
@@ -1588,6 +1856,9 @@ What should you configure?
 - B. One pipeline-level variable group holding both connection strings
 - C. A `${{ if }}` expression selecting the connection string per stage
 - D. Two separate pipelines, one per environment
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -1613,6 +1884,8 @@ differs. That is the same model as GitHub environment secrets in Challenge 19.
   which defeats fetching it from Key Vault at runtime
 - **D** — duplicating a whole pipeline to change one value
 
+</details>
+
 ---
 
 ## Q45
@@ -1623,6 +1896,9 @@ You must meet the requirement that three teams share one build definition. What 
 - B. A task group in the classic editor
 - C. A variable group containing the build commands
 - D. A separate pipeline that each team triggers manually
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -1653,6 +1929,8 @@ Parameters are what make it shareable — each team passes its own project path.
 - **C** — variable groups hold values, not steps
 - **D** — manual triggering is not reuse
 
+</details>
+
 ---
 
 ## Q46
@@ -1664,6 +1942,9 @@ you configure?
 - B. A branch policy requiring reviewers on `main`
 - C. A `condition` on the DeployProduction stage
 - D. A manual `trigger` for the production stage
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -1683,6 +1964,8 @@ you configure?
 **Where approvals live:** Pipelines → Environments → select → Approvals and checks. Not in YAML —
 which is the point, because someone editing the YAML cannot remove them.
 
+</details>
+
 ---
 
 ## Q47
@@ -1696,6 +1979,9 @@ Which configuration meets the requirement?
 - B. `trigger:` with `drafts: false`
 - C. A branch policy in Azure Repos
 - D. `pr: none` with a status check
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -1719,6 +2005,8 @@ pr:
 - **C** — the code is in **GitHub**, not Azure Repos. Azure Repos branch policies do not apply
 - **D** — `pr: none` disables PR validation completely, so nothing would run on any PR
 
+</details>
+
 ---
 
 ## Q48
@@ -1731,6 +2019,9 @@ What is the cause?
 - B. The artifact was published to the wrong directory
 - C. The service connection lacks permission to read the repository
 - D. `$(Pipeline.Workspace)` is only available in regular jobs
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -1763,6 +2054,8 @@ the `infra` folder:
 - **B** — the artifact question is a red herring; the file was never published *or* checked out
 - **C** — service connections authenticate to **Azure**, not to the repository
 - **D** — `$(Pipeline.Workspace)` works in both. Line 199 uses it inside a deployment job
+
+</details>
 
 ---
 ---

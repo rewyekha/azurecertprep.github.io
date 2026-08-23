@@ -1,6 +1,8 @@
 ---
-sidebar_position: 91
+sidebar_position: 1.5
+toc_max_heading_level: 2
 title: "Challenge 31: exam questions"
+sidebar_label: "Exam questions (48 Q)"
 ---
 
 # Challenge 31 — AZ-400 exam questions
@@ -45,6 +47,9 @@ the challenge recommend for **new Azure-native** projects?
 - C. Terraform
 - D. Azure CLI scripts
 
+<details>
+<summary>Show answer</summary>
+
 ### Answer: B
 
 **In `challenge-31.md`:** the decision matrix at lines **55–64**, and the decision at lines **69–70**.
@@ -70,6 +75,8 @@ lock, back up or corrupt.
 **The exam pattern:** the recommendation is **conditional**. Azure-only and simple → Bicep.
 Multi-cloud or drift detection required → Terraform.
 
+</details>
+
 ---
 
 ## Q2
@@ -80,6 +87,9 @@ Which IaC technology has built-in drift detection?
 - B. Bicep
 - C. Terraform
 - D. All three
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: C
 
@@ -98,6 +108,8 @@ Bicep is stateless — it only compares your template to Azure. That still surfa
 
 **Why the others fail** — A and B have no built-in drift detection; D contradicts the matrix.
 
+</details>
+
 ---
 
 ## Q3
@@ -108,6 +120,9 @@ Which command shows what a Bicep deployment would change, without changing anyth
 - B. `az deployment sub what-if`
 - C. `az bicep build`
 - D. `az deployment sub create --confirm-with-what-if`
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: B
 
@@ -137,6 +152,8 @@ Which command shows what a Bicep deployment would change, without changing anyth
 - **C** — compiles locally; it never contacts Azure
 - **D** — real and useful interactively, but it **prompts and then deploys**. Not read-only
 
+</details>
+
 ---
 
 ## Q4
@@ -147,6 +164,9 @@ Which permission does the infrastructure workflow need to post what-if results t
 - B. `pull-requests: write`
 - C. `issues: write`
 - D. `id-token: write`
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: B
 
@@ -171,6 +191,8 @@ permissions:
 **Note the drift workflow's permissions differ** (lines 701–704): `issues: write` instead of
 `pull-requests: write`. Same principle, different job.
 
+</details>
+
 ---
 
 ## Q5
@@ -181,6 +203,9 @@ How does the workflow authenticate to Azure?
 - B. OIDC with `client-id`, `tenant-id` and `subscription-id`
 - C. A managed identity on the runner
 - D. An Azure CLI login with a stored password
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: B
 
@@ -207,6 +232,8 @@ short-lived OIDC token that Azure trusts via a federated credential.
 **This is the block you must know cold.** It has now appeared in Challenges 19, 21, 23, 27, 28 and
 here — security auth is the domain that has cost you marks in every mock.
 
+</details>
+
 ---
 
 ## Q6
@@ -217,6 +244,9 @@ What does `targetScope = 'subscription'` do in `main.bicep`?
 - B. Allows the template to create resource groups
 - C. Sets the default location
 - D. Enables cross-subscription deployment
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: B
 
@@ -246,6 +276,8 @@ That is also why the deployment command is `az deployment sub create` (line 279)
 
 **Why the others fail** — A, C and D all misdescribe it.
 
+</details>
+
 ---
 
 ## Q7
@@ -256,6 +288,9 @@ Which Bicep decorator restricts a parameter to a fixed set of values?
 - B. `@description`
 - C. `@secure`
 - D. `@minLength`
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -279,6 +314,8 @@ An invalid value fails **before deployment starts**, so no partial change occurs
 **The Azure Pipelines equivalent** is `type: string` with a `values` list (Challenge 20 Q11). Same
 idea, different syntax, and the exam swaps them.
 
+</details>
+
 ---
 
 ## Q8
@@ -291,6 +328,9 @@ What is the correct response?
 - B. Verify the lease is stale, then `terraform force-unlock <id>`
 - C. Run `terraform apply -lock=false`
 - D. Wait for the lock to expire automatically
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: B
 
@@ -322,6 +362,8 @@ processes write the same state simultaneously — which corrupts it.
 **The prevention (lines 929–931):** `timeoutInMinutes: 30` on the pipeline step, so a hung run is
 killed rather than holding the lock indefinitely.
 
+</details>
+
 ---
 
 ## Q9
@@ -332,6 +374,9 @@ Which Terraform backend setting enables authentication without a stored secret?
 - B. `use_msi = true`
 - C. `client_secret`
 - D. `access_key`
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -363,6 +408,8 @@ a common failure.
   running in Azure but not on a GitHub-hosted runner
 - **C** and **D** — both stored secrets
 
+</details>
+
 ---
 
 ## Q10
@@ -373,6 +420,9 @@ Why does the pipeline use a separate state file per environment?
 - B. To reduce storage costs
 - C. Because Terraform cannot manage multiple resource groups
 - D. To speed up `terraform plan`
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -395,6 +445,8 @@ production hotfix.
 **Bicep has no equivalent problem**, because it is stateless. This is the operational cost line 69
 weighs when it recommends Bicep for Azure-native work.
 
+</details>
+
 ---
 
 ## Q11
@@ -406,6 +458,9 @@ best answer.)
 - B. `terraform plan` and `terraform apply`
 - C. `terraform state list` and `terraform show`
 - D. `terraform import` and `terraform refresh`
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -430,6 +485,8 @@ formatted, without rewriting anything.
 - **C** — both read state, which lives in Azure Storage
 - **D** — both contact Azure, and `import` mutates state
 
+</details>
+
 ---
 
 ## Q12
@@ -440,6 +497,9 @@ What does `checkov` scan for in the testing job?
 - B. Security and compliance misconfigurations in IaC
 - C. Terraform state drift
 - D. Unused parameters
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: B
 
@@ -471,6 +531,8 @@ diagnostic settings. A template can be syntactically perfect and still deploy an
 **Note `if: always()` on the upload.** Checkov fails the step on findings, so without it the SARIF is
 never uploaded precisely when there is something to see. Same pattern as Trivy in Challenge 28.
 
+</details>
+
 ---
 
 ## Q13
@@ -481,6 +543,9 @@ Which `bicepconfig.json` rule prevents a secure parameter from having a default 
 - B. `secure-parameter-default`
 - C. `no-unused-params`
 - D. `use-recent-api-versions`
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: B
 
@@ -507,6 +572,8 @@ security-related — that is the pattern to read off this file.
 **Why the others fail** — all real rules with different purposes: hardcoded URLs, unused parameters,
 and API versions older than 730 days.
 
+</details>
+
 ---
 
 ## Q14
@@ -517,6 +584,9 @@ On a pull request, which operations should run?
 - B. Validate and apply to dev
 - C. Apply to all environments
 - D. Nothing — infrastructure changes are applied manually
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -538,6 +608,8 @@ merge will do before approving it.
 - **B** and **C** — write operations before review
 - **D** — manual application is the problem the CTO mandated fixing (line 30)
 
+</details>
+
 ---
 
 ## Q15
@@ -548,6 +620,9 @@ Which branch protection setting requires the what-if job to pass before merging?
 - B. `required_status_checks` with the job names in `contexts`
 - C. `enforce_admins`
 - D. `restrictions`
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: B
 
@@ -573,6 +648,8 @@ what-if reflects the current state of the world.
 - **C** — applies the rules to administrators too. Good practice, different setting
 - **D** — restricts who may push
 
+</details>
+
 ---
 
 ## Q16
@@ -583,6 +660,9 @@ Which schedule expression runs drift detection every weekday at 06:00 UTC?
 - B. `6 0 * * 1-5`
 - C. `0 6 * * *`
 - D. `0 6 1-5 * *`
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -607,6 +687,8 @@ the fifth field is Monday to Friday.
 **Note `workflow_dispatch` alongside it** — so an engineer can trigger a drift check manually after
 suspecting a manual change, without waiting for the schedule.
 
+</details>
+
 ---
 
 # Section B — Multiple answer
@@ -624,6 +706,9 @@ Which **three** are true about Bicep compared with Terraform? (Choose three.)
 - E. Bicep supports multi-cloud deployment
 - F. Bicep uses HCL syntax
 
+<details>
+<summary>Show answer</summary>
+
 ### Answer: A, B, C
 
 **In `challenge-31.md`:** lines **58–64**.
@@ -639,6 +724,8 @@ nothing to store, lock, version or corrupt; it also means no record of intent to
 
 **Why the others fail** — D, E and F describe Terraform. Bicep has its own DSL, not HCL.
 
+</details>
+
 ---
 
 ## Q18
@@ -651,6 +738,9 @@ Which **three** checks does the pipeline run **before** any deployment? (Choose 
 - D. `az deployment sub create`
 - E. `terraform apply`
 - F. `checkov` policy scan
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A, B, C
 
@@ -667,6 +757,8 @@ the three **deployment** checks, in ascending depth, while checkov is a separate
 
 **Why the others fail** — D and E are the write operations these checks gate.
 
+</details>
+
 ---
 
 ## Q19
@@ -679,6 +771,9 @@ not? (Choose two — one is shared, identify the difference.)
 - C. `pull-requests: write`
 - D. `contents: write`
 - E. `actions: write`
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A (with B shared)
 
@@ -699,6 +794,8 @@ schedule when no PR exists.
 **Why the others fail** — B and shared `contents: read` appear in both; C is the deployment workflow's;
 D and E are needed by neither.
 
+</details>
+
 ---
 
 ## Q20
@@ -710,6 +807,9 @@ Which **two** protect the Terraform state file from loss? (Choose two.)
 - C. A separate state file per environment
 - D. `use_oidc = true`
 - E. `terraform force-unlock`
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A, B
 
@@ -736,6 +836,8 @@ and restore an earlier one.
 **Why state deserves this care:** losing it means Terraform no longer knows what it manages, and the
 next apply tries to recreate 200 production resources.
 
+</details>
+
 ---
 
 ## Q21
@@ -747,6 +849,9 @@ Which **two** describe `plan on PR, apply on merge`? (Choose two.)
 - C. Pull requests apply to a dev environment for testing
 - D. Merges to `main` require a second what-if before applying
 - E. Applies run on every push to any branch
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A, B
 
@@ -772,6 +877,8 @@ only on a push to `main`.
 - **D** — the what-if already ran; a second one adds nothing before the same apply
 - **E** — every branch applying is the opposite of gated
 
+</details>
+
 ---
 
 ## Q22
@@ -783,6 +890,9 @@ Which **two** Bicep decorators improve safety and documentation? (Choose two.)
 - C. `@description` on every parameter
 - D. `@minValue` on a string parameter
 - E. `@batchSize` on a parameter
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A, B
 
@@ -800,6 +910,8 @@ Azure retains. Without it, a password passed as a parameter is readable in the p
 - **E** — `@batchSize` controls parallel loop deployment; it is a real decorator applied to
   **resource loops**, not parameters
 
+</details>
+
 ---
 
 ## Q23
@@ -811,6 +923,9 @@ Which **two** problems in Contoso's scenario does IaC directly solve? (Choose tw
 - C. Slow application build times
 - D. Insufficient database capacity
 - E. Lack of container scanning
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A, B
 
@@ -828,6 +943,8 @@ lead time; both follow from the same two causes.
 
 **Why the others fail** — C, D and E are real concerns addressed by other challenges, not by IaC.
 
+</details>
+
 ---
 
 # Section C — Repeated scenario
@@ -844,7 +961,10 @@ portal changes must be detected.
 what-if, posting results as a PR comment. On merge to `main`, apply. Run a scheduled what-if against
 production and open an issue when drift is found.
 
-Does this meet the goal? **Yes**
+Does this meet the goal?
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: Yes
 
@@ -860,6 +980,8 @@ Does this meet the goal? **Yes**
 The drift job compensates for Bicep's missing built-in drift detection — `what-if` against the
 template is close enough for this purpose.
 
+</details>
+
 ---
 
 ## Q25
@@ -868,7 +990,10 @@ template is close enough for this purpose.
 authenticate with a service principal client secret, and run `terraform apply` on every pull request
 so reviewers can see the real result.
 
-Does this meet the goal? **No**
+Does this meet the goal?
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: No
 
@@ -886,6 +1011,8 @@ precisely to avoid it.
 Terraform itself is a defensible choice here — drift detection is a stated requirement. Everything
 around it is wrong.
 
+</details>
+
 ---
 
 ## Q26
@@ -893,7 +1020,10 @@ around it is wrong.
 **Proposed solution:** Use Bicep with OIDC. On pull requests run lint, validate and what-if with the
 results posted as a comment. On merge to `main`, apply. Rely on Azure Activity Log for drift.
 
-Does this meet the goal? **No**
+Does this meet the goal?
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: No
 
@@ -910,6 +1040,8 @@ production still what the template says it should be?*
 Activity Log is a genuinely useful **complement** — it names the person and the time, which what-if
 cannot. It is not a substitute.
 
+</details>
+
 ---
 
 # Section D — Yes/No statement grid
@@ -917,6 +1049,16 @@ cannot. It is not a substitute.
 ---
 
 ## Q27 — technology choice
+
+| # | Statement | Answer |
+|---|---|---|
+| 1 | Bicep requires a remote state store |  |
+| 2 | Terraform detects drift with `terraform plan` |  |
+| 3 | Bicep compiles to ARM templates |  |
+| 4 | ARM templates support multi-cloud deployment |  |
+
+<details>
+<summary>Show answer</summary>
 
 | # | Statement | Answer |
 |---|---|---|
@@ -933,9 +1075,21 @@ lock or recover.
 Row 3 is not in the table but follows from line 57 ("simplified DSL"): Bicep is a **transpiler** over
 ARM, which is why `az bicep build` produces ARM JSON and why deployment behaviour is identical.
 
+</details>
+
 ---
 
 ## Q28 — pipeline design
+
+| # | Statement | Answer |
+|---|---|---|
+| 1 | Pull requests should run write operations |  |
+| 2 | What-if output should be visible to the reviewer |  |
+| 3 | `az bicep build` contacts Azure |  |
+| 4 | Branch protection can require the what-if job to pass |  |
+
+<details>
+<summary>Show answer</summary>
 
 | # | Statement | Answer |
 |---|---|---|
@@ -951,9 +1105,21 @@ which is why it is the first and cheapest gate.
 
 Row 4 depends on the `contexts` values matching the job `name:` values exactly.
 
+</details>
+
 ---
 
 ## Q29 — state management
+
+| # | Statement | Answer |
+|---|---|---|
+| 1 | The azurerm backend locks state using blob leases |  |
+| 2 | `terraform force-unlock` should be run whenever a lock error appears |  |
+| 3 | Each environment should have its own state file |  |
+| 4 | Deleting the state file is a safe way to recover from a lock |  |
+
+<details>
+<summary>Show answer</summary>
 
 | # | Statement | Answer |
 |---|---|---|
@@ -970,9 +1136,21 @@ is running lets two processes write state at once.
 Row 4 is the destructive answer that looks like a fix. Without state, Terraform believes nothing
 exists — and the next apply recreates 200 production resources from scratch.
 
+</details>
+
 ---
 
 ## Q30 — testing and drift
+
+| # | Statement | Answer |
+|---|---|---|
+| 1 | `checkov` finds security misconfigurations in IaC |  |
+| 2 | `terraform fmt -check` rewrites files to canonical format |  |
+| 3 | A scheduled what-if can detect drift for Bicep |  |
+| 4 | Drift detection should open an issue rather than auto-remediate |  |
+
+<details>
+<summary>Show answer</summary>
 
 | # | Statement | Answer |
 |---|---|---|
@@ -991,6 +1169,8 @@ re-applying, because drift is sometimes an **emergency fix** someone made delibe
 Auto-remediating would revert it without anyone knowing. A human decides whether to fold the change
 into the template or revert it.
 
+</details>
+
 ---
 
 # Section E — Drag and drop
@@ -1002,6 +1182,9 @@ into the template or revert it.
 Arrange the infrastructure pipeline jobs in execution order.
 
 **Items:** `deploy-prod` · `validate` · `deploy-dev` · `what-if`
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer
 
@@ -1021,11 +1204,27 @@ On a pull request the pipeline stops after what-if. Only a merge reaches the dep
 **And note dev before prod** — the same template is proved in a real environment before production
 sees it.
 
+</details>
+
 ---
 
 ## Q32
 
 Match each command to the depth of checking it performs.
+
+| Command | Checks |
+|---|---|
+| `az bicep build` |  |
+| `terraform validate` |  |
+| `az deployment sub validate` |  |
+| `az deployment sub what-if` |  |
+| `terraform plan` |  |
+| `az deployment sub create` |  |
+
+**Options:** Applies the change · Azure would accept this template · **Syntax and configuration — no Azure call** (with `-backend=false`) · Syntax and lint — no Azure call · What would actually change · What would change, including drift from state
+
+<details>
+<summary>Show answer</summary>
 
 | Command | Checks |
 |---|---|
@@ -1041,11 +1240,27 @@ Match each command to the depth of checking it performs.
 **Order your gates cheapest first.** Local checks need no credentials and fail in seconds; Azure calls
 cost time and access. A syntax error should never consume an OIDC token.
 
+</details>
+
 ---
 
 ## Q33
 
 Match each requirement to its technology.
+
+| Requirement | Choose |
+|---|---|
+| Azure-only, no state to operate |  |
+| Multi-cloud deployment |  |
+| Built-in drift detection |  |
+| Existing JSON templates to maintain |  |
+| Team already knows HCL |  |
+| Simplest authoring for Azure resources |  |
+
+**Options:** ARM · Bicep · Terraform
+
+<details>
+<summary>Show answer</summary>
 
 | Requirement | Choose |
 |---|---|
@@ -1062,6 +1277,8 @@ Match each requirement to its technology.
 deciding constraint — multi-cloud, drift, existing investment, team skill — and that constraint picks
 the tool.
 
+</details>
+
 ---
 
 ## Q34
@@ -1070,6 +1287,9 @@ Arrange the drift-detection flow in order.
 
 **Items:** Create a GitHub issue · Run what-if against production · Check whether the output contains
 `noChange` · Log in to Azure with OIDC · Trigger on schedule
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer
 
@@ -1089,11 +1309,26 @@ Arrange the drift-detection flow in order.
 **Step 5 only fires when drift exists** — otherwise the workflow runs silently every weekday and
 creates nothing. A daily "no drift" issue would train everyone to ignore the label.
 
+</details>
+
 ---
 
 ## Q35
 
 Match each symptom to its cause.
+
+| Symptom | Cause |
+|---|---|
+| Deployment fails: no parameters supplied |  |
+| Production deployed by accident from a default |  |
+| `terraform apply` blocked by a lock |  |
+| Drift job runs but never reports anything |  |
+| Required check never satisfied on the PR |  |
+
+**Options:** A crashed run left a stale blob lease · `contexts` name does not match the job `name:` · `noChange` check inverted, or drift genuinely absent · `param environmentName string = 'production'` · `--parameters` flag missing from the command
+
+<details>
+<summary>Show answer</summary>
 
 | Symptom | Cause |
 |---|---|
@@ -1108,6 +1343,8 @@ Match each symptom to its cause.
 **Break & fix Exercise 1's second error is the dangerous one.** A parameter defaulting to
 `'production'` (line 811) means anyone who forgets a parameter file deploys to production. The fix
 (line 854) removes the default entirely, forcing an explicit choice.
+
+</details>
 
 ---
 
@@ -1137,11 +1374,16 @@ Requirement: authenticate without a stored secret, and post what-if output to th
 - **BLANK 1:** `id-token` / `contents` / `packages` / `deployments`
 - **BLANK 2:** `pull-requests` / `issues` / `actions` / `checks`
 
+<details>
+<summary>Show answer</summary>
+
 ### Answer: `id-token`, `pull-requests`
 
 **In `challenge-31.md`:** lines **184** and **186**.
 
 `issues: write` is the drift workflow's permission (line 704) — it creates issues, not PR comments.
+
+</details>
 
 ---
 
@@ -1166,6 +1408,9 @@ module networking 'modules/networking/main.bicep' = {
 - **BLANK 2:** `allowed` / `values` / `restrict` / `oneOf`
 - **BLANK 3:** `scope` / `targetScope` / `resourceGroup` / `parent`
 
+<details>
+<summary>Show answer</summary>
+
 ### Answer: `targetScope`, `allowed`, `scope`
 
 **In `challenge-31.md`:** lines **133**, **90**, **155**.
@@ -1176,6 +1421,8 @@ first; deploying into it needs the second.
 
 `values` is Azure Pipelines parameter syntax (Challenge 20) — offered here as a cross-platform
 distractor.
+
+</details>
 
 ---
 
@@ -1203,6 +1450,9 @@ Requirement: isolate state per environment and authenticate without a secret.
   `contoso.tfstate`
 - **BLANK 2:** `use_oidc` / `use_msi` / `use_cli` / `use_azuread`
 
+<details>
+<summary>Show answer</summary>
+
 ### Answer: `contoso-$(environment).tfstate`, `use_oidc`
 
 **In `challenge-31.md`:** lines **671** and **353**/**359**.
@@ -1210,6 +1460,8 @@ Requirement: isolate state per environment and authenticate without a secret.
 A single shared key means one state for all five environments — the blast-radius problem from Q10.
 
 `use_oidc` appears **twice**: backend and provider authenticate separately.
+
+</details>
 
 ---
 
@@ -1227,12 +1479,17 @@ wrong without modifying files.
 - **BLANK 1:** `backend` / `upgrade` / `lock` / `input`
 - **BLANK 2:** `check` / `write` / `diff` / `list`
 
+<details>
+<summary>Show answer</summary>
+
 ### Answer: `backend`, `check`
 
 **In `challenge-31.md`:** lines **577** and **579**.
 
 `-backend=false` skips connecting to remote state, so no credentials are needed. `-check` reports and
 exits non-zero; plain `fmt` rewrites files, which is not what CI should do.
+
+</details>
 
 ---
 
@@ -1254,6 +1511,9 @@ exits non-zero; plain `fmt` rewrites files, which is not what CI should do.
 - **BLANK 2:** `sarif` / `json` / `cli` / `junitxml`
 - **BLANK 3:** `always()` / `success()` / `failure()` / `github.event_name == 'push'`
 
+<details>
+<summary>Show answer</summary>
+
 ### Answer: `bicep`, `sarif`, `always()`
 
 **In `challenge-31.md`:** lines **608–613**.
@@ -1261,6 +1521,8 @@ exits non-zero; plain `fmt` rewrites files, which is not what CI should do.
 `always()` matters: checkov fails the step on findings, so without it the SARIF upload is skipped
 exactly when there are results to review. Same pattern as Trivy in Challenge 28 and
 `PublishTestResults` in Challenge 20.
+
+</details>
 
 ---
 
@@ -1277,6 +1539,9 @@ exactly when there are results to review. Same pattern as Trivy in Challenge 28 
 - **BLANK 2:** `refs/heads/main` / `main` / `refs/pull/main` / `heads/main`
 - **BLANK 3:** `infrastructure-dev` / `production` / `dev` / *(omit)*
 
+<details>
+<summary>Show answer</summary>
+
 ### Answer: `push`, `refs/heads/main`, `infrastructure-dev`
 
 **In `challenge-31.md`:** lines **263** and **265**.
@@ -1286,6 +1551,8 @@ exactly when there are results to review. Same pattern as Trivy in Challenge 28 
 
 Omitting the environment would remove the approval gate and the deployment record entirely
 (Challenge 24 Q1).
+
+</details>
 
 ---
 
@@ -1335,6 +1602,9 @@ Which technology should Contoso choose, and why?
 - C. ARM templates — no new tooling needed
 - D. Azure CLI scripts in a pipeline
 
+<details>
+<summary>Show answer</summary>
+
 ### Answer: A
 
 **In `challenge-31.md`:** lines **57–70**.
@@ -1350,6 +1620,8 @@ protect, no lease to unstick, no per-environment state key.
 - **C** — verbose JSON with a steep curve (line 57), and Bicep gives the same deployment engine
 - **D** — imperative scripts are not declarative and produce no what-if
 
+</details>
+
 ---
 
 ## Q43
@@ -1360,6 +1632,9 @@ How should one template set serve five environments?
 - B. Five copies of `main.bicep`, one per environment
 - C. One template with `if` conditions for each environment
 - D. Five separate repositories
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -1386,6 +1661,8 @@ staging template to change.
   branches accumulate
 - **D** — five repositories multiply the drift problem across repos
 
+</details>
+
 ---
 
 ## Q44
@@ -1397,6 +1674,9 @@ Which **two** meet the peer-review requirements? (Choose two.)
 - C. Applying to dev on every pull request
 - D. A nightly report of changes made
 - E. `enforce_admins: false` so leads can merge quickly
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A, B
 
@@ -1412,6 +1692,8 @@ approve before the checks finish, or merge despite a failure.
 - **E** — the challenge sets `enforce_admins=true` (line 628). Exempting admins means the people who
   deploy most often bypass the gate
 
+</details>
+
 ---
 
 ## Q45
@@ -1422,6 +1704,9 @@ Which configuration catches security misconfigurations before deployment?
 - B. `az bicep build`
 - C. `az deployment sub what-if`
 - D. Azure Policy applied after deployment
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -1437,6 +1722,8 @@ Which configuration catches security misconfigurations before deployment?
   time with a failure the pipeline must interpret. Catching it in the PR is earlier and cheaper.
   In practice you want both
 
+</details>
+
 ---
 
 ## Q46
@@ -1447,6 +1734,9 @@ Which configuration detects manual portal changes to production?
 - B. Azure Activity Log alerts
 - C. `terraform plan` — Contoso uses Bicep
 - D. A resource lock on the production resource group
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -1469,6 +1759,8 @@ Which configuration detects manual portal changes to production?
   a `CanNotDelete` or `ReadOnly` lock also blocks **your pipeline**. Locks and IaC conflict unless the
   pipeline removes and reapplies them
 
+</details>
+
 ---
 
 ## Q47
@@ -1482,6 +1774,9 @@ What should they do, and what does this illustrate?
 - B. Copy the module into each environment folder
 - C. Stop using modules and inline the resources
 - D. Add more tests to the networking module
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -1511,6 +1806,8 @@ per consumer instead of everything at once.
   every consumer takes the change simultaneously. Testing reduces the chance of a bad version;
   versioning reduces the *blast radius* when one slips through
 
+</details>
+
 ---
 
 ## Q48
@@ -1524,6 +1821,9 @@ What should you do?
 - B. Downgrade to `warning` and open a follow-up issue
 - C. Add the parameter to an exclusion list
 - D. Disable `bicepconfig.json` for that module
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -1550,6 +1850,8 @@ or a secret.
 **The pattern across these challenges:** when a guard blocks you — `BlockOnPossibleDataLoss`, Trivy's
 `exit-code`, a rolling upgrade halting, this lint rule — ask whether it is **right** before loosening
 it. It nearly always is.
+
+</details>
 
 ---
 ---

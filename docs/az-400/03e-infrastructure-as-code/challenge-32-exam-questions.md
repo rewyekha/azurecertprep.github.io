@@ -1,6 +1,8 @@
 ---
-sidebar_position: 92
+sidebar_position: 2.5
+toc_max_heading_level: 2
 title: "Challenge 32: exam questions"
+sidebar_label: "Exam questions (48 Q)"
 ---
 
 # Challenge 32 — AZ-400 exam questions
@@ -45,6 +47,9 @@ Which service does Azure Machine Configuration use to audit and enforce settings
 - C. Azure Automation
 - D. Microsoft Defender for Cloud
 
+<details>
+<summary>Show answer</summary>
+
 ### Answer: A
 
 **In `challenge-32.md`:** line **33**.
@@ -66,6 +71,8 @@ That is why everything downstream is Policy machinery: a policy **definition** (
 - **D** — assesses security posture and consumes policy results rather than driving guest
   configuration
 
+</details>
+
 ---
 
 ## Q2
@@ -78,6 +85,9 @@ Which **two** prerequisites are most likely missing? (Pick the single best answe
 - B. A network security group rule and a public IP
 - C. An Azure Monitor agent and a Log Analytics workspace
 - D. A user-assigned identity and a service principal
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -109,6 +119,8 @@ status sat at Pending rather than failing outright.
 **Why the others fail** — B, C and D describe unrelated prerequisites. Machine Configuration needs no
 inbound network access; the agent connects outbound.
 
+</details>
+
 ---
 
 ## Q3
@@ -119,6 +131,9 @@ Which package type both **reports** and **corrects** configuration drift?
 - B. `AuditAndSet`
 - C. `Set`
 - D. `Enforce`
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: B
 
@@ -142,6 +157,8 @@ was told to check — it never corrects, so drift persists silently while the da
   enforcing
 - **C** and **D** — not valid `-Type` values. The two are `Audit` and `AuditAndSet`
 
+</details>
+
 ---
 
 ## Q4
@@ -152,6 +169,9 @@ Which `New-GuestConfigurationPolicy` mode automatically corrects non-compliant m
 - B. `ApplyAndAutoCorrect`
 - C. `ApplyAndMonitor`
 - D. `Disabled`
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: B
 
@@ -177,6 +197,8 @@ assigned in audit mode still only reports.
   genuine middle option, and not "automatically corrects"
 - **D** — not a mode here
 
+</details>
+
 ---
 
 ## Q5
@@ -187,6 +209,9 @@ Why must the configuration package be uploaded to storage with a long-lived SAS 
 - B. To back up the package
 - C. To allow VMs to write compliance results
 - D. To version the package
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -211,6 +236,8 @@ breaks at once. That expiry date is a real thing to track.
 
 **Why the others fail** — B, C and D all misdescribe the purpose.
 
+</details>
+
 ---
 
 ## Q6
@@ -221,6 +248,9 @@ Which policy assignment setting allows Azure Policy to remediate resources?
 - B. `-EnforcementMode Default`
 - C. `-NotScopes`
 - D. `-Metadata`
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -251,6 +281,8 @@ fails with an authorisation error even though the assignment looks correct.
 - **C** — excludes scopes
 - **D** — descriptive metadata
 
+</details>
+
 ---
 
 ## Q7
@@ -261,6 +293,9 @@ Which command forces immediate policy compliance evaluation instead of waiting f
 - B. `az policy assignment update`
 - C. `az policy remediation create`
 - D. `az vm restart`
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -282,6 +317,8 @@ change. After fixing prerequisites you do not want to wait a day to learn whethe
 - **C** — remediation **fixes** known non-compliant resources; it does not re-evaluate compliance
 - **D** — restarting the VM does not schedule a policy scan
 
+</details>
+
 ---
 
 ## Q8
@@ -292,6 +329,9 @@ Which DSC resource enforces that a Windows service is running and set to start a
 - B. `Service`
 - C. `WindowsFeature`
 - D. `Script`
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: B
 
@@ -315,6 +355,8 @@ it starts after a reboot. Setting only the first means the firewall is running u
 - **D** — `Script` runs arbitrary Get/Set/Test blocks. It works and is the last resort, because you
   must write the idempotency logic yourself
 
+</details>
+
 ---
 
 ## Q9
@@ -325,6 +367,9 @@ Which registry configuration disables TLS 1.0 on the server?
 - B. `ValueData = '0'` under the TLS 1.0 Server key
 - C. Deleting the TLS 1.0 key
 - D. `Ensure = 'Absent'` on the TLS 1.2 key
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: B
 
@@ -353,6 +398,8 @@ different from removing the key, and it is the part people misread.
 **The pattern across lines 88–110:** disable 1.0, disable 1.1, enable 1.2 — three explicit settings,
 because leaving any of them to a default leaves it to chance.
 
+</details>
+
 ---
 
 ## Q10
@@ -363,6 +410,9 @@ Which command tests a Machine Configuration package **locally** before publishin
 - B. `New-GuestConfigurationPackage`
 - C. `Start-DscConfiguration`
 - D. `az policy state summarize`
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -388,6 +438,8 @@ dashboard into an actionable finding.
 **Why local testing matters here:** the publish path is long — upload, SAS, definition, assignment,
 evaluation cycle. Catching a broken package before all of that saves a day.
 
+</details>
+
 ---
 
 ## Q11
@@ -398,6 +450,9 @@ What is the relationship between Azure Automation State Configuration and Azure 
 - B. Machine Configuration supersedes Automation State Configuration
 - C. They are the same service under two names
 - D. Automation State Configuration only works on Linux
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: B
 
@@ -421,6 +476,8 @@ What is the relationship between Azure Automation State Configuration and Azure 
 - **C** — both use DSC configurations, and the delivery mechanism differs entirely
 - **D** — Automation State Configuration is Windows-centric; Linux support was always more limited
 
+</details>
+
 ---
 
 ## Q12
@@ -431,6 +488,9 @@ In `Register-AzAutomationDscNode`, what does `RefreshFrequencyMins 30` control?
 - B. How often the node applies the configuration
 - C. How often compliance is reported to Azure Policy
 - D. The reboot interval
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -459,6 +519,8 @@ So this node checks for a new configuration every 30 minutes and re-applies the 
 - **C** — Automation State Configuration reports to the Automation account, not Policy
 - **D** — reboots are governed by `RebootNodeIfNeeded` and `ActionAfterReboot`
 
+</details>
+
 ---
 
 ## Q13
@@ -469,6 +531,9 @@ Which command creates a task that fixes already non-compliant resources?
 - B. `az policy state trigger-scan`
 - C. `az policy assignment create`
 - D. `az policy definition create`
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -495,6 +560,8 @@ non-compliant and otherwise left alone. A remediation task is what goes back and
 **And the dependency chain:** remediation requires the assignment to have a managed identity (Q6) with
 an appropriate RBAC role.
 
+</details>
+
 ---
 
 ## Q14
@@ -505,6 +572,9 @@ What does `--resource-discovery-mode ReEvaluateCompliance` do?
 - B. Skips resources already marked compliant
 - C. Deletes non-compliant resources
 - D. Runs remediation only on newly created resources
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -523,6 +593,8 @@ may remediate a machine someone already fixed, or miss one that drifted this mor
 **Why the others fail** — B, C and D all describe behaviours these modes do not have. Note especially
 C: policy remediation **corrects** resources; it never deletes them.
 
+</details>
+
 ---
 
 ## Q15
@@ -533,6 +605,9 @@ Which KQL table reports Machine Configuration compliance in Azure Resource Graph
 - B. `PolicyResources`
 - C. `SecurityResources`
 - D. `Resources`
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -559,6 +634,8 @@ compliant would hide exactly the problem you are looking for.
 **Why the others fail** — `PolicyResources` holds policy definitions and assignments;
 `SecurityResources` is Defender for Cloud; `Resources` is the general ARM inventory.
 
+</details>
+
 ---
 
 ## Q16
@@ -569,6 +646,9 @@ Break & fix Exercise 2 has a second defect beyond the wrong package type. What i
 - B. The MOF file is not compiled
 - C. The SAS token has expired
 - D. The policy is assigned to the wrong scope
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -596,6 +676,8 @@ real. One because nothing is enforced, the other because nothing can run.
 
 **Why the others fail** — B, C and D are unrelated to this exercise.
 
+</details>
+
 ---
 
 # Section B — Multiple answer
@@ -613,6 +695,9 @@ three.)
 - D. A public IP address on the VM
 - E. A Log Analytics workspace
 - F. An inbound NSG rule on port 443
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A, B, C
 
@@ -636,6 +721,8 @@ az vm extension set --name AzurePolicyforWindows \
 **At scale, B is applied by policy** (lines 49–53) rather than one VM at a time — a built-in policy
 that adds a system-assigned identity to VMs.
 
+</details>
+
 ---
 
 ## Q18
@@ -648,6 +735,9 @@ reported? (Choose two.)
 - C. `New-GuestConfigurationPolicy -Mode Audit`
 - D. `-Platform Windows`
 - E. `-Version '1.0.0'`
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A, B
 
@@ -663,6 +753,8 @@ of; the **policy** says what it is allowed to do.
 - **D** — targets the OS platform
 - **E** — versioning, which matters for updates but not for enforcement
 
+</details>
+
 ---
 
 ## Q19
@@ -674,6 +766,9 @@ Which **two** are required before a policy remediation task can succeed? (Choose
 - C. The VM has a public IP
 - D. The policy effect is `Audit`
 - E. Compliance data is less than one hour old
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A, B
 
@@ -696,6 +791,8 @@ assignment itself looks perfectly configured.
 - **E** — stale data is exactly why `ReEvaluateCompliance` exists (line 308); freshness is not a
   prerequisite
 
+</details>
+
 ---
 
 ## Q20
@@ -707,6 +804,9 @@ Which **two** DSC resources appear in Contoso's security baseline? (Choose two.)
 - C. `File` for audit log paths
 - D. `User` for local accounts
 - E. `Package` for antivirus installation
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A, B
 
@@ -727,6 +827,8 @@ here. The baseline covers TLS, firewall, a Windows feature and a password-length
 service name, not its display name, and getting that wrong produces a resource that silently manages
 nothing.
 
+</details>
+
 ---
 
 ## Q21
@@ -738,6 +840,9 @@ Which **two** distinguish Automation State Configuration from Machine Configurat
 - C. Machine Configuration requires an Automation account
 - D. Automation State Configuration is the current recommended approach
 - E. Machine Configuration cannot enforce settings
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A, B
 
@@ -761,6 +866,8 @@ one dashboard.
 - **D** — line 251 calls it legacy and superseded
 - **E** — `AuditAndSet` plus `ApplyAndAutoCorrect` enforces
 
+</details>
+
 ---
 
 ## Q22
@@ -772,6 +879,9 @@ Which **two** compliance queries would you use to find machines failing the base
 - C. `az vm list`
 - D. `az policy definition list`
 - E. `az automation dsc node list`
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A, B
 
@@ -788,6 +898,8 @@ subscriptions**, producing the compliance-rate trend that goes on a workbook.
 - **E** — real, and it queries **Automation State Configuration** nodes (line 291). Wrong service for
   a Machine Configuration baseline
 
+</details>
+
 ---
 
 ## Q23
@@ -799,6 +911,9 @@ Which **two** describe the runbook-based scheduled remediation? (Choose two.)
 - C. It applies DSC configurations directly to each VM
 - D. It requires a stored service principal secret
 - E. It runs on every VM locally
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A, B
 
@@ -828,6 +943,8 @@ used a fixed name would fail on its second run.
 **Why the others fail** — C describes Automation State Configuration; D contradicts `-Identity`; E is
 wrong, the runbook runs centrally against Azure.
 
+</details>
+
 ---
 
 # Section C — Repeated scenario
@@ -844,7 +961,10 @@ fleet-wide compliance visibility.
 `-Mode ApplyAndAutoCorrect`, assign the policy with a system-assigned identity, and grant that
 identity a role at the resource group scope.
 
-Does this meet the goal? **Yes**
+Does this meet the goal?
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: Yes
 
@@ -858,6 +978,8 @@ Does this meet the goal? **Yes**
 
 The RBAC grant is the step that turns a correct-looking assignment into a working one.
 
+</details>
+
 ---
 
 ## Q25
@@ -865,7 +987,10 @@ The RBAC grant is the step that turns a correct-looking assignment into a workin
 **Proposed solution:** Build an `Audit` Machine Configuration package, assign it, and review the
 compliance dashboard weekly so operations can fix failures manually.
 
-Does this meet the goal? **No**
+Does this meet the goal?
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: No
 
@@ -881,6 +1006,8 @@ A weekly manual fix cycle competes with a continuous drift source, and loses.
 **When `Audit` is right:** while you are measuring a new baseline and do not yet know what enforcement
 would break. It is a starting point, not a destination.
 
+</details>
+
 ---
 
 ## Q26
@@ -888,7 +1015,10 @@ would break. It is a starting point, not a destination.
 **Proposed solution:** Build an `AuditAndSet` package, publish with `-Mode ApplyAndAutoCorrect`, and
 assign the policy — but leave the assignment without a managed identity.
 
-Does this meet the goal? **No**
+Does this meet the goal?
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: No
 
@@ -905,6 +1035,8 @@ non-compliant indefinitely, and remediation tasks show failed deployments.
 **This is the same shape as Challenge 24 Q1** — a job with no `environment:` still runs, it just has
 no gate. Here an assignment with no identity still audits, it just cannot act.
 
+</details>
+
 ---
 
 # Section D — Yes/No statement grid
@@ -912,6 +1044,16 @@ no gate. Here an assignment with no identity still audits, it just cannot act.
 ---
 
 ## Q27 — prerequisites
+
+| # | Statement | Answer |
+|---|---|---|
+| 1 | VMs need a managed identity for Machine Configuration |  |
+| 2 | The Guest Configuration extension is required |  |
+| 3 | VMs need inbound network access on port 443 |  |
+| 4 | The `Microsoft.GuestConfiguration` provider must be registered |  |
+
+<details>
+<summary>Show answer</summary>
 
 | # | Statement | Answer |
 |---|---|---|
@@ -929,9 +1071,21 @@ locked-down production servers.
 Rows 1 and 2 together are Break & fix Exercise 1, and their shared symptom is **"Pending"** rather
 than a failure.
 
+</details>
+
 ---
 
 ## Q28 — modes
+
+| # | Statement | Answer |
+|---|---|---|
+| 1 | An `Audit` package corrects drift |  |
+| 2 | `ApplyAndAutoCorrect` re-applies configuration on each evaluation |  |
+| 3 | `ApplyAndMonitor` applies once, then only reports |  |
+| 4 | The package type and policy mode must be compatible |  |
+
+<details>
+<summary>Show answer</summary>
 
 | # | Statement | Answer |
 |---|---|---|
@@ -947,9 +1101,21 @@ once, then observe deliberate deviations — and it is **not** continuous enforc
 
 Row 4 is the pairing rule: capability comes from the **package**, permission from the **policy mode**.
 
+</details>
+
 ---
 
 ## Q29 — remediation
+
+| # | Statement | Answer |
+|---|---|---|
+| 1 | A remediation task fixes resources that were already non-compliant |  |
+| 2 | An `Audit` effect policy can be remediated |  |
+| 3 | The assignment identity needs an RBAC role to remediate |  |
+| 4 | `ReEvaluateCompliance` re-scans before remediating |  |
+
+<details>
+<summary>Show answer</summary>
 
 | # | Statement | Answer |
 |---|---|---|
@@ -966,9 +1132,21 @@ pre-existing resources are flagged and otherwise untouched until a remediation t
 Row 2 follows from that: an `Audit` effect has no deployment to trigger, so there is nothing to
 remediate.
 
+</details>
+
 ---
 
 ## Q30 — Automation State Configuration
+
+| # | Statement | Answer |
+|---|---|---|
+| 1 | Nodes pull their configuration from the Automation account |  |
+| 2 | `ConfigurationModeFrequencyMins` controls how often configuration is applied |  |
+| 3 | It is the recommended approach for new deployments |  |
+| 4 | Compliance appears in Azure Policy compliance |  |
+
+<details>
+<summary>Show answer</summary>
 
 | # | Statement | Answer |
 |---|---|---|
@@ -986,6 +1164,8 @@ Row 4 is the difference that matters operationally: node status lives in the **A
 (line 291), not on the Policy compliance dashboard. Two services means two places to look, which is
 part of why Machine Configuration supersedes it.
 
+</details>
+
 ---
 
 # Section E — Drag and drop
@@ -999,6 +1179,9 @@ Arrange the Machine Configuration authoring and publishing flow in order.
 **Items:** Assign the policy with a managed identity · Compile the DSC configuration to MOF · Upload
 the package and generate a SAS URI · Create the policy definition · Build the package with
 `AuditAndSet` · Test the package locally
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer
 
@@ -1015,11 +1198,26 @@ broken.
 
 **Same principle as Challenge 31's ordering:** local checks first, cloud round-trips last.
 
+</details>
+
 ---
 
 ## Q32
 
 Match each mode to its behaviour.
+
+| Mode or type | Behaviour |
+|---|---|
+| Package `-Type Audit` |  |
+| Package `-Type AuditAndSet` |  |
+| Policy `-Mode Audit` |  |
+| Policy `-Mode ApplyAndMonitor` |  |
+| Policy `-Mode ApplyAndAutoCorrect` |  |
+
+**Options:** Applies on every evaluation · Applies once, then reports · Capable of reporting and correcting · Evaluates and reports · Reports compliance only
+
+<details>
+<summary>Show answer</summary>
 
 | Mode or type | Behaviour |
 |---|---|
@@ -1035,11 +1233,26 @@ Match each mode to its behaviour.
 the policy mode is what it is *allowed* to do. Enforcement requires both — `AuditAndSet` **and**
 `ApplyAndAutoCorrect`.
 
+</details>
+
 ---
 
 ## Q33
 
 Match each command to its purpose.
+
+| Command | Purpose |
+|---|---|
+| `az policy state trigger-scan` |  |
+| `az policy state summarize` |  |
+| `az policy state list --filter ...NonCompliant` |  |
+| `az policy remediation create` |  |
+| `Test-GuestConfigurationPackage` |  |
+
+**Options:** Aggregate compliance counts · Fix already non-compliant resources · Force immediate compliance evaluation · List failing resources · Validate a package locally before publishing
+
+<details>
+<summary>Show answer</summary>
 
 | Command | Purpose |
 |---|---|
@@ -1055,6 +1268,8 @@ Match each command to its purpose.
 **fixes**. Evaluating a broken machine over and over changes nothing; remediating without a fresh
 evaluation may act on stale data — which is why `ReEvaluateCompliance` combines both.
 
+</details>
+
 ---
 
 ## Q34
@@ -1063,6 +1278,9 @@ Arrange the Break & fix Exercise 1 diagnosis and repair in order.
 
 **Items:** Install the Guest Configuration extension · Trigger a compliance scan · Check for a managed
 identity · Assign a managed identity · Check for the extension
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer
 
@@ -1079,11 +1297,26 @@ prerequisites, one symptom.
 **Step 5 turns a 24-hour wait into a minute** — without it, the correct fix looks like it did not
 work.
 
+</details>
+
 ---
 
 ## Q35
 
 Match each symptom to its cause.
+
+| Symptom | Cause |
+|---|---|
+| Compliance stuck at "Pending" for 24 hours |  |
+| Dashboard shows compliant machines that clearly are not |  |
+| Package works locally, fails on target machines |  |
+| Remediation task fails with an authorisation error |  |
+| Every assignment breaks on the same day |  |
+
+**Options:** Assignment identity has no RBAC role · Dependent DSC module not bundled (`-FilesToInclude`) · Missing managed identity and/or extension · Package built as `Audit`, not `AuditAndSet` · The package SAS token expired
+
+<details>
+<summary>Show answer</summary>
 
 | Symptom | Cause |
 |---|---|
@@ -1098,6 +1331,8 @@ Match each symptom to its cause.
 **The last row is a scheduling trap.** A three-year SAS (line 179) feels permanent when you write it
 and becomes an outage nobody predicted three years later. Put the expiry date in a calendar the day
 you create it.
+
+</details>
 
 ---
 
@@ -1123,12 +1358,17 @@ az vm extension set \
 - **BLANK 2:** `AzurePolicyforWindows` / `GuestConfigurationForWindows` / `DSCForWindows` /
   `AzureMonitorWindowsAgent`
 
+<details>
+<summary>Show answer</summary>
+
 ### Answer: `Microsoft.GuestConfiguration`, `AzurePolicyforWindows`
 
 **In `challenge-32.md`:** lines **37** and **59–60**.
 
 The namespace appears twice — as the provider to register and as the extension **publisher**. The
 Linux equivalent extension is `AzurePolicyforLinux`.
+
+</details>
 
 ---
 
@@ -1148,12 +1388,17 @@ installed.
 - **BLANK 1:** `AuditAndSet` / `Audit` / `Set` / `Enforce`
 - **BLANK 2:** `ModuleBase` / `Path` / `Name` / `Version`
 
+<details>
+<summary>Show answer</summary>
+
 ### Answer: `AuditAndSet`, `ModuleBase`
 
 **In `challenge-32.md`:** lines **143** and **572**.
 
 Both halves of Break & fix Exercise 2 in one block. `Audit` reports without correcting; omitting
 `-FilesToInclude` produces a package referencing a module the target machine has never seen.
+
+</details>
 
 ---
 
@@ -1176,6 +1421,9 @@ New-AzPolicyAssignment `
 - **BLANK 1:** `ApplyAndAutoCorrect` / `Audit` / `ApplyAndMonitor` / `Disabled`
 - **BLANK 2:** `IdentityType` / `EnforcementMode` / `AssignIdentity` / `RoleDefinition`
 
+<details>
+<summary>Show answer</summary>
+
 ### Answer: `ApplyAndAutoCorrect`, `IdentityType`
 
 **In `challenge-32.md`:** lines **191** and **205**.
@@ -1183,6 +1431,8 @@ New-AzPolicyAssignment `
 `EnforcementMode` controls whether the effect is applied or only logged — a different concept that
 sounds like the right answer. `-Location` is required alongside `-IdentityType` because a managed
 identity is a regional resource.
+
+</details>
 
 ---
 
@@ -1208,6 +1458,9 @@ identity is a regional resource.
 - **BLANK 2:** `0` / `1`
 - **BLANK 3:** `MpsSvc` / `WinDefend` / `Firewall` / `WindowsFirewall`
 
+<details>
+<summary>Show answer</summary>
+
 ### Answer: `Present`, `0`, `MpsSvc`
 
 **In `challenge-32.md`:** lines **89–93** and **114**.
@@ -1217,6 +1470,8 @@ disabled. `Absent` would delete the value, and an absent value falls back to the
 enabled.
 
 `MpsSvc` is the service name; `WinDefend` is Microsoft Defender Antivirus, a different service.
+
+</details>
 
 ---
 
@@ -1236,11 +1491,16 @@ Requirements: re-check current state before fixing, and force an immediate evalu
 - **BLANK 1:** `ReEvaluateCompliance` / `ExistingNonCompliant` / `AllResources` / `Incremental`
 - **BLANK 2:** `trigger-scan` / `refresh` / `evaluate` / `summarize`
 
+<details>
+<summary>Show answer</summary>
+
 ### Answer: `ReEvaluateCompliance`, `trigger-scan`
 
 **In `challenge-32.md`:** lines **308** and **535**.
 
 `ExistingNonCompliant` is the **default** and acts on recorded state, which can be up to 24 hours old.
+
+</details>
 
 ---
 
@@ -1261,6 +1521,9 @@ GuestConfigurationResources
 - **BLANK 1:** `countif` / `count` / `sumif` / `dcount`
 - **BLANK 2:** `todouble` / `toint` / `tostring` / `tolong`
 
+<details>
+<summary>Show answer</summary>
+
 ### Answer: `countif`, `todouble`
 
 **In `challenge-32.md`:** lines **241–246**.
@@ -1271,6 +1534,8 @@ GuestConfigurationResources
 **And note the three buckets.** Counting only Compliant and NonCompliant would silently exclude
 `Pending` machines — the ones with the missing identity or extension, which are precisely the ones you
 need to find.
+
+</details>
 
 ---
 
@@ -1320,6 +1585,9 @@ Which technology should Contoso use for the baseline?
 - C. A scheduled PowerShell script on each VM
 - D. Bicep templates
 
+<details>
+<summary>Show answer</summary>
+
 ### Answer: A
 
 **In `challenge-32.md`:** lines **33** and **251**.
@@ -1333,6 +1601,8 @@ Which technology should Contoso use for the baseline?
   networking. It cannot reach **inside** the guest OS to set a registry key or start a service. Guest
   configuration is a different layer entirely
 
+</details>
+
 ---
 
 ## Q43
@@ -1345,6 +1615,9 @@ Which **two** settings ensure drift is corrected rather than reported? (Choose t
 - D. Policy `-Mode ApplyAndMonitor`
 - E. `-EnforcementMode DoNotEnforce`
 
+<details>
+<summary>Show answer</summary>
+
 ### Answer: A, B
 
 **In `challenge-32.md`:** lines **143** and **191**.
@@ -1355,6 +1628,8 @@ Which **two** settings ensure drift is corrected rather than reported? (Choose t
 - **D** — applies **once**, then only reports. Since the drift source is ongoing operator activity,
   the very next incident undoes it and nothing corrects it again
 - **E** — `DoNotEnforce` logs what *would* happen without doing it — policy's equivalent of what-if
+
+</details>
 
 ---
 
@@ -1367,6 +1642,9 @@ How should the same baseline reach all 70 VMs without per-machine setup?
 - B. Run `az vm extension set` on each VM individually
 - C. Create one policy assignment per VM
 - D. Add each VM to an Automation account as a DSC node
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -1388,6 +1666,8 @@ machine built next month inherits the baseline without anyone remembering.
 - **C** — 70 assignments to maintain
 - **D** — the legacy service, plus per-node registration
 
+</details>
+
 ---
 
 ## Q45
@@ -1401,6 +1681,9 @@ never-reported machines?
 - C. `az policy definition list`
 - D. A Log Analytics query over `Heartbeat`
 
+<details>
+<summary>Show answer</summary>
+
 ### Answer: A
 
 **In `challenge-32.md`:** lines **235–246**.
@@ -1413,6 +1696,8 @@ two hides a real gap: a fleet showing "60% compliant, 40% non-compliant" reads v
 **Why the others fail** — B lists VMs, C lists definitions, D shows agent heartbeats from a different
 service entirely.
 
+</details>
+
 ---
 
 ## Q46
@@ -1423,6 +1708,9 @@ Which configuration remediates the VMs that are **already** non-compliant?
 - B. Re-assigning the policy
 - C. `az policy state trigger-scan`
 - D. Waiting for the next evaluation cycle
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -1438,6 +1726,8 @@ Which configuration remediates the VMs that are **already** non-compliant?
 update**. Everything that already existed when you assigned the policy needs a remediation task to
 reach it.
 
+</details>
+
 ---
 
 ## Q47
@@ -1448,6 +1738,9 @@ Which configuration meets the no-stored-credential requirement for scheduled rem
 - B. A runbook with a service principal secret in an Automation variable
 - C. A pipeline using `AZURE_CREDENTIALS`
 - D. A scheduled task on each VM using a stored password
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -1471,6 +1764,8 @@ The Automation account's **managed identity** — no secret created, stored or r
 `-Identity` for Automation, system-assigned identity for the policy assignment. **Identity over stored
 secret** — the domain that has cost you marks in every mock.
 
+</details>
+
 ---
 
 ## Q48
@@ -1484,6 +1779,9 @@ What is the most likely cause?
 - B. Linux VMs do not support Machine Configuration
 - C. The SAS token expired
 - D. The Linux VMs need a reboot
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -1511,6 +1809,8 @@ same — TLS, firewall, password policy — but the **implementation** is entire
 **The wider lesson:** a "fleet-wide baseline" in a mixed estate is at least two baselines. The gap
 hides because Windows machines report healthily and the 5% looks like a rounding error rather than an
 entire unprotected platform.
+
+</details>
 
 ---
 ---

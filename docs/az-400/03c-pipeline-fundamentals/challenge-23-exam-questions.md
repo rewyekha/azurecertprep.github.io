@@ -1,6 +1,8 @@
 ---
-sidebar_position: 95
+sidebar_position: 5.5
+toc_max_heading_level: 2
 title: "Challenge 23: exam questions"
+sidebar_label: "Exam questions (48 Q)"
 ---
 
 # Challenge 23 — AZ-400 exam questions
@@ -48,6 +50,9 @@ What is missing from the caller?
 - C. An `env:` block defining the secret
 - D. A `needs:` declaration on the calling job
 
+<details>
+<summary>Show answer</summary>
+
 ### Answer: A
 
 **In `challenge-23.md`:** Break & fix Exercise 1, lines **824–851**.
@@ -85,6 +90,8 @@ handed across the boundary deliberately.
 **Which form to prefer:** `inherit` is convenient; explicit passing is least-privilege. If a question
 mentions minimal access, pick explicit.
 
+</details>
+
 ---
 
 ## Q2
@@ -95,6 +102,9 @@ Where does a reusable workflow execute relative to the job that calls it?
 - B. As its own job or jobs, on their own runners
 - C. On the caller's runner but in a separate container
 - D. On a GitHub-hosted runner only
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: B
 
@@ -120,6 +130,8 @@ each on its own runner.
 That is why the reusable workflow uploads an artifact at line 107 rather than assuming the next job
 can see `dist/`.
 
+</details>
+
 ---
 
 ## Q3
@@ -130,6 +142,9 @@ Which trigger makes a workflow callable by another workflow?
 - B. `on: workflow_call`
 - C. `on: workflow_dispatch`
 - D. `on: repository_dispatch`
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: B
 
@@ -154,6 +169,8 @@ on:
 **Keep `workflow_call` and `workflow_run` apart** — one is *called by*, the other is *triggered
 after*. That pair is a reliable exam question.
 
+</details>
+
 ---
 
 ## Q4
@@ -164,6 +181,9 @@ A composite action's `run` step fails validation. What is missing?
 - B. `shell`
 - C. `working-directory`
 - D. `continue-on-error`
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: B
 
@@ -183,6 +203,8 @@ Mandatory in composite actions, optional in workflows.
 - **C** — optional
 - **D** — failure handling, not validation
 
+</details>
+
 ---
 
 ## Q5
@@ -193,6 +215,9 @@ How does a composite action expose a value to the calling workflow?
 - B. Through an `outputs` block mapping to a step output
 - C. Through an `env` block at action level
 - D. By uploading an artifact
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: B
 
@@ -227,6 +252,8 @@ reads `steps.<id>.outputs.<name>`. **Same three-part shape as job outputs in Cha
 - **C** — `env` is input configuration, not output
 - **D** — artifacts move files between jobs, not values to a caller
 
+</details>
+
 ---
 
 ## Q6
@@ -237,6 +264,9 @@ A reusable workflow declares an output. Where does its `value` come from?
 - B. A job output inside the reusable workflow
 - C. An environment variable
 - D. A repository variable
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: B
 
@@ -258,6 +288,8 @@ directly from what each one is.
 **The full chain here:** step (line 146) → job output (line 145) → workflow output (line 82) →
 caller.
 
+</details>
+
 ---
 
 ## Q7
@@ -268,6 +300,9 @@ Which Azure Pipelines template type can contribute **stages**?
 - B. A template whose root key is `jobs:`
 - C. A template whose root key is `stages:`
 - D. Any template, depending on where it is referenced
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: C
 
@@ -289,6 +324,8 @@ be inserted where stages are expected — you get a validation error.
 
 **The four types:** steps, jobs, stages, variables.
 
+</details>
+
 ---
 
 ## Q8
@@ -301,6 +338,9 @@ What happens?
 - B. The pipeline fails with an unexpected-value error
 - C. The parameter falls back to its default
 - D. The string is treated as a single-item list
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: B
 
@@ -337,6 +377,8 @@ Template parameters are **type-checked at compile time**, before any agent is al
               ${{ tag }}
 ```
 
+</details>
+
 ---
 
 ## Q9
@@ -349,6 +391,9 @@ What is wrong?
 - B. `ref` must be a full ref path such as `refs/heads/main`
 - C. `type` must be `github`
 - D. The template path must be absolute
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: B
 
@@ -371,6 +416,8 @@ Also seen at line **558** (`refs/heads/main`) and line **790** (`refs/tags/v2.1.
 **Ref forms to know:** `refs/heads/<branch>`, `refs/tags/<tag>`. Line 790 pins a **tag**, which is
 the production-safe choice.
 
+</details>
+
 ---
 
 ## Q10
@@ -381,6 +428,9 @@ Which reference style makes a shared template safe against upstream changes?
 - B. `@v2.1.0` or `refs/tags/v2.1.0`
 - C. `@HEAD`
 - D. `@latest`
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: B
 
@@ -405,6 +455,8 @@ Which reference style makes a shared template safe against upstream changes?
 **The trade-off to state:** pinning gives stability but means security fixes need a deliberate bump.
 Pin production, float development.
 
+</details>
+
 ---
 
 ## Q11
@@ -415,6 +467,9 @@ What does `${{ each tag in parameters.tags }}` do?
 - B. Expands the YAML at compile time, one entry per list item
 - C. Creates a matrix of parallel jobs
 - D. Concatenates the tags into a string
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: B
 
@@ -438,6 +493,8 @@ the pipeline starts**. It is YAML generation, not a loop.
 **The pairing:** `${{ if }}` includes or excludes YAML; `${{ each }}` repeats YAML. Both compile-time,
 both from Challenge 20's expression rules.
 
+</details>
+
 ---
 
 ## Q12
@@ -448,6 +505,9 @@ In classic Azure DevOps, what is the equivalent of a YAML step template?
 - B. A variable group
 - C. A deployment group
 - D. A service connection
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -470,6 +530,8 @@ In classic Azure DevOps, what is the equivalent of a YAML step template?
 jobs or stages, task groups cannot do it — which is a reason to migrate, and Challenge 37 does
 exactly that.
 
+</details>
+
 ---
 
 ## Q13
@@ -480,6 +542,9 @@ Which construct shares six setup **steps** inside an existing job without adding
 - B. A composite action
 - C. A starter workflow
 - D. A job template
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: B
 
@@ -502,6 +567,8 @@ Which construct shares six setup **steps** inside an existing job without adding
   propagate
 - **D** — job templates are Azure Pipelines, and they contribute jobs, not steps
 
+</details>
+
 ---
 
 ## Q14
@@ -513,6 +580,9 @@ Where must an organization-wide reusable workflow live to be referenced as
 - B. In `workflows/` at the root of any repository
 - C. In `.github/actions/` of the consuming repository
 - D. In a repository named `workflows`
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -536,6 +606,8 @@ looks like a typo and is not.
 under `.github/`. So the reference is `contoso/.github/actions/dotnet-build-test@main` (line 335) —
 only one `.github`.
 
+</details>
+
 ---
 
 ## Q15
@@ -546,6 +618,9 @@ A variable group is declared at stage level. Which stage can read it?
 - B. Only the stage where it is declared
 - C. Only stages that declare `dependsOn`
 - D. Only deployment jobs
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: B
 
@@ -573,6 +648,8 @@ Scope is pipeline → stage → job, exactly as in Challenge 20.
 `contoso-staging` and `contoso-production` with the **same variable names** and different values.
 Same `$(ResourceGroup)` expression, different result per stage.
 
+</details>
+
 ---
 
 ## Q16
@@ -583,6 +660,9 @@ Which input type lets a template parameter restrict the caller to a fixed set of
 - B. `type: choice` with `options`
 - C. `type: enum`
 - D. `type: object` with `allowed`
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -607,6 +687,8 @@ Passing anything else fails at compile time.
 - **C** — no `enum` type exists
 - **D** — no `allowed` key exists
 
+</details>
+
 ---
 
 # Section B — Multiple answer
@@ -623,6 +705,9 @@ Which **three** describe a composite action? (Choose three.)
 - D. It is invoked with `uses:` at job level
 - E. It can define its own `jobs`
 - F. It requires an `on:` trigger
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A, B, C
 
@@ -645,6 +730,8 @@ runs:
 - **E** — an action file has `name`, `description`, `inputs`, `outputs`, `runs`. There is no `jobs`
 - **F** — `on:` belongs to workflows
 
+</details>
+
 ---
 
 ## Q18
@@ -657,6 +744,9 @@ secrets? (Choose two.)
 - C. A `needs:` declaration
 - D. A `runs-on:` value on the calling job
 - E. A `permissions:` block on the calling job
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A, B
 
@@ -680,6 +770,8 @@ jobs:
   `runs-on`, because it does not run steps itself. Adding one is an error
 - **E** — permissions are declared inside the reusable workflow's own jobs (lines 142–144, 184–186)
 
+</details>
+
 ---
 
 ## Q19
@@ -692,6 +784,9 @@ Which **two** correctly pin a shared template to a stable version? (Choose two.)
 - D. `ref: main`
 - E. `ref: latest`
 
+<details>
+<summary>Show answer</summary>
+
 ### Answer: A, B
 
 **In `challenge-23.md`:** lines **777** and **790**.
@@ -702,6 +797,8 @@ Which **two** correctly pin a shared template to a stable version? (Choose two.)
 - **D** — additionally **invalid syntax** in Azure Pipelines (Break & fix Exercise 3, line 896). It
   needs the full ref path
 - **E** — not a thing
+
+</details>
 
 ---
 
@@ -715,6 +812,9 @@ cannot? (Choose two.)
 - C. Which tasks run in a job
 - D. The agent pool for a job
 - E. Task inputs
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A, B
 
@@ -736,6 +836,8 @@ same stage template can be reused for staging and production with different plac
 
 - **C**, **D**, **E** — all within reach of a step or job template. They do not require stage level
 
+</details>
+
 ---
 
 ## Q21
@@ -747,6 +849,9 @@ Which **two** statements about task groups are correct? (Choose two.)
 - C. They can encapsulate whole stages
 - D. They are version-controlled in Git
 - E. They work in YAML pipelines
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A, B
 
@@ -765,6 +870,8 @@ Which **two** statements about task groups are correct? (Choose two.)
   files, so they get code review, history and pinning for free
 - **E** — task groups do not work in YAML. This is why Challenge 37 migrates them to templates
 
+</details>
+
 ---
 
 ## Q22
@@ -776,6 +883,9 @@ Which **two** are valid ways for a caller to supply secrets to a reusable workfl
 - C. `env:` with the secret values
 - D. `with:` containing the secret values
 - E. Repository variables
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A, B
 
@@ -795,6 +905,8 @@ Which **two** are valid ways for a caller to supply secrets to a reusable workfl
   a secret there leaks it. Inputs and secrets are separate blocks precisely for this reason
 - **E** — variables are for non-sensitive values
 
+</details>
+
 ---
 
 ## Q23
@@ -807,6 +919,9 @@ two.)
 - C. A `checkout` step for the template repository
 - D. A service connection for Azure Repos
 - E. A variable group naming the repository
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A, B
 
@@ -832,6 +947,8 @@ stages:
   Azure Repos in the same organization, which uses the pipeline's own identity
 - **E** — variable groups hold values
 
+</details>
+
 ---
 
 # Section C — Repeated scenario
@@ -848,7 +965,10 @@ definition must not change under a team without warning.
 each service call it with `uses: contoso/.github/.github/workflows/reusable-node-ci-cd.yml@v2` plus a
 `secrets:` block.
 
-Does this meet the goal? **Yes**
+Does this meet the goal?
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: Yes
 
@@ -863,6 +983,8 @@ All three requirements are met:
 
 That third point is what makes this **Yes** rather than "works but risky".
 
+</details>
+
 ---
 
 ## Q25
@@ -870,7 +992,10 @@ That third point is what makes this **Yes** rather than "works but risky".
 **Proposed solution:** Create a composite action in `contoso/.github/actions` and have each service
 call it from a job step.
 
-Does this meet the goal? **No**
+Does this meet the goal?
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: No
 
@@ -894,13 +1019,18 @@ lines 284–322 — steps inside a job that each team still shapes.
 
 **The rule:** *sharing steps → composite action. Sharing a job graph → reusable workflow.*
 
+</details>
+
 ---
 
 ## Q26
 
 **Proposed solution:** Create a reusable workflow and have each service call it with `@main`.
 
-Does this meet the goal? **No**
+Does this meet the goal?
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: No
 
@@ -915,6 +1045,8 @@ Line 778 states the fix in a comment: *"Pin to a tag/release for stability."*
 **A partial solution is still No.** Note this is the same shape as Challenge 22 Q26: the mechanism is
 right, one stated requirement is unmet.
 
+</details>
+
 ---
 
 # Section D — Yes/No statement grid
@@ -922,6 +1054,16 @@ right, one stated requirement is unmet.
 ---
 
 ## Q27 — reusable workflows
+
+| # | Statement | Answer |
+|---|---|---|
+| 1 | Secrets are passed automatically from caller to reusable workflow |  |
+| 2 | A reusable workflow can declare outputs sourced from its jobs |  |
+| 3 | The calling job needs a `runs-on` value |  |
+| 4 | A reusable workflow can be pinned to a tag |  |
+
+<details>
+<summary>Show answer</summary>
 
 | # | Statement | Answer |
 |---|---|---|
@@ -946,9 +1088,21 @@ jobs:
 No `runs-on`, no `steps`. The job **is** the call. Adding `runs-on` is an error, and spotting its
 absence is a fast way to tell a reusable-workflow call from a composite-action step.
 
+</details>
+
 ---
 
 ## Q28 — composite actions
+
+| # | Statement | Answer |
+|---|---|---|
+| 1 | `shell` is required on every `run` step |  |
+| 2 | A composite action can read the `secrets` context directly |  |
+| 3 | It runs in the caller's workspace |  |
+| 4 | Its outputs use `value:` referencing a step output |  |
+
+<details>
+<summary>Show answer</summary>
 
 | # | Statement | Answer |
 |---|---|---|
@@ -971,9 +1125,21 @@ needs a secret, the caller must pass it as an **input**:
 Reusable workflows are the opposite — they have a dedicated `secrets:` block (lines 68–78). Two
 reuse mechanisms, two different secret models.
 
+</details>
+
 ---
 
 ## Q29 — Azure Pipelines templates
+
+| # | Statement | Answer |
+|---|---|---|
+| 1 | A `steps:` template can be inserted where stages are expected |  |
+| 2 | Parameters are type-checked at compile time |  |
+| 3 | `${{ each }}` expands YAML before the run starts |  |
+| 4 | Templates can reference other templates |  |
+
+<details>
+<summary>Show answer</summary>
 
 | # | Statement | Answer |
 |---|---|---|
@@ -991,9 +1157,21 @@ with a runtime failure, which costs you a queued job, a checkout and several min
 Row 4 — nesting is supported on both platforms. GitHub allows up to **four** levels of nested
 reusable workflows.
 
+</details>
+
 ---
 
 ## Q30 — sharing and versioning
+
+| # | Statement | Answer |
+|---|---|---|
+| 1 | `@main` gives consumers a stable, unchanging definition |  |
+| 2 | `ref: main` is valid in an Azure Pipelines repository resource |  |
+| 3 | Org-wide reusable workflows live in a repository named `.github` |  |
+| 4 | Composite actions in that repo live under `.github/workflows/` |  |
+
+<details>
+<summary>Show answer</summary>
 
 | # | Statement | Answer |
 |---|---|---|
@@ -1015,6 +1193,8 @@ contoso/.github/
 Workflows need the inner `.github/workflows/`. Actions sit at the repository root. Getting this wrong
 gives a file-not-found that looks like a permissions problem.
 
+</details>
+
 ---
 
 # Section E — Drag and drop
@@ -1024,6 +1204,20 @@ gives a file-not-found that looks like a permissions problem.
 ## Q31
 
 Match each reuse mechanism to what it contributes.
+
+| Mechanism | Contributes |
+|---|---|
+| Composite action |  |
+| Reusable workflow |  |
+| Azure Pipelines steps template |  |
+| Azure Pipelines jobs template |  |
+| Azure Pipelines stages template |  |
+| Task group (classic) |  |
+
+**Options:** **Jobs**, each on its own runner · **Jobs**, inside a stage · **Stages**, inside the pipeline · **Steps**, inside a job · **Steps**, inside the caller's job · **Steps** only
+
+<details>
+<summary>Show answer</summary>
 
 | Mechanism | Contributes |
 |---|---|
@@ -1047,6 +1241,8 @@ Match each reuse mechanism to what it contributes.
 GitHub has **two** mechanisms; Azure Pipelines has **one mechanism at three levels**. That asymmetry
 is why exam questions phrase the same need differently per platform.
 
+</details>
+
 ---
 
 ## Q32
@@ -1055,6 +1251,9 @@ Arrange the output chain of a composite action, from producer to consumer.
 
 **Items:** Caller reads `steps.<id>.outputs.<name>` · Step writes to `$GITHUB_OUTPUT` ·
 Action `outputs` maps it with `value:` · Step declares an `id`
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer
 
@@ -1081,6 +1280,8 @@ outputs:
 **Same four-link shape as job outputs in Challenge 19.** Miss any link and you get an empty string
 with no error — the silent failure that keeps appearing across these challenges.
 
+</details>
+
 ---
 
 ## Q33
@@ -1089,6 +1290,9 @@ Arrange the equivalent output chain for a **reusable workflow**.
 
 **Items:** Workflow `outputs` maps it with `value: jobs.<job>.outputs.<name>` ·
 Step writes to `$GITHUB_OUTPUT` · Job `outputs` maps the step output · Step declares an `id`
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer
 
@@ -1110,6 +1314,8 @@ Step writes to `$GITHUB_OUTPUT` · Job `outputs` maps the step output · Step de
 **One more link than a composite action**, because a reusable workflow has a job layer that a
 composite action does not. Compare Q32 (four links, `steps`) with this (five links, `steps` → `jobs`).
 
+</details>
+
 ---
 
 ## Q34
@@ -1117,6 +1323,9 @@ composite action does not. Compare Q32 (four links, `steps`) with this (five lin
 Arrange these template files by the level at which they are inserted, from innermost to outermost.
 
 **Items:** `stages/deploy-container-app.yml` · `steps/dotnet-build.yml` · `jobs/docker-build-push.yml`
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: steps → jobs → stages
 
@@ -1140,11 +1349,28 @@ single `-`; the job template is nested one level; the step template two.
 
 Directory layout at lines **802–816** mirrors this: `stages/`, `jobs/`, `steps/`, `variables/`.
 
+</details>
+
 ---
 
 ## Q35
 
 Match each requirement to the correct mechanism.
+
+| Requirement | Mechanism |
+|---|---|
+| Share a whole build-test-deploy pipeline across ten repos |  |
+| Share six setup steps inside an existing job |  |
+| Share a deploy **stage** across Azure Pipelines |  |
+| Share values that differ per environment |  |
+| Prevent a shared definition changing without warning |  |
+| Restrict a parameter to `quick` or `full` |  |
+| Repeat a task input once per list item |  |
+
+**Options:** `${{ each }}` · Composite action · Environment-scoped variable group · Pin to a tag · Reusable workflow · Stage template · `type: string` with `values`
+
+<details>
+<summary>Show answer</summary>
 
 | Requirement | Mechanism |
 |---|---|
@@ -1161,6 +1387,8 @@ Match each requirement to the correct mechanism.
 **Row 4 in detail (lines 651–669):** `contoso-staging` and `contoso-production` define the **same
 variable names** with different values. The template writes `$(ResourceGroup)` once and each stage
 resolves it differently — the same pattern as GitHub environment secrets.
+
+</details>
 
 ---
 
@@ -1189,12 +1417,17 @@ on:
 - **BLANK 2:** `secrets` / `env` / `with` / `vars`
 - **BLANK 3:** `jobs` / `steps` / `needs` / `inputs`
 
+<details>
+<summary>Show answer</summary>
+
 ### Answer: `workflow_call`, `secrets`, `jobs`
 
 **In `challenge-23.md`:** lines **43**, **68**, **82**.
 
 BLANK 3 is the one to get right: a reusable workflow's outputs come from the **`jobs`** context,
 because a workflow is made of jobs. A composite action would use `steps`.
+
+</details>
 
 ---
 
@@ -1213,12 +1446,17 @@ jobs:
 - **BLANK 2:** `with` / `inputs` / `parameters` / `env`
 - **BLANK 3:** `secrets` / `env` / `permissions` / `vars`
 
+<details>
+<summary>Show answer</summary>
+
 ### Answer: `uses`, `with`, `secrets`
 
 **In `challenge-23.md`:** lines **236–246** and **846**.
 
 Note there is **no `runs-on`** in this job — the giveaway from Q27. `template` and `parameters` are
 Azure Pipelines words; `extends` too.
+
+</details>
 
 ---
 
@@ -1242,12 +1480,17 @@ name: ".NET build and test"
 - **BLANK 2:** `shell` / `run-with` / `interpreter` / `env`
 - **BLANK 3:** `outputs` / `returns` / `exports` / `results`
 
+<details>
+<summary>Show answer</summary>
+
 ### Answer: `runs`, `shell`, `outputs`
 
 **In `challenge-23.md`:** lines **282**, **291**, **274**.
 
 An action file has exactly these top-level keys: `name`, `description`, `inputs`, `outputs`, `runs`.
 No `on`, no `jobs`.
+
+</details>
 
 ---
 
@@ -1269,6 +1512,9 @@ stages:
 - **BLANK 2:** `refs/tags/v2.1.0` / `v2.1.0` / `main` / `HEAD`
 - **BLANK 3:** `@shared-templates` / `@ContosoOrg` / `#shared-templates` / `/shared-templates`
 
+<details>
+<summary>Show answer</summary>
+
 ### Answer: `git`, `refs/tags/v2.1.0`, `@shared-templates`
 
 **In `challenge-23.md`:** lines **788–793**.
@@ -1280,6 +1526,8 @@ BLANK 2 combines two lessons: the ref must be a **full path** (Break & fix Exerc
 a **tag** is the stable choice (line 790).
 
 BLANK 3 uses the **alias**, not the repository name.
+
+</details>
 
 ---
 
@@ -1304,6 +1552,9 @@ steps:
 - **BLANK 1:** `object` / `string` / `array` / `list`
 - **BLANK 2:** `each` / `for` / `foreach` / `loop`
 
+<details>
+<summary>Show answer</summary>
+
 ### Answer: `object`, `each`
 
 **In `challenge-23.md`:** lines **421–425** and **447**.
@@ -1312,6 +1563,8 @@ steps:
 the only iteration keyword, and it expands YAML at **compile time**.
 
 Passing a string here is Break & fix Exercise 2 (line 869).
+
+</details>
 
 ---
 
@@ -1334,6 +1587,9 @@ steps:
 - **BLANK 1:** `values` / `options` / `allowed` / `enum`
 - **BLANK 2:** `if` / `when` / `condition` / `case`
 
+<details>
+<summary>Show answer</summary>
+
 ### Answer: `values`, `if`
 
 **In `challenge-23.md`:** lines **716** and **733**.
@@ -1341,6 +1597,8 @@ steps:
 `options` is GitHub Actions `workflow_dispatch` vocabulary. `condition:` exists in Azure Pipelines
 but is a **runtime** key on a step — it skips the step. `${{ if }}` is **compile-time** and removes
 the step entirely. That distinction was Challenge 20 Q21 and it recurs here.
+
+</details>
 
 ---
 
@@ -1383,6 +1641,9 @@ Which mechanism meets the standardisation requirement for the ten Node services?
 - C. A starter workflow
 - D. A shared branch merged into each repository
 
+<details>
+<summary>Show answer</summary>
+
 ### Answer: A
 
 **In `challenge-23.md`:** lines **42–85** and **234–245**.
@@ -1397,6 +1658,8 @@ only reusable workflows can contribute jobs.
   solved
 - **D** — merging a branch into thirteen repos is copying with extra steps
 
+</details>
+
 ---
 
 ## Q43
@@ -1407,6 +1670,9 @@ Which mechanism meets the .NET requirement?
 - B. A composite action
 - C. A stage template
 - D. A task group
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: B
 
@@ -1423,6 +1689,8 @@ structure."* Shared steps, own jobs → composite action.
 **Q42 and Q43 together are the whole challenge.** Same organisation, same shared repository,
 different mechanism — because one shares a graph and the other shares a sequence.
 
+</details>
+
 ---
 
 ## Q44
@@ -1433,6 +1701,9 @@ Which configuration meets the governance requirement about opting in to changes?
 - B. Reference the shared workflow with `@main`
 - C. Require a pull request review on the shared repository
 - D. Copy the workflow into each repository
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -1448,6 +1719,8 @@ Which configuration meets the governance requirement about opting in to changes?
 **How teams opt in:** bump the ref to `@v3` when they are ready. That is a normal pull request in
 their own repository, reviewable and revertible.
 
+</details>
+
 ---
 
 ## Q45
@@ -1458,6 +1731,9 @@ Which parameter definition meets the security-scan requirement?
 - B. `type: choice` with `options: [quick, full]`
 - C. `type: string` with `default: "full"` only
 - D. `type: object` with a list of allowed values
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -1481,6 +1757,8 @@ Anything else fails at **compile time**, before an agent is allocated.
 - **C** — a default applies when the parameter is omitted. It does not reject a wrong value
 - **D** — `object` accepts a list but validates nothing
 
+</details>
+
 ---
 
 ## Q46
@@ -1492,6 +1770,9 @@ different resource groups. What should they build?
 - B. One stage template with parameters, referenced twice
 - C. One stage template plus two variable groups only
 - D. A step template called from both stages
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: B
 
@@ -1522,6 +1803,8 @@ different resource groups. What should they build?
 two different positions in the graph — and it is why production waits for staging, satisfying the
 third governance requirement.
 
+</details>
+
 ---
 
 ## Q47
@@ -1536,6 +1819,9 @@ Which **two** causes are most likely? (Choose two.)
 - C. The template repository was not checked out at runtime
 - D. The pipeline lacks a service connection for Azure Repos
 - E. The template uses `type: object` parameters
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A, B
 
@@ -1560,6 +1846,8 @@ Which **two** causes are most likely? (Choose two.)
 **Reading errors precisely pays off:** *file not found* = resolution or ref. *Unexpected value* =
 parameter type. *Permission denied* = endpoint or scope.
 
+</details>
+
 ---
 
 ## Q48
@@ -1574,6 +1862,9 @@ What is the correct fix, and what does this illustrate?
 - B. Switch that team back to `@main`
 - C. Make the secret optional in the reusable workflow
 - D. Use `secrets: inherit` in every consuming repository
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -1600,6 +1891,8 @@ are a contract**, and bumping the ref means accepting the new version of that co
 **What it illustrates:** version pinning worked exactly as designed. Three teams were insulated from
 a breaking change, and the fourth adopted it deliberately with a visible, fixable failure. That is
 the argument for pinning, stated as an outcome rather than a rule.
+
+</details>
 
 ---
 ---

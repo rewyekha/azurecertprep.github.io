@@ -1,6 +1,8 @@
 ---
-sidebar_position: 92
+sidebar_position: 2.5
+toc_max_heading_level: 2
 title: "Challenge 40: exam questions"
+sidebar_label: "Exam questions (48 Q)"
 ---
 
 # Challenge 40 — AZ-400 exam questions
@@ -42,6 +44,9 @@ A workflow must create a deployment in the current repository **and** trigger a 
 - C. A GitHub App installation token
 - D. A fine-grained PAT owned by the team lead
 
+<details>
+<summary>Show answer</summary>
+
 ### Answer: C
 
 **In `challenge-40.md`:** lines **72** and **116–122**.
@@ -68,6 +73,8 @@ key changes that — `permissions` tunes what the token may do *here*, never *wh
   is still **tied to a person**. GitHub Apps are the answer for automation because they are owned by
   the organisation and carry their own audit identity
 
+</details>
+
 ---
 
 ## Q2
@@ -78,6 +85,9 @@ Which statement about `GITHUB_TOKEN` is correct?
 - B. Its permissions are fixed and cannot be customised per workflow
 - C. It persists across runs so it can be reused for caching
 - D. It cannot push commits when branch protection requires pull-request reviews
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: D
 
@@ -98,6 +108,8 @@ Which statement about `GITHUB_TOKEN` is correct?
 - **B** — the `permissions` key exists precisely to customise it (lines 38–41)
 - **C** — it expires when the job completes. There is nothing to persist
 
+</details>
+
 ---
 
 ## Q3
@@ -109,6 +121,9 @@ organisation. Which token type supports an org-enforced maximum lifetime?
 - B. Fine-grained PATs
 - C. Both classic and fine-grained PATs
 - D. `GITHUB_TOKEN` and fine-grained PATs
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: B
 
@@ -128,6 +143,8 @@ tokens set to *no expiration* (line 17). For fine-grained PATs the organisation 
 *org-enforced lifetime policy*; it is built-in behaviour with nothing to configure. The question asks
 which type the organisation can enforce a maximum on.
 
+</details>
+
 ---
 
 ## Q4
@@ -139,6 +156,9 @@ able to change code. Which role fits?
 - B. Organization Member with Write on every repository
 - C. Security Manager
 - D. Triage on each repository
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: C
 
@@ -159,6 +179,8 @@ those two things.
 - **D** — Triage manages issues and pull requests (line 274), not security alerts, and it would have to
   be granted repository by repository
 
+</details>
+
 ---
 
 ## Q5
@@ -170,6 +192,9 @@ update workflow files."* What is happening?
 - B. `GITHUB_TOKEN` can never modify files under `.github/workflows/`
 - C. The runner has no git credentials
 - D. The branch does not exist
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: B
 
@@ -187,6 +212,8 @@ could rewrite workflow files could rewrite its own permissions and then do anyth
 **not** unlock `.github/workflows/` — that is a separate hard rule, which is why the fix at lines
 308–327 swaps in a **GitHub App token**.
 
+</details>
+
 ---
 
 ## Q6
@@ -197,6 +224,9 @@ Which is the correct fix for the failing formatter workflow?
 - B. Use a GitHub App token and add the app to the branch protection bypass list
 - C. Disable branch protection on `main`
 - D. Commit with `--no-verify`
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: B
 
@@ -222,6 +252,8 @@ the protection rule.
 - **D** — `--no-verify` skips **local** git hooks. Branch protection is enforced server-side and never
   sees it
 
+</details>
+
 ---
 
 ## Q7
@@ -233,6 +265,9 @@ most likely cause?
 - B. The installation's repository access is "Selected repositories" and this repo is not included
 - C. Installation tokens cannot access private repositories
 - D. The app needs `admin:org` scope
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: B
 
@@ -255,6 +290,8 @@ outside its scope returns **404** instead (line 151), because GitHub hides what 
 - **C** — installation tokens access private repositories routinely; that is their job
 - **D** — `admin:org` is classic-PAT vocabulary. Apps use named permissions such as Members: read
 
+</details>
+
 ---
 
 ## Q8
@@ -265,6 +302,9 @@ Which permissions does a GitHub App need to publish CI build status, and nothing
 - B. Contents: write, Pull requests: write
 - C. Administration: write
 - D. Deployments: write, Environments: read
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -280,6 +320,8 @@ Which permissions does a GitHub App need to publish CI build status, and nothing
 appears in none of them. **Administration is repository settings**: it could remove branch protection,
 which is not something a status reporter should ever be able to do.
 
+</details>
+
 ---
 
 ## Q9
@@ -290,6 +332,9 @@ Which permission set matches a **deployment** app?
 - B. Contents: write, Checks: write
 - C. Members: read
 - D. Security events: read, Contents: read
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -303,6 +348,8 @@ an environment but never edits it.
 **Why the others fail** — C is the team-notifications row (line 170), D is the security-scanning row
 (line 171), and B mixes build status with write access it does not need.
 
+</details>
+
 ---
 
 ## Q10
@@ -314,6 +361,9 @@ Fine-grained PAT `contoso-ci-readonly` is scoped to `contoso/webapp` and `contos
 - B. 403 Forbidden
 - C. 404 Not Found
 - D. 401 Unauthorized
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: C
 
@@ -332,6 +382,8 @@ resources a credential is not scoped to — a 403 would leak the fact that `othe
 lab.** 401 = the token is invalid or missing. 403 = valid token, recognised resource, action refused
 (Q7). 404 = out of scope, and GitHub is not telling you anything more.
 
+</details>
+
 ---
 
 ## Q11
@@ -342,6 +394,9 @@ Which organisation setting **removes** classic PATs as an access route?
 - B. Require approval of fine-grained personal access tokens: Enable
 - C. Workflow permissions: Read repository contents
 - D. Restrict access via fine-grained personal access tokens: Allow
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -354,6 +409,8 @@ working the moment it is applied, whether or not anyone remembers they exist.
 and C is about `GITHUB_TOKEN`'s defaults, an unrelated dial. All three are correct things to configure,
 and none of them revokes a classic PAT.
 
+</details>
+
 ---
 
 ## Q12
@@ -364,6 +421,9 @@ Which two settings appear under Organization Settings > Actions > General to har
 - B. Fine-grained PAT approval and classic PAT restriction
 - C. Branch protection and required reviewers
 - D. Secret scanning and push protection
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -381,6 +441,8 @@ ever looking. Unchecking it closes that self-approval loop.
 **Why B is the near-miss** — those are the right controls, on the wrong page. PAT policy lives under
 Organization Settings > Personal access tokens (line 156).
 
+</details>
+
 ---
 
 ## Q13
@@ -392,6 +454,9 @@ A workflow declares `permissions: contents: read` at the top, and its `test` job
 - B. `contents: read` and `checks: write`
 - C. All scopes, because the job overrides with write
 - D. The workflow-level block is invalid when a job also declares one
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: B
 
@@ -415,6 +480,8 @@ no contents access at all, and `actions/checkout` would fail.
 **That repetition is not redundancy. It is the whole mechanic**, and the exam tests it by deleting the
 repeated line and asking what breaks.
 
+</details>
+
 ---
 
 ## Q14
@@ -425,6 +492,9 @@ Why does the `deploy` job add `id-token: write`?
 - B. To request an OIDC token for `azure/login`
 - C. To write to the GitHub Packages registry
 - D. To create a deployment status
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: B
 
@@ -450,6 +520,8 @@ option D's job, and it is already in the block.
 **The absence of `client-secret`** under `azure/login` is the confirmation that this is OIDC rather
 than a stored credential.
 
+</details>
+
 ---
 
 ## Q15
@@ -461,6 +533,9 @@ in the **same** repository?
 - B. It cannot trigger other workflows
 - C. It is scoped to the repository
 - D. Its permissions cannot include `actions: write`
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: B
 
@@ -480,6 +555,8 @@ here — the target workflow **is** in this repository. The obstacle is the anti
 **The fix, when you genuinely need the chain**, is a GitHub App token — or `workflow_run`, which is
 designed for exactly this and is not blocked (Challenge 21).
 
+</details>
+
 ---
 
 ## Q16
@@ -490,6 +567,9 @@ Contoso must let a contractor work on `contoso/webapp` and nothing else. Which i
 - B. Add them as an Outside collaborator on that repository
 - C. Grant them the Security Manager role
 - D. Make them a Billing manager
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: B
 
@@ -511,6 +591,8 @@ repositories and gives no organisation membership, no team visibility, and no vi
 of the organisation, visible in it, and eligible for every team-based grant. That is broader than the
 requirement, and it survives long after the contract ends unless someone remembers to remove it.
 
+</details>
+
 ---
 
 # Section B — Multiple answer
@@ -527,6 +609,9 @@ Which **three** are true of `GITHUB_TOKEN`? (Choose three.)
 - D. It can access other repositories in the organisation
 - E. It can trigger other workflows
 - F. It must be created in Settings before first use
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A, B, C
 
@@ -545,6 +630,8 @@ Which **three** are true of `GITHUB_TOKEN`? (Choose three.)
 "no manual setup required" — there is nothing to create, which is precisely why it is the default
 choice for single-repository automation.
 
+</details>
+
 ---
 
 ## Q18
@@ -556,6 +643,9 @@ Which **two** are advantages of a GitHub App over a personal access token for au
 - C. It never needs any permissions configured
 - D. It can bypass all branch protection rules by default
 - E. It works without any credential of any kind
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A, B
 
@@ -575,6 +665,8 @@ secret in a variable.
 - **E** — the app still has a **private key** (`secrets.CONTOSO_APP_PRIVATE_KEY`, line 108). It is one
   well-protected credential in place of many scattered ones, not zero credentials
 
+</details>
+
 ---
 
 ## Q19
@@ -587,6 +679,9 @@ Which **three** should Contoso configure to end the orphaned-classic-PAT problem
 - D. Extend the classic PATs' expiry to 12 months
 - E. Share one fine-grained PAT across all 15 repositories
 - F. Give every developer Owner so nobody is blocked
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A, B, C
 
@@ -603,6 +698,8 @@ requirement is what drove someone to a `repo`-scoped classic PAT originally.
   repositories, one blast radius
 - **F** — the opposite of least privilege, and line 249 caps Owners at two or three people
 
+</details>
+
 ---
 
 ## Q20
@@ -615,6 +712,9 @@ two.)
 - C. Member
 - D. Owner
 - E. Outside collaborator with `push`
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A, B
 
@@ -629,6 +729,8 @@ alerts, with no write.** They are the two "wide but shallow" roles.
 - **D** — Owner is full administrative access
 - **E** — `push` **is** write, and the `--field permission=push` at line 264 spells it out
 
+</details>
+
 ---
 
 ## Q21
@@ -640,6 +742,9 @@ Which **two** are true about fine-grained PATs as configured in Task 3? (Choose 
 - C. They are owned by the organisation rather than a user
 - D. They cannot be given write permissions
 - E. They have no expiry
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A, B
 
@@ -664,6 +769,8 @@ GitHub adds it to every fine-grained PAT.
 - **D** — line 141 grants Pull requests: Read and write
 - **E** — line 135 sets 30 days, described as the maximum recommended for automation
 
+</details>
+
 ---
 
 ## Q22
@@ -676,6 +783,9 @@ Which **two** conditions cause a `GITHUB_TOKEN` push to fail? (Choose two.)
 - D. The repository is private
 - E. The runner is `ubuntu-latest`
 
+<details>
+<summary>Show answer</summary>
+
 ### Answer: A, B
 
 **In `challenge-40.md`:** line **302**.
@@ -686,6 +796,8 @@ setting, permission or branch makes it work.
 
 **Why C is the trap.** `contents: write` is what you would add, and it is necessary for a normal push.
 It is simply not sufficient for either of these two.
+
+</details>
 
 ---
 
@@ -698,6 +810,9 @@ Which **two** permissions belong in the `deploy` job of the least-privilege work
 - C. `checks: write`
 - D. `packages: write`
 - E. `administration: write`
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A, B
 
@@ -719,6 +834,8 @@ results. Correct permission, wrong job, and moving it into `deploy` would widen 
 **D and E appear nowhere** in the challenge. Note that `administration: write` would let a job edit the
 repository's own protection rules — never a deployment job's business.
 
+</details>
+
 ---
 
 # Section C — Repeated scenario
@@ -736,7 +853,10 @@ use case, install it on the required repositories, generate installation tokens 
 `actions/create-github-app-token@v1`, set classic PATs to **Do not allow**, and require approval for
 fine-grained PATs.
 
-Does this meet the goal? **Yes**
+Does this meet the goal?
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: Yes
 
@@ -753,6 +873,8 @@ Does this meet the goal? **Yes**
 **The last row is what makes it a fix rather than an addition.** Building the replacement without
 revoking the originals leaves three unexpiring `admin:org` tokens live — the finding stays open.
 
+</details>
+
 ---
 
 ## Q25
@@ -761,7 +883,10 @@ revoking the originals leaves three unexpiring `admin:org` tokens live — the f
 repositories, 90-day expiry, and Contents plus Pull requests write. Store it as an organisation secret.
 Leave classic PATs allowed for backward compatibility.
 
-Does this meet the goal? **No**
+Does this meet the goal?
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: No
 
@@ -777,6 +902,8 @@ specific automation. The audit trail says "svc-contoso did it" for all 15 reposi
 **One credential across 15 repositories is the original blast radius**, reduced only from *every*
 repository to *fifteen*. The Q19 trap, restated.
 
+</details>
+
 ---
 
 ## Q26
@@ -785,7 +912,10 @@ repository to *fifteen*. The Q19 trap, restated.
 repositories, use installation tokens in workflows, and set classic PATs to **Do not allow**. Grant the
 app Administration: write so it can never be blocked by a repository setting.
 
-Does this meet the goal? **No**
+Does this meet the goal?
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: No
 
@@ -806,6 +936,8 @@ five rows contains Administration.
 **Compare with Q24, which is identical minus this line.** One added permission turns a passing design
 into a failing one — and the exam builds Yes/No triplets exactly this way.
 
+</details>
+
 ---
 
 # Section D — Yes/No statement grid
@@ -813,6 +945,16 @@ into a failing one — and the exam builds Yes/No triplets exactly this way.
 ---
 
 ## Q27 — GITHUB_TOKEN behaviour
+
+| # | Statement | Answer |
+|---|---|---|
+| 1 | It is created automatically for every workflow run |  |
+| 2 | It can read a second repository if given `contents: read` |  |
+| 3 | It expires when the job completes |  |
+| 4 | It can update files under `.github/workflows/` |  |
+
+<details>
+<summary>Show answer</summary>
 
 | # | Statement | Answer |
 |---|---|---|
@@ -828,9 +970,21 @@ Row 2 is the single most-tested misconception in this challenge. **Permissions c
 
 Row 4 has no exception, no setting, and no permission that unlocks it.
 
+</details>
+
 ---
 
 ## Q28 — tokens and ownership
+
+| # | Statement | Answer |
+|---|---|---|
+| 1 | A fine-grained PAT is owned by the user who created it |  |
+| 2 | A GitHub App is owned by the organisation |  |
+| 3 | An organisation can enforce a maximum lifetime on classic PATs |  |
+| 4 | An organisation can block classic PATs entirely |  |
+
+<details>
+<summary>Show answer</summary>
 
 | # | Statement | Answer |
 |---|---|---|
@@ -846,9 +1000,21 @@ switch them off.**
 
 Row 1 is why Q1 chose an app over a fine-grained PAT even though both can reach two repositories.
 
+</details>
+
 ---
 
 ## Q29 — roles
+
+| # | Statement | Answer |
+|---|---|---|
+| 1 | Security Manager gives read across all repositories |  |
+| 2 | Triage can push code |  |
+| 3 | Maintain can delete the repository |  |
+| 4 | Outside collaborator is limited to named repositories |  |
+
+<details>
+<summary>Show answer</summary>
 
 | # | Statement | Answer |
 |---|---|---|
@@ -864,9 +1030,21 @@ Admin.
 
 Row 2: Triage manages issues and pull requests without code write — the "helpful but harmless" role.
 
+</details>
+
 ---
 
 ## Q30 — the permissions key
+
+| # | Statement | Answer |
+|---|---|---|
+| 1 | A job-level `permissions` block replaces the workflow-level one |  |
+| 2 | Omitting `contents: read` in a job that overrides permissions breaks `checkout` |  |
+| 3 | `id-token: write` is required for OIDC login to Azure |  |
+| 4 | Organisation defaults can force read-only workflow permissions |  |
+
+<details>
+<summary>Show answer</summary>
 
 | # | Statement | Answer |
 |---|---|---|
@@ -883,6 +1061,8 @@ on "there must be a No in here" talks themselves out of a correct row.
 Row 4 is the organisation acting as a floor: the default becomes read-only, and any workflow needing
 more must **ask for it in writing** in its own `permissions` block.
 
+</details>
+
 ---
 
 # Section E — Drag and drop
@@ -892,6 +1072,19 @@ more must **ask for it in writing** in its own `permissions` block.
 ## Q31
 
 Match each automation requirement to the correct credential.
+
+| Requirement | Credential |
+|---|---|
+| Create an issue in the current repository |  |
+| Trigger a workflow in another repository |  |
+| A developer's local script reading two repositories |  |
+| Push to a branch that requires reviews |  |
+| Publish a check run from CI |  |
+
+**Options:** Fine-grained PAT · GitHub App installation token · GitHub App token + bypass entry · `GITHUB_TOKEN` · `GITHUB_TOKEN` with `checks: write`
+
+<details>
+<summary>Show answer</summary>
 
 | Requirement | Credential |
 |---|---|
@@ -907,11 +1100,26 @@ Match each automation requirement to the correct credential.
 Stay inside with no human → `GITHUB_TOKEN`. Leave the repository → App. A human at a keyboard →
 fine-grained PAT.
 
+</details>
+
 ---
 
 ## Q32
 
 Match each GitHub App use case to its minimum permissions.
+
+| Use case | Permissions |
+|---|---|
+| CI build status |  |
+| Auto-merge pull requests |  |
+| Deployment |  |
+| Team notifications |  |
+| Security scanning |  |
+
+**Options:** Checks: write, Contents: read · Deployments: write, Contents: read, Environments: read · **Members: read** (organisation) · Pull requests: write, Contents: write · Security events: read, Contents: read
+
+<details>
+<summary>Show answer</summary>
 
 | Use case | Permissions |
 |---|---|
@@ -927,6 +1135,8 @@ Match each GitHub App use case to its minimum permissions.
 the branch. And only team notifications needs an **organisation** permission; everything else is
 repository-scoped.
 
+</details>
+
 ---
 
 ## Q33
@@ -936,6 +1146,9 @@ Arrange the steps to replace a classic PAT with a GitHub App for cross-repositor
 **Items:** Add the app-token step to the workflow · Create the GitHub App with minimum permissions ·
 Set classic PATs to Do not allow · Install the app on the required repositories · Store the private key
 as a secret and the app ID as a variable
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer
 
@@ -952,11 +1165,26 @@ then close the old door.
 **Note the split at step 3:** the app ID goes in `vars`, the private key in `secrets`. The ID is not
 sensitive; the key is the credential.
 
+</details>
+
 ---
 
 ## Q34
 
 Match each symptom to its cause.
+
+| Symptom | Cause |
+|---|---|
+| 404 from `gh api` on a repository that exists |  |
+| 403 from an installation token |  |
+| "refusing to allow a GitHub App to ... workflow files" |  |
+| A workflow cannot reach a sibling repository |  |
+| Automation broke when an employee left |  |
+
+**Options:** A user-owned PAT · `GITHUB_TOKEN` cannot write `.github/workflows/` · `GITHUB_TOKEN` is repository-scoped · Repository not in the app's installation · Repository outside the fine-grained PAT's scope
+
+<details>
+<summary>Show answer</summary>
 
 | Symptom | Cause |
 |---|---|
@@ -972,11 +1200,26 @@ Match each symptom to its cause.
 GitHub will not confirm the repository exists. App installation missing the repository → **403**,
 because the identity is recognised and simply not permitted there.
 
+</details>
+
 ---
 
 ## Q35
 
 Match each person to the correct role.
+
+| Person | Role |
+|---|---|
+| Platform lead who administers the organisation |  |
+| Every developer |  |
+| Finance analyst tracking Actions spend |  |
+| Security team reviewing Dependabot alerts |  |
+| Contractor working on one repository |  |
+
+**Options:** Billing manager · Member · Outside collaborator · Owner · Security manager
+
+<details>
+<summary>Show answer</summary>
 
 | Person | Role |
 |---|---|
@@ -990,6 +1233,8 @@ Match each person to the correct role.
 
 **Line 249 caps Owners at two or three people**, and that number is testable. The exam likes offering
 "add all senior engineers as Owners" and expecting you to reject it.
+
+</details>
 
 ---
 
@@ -1017,6 +1262,9 @@ jobs:
 - **BLANK 2:** `write` / `read` / `none` / `triage`
 - **BLANK 3:** `GITHUB_TOKEN` / `PAT` / `APP_TOKEN` / `ACTIONS_TOKEN`
 
+<details>
+<summary>Show answer</summary>
+
 ### Answer: `read`, `write`, `GITHUB_TOKEN`
 
 **In `challenge-40.md`:** lines **38–40** and **56**.
@@ -1032,6 +1280,8 @@ issue, so `contents` stays at `read` — creating an issue does not modify the r
 
 **And `secrets.GITHUB_TOKEN` needs no setup.** It appears in the `secrets` context automatically, which
 is why the trap options all look like things somebody would have had to create.
+
+</details>
 
 ---
 
@@ -1051,6 +1301,9 @@ is why the trap options all look like things somebody would have had to create.
 - **BLANK 2:** `private-key` / `password` / `client-secret` / `token`
 - **BLANK 3:** `owner` / `repository` / `org-id` / `tenant`
 
+<details>
+<summary>Show answer</summary>
+
 ### Answer: `app-id`, `private-key`, `owner`
 
 **In `challenge-40.md`:** lines **105–109**.
@@ -1060,6 +1313,8 @@ installation rather than just the current repository. Omit it and cross-reposito
 point of Task 2 — quietly disappears.
 
 **And notice the split again:** the ID comes from `vars`, the key from `secrets`.
+
+</details>
 
 ---
 
@@ -1075,6 +1330,9 @@ Requirement: a contractor must push code to this one repository and nothing else
 - **BLANK 1:** `PUT` / `POST` / `PATCH` / `GET`
 - **BLANK 2:** `push` / `admin` / `pull` / `maintain`
 
+<details>
+<summary>Show answer</summary>
+
 ### Answer: `PUT`, `push`
 
 **In `challenge-40.md`:** lines **263–264**.
@@ -1084,6 +1342,8 @@ requests. `pull` would be read-only and would not meet "must push"; `admin` and 
 
 **`PUT` because the call is idempotent** — adding a collaborator who is already there is not an error,
 which matters when the command runs from a script.
+
+</details>
 
 ---
 
@@ -1099,6 +1359,9 @@ gh api orgs/contoso/custom-repository-roles -X POST \
 
 - **BLANK 1:** `base_role` / `parent_role` / `inherits` / `template`
 - **BLANK 2:** `manage_deploy_keys` / `delete_repository` / `admin` / `bypass_branch_protection`
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: `base_role`, `manage_deploy_keys`
 
@@ -1118,6 +1381,8 @@ capabilities — it cannot subtract from the base, so choose the smallest base t
 `admin` is a role rather than a permission, and `bypass_branch_protection` would let a Release Manager
 push straight past review — undoing Break scenario 1's careful, named exception.
 
+</details>
+
 ---
 
 ## Q40
@@ -1133,6 +1398,9 @@ gh api /app/installations --jq '.[].[BLANK 2]'
 - **BLANK 1:** `/app` / `/user` / `/orgs/contoso` / `/installation`
 - **BLANK 2:** `repository_selection` / `permissions` / `account.login` / `target_type`
 
+<details>
+<summary>Show answer</summary>
+
 ### Answer: `/app`, `repository_selection`
 
 **In `challenge-40.md`:** lines **174–178**.
@@ -1143,6 +1411,8 @@ gh api /app/installations --jq '.[].[BLANK 2]'
 
 **If it returns `selected`, that is your answer**, and the follow-up at line 341 lists exactly which
 repositories are in.
+
+</details>
 
 ---
 
@@ -1163,6 +1433,9 @@ repositories are in.
 - **BLANK 1:** `read` / `write` / `none`
 - **BLANK 2:** `checks` / `issues` / `pull-requests` / `statuses`
 
+<details>
+<summary>Show answer</summary>
+
 ### Answer: `read`, `checks`
 
 **In `challenge-40.md`:** lines **206–218**.
@@ -1173,6 +1446,8 @@ block replaces the workflow-level one rather than merging with it (Q13). Delete 
 
 **`checks: write` is what `dorny/test-reporter` needs** to publish a check run. `statuses: write` is the
 older commit-status API and is not what this action uses.
+
+</details>
 
 ---
 
@@ -1218,6 +1493,9 @@ Which credential should single-repository workflows use?
 - C. The existing classic PAT until migration completes
 - D. A GitHub App installation token
 
+<details>
+<summary>Show answer</summary>
+
 ### Answer: A
 
 **In `challenge-40.md`:** lines **66–70** and **192–208**.
@@ -1232,6 +1510,8 @@ repository, and expires with the job — three requirements met by doing nothing
 - **D** — correct for cross-repository work and unnecessary overhead here. **The exam rewards the
   *narrowest* mechanism that meets the requirement**, not the most capable one
 
+</details>
+
 ---
 
 ## Q43
@@ -1242,6 +1522,9 @@ Which credential should the cross-repository deployment bot use?
 - B. A fine-grained PAT under a shared service account
 - C. `GITHUB_TOKEN` with `contents: write`
 - D. A classic PAT with a 90-day expiry
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -1257,6 +1540,8 @@ individual.
 - **C** — `GITHUB_TOKEN` cannot leave the repository. No permission changes that
 - **D** — reintroduces the exact object being removed, with a shorter fuse
 
+</details>
+
 ---
 
 ## Q44
@@ -1267,6 +1552,9 @@ How should the formatter workflow push to a protected `main`?
 - B. Add `contents: write` to `GITHUB_TOKEN`
 - C. Remove the review requirement from `main`
 - D. Push to a side branch and let the bot approve its own pull request
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -1279,6 +1567,8 @@ bypass entry supplies the permission. Either alone fails.
 pushing — but the *bot approving its own PR* is precisely what the last requirement forbids, and it is
 disabled at the organisation level by line 243. A pull request nobody looked at is not a review.
 
+</details>
+
 ---
 
 ## Q45
@@ -1290,6 +1580,9 @@ Which **two** access decisions satisfy the Access requirements? (Choose two.)
 - C. Organization Member with write on all repositories for the security team
 - D. Owner for the release team
 - E. Admin repository role for contractors
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A, B
 
@@ -1305,6 +1598,8 @@ security team, and narrow named access for contractors.
   Owner cap at line 249
 - **E** — repository administration for a contractor, including deletion
 
+</details>
+
 ---
 
 ## Q46
@@ -1315,6 +1610,9 @@ How should the release team's requirement be met?
 - B. The Admin repository role
 - C. The Maintain repository role
 - D. Organization Owner
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -1333,6 +1631,8 @@ two named capabilities, without jumping to the next role up and inheriting every
 grants more than releases and deploy keys, and you cannot trim it. B and D are progressively worse for
 the same reason.
 
+</details>
+
 ---
 
 ## Q47
@@ -1347,6 +1647,9 @@ What happened, and what is the fix?
 - B. The app's private key expired — regenerate it
 - C. `GITHUB_TOKEN` lost `contents: read` — restore it
 - D. The organisation blocked classic PATs — re-enable them
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -1372,6 +1675,8 @@ into.
   reached it
 - **D** — classic PATs are not involved, and re-enabling them would reopen the original finding
 
+</details>
+
 ---
 
 ## Q48
@@ -1385,6 +1690,9 @@ What can Contoso now produce that it could not before, and what does this illust
 - B. Nothing; app actions are not logged
 - C. The workflow run log only, which is what it always had
 - D. The classic PAT's usage history
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -1405,6 +1713,8 @@ credential that performed the action no longer exists to be misused.
 
 **And that is the sentence to give an exam case study that asks "why replace working PATs?"** — the
 tokens were never the deliverable. Attribution was.
+
+</details>
 
 ---
 ---

@@ -1,6 +1,8 @@
 ---
-sidebar_position: 94
+sidebar_position: 4.5
+toc_max_heading_level: 2
 title: "Challenge 22: exam questions"
+sidebar_label: "Exam questions (48 Q)"
 ---
 
 # Challenge 22 — AZ-400 exam questions
@@ -47,6 +49,9 @@ Why?
 - C. Path filters require `fetch-depth: 0`
 - D. Path filters only work on pull requests
 
+<details>
+<summary>Show answer</summary>
+
 ### Answer: A
 
 **In `challenge-22.md`:** Break & fix Exercise 1, lines **774–801**.
@@ -81,6 +86,8 @@ The same pattern appears in the real backend workflow at lines **93–95**.
 **Azure Pipelines is different (lines 164–170):** it uses `paths: include:` **and** `exclude:`
 together, which is perfectly legal there. Two platforms, opposite rules — a favourite exam pairing.
 
+</details>
+
 ---
 
 ## Q2
@@ -91,6 +98,9 @@ Which Azure Pipelines schedule setting causes a scheduled run even when no code 
 - B. `batch: true`
 - C. `enabled: true`
 - D. `trigger: none`
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -120,6 +130,8 @@ things a build does not — hence `always: true`.
 **GitHub Actions has no `always` equivalent.** Its `schedule` triggers always run, but GitHub
 **disables scheduled workflows in repositories with 60 days of no activity**.
 
+</details>
+
 ---
 
 ## Q3
@@ -133,6 +145,9 @@ What is the cause?
 - B. The schedule branch is not included in the pipeline's trigger branches
 - C. Schedules require `always: true`
 - D. Scheduled pipelines must use `trigger: none`
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: B
 
@@ -164,6 +179,8 @@ and consider `always: true`.
 
 **The general lesson:** a schedule can only run on a branch the pipeline actually knows about.
 
+</details>
+
 ---
 
 ## Q4
@@ -174,6 +191,9 @@ Which GitHub Actions trigger starts a workflow when another workflow finishes?
 - B. `workflow_run`
 - C. `workflow_dispatch`
 - D. `repository_dispatch`
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: B
 
@@ -203,6 +223,8 @@ Omit that `if` and you deploy after a failed build. That is a classic exam trap 
 - **C** — `workflow_dispatch` is the manual button (line 687)
 - **D** — `repository_dispatch` fires from an external API call
 
+</details>
+
 ---
 
 ## Q5
@@ -214,6 +236,9 @@ tested?
 - B. `github.event.workflow_run.head_sha`
 - C. `github.ref`
 - D. `github.event.head_commit.id`
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: B
 
@@ -239,6 +264,8 @@ passed CI.
 **Other useful fields:** `workflow_run.name`, `workflow_run.head_branch`, `workflow_run.conclusion`
 (lines 346–353).
 
+</details>
+
 ---
 
 ## Q6
@@ -249,6 +276,9 @@ In Azure Pipelines, how do you trigger a pipeline when another pipeline complete
 - B. A `dependsOn` referencing the other pipeline
 - C. A `schedules` entry synchronised to the other pipeline
 - D. A `workflow_run` trigger
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -283,6 +313,8 @@ resources:
         artifact: drop
 ```
 
+</details>
+
 ---
 
 ## Q7
@@ -293,6 +325,9 @@ Which matrix option lets every leg finish even when one fails?
 - B. `fail-fast: false`
 - C. `max-parallel: 1`
 - D. `if: always()`
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: B
 
@@ -321,6 +356,8 @@ broke.
 **The distinction to keep:** `fail-fast: false` = *let them all run and report honestly*.
 `continue-on-error` = *pretend it passed*.
 
+</details>
+
 ---
 
 ## Q8
@@ -334,6 +371,9 @@ How many jobs run?
 - B. 8
 - C. 9
 - D. 12
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: B
 
@@ -365,6 +405,8 @@ exists, so it gains `coverage: true` — used at line 550:
 
 If an `include` entry matched nothing, it **would** add a job. That difference is exam material.
 
+</details>
+
 ---
 
 ## Q9
@@ -375,6 +417,9 @@ Which Azure Pipelines matrix setting limits how many legs run at once?
 - B. `fail-fast`
 - C. `parallel`
 - D. `batch`
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -406,6 +451,8 @@ defines its own variables, rather than being a cross-product of lists.
 **Practical link:** with one free parallel job (Challenge 21, line 47), `maxParallel: 3` would still
 queue. Matrix width is limited by purchased parallelism.
 
+</details>
+
 ---
 
 ## Q10
@@ -418,6 +465,9 @@ Which condition is correct?
 - B. `if: ${{ env.changed_frontend }}`
 - C. `if: steps.changes.outputs.frontend == 'true'`
 - D. `if: needs.build.result == 'true'`
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -450,6 +500,8 @@ Note the quotes: `$GITHUB_OUTPUT` values are **strings**. `true` and `'true'` ar
 **Why this pattern exists:** path filters decide whether the *workflow* runs. This decides which
 *jobs* run inside it — the monorepo problem Challenge 35 optimises further.
 
+</details>
+
 ---
 
 ## Q11
@@ -460,6 +512,9 @@ Which expression detects that any needed job failed?
 - B. `contains(needs.*.result, 'failure')`
 - C. `needs.result == 'failure'`
 - D. `always() && failed()`
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: B
 
@@ -489,6 +544,8 @@ upstream job failed — exactly when you need the notification most.
 - **C** — `needs.result` does not exist. Results are per-job
 - **D** — `failed()` is **Azure Pipelines** syntax. GitHub Actions uses `failure()`
 
+</details>
+
 ---
 
 ## Q12
@@ -501,6 +558,9 @@ Which condition achieves this?
 - B. `condition: always()`
 - C. `condition: not(canceled())`
 - D. `condition: eq(dependencies.status, 'any')`
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: B
 
@@ -535,6 +595,8 @@ Here `DeployProduction` only runs on a tag (line 659), so on a normal build it i
 - **C** — `canceled()` exists, but `not(canceled())` still excludes skipped dependencies
 - **D** — invented syntax
 
+</details>
+
 ---
 
 ## Q13
@@ -548,6 +610,9 @@ What is the effect?
 - B. The stages run sequentially, removing the parallelism
 - C. The pipeline fails with a dependency error
 - D. Azure DevOps automatically detects independence and parallelises them
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: B
 
@@ -590,6 +655,8 @@ parallel. Chained ones do not.
 **Also remember the default:** with **no** `dependsOn`, a stage depends on the one **declared before
 it**. To make a stage start immediately, write `dependsOn: []`.
 
+</details>
+
 ---
 
 ## Q14
@@ -600,6 +667,9 @@ Which GitHub Actions `runs-on` value makes a matrix job run on the operating sys
 - B. `runs-on: ${{ matrix.os }}`
 - C. `runs-on: $(matrix.os)`
 - D. `runs-on: [self-hosted, matrix.os]`
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: B
 
@@ -620,6 +690,8 @@ Which GitHub Actions `runs-on` value makes a matrix job run on the operating sys
   at line 574
 - **D** — mixes a self-hosted label with an unexpanded expression
 
+</details>
+
 ---
 
 ## Q15
@@ -630,6 +702,9 @@ A `workflow_dispatch` input is declared `type: boolean`. How is it read in a ste
 - B. `if: ${{ inputs.dry_run }}`
 - C. `if: ${{ env.dry_run }}`
 - D. `if: ${{ github.event.dry_run }}`
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: B
 
@@ -661,6 +736,8 @@ A `type: boolean` input arrives as a **real boolean**, so use it directly and ne
 **Contrast with Q10:** values from `$GITHUB_OUTPUT` are always **strings**, so `== 'true'` is right
 there. Typed dispatch inputs are real booleans. Same-looking code, different rules.
 
+</details>
+
 ---
 
 ## Q16
@@ -672,6 +749,9 @@ Which Azure Pipelines feature provides the same "choose at queue time" experienc
 - B. Runtime parameters
 - C. Pipeline resources
 - D. Demands
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: B
 
@@ -712,6 +792,8 @@ usable only in `if:` conditions, which **skip** a step rather than remove it.
 - **C** — resources declare external repos and pipelines
 - **D** — demands match agents (Challenge 21)
 
+</details>
+
 ---
 
 # Section B — Multiple answer
@@ -729,6 +811,9 @@ Which **three** trigger types does Challenge 22 configure? (Choose three.)
 - E. Issue comment triggers
 - F. Branch protection triggers
 
+<details>
+<summary>Show answer</summary>
+
 ### Answer: A, B, C
 
 **In `challenge-22.md`:** paths at lines **56–64**, schedules at lines **245–250**, completion at
@@ -741,6 +826,8 @@ lines **328–332** and **358–367**.
 - **E** — `issue_comment` is a real GitHub event, not used here
 - **F** — branch protection is a policy, not a trigger
 
+</details>
+
 ---
 
 ## Q18
@@ -752,6 +839,9 @@ Which **two** are true about GitHub Actions path filters? (Choose two.)
 - C. Path filters apply to `schedule` triggers
 - D. Path filters must be combined with `fetch-depth: 0`
 - E. A path filter can reference the workflow file itself
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A, B
 
@@ -777,6 +867,8 @@ definition re-runs it, which is how you validate a change to the pipeline itself
 - **D** — `fetch-depth: 0` is needed when **your own script** inspects history (line 598), not for
   platform filtering
 
+</details>
+
 ---
 
 ## Q19
@@ -789,6 +881,9 @@ Which **two** are required for a `workflow_run` workflow to deploy the correct c
 - C. Add `needs:` referencing the upstream workflow
 - D. Set `types: [requested]`
 - E. Use `workflow_call` instead
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A, B
 
@@ -813,6 +908,8 @@ the default branch so `github.sha` is the wrong commit (B).
 - **D** — `types: [requested]` fires when the upstream **starts**, which is worse
 - **E** — `workflow_call` inverts control: the caller invokes you. That is a different design
 
+</details>
+
 ---
 
 ## Q20
@@ -824,6 +921,9 @@ Which **two** correctly describe `needs` in GitHub Actions? (Choose two.)
 - C. `needs` can reference a job in another workflow
 - D. `needs` guarantees the jobs run on the same runner
 - E. A dependency cycle is silently ignored
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A, B
 
@@ -846,6 +946,8 @@ Which **two** correctly describe `needs` in GitHub Actions? (Choose two.)
 - **E** — a cycle is a **hard error**. Lines 808–819 show `test needs build` and `build needs test`;
   the workflow will not start at all
 
+</details>
+
 ---
 
 ## Q21
@@ -858,6 +960,9 @@ two.)
 - C. `deploy-production` starts as soon as the first verification job finishes
 - D. Fan-out requires a matrix strategy
 - E. Fan-in requires `if: always()`
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A, B
 
@@ -884,6 +989,8 @@ two.)
 - **E** — `if: always()` would make production deploy even if verification **failed**. That is the
   opposite of a gate
 
+</details>
+
 ---
 
 ## Q22
@@ -896,6 +1003,9 @@ Which **two** Azure Pipelines conditions run a stage when the upstream stage was
 - C. `not(canceled())`
 - D. `eq(dependencies.DeployStaging.result, 'Skipped')`
 - E. `succeeded()`
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A, D
 
@@ -928,6 +1038,8 @@ alongside `Succeeded`, `SucceededWithIssues`, `Failed` and `Canceled`.
 | Failed | skip | run | run |
 | **Skipped** | skip | **skip** | **run** |
 
+</details>
+
 ---
 
 ## Q23
@@ -939,6 +1051,9 @@ Which **two** matrix behaviours are correct? (Choose two.)
 - C. `include` always creates an additional job
 - D. `exclude` requires `fail-fast: false`
 - E. A matrix can only vary one dimension
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A, B
 
@@ -966,6 +1081,8 @@ Then line 550 uses the added variable:
 - **D** — unrelated settings
 - **E** — line 533–534 vary two dimensions, producing a cross-product
 
+</details>
+
 ---
 
 # Section C — Repeated scenario
@@ -980,7 +1097,10 @@ stage, then run a notification stage once both finish, whether they succeeded or
 **Proposed solution:** Give both `WebApp` and `Api` `dependsOn: Build`, then give `Notify`
 `dependsOn: [WebApp, Api]` with `condition: always()`.
 
-Does this meet the goal? **Yes**
+Does this meet the goal?
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: Yes
 
@@ -998,6 +1118,8 @@ Does this meet the goal? **Yes**
 
 Both requirements are met: **shared upstream = parallel**, and `always()` covers failure and skip.
 
+</details>
+
 ---
 
 ## Q25
@@ -1005,7 +1127,10 @@ Both requirements are met: **shared upstream = parallel**, and `always()` covers
 **Proposed solution:** Give `WebApp` `dependsOn: Build`, give `Api` `dependsOn: WebApp`, then give
 `Notify` `dependsOn: Api` with `condition: always()`.
 
-Does this meet the goal? **No**
+Does this meet the goal?
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: No
 
@@ -1027,6 +1152,8 @@ requirement you have to actively check against.
 **The habit:** when a question says "at the same time", "in parallel", or "reduce total duration",
 look at what each stage depends on. **Same upstream = parallel. Chained = serial.**
 
+</details>
+
 ---
 
 ## Q26
@@ -1034,7 +1161,10 @@ look at what each stage depends on. **Same upstream = parallel. Chained = serial
 **Proposed solution:** Give both `WebApp` and `Api` `dependsOn: Build`, then give `Notify`
 `dependsOn: [WebApp, Api]` with `condition: succeededOrFailed()`.
 
-Does this meet the goal? **No**
+Does this meet the goal?
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: No
 
@@ -1050,6 +1180,8 @@ finished. Only `always()` covers every outcome.
 **Two proposals, two different halves wrong.** That is exactly how the repeated-scenario format
 works: check **every** requirement against **every** proposal, not just the one that looks familiar.
 
+</details>
+
 ---
 
 # Section D — Yes/No statement grid
@@ -1057,6 +1189,16 @@ works: check **every** requirement against **every** proposal, not just the one 
 ---
 
 ## Q27 — path filters
+
+| # | Statement | Answer |
+|---|---|---|
+| 1 | GitHub Actions allows `paths` and `paths-ignore` in the same trigger |  |
+| 2 | Azure Pipelines allows `paths: include:` and `exclude:` together |  |
+| 3 | GitHub `paths` supports `!` negation |  |
+| 4 | Path filters can trigger on the workflow file itself |  |
+
+<details>
+<summary>Show answer</summary>
 
 | # | Statement | Answer |
 |---|---|---|
@@ -1071,9 +1213,21 @@ works: check **every** requirement against **every** proposal, not just the one 
 Rows 1 and 2 together are the trap: **the two platforms have opposite rules.** GitHub forbids mixing
 the keys and offers `!` instead; Azure Pipelines expects `include` and `exclude` side by side.
 
+</details>
+
 ---
 
 ## Q28 — schedules
+
+| # | Statement | Answer |
+|---|---|---|
+| 1 | Azure Pipelines `always: false` skips the run when nothing changed |  |
+| 2 | A schedule can target a branch the pipeline trigger does not include |  |
+| 3 | GitHub scheduled workflows are disabled after long repository inactivity |  |
+| 4 | `trigger: none` prevents scheduled runs |  |
+
+<details>
+<summary>Show answer</summary>
 
 | # | Statement | Answer |
 |---|---|---|
@@ -1091,9 +1245,21 @@ block.
 Row 3 is real-world important: a repo left alone for 60 days has its scheduled workflows disabled,
 and GitHub emails you rather than failing loudly.
 
+</details>
+
 ---
 
 ## Q29 — job dependencies
+
+| # | Statement | Answer |
+|---|---|---|
+| 1 | Jobs with the same `needs` value run in parallel |  |
+| 2 | `needs: [a, b]` waits for both to succeed |  |
+| 3 | A dependency cycle produces a validation error |  |
+| 4 | `dependsOn` can reference a stage in another pipeline |  |
+
+<details>
+<summary>Show answer</summary>
 
 | # | Statement | Answer |
 |---|---|---|
@@ -1110,9 +1276,21 @@ cross-pipeline ordering you need a `resources: pipelines:` trigger.
 
 Row 1 is the parallelism rule that Q13 and Q25 attack from the other direction.
 
+</details>
+
 ---
 
 ## Q30 — conditions
+
+| # | Statement | Answer |
+|---|---|---|
+| 1 | `if: always()` runs the job even if a needed job failed |  |
+| 2 | `succeededOrFailed()` runs when a dependency was skipped |  |
+| 3 | `contains(needs.*.result, 'failure')` detects any failed dependency |  |
+| 4 | `needs.build.result` can equal `'skipped'` |  |
+
+<details>
+<summary>Show answer</summary>
 
 | # | Statement | Answer |
 |---|---|---|
@@ -1128,6 +1306,8 @@ Row 4 lists the four values: `success`, `failure`, `cancelled`, `skipped`. Compa
 
 Rows 1 and 3 together are the notification pattern: `always()` at job level so it runs, then
 `contains()` at step level to decide what to say.
+
+</details>
 
 ---
 
@@ -1150,6 +1330,9 @@ parallel.
   performance-tests: needs: deploy-staging
   deploy-production: needs: [smoke-tests, performance-tests]
 ```
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer — five waves
 
@@ -1179,11 +1362,29 @@ twenty seconds and turns a trap into arithmetic.
 
 :::
 
+</details>
+
 ---
 
 ## Q32
 
 Match each GitHub Actions trigger concept to its Azure Pipelines equivalent.
+
+| GitHub Actions | Azure Pipelines |
+|---|---|
+| `on: push` with `paths` |  |
+| `on: pull_request` |  |
+| `on: schedule` with `cron` |  |
+| `on: workflow_run` |  |
+| `on: workflow_dispatch` with `inputs` |  |
+| `needs:` |  |
+| `if:` |  |
+| `!` negation in `paths` |  |
+
+**Options:** `condition:` · `dependsOn:` · `parameters:` (runtime parameters) · `paths: exclude:` · `pr:` · `resources: pipelines:` with `trigger` · `schedules:` with `cron` · `trigger:` with `paths: include:`
+
+<details>
+<summary>Show answer</summary>
 
 | GitHub Actions | Azure Pipelines |
 |---|---|
@@ -1207,6 +1408,8 @@ Match each GitHub Actions trigger concept to its Azure Pipelines equivalent.
 - `!` negation ↔ `exclude:` — GitHub forbids mixing include and ignore keys; Azure Pipelines expects
   both keys together
 
+</details>
+
 ---
 
 ## Q33
@@ -1214,6 +1417,9 @@ Match each GitHub Actions trigger concept to its Azure Pipelines equivalent.
 Arrange the Azure Pipelines conditions from **most** restrictive to **least** restrictive.
 
 **Items:** `always()` · `succeeded()` · `succeededOrFailed()`
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: `succeeded()` → `succeededOrFailed()` → `always()`
 
@@ -1229,6 +1435,8 @@ Arrange the Azure Pipelines conditions from **most** restrictive to **least** re
 *skipped* on ordinary builds — and `succeededOrFailed()` will not run after it. Q26 is built on
 exactly this.
 
+</details>
+
 ---
 
 ## Q34
@@ -1237,6 +1445,9 @@ Arrange the steps to configure a pipeline-completion trigger in Azure Pipelines.
 
 **Items:** Declare a `resources: pipelines:` entry · Add a `trigger` block with branch filters ·
 Give the resource an alias · Download the upstream artifact by alias · Name the `source` pipeline
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer
 
@@ -1264,11 +1475,27 @@ resources:
 Azure DevOps; `pipeline:` is the local alias you use everywhere else. Mixing them up gives a
 resource-not-found error.
 
+</details>
+
 ---
 
 ## Q35
 
 Match each requirement to the correct mechanism.
+
+| Requirement | Mechanism |
+|---|---|
+| Skip the whole workflow when only docs changed |  |
+| Skip one job when its folder did not change |  |
+| Run nightly only when code changed |  |
+| Deploy only after CI succeeds |  |
+| Notify whether or not the deploy worked |  |
+| Test three Node versions at once |  |
+
+**Options:** `always: false` on the schedule · `if: always()` / `condition: always()` · Job `if` reading a previous job's output · Matrix strategy · Path filter on the trigger · `workflow_run` + conclusion check
+
+<details>
+<summary>Show answer</summary>
 
 | Requirement | Mechanism |
 |---|---|
@@ -1285,6 +1512,8 @@ Match each requirement to the correct mechanism.
 no agent, no cost. A job condition runs *inside* a workflow that already started, so you still pay
 for the change-detection job (lines 596–611). Use the filter when the whole workflow is irrelevant;
 use the condition when part of it is.
+
+</details>
 
 ---
 
@@ -1306,12 +1535,17 @@ on:
 - **BLANK 1:** `paths` / `paths-ignore` / `filters` / `include`
 - **BLANK 2:** `!` / `-` / `^` / `~`
 
+<details>
+<summary>Show answer</summary>
+
 ### Answer: `paths`, `!`
 
 **In `challenge-22.md`:** lines **92–95**, and the Break & fix at lines **782–798**.
 
 You cannot add a `paths-ignore` key alongside `paths`, so the exclusion must be a **negation pattern
 inside** `paths`.
+
+</details>
 
 ---
 
@@ -1329,12 +1563,17 @@ schedules:
 
 - **BLANK 1:** `always` / `enabled` / `batch` / `force`
 
+<details>
+<summary>Show answer</summary>
+
 ### Answer: `always`
 
 **In `challenge-22.md`:** line **295**.
 
 `always: true` runs the schedule even with no new commits. Its sibling at line 289 uses
 `always: false` for the nightly build, so unchanged code does not burn agent minutes.
+
+</details>
 
 ---
 
@@ -1359,6 +1598,9 @@ jobs:
 - **BLANK 2:** `conclusion` / `status` / `result` / `outcome`
 - **BLANK 3:** `head_sha` / `sha` / `commit` / `ref`
 
+<details>
+<summary>Show answer</summary>
+
 ### Answer: `workflow_run`, `conclusion`, `head_sha`
 
 **In `challenge-22.md`:** lines **329**, **336**, **341**.
@@ -1368,6 +1610,8 @@ belong to the `needs` and `steps` contexts, not to `workflow_run`.
 
 `head_sha` is essential: the workflow itself runs from the default branch, so `github.sha` would be
 the wrong commit.
+
+</details>
 
 ---
 
@@ -1389,6 +1633,9 @@ the wrong commit.
 - **BLANK 1:** `fail-fast` / `continue-on-error` / `max-parallel` / `strict`
 - **BLANK 2:** `exclude` / `include` / `omit` / `skip`
 
+<details>
+<summary>Show answer</summary>
+
 ### Answer: `fail-fast`, `exclude`
 
 **In `challenge-22.md`:** lines **531** and **535**.
@@ -1396,6 +1643,8 @@ the wrong commit.
 With that `exclude`, the matrix produces **3** jobs, not 4.
 
 `continue-on-error` would mark failures as passes. `omit` and `skip` do not exist.
+
+</details>
 
 ---
 
@@ -1413,6 +1662,9 @@ With that `exclude`, the matrix produces **3** jobs, not 4.
 - **BLANK 1:** `always()` / `success()` / `failure()` / `cancelled()`
 - **BLANK 2:** `contains` / `includes` / `has` / `any`
 
+<details>
+<summary>Show answer</summary>
+
 ### Answer: `always()`, `contains`
 
 **In `challenge-22.md`:** lines **630** and **634**.
@@ -1422,6 +1674,8 @@ Without `always()`, the job is skipped when an upstream job fails — exactly wh
 matters most.
 
 `needs.*.result` is an array, and `contains()` is the function that searches one.
+
+</details>
 
 ---
 
@@ -1443,6 +1697,9 @@ Requirement: `Api` and `WebApp` must deploy **in parallel**, and `Notify` must r
 - **BLANK 2:** `dependsOn` / `dependsOn: Api` / `needs` / `condition`
 - **BLANK 3:** `condition` / `if` / `when` / `trigger`
 
+<details>
+<summary>Show answer</summary>
+
 ### Answer: `dependsOn`, `dependsOn` (on **Build**, not on `Api`), `condition`
 
 **Both stages must name the same upstream.** Pointing `WebApp` at `Api` would serialise them — the
@@ -1456,6 +1713,8 @@ mistake in Q13 and Q25, and the one you have made in more than one mock.
 ```
 
 `needs` and `if` are GitHub Actions keywords.
+
+</details>
 
 ---
 
@@ -1505,6 +1764,9 @@ Which configuration meets the efficiency requirements?
 - C. One workflow that checks changed files in a script and exits early
 - D. Separate repositories for frontend and backend
 
+<details>
+<summary>Show answer</summary>
+
 ### Answer: A
 
 **In `challenge-22.md`:** lines **49–121**.
@@ -1533,6 +1795,8 @@ Listing `shared/**` in both files is what satisfies the third requirement.
 - **D** — splitting the repository is a far larger change than the requirement asks for, and it
   breaks `shared/`. Challenge 12 covers that trade-off properly
 
+</details>
+
 ---
 
 ## Q43
@@ -1543,6 +1807,9 @@ Which matrix configuration meets the testing requirements?
 - B. The same matrix with `fail-fast: true`
 - C. Four separate jobs, one per combination
 - D. One job looping over versions in a script
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -1559,6 +1826,8 @@ instruction to disable fail-fast.
   matrix
 - **D** — sequential, and one failure stops the loop
 
+</details>
+
 ---
 
 ## Q44
@@ -1570,6 +1839,9 @@ Which **two** configurations meet the orchestration requirements? (Choose two.)
 - C. `integration-tests` declares `needs: unit-tests`
 - D. `build-image` declares `needs: unit-tests`
 - E. All test jobs use `if: always()`
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A, B
 
@@ -1585,6 +1857,8 @@ Which **two** configurations meet the orchestration requirements? (Choose two.)
   ship code that fails integration
 - **E** — `always()` would build the image even when tests **failed**, destroying the gate
 
+</details>
+
 ---
 
 ## Q45
@@ -1595,6 +1869,9 @@ Which configuration meets both nightly-build requirements?
 - B. One `schedules` entry with `always: true`
 - C. Two GitHub `cron` entries with no extra settings
 - D. A single cron running daily with a stage condition on the day of week
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -1621,6 +1898,8 @@ schedules:
 **Bonus (line 311):** `Build.CronSchedule.DisplayName` lets a stage detect *which* schedule started
 the run — which is how the `FullRegression` stage runs only on Sunday.
 
+</details>
+
 ---
 
 ## Q46
@@ -1631,6 +1910,9 @@ Which configuration meets the notification requirement?
 - B. A `Notify` stage with `condition: succeededOrFailed()`
 - C. A notification step at the end of the production deploy job
 - D. A separate scheduled workflow that checks deployment status
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -1645,6 +1927,8 @@ Which configuration meets the notification requirement?
   never started
 - **D** — a poll on a timer is not "notified when it finishes"
 
+</details>
+
 ---
 
 ## Q47
@@ -1658,6 +1942,9 @@ What is the cause?
 - B. The backend workflow uses `paths-ignore`
 - C. `shared/` needs its own workflow
 - D. Path filters do not support nested directories
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -1686,6 +1973,8 @@ precisely so a shared change builds both.
 component that depends on it. Miss one and that component silently stops being tested against
 changes it depends on — the worst kind of failure, because everything stays green.
 
+</details>
+
 ---
 
 ## Q48
@@ -1699,6 +1988,9 @@ What should they change?
 - B. Add `fail-fast: false` to the matrix
 - C. Increase `max-parallel`
 - D. Add `if: always()` to the deploy jobs
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -1732,6 +2024,8 @@ on:
 **When in-workflow detection is still right:** when one workflow must handle several components and
 decide **per job** which to deploy — the pattern at lines 613–625. The two techniques are
 complementary: filter the workflow, then condition the jobs.
+
+</details>
 
 ---
 ---

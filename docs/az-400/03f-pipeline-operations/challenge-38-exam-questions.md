@@ -1,6 +1,8 @@
 ---
-sidebar_position: 95
+sidebar_position: 5.5
+toc_max_heading_level: 2
 title: "Challenge 38: exam questions"
+sidebar_label: "Exam questions (48 Q)"
 ---
 
 # Challenge 38 — AZ-400 exam questions
@@ -45,6 +47,9 @@ Which configuration authenticates npm to GitHub Packages for the `@contoso` scop
 - C. A PAT in `package.json`
 - D. `npm config set always-auth false`
 
+<details>
+<summary>Show answer</summary>
+
 ### Answer: A
 
 **In `challenge-38.md`:** lines **130–149**.
@@ -75,6 +80,8 @@ organisation. That is why the workflow declares `packages: write` at line 223.
 **Why the others fail** — B is interactive, C would commit a credential, D disables the auth this
 requires.
 
+</details>
+
 ---
 
 ## Q2
@@ -85,6 +92,9 @@ Which job dependency prevents an image being built from code that failed its qua
 - B. `needs: lint`
 - C. `if: always()`
 - D. `needs: test-unit`
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -105,6 +115,8 @@ exactly Break & fix Exercise 1.
 
 **Why the others fail** — B waits only for linting, C would build regardless of any failure.
 
+</details>
+
 ---
 
 ## Q3
@@ -115,6 +127,9 @@ The coverage gate fails at 78.5% against an 80% threshold. What is the correct r
 - B. Lower the threshold to 75%
 - C. Exclude `push.service.ts` from coverage
 - D. Set `continue-on-error: true` on the gate
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -140,6 +155,8 @@ retry — precisely the paths that matter in production and are least exercised 
 **Line 822 states the exam's framing outright:** *"One developer suggests lowering the threshold.
 Instead, find and fix the root cause."*
 
+</details>
+
 ---
 
 ## Q4
@@ -153,6 +170,9 @@ What is the cause?
 - B. The swap command targets the wrong slot
 - C. The container image is wrong
 - D. The environment lacks approval
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -180,6 +200,8 @@ are accepting traffic, reads a non-200, and correctly performs the rollback it w
 **The version comparison is the subtle part.** A 200 only proves *something* is answering — possibly
 the old version still draining. Comparing against the built version proves the **new** code is live.
 
+</details>
+
 ---
 
 ## Q5
@@ -190,6 +212,9 @@ Which permission does the workflow need to post a coverage comment on a pull req
 - B. `contents: write`
 - C. `checks: write`
 - D. `issues: write`
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -211,6 +236,8 @@ is the least-privilege pattern applied consistently.
 beside a commit. Posting a comment on the PR conversation is `pull-requests: write`. Both appear here
 because the pipeline does both.
 
+</details>
+
 ---
 
 ## Q6
@@ -221,6 +248,9 @@ Which authentication method does the pipeline use for Azure?
 - B. `AZURE_CREDENTIALS` service principal JSON
 - C. A managed identity on the runner
 - D. An ACR admin username and password
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -245,6 +275,8 @@ exchanges it for a registry token. No registry credential is stored.
 **Why the others fail** — B stores a secret, C has no managed identity on a hosted runner, D is the
 shared admin account.
 
+</details>
+
 ---
 
 ## Q7
@@ -255,6 +287,9 @@ Which two Trivy settings make the security scan a blocking gate?
 - B. `severity: "HIGH,CRITICAL"` alone
 - C. `format: "sarif"`
 - D. `ignore-unfixed: true`
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -279,6 +314,8 @@ dependency never reaches the registry.
 **And `npm audit --audit-level=high`** (line 254) runs alongside it — two scanners with different
 databases, because neither catches everything.
 
+</details>
+
 ---
 
 ## Q8
@@ -289,6 +326,9 @@ Which job condition builds the image only on merges to `main`?
 - B. `if: github.ref_name == 'main'`
 - C. `if: always()`
 - D. `if: github.event_name == 'pull_request'`
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -303,6 +343,8 @@ side effects.
 
 **Why the others fail** — B does not exclude other events, C builds on failures, D is inverted.
 
+</details>
+
 ---
 
 ## Q9
@@ -313,6 +355,9 @@ Which input allows a manual run that builds and tests without deploying?
 - B. `workflow_call` with a string input
 - C. `repository_dispatch`
 - D. A `schedule` trigger
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -338,6 +383,8 @@ Which input allows a manual run that builds and tests without deploying?
 **Why it is useful:** validating a pipeline change, or building an image for inspection, without
 touching an environment.
 
+</details>
+
 ---
 
 ## Q10
@@ -348,6 +395,9 @@ How does the coverage gate combine results from the sharded unit tests?
 - B. Read only shard 1's coverage
 - C. Re-run all tests unsharded
 - D. Average the shard percentages
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -370,6 +420,8 @@ the start.
 shards at 80% each can merge to well below 80% if they cover overlapping lines, or above it if they
 cover disjoint ones. Only merging the line-level data gives the true figure.
 
+</details>
+
 ---
 
 ## Q11
@@ -380,6 +432,9 @@ Which infrastructure checks run before deployment?
 - B. `terraform plan` only
 - C. A checkov policy scan only
 - D. None — Bicep deploys directly
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -398,6 +453,8 @@ validate asks whether Azure would accept it, what-if reports what would change.
 **Note `validate-infra` runs `needs: build-image`** (line 427) — the image exists before the
 infrastructure that will run it is validated, so a failure at either point stops the deployment.
 
+</details>
+
 ---
 
 ## Q12
@@ -408,6 +465,9 @@ Which mechanism records a deployment marker in Application Insights?
 - B. A custom metric
 - C. A log message
 - D. An availability test
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -428,6 +488,8 @@ That is Challenge 03's source-to-production trace, closed at the observability e
 
 **Why the others fail** — B and C record data without marking the timeline; D checks uptime.
 
+</details>
+
 ---
 
 ## Q13
@@ -438,6 +500,9 @@ Which retention setting is applied to the coverage artifacts?
 - B. `retention-days: 90`
 - C. `retention-days: 365`
 - D. No retention setting
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -456,6 +521,8 @@ that. The 90-day default (Challenge 36 Q2) would keep them for three months at n
 **Note the artifact name includes the shard** — `coverage-unit-${{ matrix.shard }}` — avoiding the
 overwrite bug from Challenge 35.
 
+</details>
+
 ---
 
 ## Q14
@@ -466,6 +533,9 @@ Which environment configuration requires manual approval for production only?
 - B. `wait_timer` on both environments
 - C. A branch policy on `main`
 - D. `if: github.actor == 'admin'`
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -490,6 +560,8 @@ from an arbitrary branch.
 
 **Why the others fail** — B delays both without asking anyone, C gates merging, D is not an approval.
 
+</details>
+
 ---
 
 ## Q15
@@ -501,6 +573,9 @@ Which secrets are environment-scoped, and which are shared?
 - B. All three per environment
 - C. All three at repository level
 - D. All three in the workflow file
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -523,6 +598,8 @@ value with no benefit.
 **The decision rule from Challenge 24 Q35:** *differs per environment* → environment scope. *Same
 everywhere* → repository scope.
 
+</details>
+
 ---
 
 ## Q16
@@ -533,6 +610,9 @@ Which condition ensures pipeline metrics are recorded even when deployment fails
 - B. `if: success()`
 - C. `needs: deploy-production` alone
 - D. `continue-on-error: true`
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -556,6 +636,8 @@ recorded status is accurate.
 **Why the others fail** — B skips on failure, C alone still skips when the dependency fails,
 D relates to the job's own errors.
 
+</details>
+
 ---
 
 # Section B — Multiple answer
@@ -573,6 +655,9 @@ Which **three** jobs must succeed before the container image is built? (Choose t
 - E. `deploy-staging`
 - F. `lint`
 
+<details>
+<summary>Show answer</summary>
+
 ### Answer: A, B, C
 
 **In `challenge-38.md`:** line **372**.
@@ -588,6 +673,8 @@ Which **three** jobs must succeed before the container image is built? (Choose t
 (line 427), and `deploy-staging` needs both. The image is built first, then the infrastructure that
 will host it is validated, then deployment happens.
 
+</details>
+
 ---
 
 ## Q18
@@ -600,6 +687,9 @@ Which **three** quality gates run on a pull request? (Choose three.)
 - D. Container image build
 - E. Staging deployment
 - F. Blue-green production swap
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A, B, C
 
@@ -617,6 +707,8 @@ build-on-PR, publish-on-merge principle as Challenge 28 Q2, expressed as a job c
 **And the coverage comment** (lines 344–345) is posted **only** on pull requests — the reviewer sees
 the number in the conversation where the decision is made.
 
+</details>
+
 ---
 
 ## Q19
@@ -628,6 +720,9 @@ Which **two** fix the broken blue-green verification? (Choose two.)
 - C. Remove the rollback step
 - D. Increase the swap timeout
 - E. Check health before swapping instead
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A, B
 
@@ -652,6 +747,8 @@ draining connections. Comparing the version proves the swap actually took effect
 - **E** — the warm-up check **already** runs before the swap (lines 568–584). This is the *post*-swap
   verification, and both are needed
 
+</details>
+
 ---
 
 ## Q20
@@ -663,6 +760,9 @@ Which **two** are configured on the composite action rather than in each job? (C
 - C. The coverage threshold
 - D. Environment approvals
 - E. The Docker build
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A, B
 
@@ -695,6 +795,8 @@ Q4).
 **Why the others fail** — C is in the coverage-gate script, D is on the environment in the UI, E is in
 `build-image`.
 
+</details>
+
 ---
 
 ## Q21
@@ -706,6 +808,9 @@ Which **two** security scanners run before the image is built? (Choose two.)
 - C. CodeQL
 - D. Trivy scanning the built image
 - E. Defender for Containers
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A, B
 
@@ -724,6 +829,8 @@ dependency never becomes an image.
 - **D** — image scanning is Challenge 28's pattern; this pipeline scans the source instead
 - **E** — registry-side scanning, complementary and not part of this workflow
 
+</details>
+
 ---
 
 ## Q22
@@ -735,6 +842,9 @@ Which **two** describe the production deployment sequence? (Choose two.)
 - C. Deploy directly to the production slot
 - D. Route 10% of traffic before swapping
 - E. Delete the staging slot after swapping
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A, B
 
@@ -759,6 +869,8 @@ anything the warm-up missed.
 - **E** — the staging slot **holds the previous version** after the swap. Deleting it removes the way
   back
 
+</details>
+
 ---
 
 ## Q23
@@ -770,6 +882,9 @@ Which **two** optimisations from Challenge 35 appear in this pipeline? (Choose t
 - C. Self-hosted runners
 - D. Turborepo incremental builds
 - E. `--maxWorkers=4`
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A, B
 
@@ -789,6 +904,8 @@ are the intended pair for **test** optimisation specifically.
 rather than four is proportionate to this service's suite size; sharding has overhead, and four shards
 on a small suite can be slower than two.
 
+</details>
+
 ---
 
 # Section C — Repeated scenario
@@ -806,7 +923,10 @@ Deploy to staging automatically with an environment that has no reviewers. Deplo
 an environment with a required reviewer, deploying to the staging slot, warming it, swapping, then
 verifying both status and version with retries before rolling back on failure.
 
-Does this meet the goal? **Yes**
+Does this meet the goal?
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: Yes
 
@@ -822,6 +942,8 @@ Does this meet the goal? **Yes**
 
 The version comparison is what makes the verification trustworthy rather than merely a 200 check.
 
+</details>
+
 ---
 
 ## Q25
@@ -829,7 +951,10 @@ The version comparison is what makes the verification trustworthy rather than me
 **Proposed solution:** Gate `build-image` on `test-unit` only. Deploy to staging and production
 automatically. Verify production with a single health check immediately after the swap.
 
-Does this meet the goal? **No**
+Does this meet the goal?
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: No
 
@@ -845,6 +970,8 @@ without reviewers is not a gate.
 **The single immediate health check** is Break & fix Exercise 2: it reads a non-200 from a slot that
 has not started serving and rolls back a perfectly good release.
 
+</details>
+
 ---
 
 ## Q26
@@ -853,7 +980,10 @@ has not started serving and rolls back a perfectly good release.
 require a reviewer on production, warm the slot, swap, and verify with a retry loop checking for HTTP
 200.
 
-Does this meet the goal? **No**
+Does this meet the goal?
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: No
 
@@ -877,6 +1007,8 @@ version."*
 **Which is why `build-image` declares `image_version` as a job output** (line 374) — so the verifier
 knows what it is looking for.
 
+</details>
+
 ---
 
 # Section D — Yes/No statement grid
@@ -884,6 +1016,16 @@ knows what it is looking for.
 ---
 
 ## Q27 — pipeline structure
+
+| # | Statement | Answer |
+|---|---|---|
+| 1 | `build-image` waits for coverage, integration tests and the security scan |  |
+| 2 | The image is built on pull requests |  |
+| 3 | `validate-infra` runs before `build-image` |  |
+| 4 | `deploy-staging` waits for both `build-image` and `validate-infra` |  |
+
+<details>
+<summary>Show answer</summary>
 
 | # | Statement | Answer |
 |---|---|---|
@@ -899,9 +1041,21 @@ then the infrastructure that will host it is validated.
 
 Row 2 is the PR behaviour — full validation, no publishing.
 
+</details>
+
 ---
 
 ## Q28 — quality gates
+
+| # | Statement | Answer |
+|---|---|---|
+| 1 | Sharded coverage must be merged before checking the threshold |  |
+| 2 | Lowering the threshold is the correct fix for a shortfall |  |
+| 3 | `exit-code: "1"` makes Trivy block the pipeline |  |
+| 4 | The security scan runs after the image is built |  |
+
+<details>
+<summary>Show answer</summary>
 
 | # | Statement | Answer |
 |---|---|---|
@@ -918,9 +1072,21 @@ someone could deploy later by accident.
 Row 2 is the exam's framing at line 822 — find the root cause, which here is untested error-handling
 paths in `push.service.ts`.
 
+</details>
+
 ---
 
 ## Q29 — deployment
+
+| # | Statement | Answer |
+|---|---|---|
+| 1 | Staging deploys without approval; production requires a reviewer |  |
+| 2 | The production deploy writes to the staging slot before swapping |  |
+| 3 | An HTTP 200 immediately after a swap proves the new version is live |  |
+| 4 | The rollback is another slot swap |  |
+
+<details>
+<summary>Show answer</summary>
 
 | # | Statement | Answer |
 |---|---|---|
@@ -937,9 +1103,21 @@ swap the old instances are still answering.
 Row 4: the rollback is the identical command, because a swap exchanges rather than copies
 (Challenge 25 Q6).
 
+</details>
+
 ---
 
 ## Q30 — configuration placement
+
+| # | Statement | Answer |
+|---|---|---|
+| 1 | `AZURE_CLIENT_ID` differs per environment |  |
+| 2 | `AZURE_TENANT_ID` is a repository secret |  |
+| 3 | Approvals are declared in the workflow YAML |  |
+| 4 | Coverage artifacts use `retention-days: 7` |  |
+
+<details>
+<summary>Show answer</summary>
 
 | # | Statement | Answer |
 |---|---|---|
@@ -955,6 +1133,8 @@ production.
 
 Row 3 recurs from Challenge 24 and Challenge 37 — the YAML **names** the environment; the protection
 rules live on it, configured through the API or UI (lines 775–782).
+
+</details>
 
 ---
 
@@ -979,6 +1159,9 @@ Arrange the pipeline jobs into execution waves.
   pipeline-metrics:  needs: deploy-production, if: always()
 ```
 
+<details>
+<summary>Show answer</summary>
+
 ### Answer — seven waves
 
 | Wave | Jobs |
@@ -1000,11 +1183,27 @@ alongside `lint` rather than waiting for it. The gate is at line 372, where `bui
 **Total duration is the critical path**, so the two shards cost one shard's time, and `security-scan`
 is free unless it is slower than the whole lint-test-coverage chain.
 
+</details>
+
 ---
 
 ## Q32
 
 Match each Domain 3 challenge to where it appears in this capstone.
+
+| Challenge | Appears as |
+|---|---|
+| 13–15 packages |  |
+| 16–18 testing |  |
+| 19–24 pipelines |  |
+| 25–30 deployments |  |
+| 31–33 IaC |  |
+| 34–37 operations |  |
+
+**Options:** Bicep lint, validate and what-if before deploying · Blue-green slot swap with warm-up and rollback · Caching, sharding, 7-day retention, metrics job · Composite action, matrix, environments, approvals · `.npmrc` scope + `NODE_AUTH_TOKEN` for `@contoso` · Sharded unit tests, integration tests, 80% coverage gate
+
+<details>
+<summary>Show answer</summary>
 
 | Challenge | Appears as |
 |---|---|
@@ -1021,6 +1220,8 @@ Match each Domain 3 challenge to where it appears in this capstone.
 **This is why the capstone is worth taking seriously as revision.** One pipeline exercises 25
 challenges, and the exam's Domain 3 questions are drawn from the same surface.
 
+</details>
+
 ---
 
 ## Q33
@@ -1029,6 +1230,9 @@ Arrange the production deployment steps in order.
 
 **Items:** Swap slots · Verify version and status with retries · Warm up the staging slot · Deploy the
 container to the staging slot · Roll back if verification fails
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer
 
@@ -1044,11 +1248,28 @@ code ready?"* before it becomes production. The verification asks *"did the swap
 **Skipping either produces a documented failure:** no warm-up gives users a cold start (Challenge 26),
 no version check gives a false success (Break & fix Exercise 2).
 
+</details>
+
 ---
 
 ## Q34
 
 Match each configuration to where it lives.
+
+| Configuration | Lives in |
+|---|---|
+| Job graph and quality gates |  |
+| Coverage threshold check |  |
+| Required reviewers on production |  |
+| Deployment branch policy |  |
+| `AZURE_CLIENT_ID` per environment |  |
+| `AZURE_TENANT_ID` |  |
+| Registry scope for `@contoso` |  |
+
+**Options:** Environment secrets · `.npmrc` + `setup-node` · Repository secrets · The environment · **The environment** — API or UI · The workflow YAML · **The workflow YAML** (coverage-gate script)
+
+<details>
+<summary>Show answer</summary>
 
 | Configuration | Lives in |
 |---|---|
@@ -1065,11 +1286,26 @@ Match each configuration to where it lives.
 **Three locations, and a complete-looking YAML can still be missing the gate.** That is the same
 lesson as Challenge 37 Q34 — the diff does not show the environment configuration.
 
+</details>
+
 ---
 
 ## Q35
 
 Match each symptom to its cause.
+
+| Symptom | Cause |
+|---|---|
+| Coverage gate fails at 78.5% |  |
+| Production reports success but serves old code |  |
+| `npm ci` fails to resolve `@contoso/notification-sdk` |  |
+| Image built from code with failing integration tests |  |
+| Production deploys without approval |  |
+
+**Options:** `build-image` gated on `test-unit` instead of all three jobs · Health check ran before the swap settled; no version check · No reviewers configured on the environment · `NODE_AUTH_TOKEN` not set, or scope missing from `setup-node` · Untested error paths in `push.service.ts`
+
+<details>
+<summary>Show answer</summary>
 
 | Symptom | Cause |
 |---|---|
@@ -1083,6 +1319,8 @@ Match each symptom to its cause.
 
 **Two of these produce green pipelines** — the old-version swap and the missing approval. Those are the
 ones worth being able to spot from a description rather than from a failure.
+
+</details>
 
 ---
 
@@ -1103,12 +1341,17 @@ permissions:
 - **BLANK 1:** `id-token` / `deployments` / `actions` / `checks`
 - **BLANK 2:** `packages` / `contents` / `repository-projects` / `security-events`
 
+<details>
+<summary>Show answer</summary>
+
 ### Answer: `id-token`, `packages`
 
 **In `challenge-38.md`:** lines **221** and **223**.
 
 `id-token: write` is required for OIDC — omit it and `azure/login` fails with a token-request error
 that does not mention permissions. `packages: write` covers the `@contoso` scope on GitHub Packages.
+
+</details>
 
 ---
 
@@ -1124,12 +1367,17 @@ that does not mention permissions. `packages: write` covers the `@contoso` scope
 - **BLANK 2:** `push` / `pull_request` / `workflow_dispatch` / `schedule`
 - **BLANK 3:** `refs/heads/main` / `main` / `heads/main` / `refs/main`
 
+<details>
+<summary>Show answer</summary>
+
 ### Answer: `coverage-gate`, `push`, `refs/heads/main`
 
 **In `challenge-38.md`:** lines **372–373**.
 
 `test-unit` is the near-miss: the shards can each pass while the **merged** figure is below threshold.
 `github.ref` holds the full ref.
+
+</details>
 
 ---
 
@@ -1147,12 +1395,17 @@ that does not mention permissions. `packages: write` covers the `@contoso` scope
 - **BLANK 1:** `pattern` / `name` / `filter` / `match`
 - **BLANK 2:** `merge-multiple` / `combine` / `flatten` / `merge`
 
+<details>
+<summary>Show answer</summary>
+
 ### Answer: `pattern`, `merge-multiple`
 
 **In `challenge-38.md`:** lines **325–326**.
 
 `name:` downloads exactly one artifact. `pattern:` plus `merge-multiple: true` collects every shard
 into one directory so the merge step can combine them — Challenge 35's fix applied from the start.
+
+</details>
 
 ---
 
@@ -1174,6 +1427,9 @@ into one directory so the merge step can combine them — Challenge 35's fix app
 - **BLANK 2:** `.version` / `.status` / `.uptime` / `.commit`
 - **BLANK 3:** `image_version` / `sha` / `tag` / `build_id`
 
+<details>
+<summary>Show answer</summary>
+
 ### Answer: `15`, `.version`, `image_version`
 
 **In `challenge-38.md`:** lines **903**, **911**, **912**.
@@ -1181,6 +1437,8 @@ into one directory so the merge step can combine them — Challenge 35's fix app
 `sleep 0` is the bug — checking immediately reads the draining old version. The version comparison is
 what distinguishes "something answered" from "the new code is live", and `image_version` is the job
 output declared at line 374 for exactly this purpose.
+
+</details>
 
 ---
 
@@ -1199,12 +1457,17 @@ gh secret set AZURE_CLIENT_ID --[BLANK 3] production --body "{prod-sp-client-id}
 - **BLANK 2:** `protected_branches` / `all_branches` / `main_only` / `require_review`
 - **BLANK 3:** `env` / `repo` / `org` / `scope`
 
+<details>
+<summary>Show answer</summary>
+
 ### Answer: `reviewers`, `protected_branches`, `env`
 
 **In `challenge-38.md`:** lines **779–786**.
 
 `reviewers` is what makes production manual — staging omits it entirely. `--env` scopes the client ID
 so staging and production authenticate as different principals.
+
+</details>
 
 ---
 
@@ -1228,6 +1491,9 @@ so staging and production authenticate as different principals.
 - **BLANK 2:** `${{ matrix.shard }}` / `latest` / `all` / *(omit)*
 - **BLANK 3:** `7` / `90` / `365` / `1`
 
+<details>
+<summary>Show answer</summary>
+
 ### Answer: `fail-fast`, `${{ matrix.shard }}`, `7`
 
 **In `challenge-38.md`:** lines **272**, **291**, **293**.
@@ -1235,6 +1501,8 @@ so staging and production authenticate as different principals.
 `fail-fast: false` reports both shards' failures in one run. The shard suffix prevents the overwrite
 bug from Challenge 35. Seven days matches the stated requirement at line 36 and avoids the 90-day
 default.
+
+</details>
 
 ---
 
@@ -1283,6 +1551,9 @@ Which **two** satisfy the private package requirement? (Choose two.)
 - D. A personal access token stored as a repository secret
 - E. Publishing the SDK to the public npm registry
 
+<details>
+<summary>Show answer</summary>
+
 ### Answer: A, B
 
 **In `challenge-38.md`:** lines **130–133** and **139–149**.
@@ -1295,6 +1566,8 @@ Which **two** satisfy the private package requirement? (Choose two.)
   Cross-organisation access would be different (Challenge 40)
 - **E** — publishing a private SDK publicly
 
+</details>
+
 ---
 
 ## Q43
@@ -1305,6 +1578,9 @@ Which configuration enforces the 80% coverage minimum correctly?
 - B. Fail each shard below 80%
 - C. Check the first shard's coverage
 - D. Report coverage without failing
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -1322,6 +1598,8 @@ arbitrary test split.
 
 **Why the others fail** — C is a quarter of the truth, D is a report rather than a gate.
 
+</details>
+
 ---
 
 ## Q44
@@ -1333,6 +1611,9 @@ Which **two** meet the "no stored credential for Azure" requirement? (Choose two
 - C. `AZURE_CREDENTIALS` service principal JSON
 - D. ACR admin username and password
 - E. A managed identity on the GitHub-hosted runner
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A, B
 
@@ -1347,6 +1628,8 @@ Which **two** meet the "no stored credential for Azure" requirement? (Choose two
 **And note `az acr login` afterwards** (line 397) — the Azure identity is exchanged for a registry
 token rather than a registry credential being stored.
 
+</details>
+
 ---
 
 ## Q45
@@ -1359,6 +1642,9 @@ Which **two** satisfy the deployment requirements? (Choose two.)
 - D. Neither environment configured
 - E. A `workflow_dispatch` confirmation input for production
 
+<details>
+<summary>Show answer</summary>
+
 ### Answer: A, B
 
 **In `challenge-38.md`:** lines **775–782**.
@@ -1369,6 +1655,8 @@ Which **two** satisfy the deployment requirements? (Choose two.)
 - **D** — no environment means no gate, no deployment record and no environment secrets
   (Challenge 24 Q1)
 - **E** — an input is filled in by whoever triggers the run. That is not another person approving
+
+</details>
 
 ---
 
@@ -1382,6 +1670,9 @@ Which sequence satisfies "blue-green slot swap" with verification?
 - C. Deploy to slot → swap → single health check
 - D. Deploy to slot → swap → no verification
 
+<details>
+<summary>Show answer</summary>
+
 ### Answer: A
 
 **In `challenge-38.md`:** lines **559–608**, corrected at **899–930**.
@@ -1392,6 +1683,8 @@ Which sequence satisfies "blue-green slot swap" with verification?
 - **C** — Break & fix Exercise 2. The single immediate check reads the draining old version and rolls
   back a good release
 - **D** — a bad release stays live
+
+</details>
 
 ---
 
@@ -1407,6 +1700,9 @@ What is missing, and what should Contoso add?
 - B. More smoke tests
 - C. A longer warm-up
 - D. Higher coverage
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -1429,6 +1725,8 @@ question describes — and it closes the Challenge 03 traceability chain at the 
 **Why the others fail** — B, C and D are all real improvements that would not help identify *which*
 deployment caused the change.
 
+</details>
+
 ---
 
 ## Q48
@@ -1444,6 +1742,9 @@ Where is the critical path, and what should Contoso change first?
 - B. Add more unit test shards
 - C. Move to self-hosted runners
 - D. Remove the security scan
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -1472,6 +1773,8 @@ minutes.
 
 **The general lesson:** measure the **critical path**, not the sum. Optimising a job that runs in
 parallel with a longer one saves nothing at all.
+
+</details>
 
 ---
 ---

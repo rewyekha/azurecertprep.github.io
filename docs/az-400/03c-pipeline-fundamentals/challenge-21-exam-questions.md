@@ -1,6 +1,8 @@
 ---
-sidebar_position: 93
+sidebar_position: 3.5
+toc_max_heading_level: 2
 title: "Challenge 21: exam questions"
+sidebar_label: "Exam questions (48 Q)"
 ---
 
 # Challenge 21 — AZ-400 exam questions
@@ -47,6 +49,9 @@ Which runner configuration meets the requirement?
 - C. GitHub-hosted runners with a larger runner size
 - D. GitHub-hosted runners with a longer job timeout
 
+<details>
+<summary>Show answer</summary>
+
 ### Answer: B
 
 **In `challenge-21.md`:** line **37** ("Network access: Public internet only" vs "Can access private
@@ -73,6 +78,8 @@ secondary reason; connectivity is the one with no alternative.
 - **D** — a longer timeout does not create a network route. The connection fails, it does not
   time out slowly
 
+</details>
+
 ---
 
 ## Q2
@@ -83,6 +90,9 @@ What does the `--ephemeral` flag do when configuring a self-hosted GitHub Action
 - B. The runner accepts exactly one job and then de-registers itself
 - C. The runner uses temporary storage that is cleared between jobs
 - D. The runner does not write logs to disk
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: B
 
@@ -108,6 +118,8 @@ infrastructure the **same clean-environment guarantee** as a hosted runner.
 **Why it matters (line 41):** a persistent runner is a **shared** runner. Job A can leave credentials,
 containers or files that job B — possibly from a different repository — can read.
 
+</details>
+
 ---
 
 ## Q3
@@ -120,6 +132,9 @@ What is the cause?
 - B. The agent does not advertise a capability the pipeline demands
 - C. The agent is in a different Azure subscription
 - D. The agent OS does not match the `vmImage` value
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: B
 
@@ -152,6 +167,8 @@ sudo ./svc.sh stop && sudo ./svc.sh start              # restart to re-advertise
 - **D** — `vmImage` is only for **Microsoft-hosted** agents (line 211). A self-hosted pool uses
   `name:` and `demands:`, and the two forms are mutually exclusive
 
+</details>
+
 ---
 
 ## Q4
@@ -162,6 +179,9 @@ What is the primary advantage of a VMSS-backed Azure DevOps agent pool?
 - B. VMSS scales agent count with queue demand and can scale to zero when idle
 - C. VMSS agents have faster network connectivity than hosted agents
 - D. VMSS provides built-in secret management for agents
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: B
 
@@ -189,6 +209,8 @@ self-hosted VMs (expensive when idle) and hosted agents (no private network, no 
   property in general, not a VMSS one
 - **D** — secrets come from Key Vault or variable groups. VMSS provides compute
 
+</details>
+
 ---
 
 ## Q5
@@ -199,6 +221,9 @@ Which cost multiplier applies to GitHub-hosted macOS runners compared with Linux
 - B. 5x
 - C. 10x
 - D. 20x
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: C
 
@@ -216,6 +241,8 @@ Windows is **2x**, macOS is **10x**. Both numbers are testable.
 At 10x, macOS minutes dominate a bill fast — in Contoso's estimate, 1,000 macOS minutes cost $80
 while 2,000 Linux minutes cost $16 (lines 373–374).
 
+</details>
+
 ---
 
 ## Q6
@@ -226,6 +253,9 @@ How many parallel jobs does an Azure DevOps organization get for free on Microso
 - B. 1
 - C. 5
 - D. 10
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: B
 
@@ -242,6 +272,8 @@ job per month** for hosted, or **$15 per parallel job per month** for self-hoste
 "buy more parallel jobs" is sometimes the wrong exam answer — self-hosted plus a licence can cost
 less at scale, and Challenge 35 revisits this as a pipeline-optimisation trade-off.
 
+</details>
+
 ---
 
 ## Q7
@@ -254,6 +286,9 @@ Which `runs-on` value is correct?
 - B. `runs-on: [self-hosted, linux, docker]`
 - C. `runs-on: contoso-runner-linux-01`
 - D. `runs-on: docker`
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: B
 
@@ -278,6 +313,8 @@ An **array means AND**. The job needs a runner carrying *every* label listed.
 - **D** — omits `self-hosted`, so it would try to match a GitHub-hosted runner label. There is no
   hosted label called `docker`
 
+</details>
+
 ---
 
 ## Q8
@@ -288,6 +325,9 @@ What is a GitHub runner group used for?
 - B. Controlling which repositories and workflows may use a set of runners
 - C. Grouping runners by operating system for billing
 - D. Defining the labels a runner advertises
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: B
 
@@ -313,6 +353,8 @@ and `allows_public_repositories=false` blocks public repos entirely.
 
 **Note:** runner groups require GitHub Team or Enterprise (line 122).
 
+</details>
+
 ---
 
 ## Q9
@@ -323,6 +365,9 @@ Why does the runner VM in Challenge 21 specify `--public-ip-address ""`?
 - B. To keep the runner off the public internet, reachable only inside the VNet
 - C. Because GitHub runners cannot use public IPs
 - D. To force the runner into ephemeral mode
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: B
 
@@ -348,6 +393,8 @@ what makes the pattern acceptable to security teams.
 - **C** — runners can have public IPs; it is just poor practice
 - **D** — ephemeral is `--ephemeral` on `config.sh` (line 309), unrelated to networking
 
+</details>
+
 ---
 
 ## Q10
@@ -358,6 +405,9 @@ Which outbound port must a self-hosted runner be able to reach?
 - B. 443
 - C. 5986
 - D. 8080
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: B
 
@@ -382,6 +432,8 @@ all.
 - **C** — WinRM over HTTPS, used for Windows remote management, not runner communication
 - **D** — a common application port, not used here
 
+</details>
+
 ---
 
 ## Q11
@@ -392,6 +444,9 @@ What is Actions Runner Controller (ARC)?
 - B. A Kubernetes controller that runs GitHub Actions runners as auto-scaling pods
 - C. An Azure DevOps agent pool type
 - D. A CLI tool for registering runners in bulk
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: B
 
@@ -423,6 +478,8 @@ ARC does it on Kubernetes, VMSS does it on Azure VMs.
 
 **Note line 296:** with ARC, `runs-on` takes the **scale set name**, not a label array.
 
+</details>
+
 ---
 
 ## Q12
@@ -435,6 +492,9 @@ What is the most likely cause?
 - B. The registration token expired or the runner registration was removed
 - C. The VM has no outbound internet access
 - D. The runner has the wrong labels
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: B
 
@@ -468,6 +528,8 @@ sudo ./svc.sh start
 **Read the error code.** 403 = reached the server, rejected. Timeout = never reached it. That
 distinction is worth exam points.
 
+</details>
+
 ---
 
 ## Q13
@@ -478,6 +540,9 @@ Which Azure DevOps pool configuration targets a self-hosted pool rather than Mic
 - B. `pool: name: contoso-linux-pool`
 - C. `pool: ubuntu-latest`
 - D. `pool: self-hosted`
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: B
 
@@ -504,6 +569,8 @@ pool:
   tips call out: `pool` needs a nested key, not a bare string
 - **D** — `self-hosted` is a **GitHub Actions** label. Azure DevOps has no such value
 
+</details>
+
 ---
 
 ## Q14
@@ -514,6 +581,9 @@ An agent must only run jobs on Linux. Which demand expresses that?
 - B. `- os == linux`
 - C. `- runs-on: linux`
 - D. `- Agent.OS: Linux`
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -536,6 +606,8 @@ Two demand forms:
 - **C** — `runs-on` is GitHub Actions
 - **D** — a colon makes it a YAML mapping. Demands are strings in a list
 
+</details>
+
 ---
 
 ## Q15
@@ -546,6 +618,9 @@ Which statement best describes the cost trade-off in Challenge 21's break-even a
 - B. Hosted is cheaper until macOS usage grows large, and maintenance time is a real cost
 - C. Hosted is always cheaper because there is no infrastructure to run
 - D. Cost is identical; only capability differs
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: B
 
@@ -574,6 +649,8 @@ the exam rewards remembering that engineer time is the dominant cost of self-hos
 **When self-hosted wins (lines 386–390):** private network access, very high Linux volume, macOS
 above ~1,000 minutes/month, custom hardware or persistent caches.
 
+</details>
+
 ---
 
 ## Q16
@@ -584,6 +661,9 @@ Which authentication method does a self-hosted Azure DevOps agent use during `co
 - B. A service principal secret
 - C. A managed identity
 - D. An SSH key
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -611,6 +691,8 @@ short-lived **registration token** at line 83.
   Azure DevOps agent registration
 - **D** — SSH gets *you* onto the VM (line 72). The agent does not use it
 
+</details>
+
 ---
 
 # Section B — Multiple answer
@@ -628,6 +710,9 @@ three.)
 - D. Full control over installed software
 - E. A guaranteed clean environment for every job
 - F. Zero maintenance effort
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A, B, D
 
@@ -649,6 +734,8 @@ three.)
 **The exam pattern:** it lists real hosted advantages as if they were self-hosted ones. Know the
 comparison table in both directions.
 
+</details>
+
 ---
 
 ## Q18
@@ -660,6 +747,9 @@ Which **two** options provide elastic, scale-to-near-zero self-hosted capacity? 
 - C. A fixed pool of always-on Azure VMs
 - D. Microsoft-hosted agents
 - E. A macOS Mac Mini in the office
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A, B
 
@@ -682,6 +772,8 @@ helm install contoso-runners ... \
 
 **The pairing to remember:** *Azure DevOps → VMSS. GitHub Actions → ARC.*
 
+</details>
+
 ---
 
 ## Q19
@@ -694,6 +786,9 @@ Which **two** settings make a self-hosted runner behave like a hosted one for se
 - C. Running the runner service as root
 - D. Adding more labels to the runner
 - E. Increasing the idle timeout
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A, B
 
@@ -715,6 +810,8 @@ into the next job.
 - **E** — a longer idle timeout keeps the machine alive *longer*, increasing exposure. It is a cost
   and latency setting
 
+</details>
+
 ---
 
 ## Q20
@@ -728,6 +825,9 @@ three.)
 - D. Store a long-lived PAT on the runner for cloud authentication
 - E. Give every repository access to every runner
 - F. Disable audit logging to reduce noise
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A, B, C
 
@@ -753,6 +853,8 @@ az network nsg rule create --direction Outbound --destination-port-ranges 443 ..
 - **E** — the opposite of C, and of `allows_public_repositories=false` at line 131
 - **F** — line 339 says **enable** audit logging
 
+</details>
+
 ---
 
 ## Q21
@@ -765,6 +867,9 @@ Which **two** are required for a self-hosted runner to authenticate to Azure wit
 - C. A service principal client secret in a repository secret
 - D. A managed identity assigned to the runner VM
 - E. `permissions: packages: write` on the job
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A, B
 
@@ -797,6 +902,8 @@ Which **two** are required for a self-hosted runner to authenticate to Azure wit
 **This block is identical to Challenge 19 Q41.** It repeats because security auth is your weakest
 domain — and because it is genuinely the same answer wherever the runner lives.
 
+</details>
+
 ---
 
 ## Q22
@@ -808,6 +915,9 @@ Which **two** situations justify GitHub-hosted runners over self-hosted? (Choose
 - C. Builds needing on-premises database access
 - D. iOS builds at high volume
 - E. Builds requiring a persistent Docker layer cache
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A, B
 
@@ -829,6 +939,8 @@ Which **two** situations justify GitHub-hosted runners over self-hosted? (Choose
 **Default posture for the exam:** start hosted, move to self-hosted only when a **specific** blocker
 appears — network reach, cost at volume, custom hardware, or compliance.
 
+</details>
+
 ---
 
 ## Q23
@@ -840,6 +952,9 @@ Which **two** statements about GitHub runner labels are correct? (Choose two.)
 - C. Labels control which repositories may use a runner
 - D. `runs-on` can match a runner by its name
 - E. Labels are automatically derived from installed software
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A, B
 
@@ -864,6 +979,8 @@ Which **two** statements about GitHub runner labels are correct? (Choose two.)
   DevOps agents **do** auto-detect capabilities from environment variables (line 454), GitHub runners
   do not
 
+</details>
+
 ---
 
 # Section C — Repeated scenario
@@ -879,7 +996,10 @@ to start from a clean environment.
 **Proposed solution:** Deploy self-hosted runners inside the corporate network, configured with
 `--ephemeral`, and target them with `runs-on: [self-hosted, linux, on-prem]`.
 
-Does this meet the goal? **Yes**
+Does this meet the goal?
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: Yes
 
@@ -899,6 +1019,8 @@ Both requirements are satisfied:
 You would also need automation to start a replacement runner. That is implied by the pattern, not a
 gap in the design.
 
+</details>
+
 ---
 
 ## Q25
@@ -906,7 +1028,10 @@ gap in the design.
 **Proposed solution:** Keep GitHub-hosted runners and add the GitHub runner IP ranges to the
 corporate firewall allow-list.
 
-Does this meet the goal? **No**
+Does this meet the goal?
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: No
 
@@ -922,6 +1047,8 @@ workflow can run in. That is not access control; it is exposure.
 cloud range, it is wrong. The intended answer is to move the compute **inside** the network, not to
 open the network to the compute.
 
+</details>
+
 ---
 
 ## Q26
@@ -929,7 +1056,10 @@ open the network to the compute.
 **Proposed solution:** Deploy persistent self-hosted runners inside the corporate network without
 `--ephemeral`.
 
-Does this meet the goal? **No**
+Does this meet the goal?
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: No
 
@@ -946,6 +1076,8 @@ Concretely, without ephemeral the next job inherits:
 
 **A partial solution is still No.** Both requirements were stated, so both must be met.
 
+</details>
+
 ---
 
 # Section D — Yes/No statement grid
@@ -953,6 +1085,16 @@ Concretely, without ephemeral the next job inherits:
 ---
 
 ## Q27 — hosted versus self-hosted
+
+| # | Statement | Answer |
+|---|---|---|
+| 1 | GitHub-hosted runners can reach private network resources |  |
+| 2 | Self-hosted runners keep a local cache between jobs |  |
+| 3 | GitHub patches the OS of self-hosted runners |  |
+| 4 | Hosted runners provide a fresh VM for every job |  |
+
+<details>
+<summary>Show answer</summary>
 
 | # | Statement | Answer |
 |---|---|---|
@@ -970,9 +1112,21 @@ yours to patch — the ~$500/month at line 382.
 Row 2 is the performance argument: line 40 contrasts `actions/cache` (a network round-trip) with a
 local filesystem cache.
 
+</details>
+
 ---
 
 ## Q28 — ephemeral runners
+
+| # | Statement | Answer |
+|---|---|---|
+| 1 | An ephemeral runner runs one job then de-registers |  |
+| 2 | Ephemeral runners are recommended for public repositories |  |
+| 3 | Ephemeral means the workspace is wiped but the runner stays online |  |
+| 4 | Azure DevOps VMSS pools have an equivalent setting |  |
+
+<details>
+<summary>Show answer</summary>
 
 | # | Statement | Answer |
 |---|---|---|
@@ -990,9 +1144,21 @@ blast radius to one job.
 
 Row 3 is the distractor from Q2 restated as a grid row. The **runner** goes away, not just its files.
 
+</details>
+
 ---
 
 ## Q29 — Azure DevOps agents
+
+| # | Statement | Answer |
+|---|---|---|
+| 1 | `pool: name:` and `pool: vmImage:` can be used together |  |
+| 2 | Demands must all be satisfied for a job to be assigned |  |
+| 3 | Agents advertise capabilities automatically from environment variables |  |
+| 4 | A PAT is required every time the agent runs a job |  |
+
+<details>
+<summary>Show answer</summary>
 
 | # | Statement | Answer |
 |---|---|---|
@@ -1012,9 +1178,21 @@ Row 4: the PAT authenticates **registration only**. Afterwards the agent holds i
 the PAT can be revoked. Leaving a long-lived PAT on the machine is the security failure the exam
 tests.
 
+</details>
+
 ---
 
 ## Q30 — scaling
+
+| # | Statement | Answer |
+|---|---|---|
+| 1 | A VMSS agent pool can scale to zero agents |  |
+| 2 | ARC runs GitHub runners as Kubernetes pods |  |
+| 3 | VMSS pools work with GitHub Actions |  |
+| 4 | ARC requires a Kubernetes cluster you operate |  |
+
+<details>
+<summary>Show answer</summary>
 
 | # | Statement | Answer |
 |---|---|---|
@@ -1032,6 +1210,8 @@ Row 4 is the hidden cost of ARC: you now operate a Kubernetes cluster. Cheap if 
 expensive if this would be your first cluster. The exam sometimes phrases this as "the team has no
 Kubernetes experience", which pushes the answer toward VMSS or hosted.
 
+</details>
+
 ---
 
 # Section E — Drag and drop
@@ -1044,6 +1224,9 @@ Arrange the steps to bring a self-hosted GitHub runner online, in order.
 
 **Items:** Install the runner as a service · Download the runner package · Create the VM ·
 Run `config.sh` with a registration token · Start the service
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer
 
@@ -1064,11 +1247,27 @@ sudo ./svc.sh start                                    # 5
 **Why the order is fixed:** `config.sh` writes the runner's credential and settings to disk.
 `svc.sh install` reads those files to create the service unit, so configuration must come first.
 
+</details>
+
 ---
 
 ## Q32
 
 Match each capability to the platform that provides it.
+
+| Capability | Platform |
+|---|---|
+| VMSS-backed elastic agent pool |  |
+| Actions Runner Controller (ARC) |  |
+| Capabilities auto-detected from env vars |  |
+| Runner groups with repository visibility |  |
+| `demands` in the pool declaration |  |
+| Labels array in `runs-on` |  |
+
+**Options:** Azure DevOps · GitHub Actions
+
+<details>
+<summary>Show answer</summary>
 
 | Capability | Platform |
 |---|---|
@@ -1092,11 +1291,26 @@ scaling, cleanliness — with different names.
 | Elastic scale | ARC | VMSS |
 | One-job lifetime | `--ephemeral` | tear down after use |
 
+</details>
+
 ---
 
 ## Q33
 
 Match each Contoso requirement to its runner recommendation.
+
+| Requirement | Recommendation |
+|---|---|
+| iOS builds requiring Xcode |  |
+| Integration tests against on-prem SQL |  |
+| Docker builds needing a warm layer cache |  |
+| Lint and unit tests |  |
+| Data residency compliance |  |
+
+**Options:** GitHub-hosted · Self-hosted in the required region · Self-hosted inside the corporate network · Self-hosted macOS · Self-hosted with local Docker cache
+
+<details>
+<summary>Show answer</summary>
 
 | Requirement | Recommendation |
 |---|---|
@@ -1111,6 +1325,8 @@ Match each Contoso requirement to its runner recommendation.
 Each row has a **different** driver: cost multiplier, network reach, cache locality, simplicity,
 regulation. The exam gives you one of these drivers in a sentence and expects the matching answer.
 
+</details>
+
 ---
 
 ## Q34
@@ -1119,6 +1335,9 @@ Arrange these runner options from lowest to highest maintenance burden.
 
 **Items:** Self-hosted VM (always on) · GitHub-hosted runner · ARC on Kubernetes ·
 VMSS-backed agent pool
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer
 
@@ -1130,11 +1349,27 @@ VMSS-backed agent pool
 **The trade-off in one line:** maintenance rises exactly as control rises. Line 382 prices the
 maintenance at ~$500/month, which is more than the VM itself (~$140/month at line 379).
 
+</details>
+
 ---
 
 ## Q35
 
 Match each cost figure to what it describes.
+
+| Figure | Meaning |
+|---|---|
+| $0.008/min |  |
+| $0.016/min |  |
+| $0.08/min |  |
+| $40/month |  |
+| $15/month |  |
+| ~$500/month |  |
+
+**Options:** Extra Azure DevOps **Microsoft-hosted** parallel job · Extra Azure DevOps **self-hosted** parallel job · GitHub-hosted **Linux** · GitHub-hosted **macOS** (10x) · GitHub-hosted **Windows** (2x) · **Maintenance** — engineer time
+
+<details>
+<summary>Show answer</summary>
 
 | Figure | Meaning |
 |---|---|
@@ -1149,6 +1384,8 @@ Match each cost figure to what it describes.
 
 **The two numbers most likely to be tested:** macOS is **10x** Linux, and Azure DevOps gives **one**
 free hosted parallel job.
+
+</details>
 
 ---
 
@@ -1171,12 +1408,17 @@ free hosted parallel job.
 - **BLANK 2:** `runnergroup` / `pool` / `team` / `scope`
 - **BLANK 3:** `ephemeral` / `persistent` / `once` / `single`
 
+<details>
+<summary>Show answer</summary>
+
 ### Answer: `labels`, `runnergroup`, `ephemeral`
 
 **In `challenge-21.md`:** lines **85–86** and line **309**.
 
 `demands` and `capabilities` are **Azure DevOps** words; `pool` too. `tags` belongs to Azure
 resources. `persistent`, `once` and `single` do not exist as flags.
+
+</details>
 
 ---
 
@@ -1191,12 +1433,17 @@ jobs:
 - **BLANK 1:** `[self-hosted, linux, on-prem]` / `self-hosted` / `contoso-runner-linux-01` /
   `[linux]`
 
+<details>
+<summary>Show answer</summary>
+
 ### Answer: `[self-hosted, linux, on-prem]`
 
 **In `challenge-21.md`:** line **150**.
 
 The array means **all** labels must be present. Bare `self-hosted` could land the job on the macOS
 runner. A runner **name** never matches. `[linux]` alone would look for a hosted runner label.
+
+</details>
 
 ---
 
@@ -1214,6 +1461,9 @@ pool:
 - **BLANK 2:** `demands` / `labels` / `capabilities` / `requires`
 - **BLANK 3:** `-equals` / `==` / `:` / `-is`
 
+<details>
+<summary>Show answer</summary>
+
 ### Answer: `name`, `demands`, `-equals`
 
 **In `challenge-21.md`:** lines **202–206**.
@@ -1221,6 +1471,8 @@ pool:
 `vmImage` would make it a Microsoft-hosted pool and cannot appear alongside `name`. `labels` is
 GitHub. `capabilities` is what the **agent** advertises; `demands` is what the **pipeline** asks for —
 two ends of the same handshake, and the exam swaps them.
+
+</details>
 
 ---
 
@@ -1241,6 +1493,9 @@ az vmss create \
 - **BLANK 1:** `0` / `1` / `2` / `10`
 - **BLANK 2:** `0` / `1` / `2` / `10`
 
+<details>
+<summary>Show answer</summary>
+
 ### Answer: `0`, `0`
 
 **In `challenge-21.md`:** lines **225** and **239**.
@@ -1250,6 +1505,8 @@ az vmss create \
 Note the tension with "Desired idle agents: 2" (line 241): that keeps two warm agents ready for fast
 job starts. Set it above zero and you trade money for latency. The exam asks this as
 "minimise cost" (idle 0) versus "minimise queue time" (idle above 0).
+
+</details>
 
 ---
 
@@ -1269,12 +1526,17 @@ job starts. Set it above zero and you trade money for latency. The exam asks thi
 - **BLANK 2:** `azure/login@v2` / `docker/login-action@v3` / `actions/checkout@v4` /
   `azure/webapps-deploy@v3`
 
+<details>
+<summary>Show answer</summary>
+
 ### Answer: `id-token`, `azure/login@v2`
 
 **In `challenge-21.md`:** lines **350–355**.
 
 Same block as Challenge 19 Q41. It repeats deliberately — this is the pattern that has cost you marks
 in every mock, and it is identical whether the runner is hosted or self-hosted.
+
+</details>
 
 ---
 
@@ -1292,6 +1554,9 @@ az network nsg rule create \
 - **BLANK 1:** `Outbound` / `Inbound` / `Both` / `Any`
 - **BLANK 2:** `443` / `22` / `80` / `5986`
 
+<details>
+<summary>Show answer</summary>
+
 ### Answer: `Outbound`, `443`
 
 **In `challenge-21.md`:** lines **331** and **334**.
@@ -1301,6 +1566,8 @@ DevOps for work. You never open an inbound port — which is exactly why securit
 self-hosted runners inside a private network.
 
 If an exam option proposes an **inbound** rule so the platform can "reach the runner", it is wrong.
+
+</details>
 
 ---
 
@@ -1341,6 +1608,9 @@ Which configuration meets the integration-test requirement?
 - C. A VPN gateway between GitHub and the corporate network
 - D. Larger GitHub-hosted runners
 
+<details>
+<summary>Show answer</summary>
+
 ### Answer: A
 
 **In `challenge-21.md`:** lines **150–155**, line **398**.
@@ -1350,6 +1620,8 @@ Which configuration meets the integration-test requirement?
 - **B** — allow-listing GitHub's public ranges exposes internal SQL to a shared public cloud space
 - **C** — you cannot terminate a VPN on a GitHub-hosted runner. You do not control it
 - **D** — more CPU does not create a network route
+
+</details>
 
 ---
 
@@ -1361,6 +1633,9 @@ Which option meets the iOS cost requirement?
 - B. GitHub-hosted macOS runners with a longer timeout
 - C. Cross-compiling iOS builds on Linux
 - D. Running iOS builds less frequently
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -1377,6 +1652,8 @@ about **1,000 macOS minutes per month**.
 - **D** — reducing build frequency degrades the delivery process to save money. The exam never wants
   that as the answer
 
+</details>
+
 ---
 
 ## Q44
@@ -1388,6 +1665,9 @@ Which **two** requirements does `--ephemeral` satisfy? (Choose two.)
 - C. Runners must not be reachable from the public internet
 - D. Each job starts from a clean environment
 - E. Docker builds must reuse a warm cache
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A, D
 
@@ -1407,6 +1687,8 @@ One job per runner, then de-registration. Nothing carries over — which is both
 persistent labelled runners for the Docker cache. Note that the requirements as written *do* conflict
 — and noticing a conflict rather than forcing one answer is itself an exam skill.
 
+</details>
+
 ---
 
 ## Q45
@@ -1417,6 +1699,9 @@ Which option meets the "capacity must cost nothing when idle" requirement?
 - B. Three always-on self-hosted VMs
 - C. Reserved 1-year VM pricing
 - D. Spot VMs running continuously
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -1437,6 +1722,8 @@ Which option meets the "capacity must cost nothing when idle" requirement?
 **The distinction:** reserved and spot make idle capacity *cheaper*. Only scale-to-zero makes it
 *free*.
 
+</details>
+
 ---
 
 ## Q46
@@ -1448,6 +1735,9 @@ required?
 - B. Ephemeral self-hosted runners
 - C. GitHub-hosted runners with `actions/cache`
 - D. VMSS agents with tear-down enabled
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -1465,6 +1755,8 @@ definition.
 **The trade-off to state plainly:** persistence buys cache speed and costs isolation. Restrict those
 runners to trusted internal repositories via a runner group (line 128).
 
+</details>
+
 ---
 
 ## Q47
@@ -1477,6 +1769,9 @@ What should you configure?
 - B. Additional labels on the runners
 - C. Branch protection on both repositories
 - D. A separate GitHub organization
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -1499,6 +1794,8 @@ gh api --method POST /orgs/contoso/actions/runner-groups \
 - **C** — branch protection governs merging code
 - **D** — a whole new org to scope a runner pool is disproportionate, and it fragments everything else
 
+</details>
+
 ---
 
 ## Q48
@@ -1512,6 +1809,9 @@ What is the most likely explanation, and what should Contoso do?
 - B. The runner lacks a label; add one
 - C. The runner is ephemeral and re-provisions before each job
 - D. The runner group is misconfigured
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: C
 
@@ -1536,6 +1836,8 @@ register before work begins. For a **40-second** job that overhead dominates.
 
 **The general lesson:** self-hosting helps **long** builds with **big** caches. Short jobs are pure
 overhead. Match the runner to the job, not to the org.
+
+</details>
 
 ---
 ---

@@ -1,6 +1,8 @@
 ---
-sidebar_position: 93
+sidebar_position: 3.5
+toc_max_heading_level: 2
 title: "Challenge 33: exam questions"
+sidebar_label: "Exam questions (48 Q)"
 ---
 
 # Challenge 33 — AZ-400 exam questions
@@ -46,6 +48,9 @@ Which role lets a developer create environments in a Deployment Environments pro
 - C. DevCenter Project Admin
 - D. Owner on the Dev Center
 
+<details>
+<summary>Show answer</summary>
+
 ### Answer: B
 
 **In `challenge-33.md`:** lines **59–62**.
@@ -73,6 +78,8 @@ environment, and the platform's identity provisions it.
 **The role trio to know:** `Deployment Environments User` (create and manage your own),
 `DevCenter Project Admin` (manage the project), `Deployment Environments Reader` (view only).
 
+</details>
+
 ---
 
 ## Q2
@@ -83,6 +90,9 @@ What does a **project environment type** map an environment type to?
 - B. A resource group naming convention
 - C. A catalog repository
 - D. A Dev Box definition
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -112,6 +122,8 @@ type is how cost and blast radius are separated.
 **Why the others fail** — B, C and D are all different concepts. Catalogs attach to the **Dev Center**
 (line 289), not to an environment type.
 
+</details>
+
 ---
 
 ## Q3
@@ -122,6 +134,9 @@ Where are environment **types** defined, and where are they mapped to subscripti
 - B. Types at the project; mapping at the Dev Center
 - C. Both at the Dev Center
 - D. Both at the project
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -143,6 +158,8 @@ projects can both have "Dev" pointing at entirely different subscriptions.
 
 **Why the others fail** — all three invert or collapse the split.
 
+</details>
+
 ---
 
 ## Q4
@@ -156,6 +173,9 @@ What is the cause?
 - B. The project environment type's managed identity has no role on the target subscription
 - C. The catalog has not synced
 - D. The environment type is disabled
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: B
 
@@ -184,6 +204,8 @@ the developer never touches that subscription.
 - **C** — a sync failure gives "environment definition not found" (line 616), a different message
 - **D** — a disabled type gives a different error and would block everyone, not just deployment
 
+</details>
+
 ---
 
 ## Q5
@@ -194,6 +216,9 @@ Which file declares the parameters a developer is prompted for?
 - B. `environment.yaml`
 - C. `azuredeploy.parameters.json`
 - D. `catalog.json`
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: B
 
@@ -225,6 +250,8 @@ parameters:
 **Why the others fail** — C is ARM parameter-file syntax, D does not exist in this model, and A holds
 the resources.
 
+</details>
+
 ---
 
 ## Q6
@@ -235,6 +262,9 @@ Which parameter is automatically supplied by Azure Deployment Environments?
 - B. `appServicePlanSku`
 - C. `sqlDatabaseSku`
 - D. `enableApplicationInsights`
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -254,6 +284,8 @@ is the discriminator.
 
 **Why the others fail** — all three appear in the `parameters` list and are chosen by the developer.
 
+</details>
+
 ---
 
 ## Q7
@@ -264,6 +296,9 @@ Where does the Dev Center store the credential used to read a GitHub catalog?
 - B. In Azure Key Vault, referenced by `secret-identifier`
 - C. In a GitHub Actions secret
 - D. In the project's environment type
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: B
 
@@ -286,6 +321,8 @@ the catalog sync fails on the very first attempt.
 
 **Why the others fail** — A is what the design avoids, C is the wrong platform, D is unrelated.
 
+</details>
+
 ---
 
 ## Q8
@@ -298,6 +335,9 @@ What should you check first?
 - B. The catalog's sync state and sync error details
 - C. The target subscription quota
 - D. The Bicep template syntax
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: B
 
@@ -320,6 +360,8 @@ problem gives a deployment error after provisioning starts.
 
 **Why the others fail** — A, C and D produce different, distinguishable errors.
 
+</details>
+
 ---
 
 ## Q9
@@ -330,6 +372,9 @@ Which command does a **developer** use to create an environment?
 - B. `az devcenter dev environment create`
 - C. `az deployment sub create`
 - D. `az devcenter admin project create`
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: B
 
@@ -357,6 +402,8 @@ several exam questions on its own.
 **Three ways to create an environment** (lines 329, 364): the CLI, the **Developer Portal** at
 `devportal.microsoft.com`, and the API — which is what the pipeline in Task 7 uses.
 
+</details>
+
 ---
 
 ## Q10
@@ -367,6 +414,9 @@ How does the PR pipeline name each ephemeral environment?
 - B. `$(Build.BuildId)`
 - C. `$(Build.SourceBranchName)`
 - D. A random GUID
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -389,6 +439,8 @@ to the same PR finds the existing environment rather than creating a duplicate (
   from similar branches could collide
 - **D** — a random name cannot be found again for cleanup
 
+</details>
+
 ---
 
 ## Q11
@@ -399,6 +451,9 @@ Why does the pipeline check whether the environment exists before creating it?
 - B. To save Azure quota
 - C. Because creation always fails on the second attempt
 - D. To validate the catalog
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -426,6 +481,8 @@ healthy.
 
 **Why the others fail** — B is a side effect, C overstates it, D is unrelated.
 
+</details>
+
 ---
 
 ## Q12
@@ -436,6 +493,9 @@ How does the pipeline wait for provisioning to complete?
 - B. A loop polling `provisioningState` until `Succeeded`
 - C. `az devcenter dev environment wait`
 - D. It does not wait
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: B
 
@@ -465,6 +525,8 @@ argument as `rollout status` in Challenge 28 and the health-check loops in Chall
 - **C** — plausible, and not the command used here
 - **D** — the URL query at line 535 would return nothing
 
+</details>
+
 ---
 
 ## Q13
@@ -475,6 +537,9 @@ How does the pipeline expose the environment URL to later stages?
 - B. Writing it to a pipeline artifact
 - C. `echo "envUrl=$URL" >> $GITHUB_OUTPUT`
 - D. A variable group
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -495,6 +560,8 @@ did not deploy themselves.
 
 **Why the others fail** — B works and is clumsy, C is GitHub Actions syntax, D holds static values.
 
+</details>
+
 ---
 
 ## Q14
@@ -505,6 +572,9 @@ Which mechanism enforces automatic cleanup of idle Dev environments?
 - B. `--max-dev-boxes-per-user`
 - C. Deleting the environment type
 - D. Azure Advisor recommendations
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -536,6 +606,8 @@ That split is deliberate: policy is good at tagging consistently, and bad at del
 
 **This directly addresses the scenario** (line 24): environments idle 80% of the time.
 
+</details>
+
 ---
 
 ## Q15
@@ -546,6 +618,9 @@ Which control limits how many environments a single developer can hold?
 - B. Azure subscription quota
 - C. The `allowed` list in `environment.yaml`
 - D. The Deployment Environments User role
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -568,6 +643,8 @@ developer across 40 developers is 120 environments running indefinitely.
   P1v3 for a dev environment
 - **D** — grants the ability to create; it sets no limit
 
+</details>
+
 ---
 
 ## Q16
@@ -578,6 +655,9 @@ Which two catalog sources can a Dev Center use?
 - B. GitHub and Azure Storage
 - C. Azure Container Registry and GitHub
 - D. Azure Repos Git only
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -601,6 +681,8 @@ makes them easy to confuse in a question. The only difference is the flag.
 **Why a git repository at all:** the catalog is **environment definitions as code**, so it gets pull
 request review, version history and branch protection. Same reasoning as Challenge 31's IaC pipeline.
 
+</details>
+
 ---
 
 # Section B — Multiple answer
@@ -617,6 +699,9 @@ Which **three** components must exist before a developer can create an environme
 - D. A Dev Box definition
 - E. A Log Analytics workspace
 - F. A public IP on the target subscription
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A, B, C
 
@@ -636,6 +721,8 @@ Break the third and you get "environment definition not found" (Q8). Break the s
 **Why the others fail** — Dev Box is a separate product sharing the same Dev Center; E and F are
 unrelated.
 
+</details>
+
 ---
 
 ## Q18
@@ -647,6 +734,9 @@ Which **two** are configured on a **project environment type**? (Choose two.)
 - C. The catalog repository URI
 - D. The environment definition's parameters
 - E. The maximum environments per user
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A, B
 
@@ -661,6 +751,8 @@ Which **two** are configured on a **project environment type**? (Choose two.)
 **Knowing which object owns which setting is most of this challenge.** Dev Center owns catalogs and
 type names; project owns limits and subscription mappings; catalog owns definitions and parameters.
 
+</details>
+
 ---
 
 ## Q19
@@ -672,6 +764,9 @@ Which **two** identities are involved when a developer creates an environment? (
 - C. The developer's personal subscription Contributor role
 - D. The Dev Center's managed identity, deploying resources
 - E. A service principal stored in the catalog
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A, B
 
@@ -692,6 +787,8 @@ So there are three identities in total, each with one job:
 **Why the others fail** — C is the shadow-IT anti-pattern; E stores a credential where it does not
 belong.
 
+</details>
+
 ---
 
 ## Q20
@@ -703,6 +800,9 @@ Which **two** does `environment.yaml` define? (Choose two.)
 - C. The target subscription
 - D. The deploying identity
 - E. The maximum environment lifetime
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A, B
 
@@ -724,6 +824,8 @@ auto-delete runbook (line 430), not declared in the definition.
 provisioning a P1v3 plan for a throwaway environment, and it is enforced regardless of whether they
 use the portal, the CLI or the API.
 
+</details>
+
 ---
 
 ## Q21
@@ -735,6 +837,9 @@ Which **two** cost controls does the challenge implement? (Choose two.)
 - C. Azure Reservations
 - D. Deleting the Dev Center nightly
 - E. Restricting developers to the F1 SKU only
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A, B
 
@@ -750,6 +855,8 @@ to it. Restricting the SKU list is a real third control; the two implemented are
 **Why the others fail** — C is a billing commitment unrelated to environment sprawl; D destroys the
 platform.
 
+</details>
+
 ---
 
 ## Q22
@@ -761,6 +868,9 @@ Which **two** are true about the PR-environment pipeline? (Choose two.)
 - C. It creates a new environment on every push to the PR
 - D. It uses `$(Build.BuildId)` as the environment name
 - E. It deploys the Bicep template directly with `az deployment sub create`
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A, B
 
@@ -777,6 +887,8 @@ Which **two** are true about the PR-environment pipeline? (Choose two.)
 definition production uses — which is exactly the "inconsistency between developer environments and
 production" problem from line 25.
 
+</details>
+
 ---
 
 ## Q23
@@ -788,6 +900,9 @@ Which **two** problems in Contoso's scenario does Deployment Environments solve?
 - C. Slow application build times
 - D. Container image vulnerabilities
 - E. Database migration ordering
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A, B
 
@@ -801,6 +916,8 @@ The scenario also lists shared environments causing conflicts, and idle cost —
 environments and the auto-delete runbook respectively.
 
 **Why the others fail** — C, D and E belong to other challenges.
+
+</details>
 
 ---
 
@@ -818,7 +935,10 @@ dev subscription with a system-assigned identity granted Contributor there, publ
 `allowed` SKU list, grant developers `Deployment Environments User` on the project, and schedule a
 runbook that deletes environments older than 7 days.
 
-Does this meet the goal? **Yes**
+Does this meet the goal?
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: Yes
 
@@ -834,6 +954,8 @@ Does this meet the goal? **Yes**
 The Contributor grant on the **project environment type's identity** is the step that makes
 deployments actually work (Break & fix Exercise 2).
 
+</details>
+
 ---
 
 ## Q25
@@ -841,7 +963,10 @@ deployments actually work (Break & fix Exercise 2).
 **Proposed solution:** Grant all 40 developers Contributor on the dev subscription and share Bicep
 templates in a repository so they can deploy their own environments with `az deployment sub create`.
 
-Does this meet the goal? **No**
+Does this meet the goal?
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: No
 
@@ -859,6 +984,8 @@ to key a runbook on.
 **What it does solve** is the 3–5 day wait — which is exactly why teams drift into this pattern. Speed
 without guardrails.
 
+</details>
+
 ---
 
 ## Q26
@@ -868,7 +995,10 @@ without guardrails.
 schedule the cleanup runbook — but leave the project environment type's identity without a role on
 the dev subscription.
 
-Does this meet the goal? **No**
+Does this meet the goal?
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: No
 
@@ -889,6 +1019,8 @@ role — the one thing that is already correct.
 **The rule to carry:** in Deployment Environments, *requesting* and *deploying* are two different
 authorisations held by two different principals.
 
+</details>
+
 ---
 
 # Section D — Yes/No statement grid
@@ -896,6 +1028,16 @@ authorisations held by two different principals.
 ---
 
 ## Q27 — structure
+
+| # | Statement | Answer |
+|---|---|---|
+| 1 | Environment types are defined at the Dev Center |  |
+| 2 | Project environment types map a type to a subscription |  |
+| 3 | Catalogs attach to the project |  |
+| 4 | A project can limit environments per user |  |
+
+<details>
+<summary>Show answer</summary>
 
 | # | Statement | Answer |
 |---|---|---|
@@ -910,9 +1052,21 @@ Row 3 is the one to get right: `az devcenter admin catalog create` takes `--dev-
 `--project-name`. Catalogs are **shared across every project** in the Dev Center, which is what makes
 one blessed set of environment definitions reachable organisation-wide.
 
+</details>
+
 ---
 
 ## Q28 — permissions
+
+| # | Statement | Answer |
+|---|---|---|
+| 1 | `Deployment Environments User` is assigned at project scope |  |
+| 2 | Developers need Contributor on the target subscription |  |
+| 3 | The project environment type's identity deploys the resources |  |
+| 4 | The Dev Center's identity reads the catalog secret from Key Vault |  |
+
+<details>
+<summary>Show answer</summary>
 
 | # | Statement | Answer |
 |---|---|---|
@@ -929,9 +1083,21 @@ access without removing self-service.
 
 Row 4 is the third identity, and it explains why the Dev Center needs one at all.
 
+</details>
+
 ---
 
 ## Q29 — catalogs and definitions
+
+| # | Statement | Answer |
+|---|---|---|
+| 1 | A catalog can be a GitHub or Azure Repos Git repository |  |
+| 2 | The catalog credential is stored in Key Vault |  |
+| 3 | `environment.yaml` declares the developer-facing parameters |  |
+| 4 | A failed sync produces an `AuthorizationFailed` error to the developer |  |
+
+<details>
+<summary>Show answer</summary>
 
 | # | Statement | Answer |
 |---|---|---|
@@ -951,9 +1117,21 @@ Row 4 separates the two Break & fix exercises by their **error message**:
 
 Reading the message tells you which of the two to investigate, which is worth an exam mark on its own.
 
+</details>
+
 ---
 
 ## Q30 — governance and lifecycle
+
+| # | Statement | Answer |
+|---|---|---|
+| 1 | `--max-dev-boxes-per-user` limits concurrent environments |  |
+| 2 | The `allowed` parameter list constrains SKU choices |  |
+| 3 | Deployment Environments deletes idle environments automatically |  |
+| 4 | Azure Policy can tag environment resource groups with an expiry |  |
+
+<details>
+<summary>Show answer</summary>
 
 | # | Statement | Answer |
 |---|---|---|
@@ -971,6 +1149,8 @@ combination, environments live until someone remembers them.
 Given the scenario says environments sit idle 80% of the time (line 24), that gap is the entire cost
 problem.
 
+</details>
+
 ---
 
 # Section E — Drag and drop
@@ -984,6 +1164,9 @@ Arrange the platform setup steps in order.
 **Items:** Create project environment types mapped to subscriptions · Create the Dev Center · Attach
 the catalog · Grant developers `Deployment Environments User` · Create the project · Create
 environment types
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer
 
@@ -1000,11 +1183,27 @@ at the Dev Center first.
 **Step 6 last is deliberate.** Granting access before the platform works means developers hit
 failures on their first attempt, which is how self-service tools acquire a reputation nobody can shake.
 
+</details>
+
 ---
 
 ## Q32
 
 Match each object to what it owns.
+
+| Object | Owns |
+|---|---|
+| Dev Center |  |
+| Project |  |
+| Project environment type |  |
+| Catalog |  |
+| `environment.yaml` |  |
+| `main.bicep` |  |
+
+**Options:** Catalogs and environment type names · Developer-facing parameters and template path · Environment definitions · Per-user limits and developer role assignments · Target subscription and deploying identity · The resources actually deployed
+
+<details>
+<summary>Show answer</summary>
 
 | Object | Owns |
 |---|---|
@@ -1021,11 +1220,24 @@ Match each object to what it owns.
 the subscription on the Dev Center, or the parameters in the Bicep file. Learn the table, not the
 individual commands.
 
+</details>
+
 ---
 
 ## Q33
 
 Match each identity to its role in one environment creation.
+
+| Identity | Role |
+|---|---|
+| Developer |  |
+| Dev Center managed identity |  |
+| Project environment type identity |  |
+
+**Options:** Deploys resources into the target subscription · Reads the catalog credential from Key Vault · **Requests the environment** (`Deployment Environments User` on the project)
+
+<details>
+<summary>Show answer</summary>
 
 | Identity | Role |
 |---|---|
@@ -1039,6 +1251,8 @@ Match each identity to its role in one environment creation.
 separation is the entire security argument for the product — and Q4, Q19 and Q26 all attack it from
 different angles.
 
+</details>
+
 ---
 
 ## Q34
@@ -1048,6 +1262,9 @@ Arrange the PR-environment pipeline steps in order.
 **Items:** Publish the URL as an output variable · Check whether the environment already exists ·
 Poll `provisioningState` until `Succeeded` · Create the environment if absent · Read
 `outputs.webAppUrl.value`
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer
 
@@ -1063,11 +1280,26 @@ Poll `provisioningState` until `Succeeded` · Create the environment if absent �
 - Skip 3 → step 4 reads an empty output from a half-provisioned environment
 - Skip 5 → later stages have no way to reach the environment
 
+</details>
+
 ---
 
 ## Q35
 
 Match each symptom to its cause.
+
+| Symptom | Cause |
+|---|---|
+| `environment definition 'WebApp' was not found in catalog` |  |
+| `AuthorizationFailed` on `deployments/write` |  |
+| The catalog never syncs at all |  |
+| PR pipeline fails on the second push |  |
+| Dev environments accumulate indefinitely |  |
+
+**Options:** Catalog sync failed — wrong `path` · Dev Center identity cannot read the Key Vault secret · No existence check before create · No expiry tag policy or cleanup runbook · Project environment type identity has no subscription role
+
+<details>
+<summary>Show answer</summary>
 
 | Symptom | Cause |
 |---|---|
@@ -1082,6 +1314,8 @@ Match each symptom to its cause.
 **The middle row is the one with no worked example in the challenge** — but it follows directly from
 Q7. The Dev Center reads the PAT from Key Vault using its own managed identity, so if that identity
 has no Key Vault access, the sync never even starts.
+
+</details>
 
 ---
 
@@ -1106,12 +1340,17 @@ az role assignment create \
 - **BLANK 2:** `Deployment Environments User` / `Contributor` / `DevCenter Project Admin` /
   `Owner`
 
+<details>
+<summary>Show answer</summary>
+
 ### Answer: `SystemAssigned`, `Deployment Environments User`
 
 **In `challenge-33.md`:** lines **47** and **61**.
 
 The Dev Center's identity is what reads the catalog secret from Key Vault. The developer role is
 scoped to the **project**, deliberately never to a subscription.
+
+</details>
 
 ---
 
@@ -1131,6 +1370,9 @@ az devcenter admin project-environment-type create \
 - **BLANK 2:** `roles` / `permissions` / `role-assignments` / `access`
 - **BLANK 3:** `Enabled` / `Active` / `On` / `Available`
 
+<details>
+<summary>Show answer</summary>
+
 ### Answer: `deployment-target-id`, `roles`, `Enabled`
 
 **In `challenge-33.md`:** lines **92–95**.
@@ -1140,6 +1382,8 @@ the environment they create**, so they can work with the resources inside it.
 
 `--status Enabled` matters: a disabled type stays configured but accepts no new environments, which is
 how you retire a type without breaking existing ones.
+
+</details>
 
 ---
 
@@ -1163,6 +1407,9 @@ parameters:
 - **BLANK 1:** `templatePath` / `template` / `bicepFile` / `path`
 - **BLANK 2:** `allowed` / `values` / `options` / `choices`
 
+<details>
+<summary>Show answer</summary>
+
 ### Answer: `templatePath`, `allowed`
 
 **In `challenge-33.md`:** lines **144** and **151**.
@@ -1170,6 +1417,8 @@ parameters:
 `values` is Azure Pipelines parameter syntax (Challenge 20); `options` is GitHub Actions
 `workflow_dispatch` (Challenge 19). Three platforms, three keywords for the same idea — and the exam
 mixes them deliberately.
+
+</details>
 
 ---
 
@@ -1188,12 +1437,17 @@ az devcenter admin catalog create \
 - **BLANK 1:** `git-hub` / `ado-git` / `git` / `repository`
 - **BLANK 2:** `secret-identifier` / `token` / `pat` / `credential`
 
+<details>
+<summary>Show answer</summary>
+
 ### Answer: `git-hub`, `secret-identifier`
 
 **In `challenge-33.md`:** lines **293** and **296**.
 
 `--ado-git` is the Azure Repos equivalent (line 321), taking the same four settings. `secret-identifier`
 is a **Key Vault URI**, not the secret itself — the Dev Center resolves it with its managed identity.
+
+</details>
 
 ---
 
@@ -1212,12 +1466,17 @@ az devcenter [BLANK 1] environment create \
 - **BLANK 1:** `dev` / `admin` / `env` / `user`
 - **BLANK 2:** `environment-definition-name` / `template-name` / `definition` / `blueprint-name`
 
+<details>
+<summary>Show answer</summary>
+
 ### Answer: `dev`, `environment-definition-name`
 
 **In `challenge-33.md`:** lines **333** and **339**.
 
 `admin` commands configure the platform; `dev` commands are what developers run. Spotting which half a
 command belongs to is worth marks by itself.
+
+</details>
 
 ---
 
@@ -1239,6 +1498,9 @@ variables:
   `provisioningState`
 - **BLANK 3:** `isOutput=true` / `isSecret=true` / `global=true` / `scope=stage`
 
+<details>
+<summary>Show answer</summary>
+
 ### Answer: `pr-$(System.PullRequest.PullRequestNumber)`, `outputs.webAppUrl.value`, `isOutput=true`
 
 **In `challenge-33.md`:** lines **472**, **539**, **540**.
@@ -1248,6 +1510,8 @@ environment each time.
 
 `outputs.webAppUrl.value` reads a **Bicep template output** surfaced by the environment.
 `isOutput=true` plus a named task is the cross-job pattern from Challenge 20.
+
+</details>
 
 ---
 
@@ -1294,6 +1558,9 @@ Which structure meets the "different subscriptions per environment type" require
 - C. Three catalogs, one per environment type
 - D. A single environment type with a subscription parameter
 
+<details>
+<summary>Show answer</summary>
+
 ### Answer: A
 
 **In `challenge-33.md`:** lines **88–115**.
@@ -1312,6 +1579,8 @@ Which structure meets the "different subscriptions per environment type" require
 - **D** — a parameter is chosen by the **developer**, which would let anyone deploy into staging. The
   subscription must be fixed by the platform, not requested
 
+</details>
+
 ---
 
 ## Q43
@@ -1323,6 +1592,9 @@ Which **two** meet the "no standing access" requirement? (Choose two.)
 - C. Developers hold Contributor on the dev subscription
 - D. Developers hold Reader on the target subscription
 - E. A shared service principal credential distributed to developers
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A, B
 
@@ -1338,6 +1610,8 @@ project-scoped and grants nothing directly in the subscription.
 - **D** — Reader is less dangerous and still standing access, and it does not enable anything they need
 - **E** — a shared credential is unattributable and unrotatable
 
+</details>
+
 ---
 
 ## Q44
@@ -1348,6 +1622,9 @@ Which control stops developers choosing oversized SKUs?
 - B. Azure Policy on the target subscription
 - C. `--max-dev-boxes-per-user`
 - D. The `@allowed` decorator in `main.bicep`
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -1363,6 +1640,8 @@ Which control stops developers choosing oversized SKUs?
   `environment.yaml` is the developer-facing contract; the Bicep decorator is the implementation's
   own guard. In practice you want both, and the question asks which control shapes the **choice**
 
+</details>
+
 ---
 
 ## Q45
@@ -1374,6 +1653,9 @@ Which **two** meet the cost requirements? (Choose two.)
 - C. An Azure Policy `deny` effect on expensive SKUs
 - D. Azure Reservations for the dev subscription
 - E. Deleting the Dev environment type weekly
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A, B
 
@@ -1389,6 +1671,8 @@ own mechanism.
   smaller
 - **E** — would break every existing environment of that type
 
+</details>
+
 ---
 
 ## Q46
@@ -1399,6 +1683,9 @@ How should each pull request get an isolated environment?
 - B. A shared `pr-testing` environment that every PR deploys into
 - C. Developers manually creating an environment per PR
 - D. Deploying the Bicep template directly from the PR pipeline
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -1414,6 +1701,8 @@ How should each pull request get an isolated environment?
 **And the consistency benefit:** the PR environment uses the **same definition** as everything else, so
 it genuinely matches production's shape — the third requirement in the self-service group.
 
+</details>
+
 ---
 
 ## Q47
@@ -1427,6 +1716,9 @@ What is the most likely cause?
 - B. The catalog has not synced
 - C. The developer lacks permissions
 - D. The environment type is disabled
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -1446,6 +1738,8 @@ Bicep deployment runs there under the environment type's identity.
 **The reasoning pattern:** *what is different between the thing that works and the thing that does
 not?* Shared components are exonerated by the working case.
 
+</details>
+
 ---
 
 ## Q48
@@ -1461,6 +1755,9 @@ What went wrong?
 - B. The runbook's managed identity lacks permissions
 - C. The tag name is misspelled in the runbook
 - D. The 7-day threshold is too long
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -1500,6 +1797,8 @@ az policy remediation create \
 **The general lesson, and it recurs:** a policy that tags going forward does not fix what already
 exists. Whenever you introduce a tag-driven process, ask what happens to the resources that predate
 it.
+
+</details>
 
 ---
 ---

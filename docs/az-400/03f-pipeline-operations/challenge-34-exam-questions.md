@@ -1,6 +1,8 @@
 ---
-sidebar_position: 91
+sidebar_position: 1.5
+toc_max_heading_level: 2
 title: "Challenge 34: exam questions"
+sidebar_label: "Exam questions (48 Q)"
 ---
 
 # Challenge 34 — AZ-400 exam questions
@@ -45,6 +47,9 @@ What defines a **flaky test**?
 - C. A test that takes longer than average
 - D. A test with no assertions
 
+<details>
+<summary>Show answer</summary>
+
 ### Answer: B
 
 **In `challenge-34.md`:** line **31**.
@@ -62,6 +67,8 @@ No code changed, so the test itself is the variable.
 **Why the others fail** — A is a genuine failure, C is slow rather than unreliable, D is a bad test
 that is at least deterministic.
 
+</details>
+
 ---
 
 ## Q2
@@ -72,6 +79,9 @@ Which Jest setting retries a failed test automatically?
 - B. `maxWorkers: 2`
 - C. `bail: 2`
 - D. `testTimeout: 2000`
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -93,6 +103,8 @@ tell you which test was flaky. That is why the challenge pairs it with annotatio
 - **C** — `bail` stops the run after N failures. The opposite of retrying
 - **D** — a per-test timeout. Raising it can mask a timing-sensitive test rather than fix it
 
+</details>
+
 ---
 
 ## Q3
@@ -105,6 +117,9 @@ What is the most likely cause?
 - B. `|| true` on the test step and `failTaskOnFailedTests: false`
 - C. The test results file is missing
 - D. Tests run on the wrong branch
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: B
 
@@ -128,6 +143,8 @@ honestly.**
 **Why the others fail** — C would show *missing* results rather than a 100% pass rate; A and D would
 not produce a clean green dashboard alongside production bugs.
 
+</details>
+
 ---
 
 ## Q4
@@ -138,6 +155,9 @@ Which Azure DevOps setting must be enabled for built-in flaky test detection?
 - B. `failTaskOnFailedTests: true`
 - C. `continueOnError: true`
 - D. `retryCountOnTaskFailure`
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -165,6 +185,8 @@ which ones are unreliable.
 **Why the others fail** — B controls build failure, C swallows errors, D is a task-level retry
 setting.
 
+</details>
+
 ---
 
 ## Q5
@@ -175,6 +197,9 @@ Which metric measures how long the pipeline stays broken?
 - B. MTTR — mean time to recovery
 - C. P95 duration
 - D. Queue time
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: B
 
@@ -202,6 +227,8 @@ production.
 **Why the others fail** — A measures how often it breaks, C how slow it is, D how long work waits to
 start.
 
+</details>
+
 ---
 
 ## Q6
@@ -212,6 +239,9 @@ Which four targets does the weekly health report track?
 - B. Lines of code, test count, coverage, complexity
 - C. Deployment frequency, lead time, change failure rate, MTTR
 - D. CPU, memory, disk, network
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -234,6 +264,8 @@ runs, so the P95 is what actually shapes their trust in CI.
   *delivery*. These measure the *pipeline*. MTTR appears in both, at different scopes
 - **B** and **D** — code quality and infrastructure metrics
 
+</details>
+
 ---
 
 ## Q7
@@ -244,6 +276,9 @@ Which permission does the metrics workflow need to read another workflow's runs?
 - B. `contents: read`
 - C. `checks: read`
 - D. `workflows: read`
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -268,6 +303,8 @@ API exposes about runs.
 **Note both permissions map to something the job does** — read runs, create an issue. Same
 least-privilege pattern as every other workflow in these challenges.
 
+</details>
+
 ---
 
 ## Q8
@@ -278,6 +315,9 @@ Which trigger runs the metrics collector after the CI pipeline finishes?
 - B. `workflow_call`
 - C. `schedule`
 - D. `repository_dispatch`
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -303,6 +343,8 @@ filter. The trigger cannot express "only when it failed".
 **Why the others fail** — B makes it callable, C runs on a clock (which the *weekly report* uses at
 line 313), D is an external API trigger.
 
+</details>
+
 ---
 
 ## Q9
@@ -313,6 +355,9 @@ The degradation alert fires when what condition is met?
 - B. Three or more consecutive failures on main
 - C. Duration exceeds 45 minutes
 - D. Test pass rate drops below 90%
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: B
 
@@ -344,6 +389,8 @@ place.
 - **C** — a real alert, and it is the **duration** threshold in a different workflow (line 245)
 - **D** — not implemented here
 
+</details>
+
 ---
 
 ## Q10
@@ -354,6 +401,9 @@ Which condition prevents the flaky-test annotation step from failing when no fla
 - B. `continue-on-error: true`
 - C. `if: success()`
 - D. `if: failure()`
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -377,6 +427,8 @@ exist?" test in GitHub Actions.
 - **C** — the test step failed, so `success()` is false and the annotation never appears
 - **D** — misses the case where tests passed on the first attempt but a *previous* step wrote the file
 
+</details>
+
 ---
 
 ## Q11
@@ -387,6 +439,9 @@ Why does the retry implementation compare results from two attempts rather than 
 - B. To speed up the test run
 - C. To reduce test count
 - D. To satisfy code coverage requirements
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -412,6 +467,8 @@ a `::warning::` and are recorded. Green build, visible debt.
 
 **Why the others fail** — B is false, retrying is slower; C and D are unrelated.
 
+</details>
+
 ---
 
 ## Q12
@@ -422,6 +479,9 @@ Which `gh` command calculates the failure rate over recent runs?
 - B. `gh workflow view`
 - C. `gh run watch`
 - D. `gh api /rate_limit`
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -440,6 +500,8 @@ handful of runs and swings wildly.
 
 **Why the others fail** — B shows workflow metadata, C follows a run live, D reports API quota.
 
+</details>
+
 ---
 
 ## Q13
@@ -451,6 +513,9 @@ code?
 - B. The Releases view
 - C. The Artifacts feed
 - D. The Test Plans hub
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -474,6 +539,8 @@ Azure DevOps.
 
 **Why the others fail** — B is classic releases, C is packages, D is manual test case management.
 
+</details>
+
 ---
 
 ## Q14
@@ -484,6 +551,9 @@ Which endpoint supports custom pipeline analytics queries in Azure DevOps?
 - B. The Build REST API
 - C. Application Insights
 - D. Azure Resource Graph
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -505,6 +575,8 @@ entity sets.
 - **C** — application telemetry, not pipeline data
 - **D** — queries Azure resources, and Azure DevOps pipelines are not ARM resources
 
+</details>
+
 ---
 
 ## Q15
@@ -515,6 +587,9 @@ What does the P95 duration tell you that the average does not?
 - B. The median duration
 - C. The total pipeline cost
 - D. The failure rate
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -533,6 +608,8 @@ gracefully rather than crashing.
 
 **Why the others fail** — B is P50, C and D are different measures entirely.
 
+</details>
+
 ---
 
 ## Q16
@@ -543,6 +620,9 @@ The health report runs on `cron: "0 9 * * 1"`. When is that?
 - B. Every day at 09:00 UTC
 - C. The first of every month at 09:00
 - D. Every hour on Mondays
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -563,6 +643,8 @@ health becomes an input to what the team commits to rather than a complaint rais
 **Note `workflow_dispatch` alongside it** — the engineering manager can pull the report on demand
 without waiting for Monday.
 
+</details>
+
 ---
 
 # Section B — Multiple answer
@@ -579,6 +661,9 @@ Which **three** metrics does the weekly health report calculate? (Choose three.)
 - D. Code coverage
 - E. Deployment frequency
 - F. Cyclomatic complexity
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A, B, C
 
@@ -600,6 +685,8 @@ Which **three** metrics does the weekly health report calculate? (Choose three.)
 delivery process**. MTTR appears in both with different scopes — pipeline recovery here, service
 recovery in DORA.
 
+</details>
+
 ---
 
 ## Q18
@@ -611,6 +698,9 @@ Which **two** changes fix the misleading 100% pass rate? (Choose two.)
 - C. Remove `condition: always()` from the publish task
 - D. Set `continueOnError: true`
 - E. Delete the failing tests
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A, B
 
@@ -627,6 +717,8 @@ you need to see them. Removing it would fix the false green and blind you to the
 - **D** — another muzzle, this time at task level
 - **E** — deleting tests to make the build green is the same failure in a more expensive form
 
+</details>
+
 ---
 
 ## Q19
@@ -638,6 +730,9 @@ Which **two** are required to make retries useful rather than harmful? (Choose t
 - C. Retry the entire suite until it passes
 - D. Set `continue-on-error: true` on the test job
 - E. Increase `retryTimes` until failures disappear
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A, B
 
@@ -661,6 +756,8 @@ Which **two** are required to make retries useful rather than harmful? (Choose t
 
 **The principle:** *a retry must leave a trace.* Green build, visible debt.
 
+</details>
+
 ---
 
 ## Q20
@@ -681,6 +778,9 @@ Which **three** problems appear in the broken retry loop? (Choose three.)
 - D. It retries too few times
 - E. It runs tests in parallel
 
+<details>
+<summary>Show answer</summary>
+
 ### Answer: A, B, C
 
 **In `challenge-34.md`:** lines **683–691** — the comments name all three.
@@ -693,6 +793,8 @@ which test was unreliable.
 
 **Why the others fail** — D is wrong, three attempts is reasonable; E is not what the loop does.
 
+</details>
+
 ---
 
 ## Q21
@@ -704,6 +806,9 @@ Which **two** permissions does the alert workflow need? (Choose two.)
 - C. `contents: write`
 - D. `pull-requests: write`
 - E. `packages: write`
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A, B
 
@@ -718,6 +823,8 @@ packages. Each permission it holds maps to something it actually does.
 and `issues: write` for drift. The permission follows the **output**, and reading it off the block is
 a fast way to answer these questions.
 
+</details>
+
 ---
 
 ## Q22
@@ -729,6 +836,9 @@ Which **two** behaviours in Contoso's scenario indicate lost trust in CI? (Choos
 - C. Build queue times spike during peak hours
 - D. The pipeline takes 45 minutes
 - E. Tests are written in Jest
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A, B
 
@@ -745,6 +855,8 @@ add alerting (so breakage is noticed), then optimise duration — which is Chall
 
 **Why the others fail** — C and D are symptoms of pipeline performance, E is a tooling choice.
 
+</details>
+
 ---
 
 ## Q23
@@ -757,6 +869,9 @@ two.)
 - C. System detection requires `retryTimes` in Jest
 - D. Custom detection only works with MSTest
 - E. System detection disables failing builds
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A, B
 
@@ -780,6 +895,8 @@ happened at least twice. Custom marking is immediate and only as accurate as the
 - **E** — it **classifies** results. Whether a flaky test fails the build is controlled separately by
   `failTaskOnFailedTests`
 
+</details>
+
 ---
 
 # Section C — Repeated scenario
@@ -796,7 +913,10 @@ fail the build on genuine failures.
 sets, emit a `::warning::` naming any test that passed on retry, upload a flaky-test artifact, and exit
 non-zero only if tests still fail.
 
-Does this meet the goal? **Yes**
+Does this meet the goal?
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: Yes
 
@@ -813,6 +933,8 @@ All three requirements are met by different parts of the same block:
 **Note it retries only the failed tests** (line 433), not the whole suite — faster, and it keeps the
 comparison precise.
 
+</details>
+
 ---
 
 ## Q25
@@ -820,7 +942,10 @@ comparison precise.
 **Proposed solution:** Wrap the test command in a loop that retries up to three times and breaks on
 success.
 
-Does this meet the goal? **No**
+Does this meet the goal?
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: No
 
@@ -836,6 +961,8 @@ attempts failed can still exit 0 — meaning **genuine failures stop failing the
 **It satisfies exactly one requirement** — flaky tests no longer fail the build — and does so by
 making *all* failures stop failing the build. That is the worst outcome available.
 
+</details>
+
 ---
 
 ## Q26
@@ -843,7 +970,10 @@ making *all* failures stop failing the build. That is the worst outcome availabl
 **Proposed solution:** Set `retryTimes: 2` in `jest.config.js` and publish JUnit results with
 `failTaskOnFailedTests: true`.
 
-Does this meet the goal? **No**
+Does this meet the goal?
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: No
 
@@ -861,6 +991,8 @@ the platform side, or the compare-and-annotate approach from Q24.
 
 **The recurring lesson:** `retryTimes` alone converts a visible problem into an invisible one.
 
+</details>
+
 ---
 
 # Section D — Yes/No statement grid
@@ -868,6 +1000,16 @@ the platform side, or the compare-and-annotate approach from Q24.
 ---
 
 ## Q27 — flaky tests
+
+| # | Statement | Answer |
+|---|---|---|
+| 1 | A flaky test passes and fails on the same commit |  |
+| 2 | Retrying without recording resolves flakiness |  |
+| 3 | Azure DevOps can detect flaky tests automatically |  |
+| 4 | `retryTimes` in Jest reports which tests were retried in JUnit output |  |
+
+<details>
+<summary>Show answer</summary>
 
 | # | Statement | Answer |
 |---|---|---|
@@ -884,9 +1026,21 @@ tomorrow, and now nobody can see it.
 Row 4 is Q26's point: Jest's internal retry produces a clean "passed" in the results file. Detection
 has to come from comparing runs or from platform-side classification.
 
+</details>
+
 ---
 
 ## Q28 — build honesty
+
+| # | Statement | Answer |
+|---|---|---|
+| 1 | `\|\| true` on a test step hides failures |  |
+| 2 | `failTaskOnFailedTests: false` lets a build pass with failing tests |  |
+| 3 | `condition: always()` on the publish task should be removed |  |
+| 4 | `continueOnError: true` on a test task makes failures visible |  |
+
+<details>
+<summary>Show answer</summary>
 
 | # | Statement | Answer |
 |---|---|---|
@@ -907,9 +1061,21 @@ has to come from comparing runs or from platform-side classification.
 Row 4: `continueOnError` turns a failure into a **warning**. The run shows partially succeeded, which
 most people read as green.
 
+</details>
+
 ---
 
 ## Q29 — metrics
+
+| # | Statement | Answer |
+|---|---|---|
+| 1 | MTTR measures time from failure to the next success |  |
+| 2 | P95 duration is the same as the average |  |
+| 3 | Success rate above 90% is the stated target |  |
+| 4 | Queue time is part of total run duration |  |
+
+<details>
+<summary>Show answer</summary>
 
 | # | Statement | Answer |
 |---|---|---|
@@ -927,9 +1093,21 @@ that number — buying parallelism or self-hosted capacity will, which is Challe
 Row 2: a healthy average with an unhealthy P95 is the most common real pattern, and the P95 is what
 people remember.
 
+</details>
+
 ---
 
 ## Q30 — alerting
+
+| # | Statement | Answer |
+|---|---|---|
+| 1 | Alerting on every failure builds trust in the alert |  |
+| 2 | Three consecutive failures indicates a systemic problem |  |
+| 3 | An alert should have an assignee |  |
+| 4 | `workflow_run` with `types: [completed]` fires on failures too |  |
+
+<details>
+<summary>Show answer</summary>
 
 | # | Statement | Answer |
 |---|---|---|
@@ -946,6 +1124,8 @@ then genuinely nobody notices when it breaks.
 
 Row 3: line 513 assigns `oncall-engineer`. An unassigned P1 belongs to everyone, which means nobody.
 
+</details>
+
 ---
 
 # Section E — Drag and drop
@@ -959,6 +1139,9 @@ Arrange the flaky-test detection flow in order.
 **Items:** Emit a `::warning::` annotation · Run the full test suite · Compare the two result sets ·
 Retry only the failed tests · Exit non-zero only if tests still fail
 
+<details>
+<summary>Show answer</summary>
+
 ### Answer
 
 1. Run the full test suite — line **413**, `continue-on-error: true`
@@ -971,11 +1154,27 @@ Retry only the failed tests · Exit non-zero only if tests still fail
 **only the failures**, which keeps step 3's comparison meaningful — a whole-suite retry cannot tell you
 which specific test recovered.
 
+</details>
+
 ---
 
 ## Q32
 
 Match each metric to what it reveals.
+
+| Metric | Reveals |
+|---|---|
+| Success rate |  |
+| Average duration |  |
+| P95 duration |  |
+| MTTR |  |
+| Queue time |  |
+| Flaky test count |  |
+
+**Options:** How long it stays broken · How long work waits for an agent · How much of the failure rate is noise · How often the pipeline breaks · The bad runs developers remember · Typical feedback time
+
+<details>
+<summary>Show answer</summary>
 
 | Metric | Reveals |
 |---|---|
@@ -992,6 +1191,8 @@ Match each metric to what it reveals.
 average with a bad P95 → find the outlier job. High MTTR → alerting and ownership. High queue time →
 parallelism or self-hosted capacity, which is Challenge 21.
 
+</details>
+
 ---
 
 ## Q33
@@ -1000,6 +1201,9 @@ Arrange these pipeline-health interventions in the order that restores trust fas
 
 **Items:** Optimise pipeline duration · Detect and annotate flaky tests · Alert on consecutive
 failures · Publish a weekly health report
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer
 
@@ -1012,11 +1216,26 @@ failures · Publish a weekly health report
 delivers wrong answers sooner, and alerting on an unreliable pipeline generates noise people learn to
 ignore. Reliability precedes speed.
 
+</details>
+
 ---
 
 ## Q34
 
 Match each symptom to its cause.
+
+| Symptom | Cause |
+|---|---|
+| 100% pass rate but bugs in production |  |
+| Tests pass on retry with no code change |  |
+| Build goes green even when all retries fail |  |
+| Nobody notices main is broken for hours |  |
+| Developers push directly to main |  |
+
+**Options:** `\|\| true` and `failTaskOnFailedTests: false` · Exit code taken from the loop's last `echo` · Flaky tests · Lost trust from a 30% failure rate · No alerting on consecutive failures
+
+<details>
+<summary>Show answer</summary>
 
 | Symptom | Cause |
 |---|---|
@@ -1032,11 +1251,27 @@ Match each symptom to its cause.
 the **last command executed**. When every attempt fails, the last command is the `echo` in the `||`
 branch, which exits 0.
 
+</details>
+
 ---
 
 ## Q35
 
 Match each tool to its platform.
+
+| Capability | Platform |
+|---|---|
+| Built-in flaky test detection in project settings |  |
+| `retryTimes` in `jest.config.js` |  |
+| `gh run list --json ... --jq` analytics |  |
+| Analytics OData `PipelineRuns` endpoint |  |
+| `::warning::` workflow annotations |  |
+| `PublishTestResults@2` with `failTaskOnFailedTests` |  |
+
+**Options:** Azure DevOps · Azure Pipelines · GitHub · GitHub Actions · Test framework — either platform
+
+<details>
+<summary>Show answer</summary>
 
 | Capability | Platform |
 |---|---|
@@ -1052,6 +1287,8 @@ Match each tool to its platform.
 **The asymmetry is worth stating:** Azure DevOps has **built-in** flaky detection and analytics; GitHub
 Actions requires you to build both from the API. That is why the challenge writes a metrics collector
 for GitHub and simply points at the Analytics tab for Azure DevOps.
+
+</details>
 
 ---
 
@@ -1075,12 +1312,17 @@ module.exports = {
 - **BLANK 1:** `retryTimes` / `maxWorkers` / `bail` / `testTimeout`
 - **BLANK 2:** `jest-junit` / `jest-html-reporter` / `default` / `jest-flaky`
 
+<details>
+<summary>Show answer</summary>
+
 ### Answer: `retryTimes`, `jest-junit`
 
 **In `challenge-34.md`:** lines **94** and **97**.
 
 `jest-junit` produces the JUnit XML that both `PublishTestResults@2` (line 140) and
 `dorny/test-reporter` (line 81) consume — one format, both platforms.
+
+</details>
 
 ---
 
@@ -1100,6 +1342,9 @@ Requirement: always publish results, and fail the build when tests fail.
 - **BLANK 2:** `failTaskOnFailedTests` / `continueOnError` / `publishRunAttachments` /
   `mergeTestResults`
 
+<details>
+<summary>Show answer</summary>
+
 ### Answer: `always()`, `failTaskOnFailedTests`
 
 **In `challenge-34.md`:** lines **668–672**.
@@ -1107,6 +1352,8 @@ Requirement: always publish results, and fail the build when tests fail.
 **The two settings pull in opposite directions and both are correct.** `always()` guarantees results
 are **visible** after a failure; `failTaskOnFailedTests: true` guarantees the build is **honest**
 about it.
+
+</details>
 
 ---
 
@@ -1126,12 +1373,17 @@ jobs:
 - **BLANK 1:** `workflow_run` / `workflow_call` / `workflow_dispatch` / `schedule`
 - **BLANK 2:** `conclusion` / `status` / `result` / `outcome`
 
+<details>
+<summary>Show answer</summary>
+
 ### Answer: `workflow_run`, `conclusion`
 
 **In `challenge-34.md`:** lines **478** and **485**.
 
 `types: [completed]` fires on success **and** failure — `status` would tell you it finished,
 `conclusion` tells you **how**. Same pair as Challenge 22 Q38.
+
+</details>
 
 ---
 
@@ -1148,6 +1400,9 @@ jobs:
 - **BLANK 2:** `hashFiles` / `fileExists` / `exists` / `contains`
 - **BLANK 3:** `warning` / `error` / `notice` / `debug`
 
+<details>
+<summary>Show answer</summary>
+
 ### Answer: `always()`, `hashFiles`, `warning`
 
 **In `challenge-34.md`:** lines **455** and **458**.
@@ -1155,6 +1410,8 @@ jobs:
 `hashFiles()` returns an empty string when nothing matches — the idiomatic file-existence test.
 `::warning::` is right because flakiness should be **visible without failing the build**; `::error::`
 would turn recorded debt into a hard failure.
+
+</details>
 
 ---
 
@@ -1175,12 +1432,17 @@ would turn recorded debt into a hard failure.
 - **BLANK 1:** `3` / `1` / `5` / `10`
 - **BLANK 2:** `assignees` / `reviewers` / `owners` / `watchers`
 
+<details>
+<summary>Show answer</summary>
+
 ### Answer: `3`, `assignees`
 
 **In `challenge-34.md`:** lines **505** and **513**.
 
 One failure is usually a developer already fixing it; three in a row is systemic. And an unassigned P1
 belongs to nobody.
+
+</details>
 
 ---
 
@@ -1195,12 +1457,17 @@ gh run list --workflow=ci.yml --limit [BLANK 1] --[BLANK 2] conclusion \
 - **BLANK 2:** `json` / `format` / `output` / `fields`
 - **BLANK 3:** `jq` / `filter` / `query` / `template`
 
+<details>
+<summary>Show answer</summary>
+
 ### Answer: `200`, `json`, `jq`
 
 **In `challenge-34.md`:** lines **184–185**.
 
 A rate computed over the default handful of runs swings wildly; 200 gives a stable figure. `--json`
 selects fields and `--jq` transforms them — the pairing that makes the CLI an analytics tool.
+
+</details>
 
 ---
 
@@ -1247,6 +1514,9 @@ Which **two** meet the flaky-test requirements? (Choose two.)
 - D. Add `continue-on-error: true` to the test job
 - E. Quarantine failing tests by deleting them
 
+<details>
+<summary>Show answer</summary>
+
 ### Answer: A, B
 
 **In `challenge-34.md`:** lines **436–450** and **454–466**.
@@ -1258,6 +1528,8 @@ Which **two** meet the flaky-test requirements? (Choose two.)
 - **D** — the build passes on genuine failures too, breaking the third requirement
 - **E** — coverage falls silently and the underlying defect ships
 
+</details>
+
 ---
 
 ## Q43
@@ -1268,6 +1540,9 @@ Which configuration ensures genuine failures still fail the build?
 - B. `continue-on-error: true` on the test step
 - C. `|| true` after the test command
 - D. `failTaskOnFailedTests: false`
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -1285,6 +1560,8 @@ Any of them produces the 100%-pass-rate-with-production-bugs failure from Break 
 **Note the first attempt *does* use `continue-on-error: true`** (line 415) — deliberately, so the
 retry can run. The honesty is enforced at the **end**, by the comparison's exit code.
 
+</details>
+
 ---
 
 ## Q44
@@ -1296,6 +1573,9 @@ Which **two** meet the visibility requirements? (Choose two.)
 - C. An email on every failed run
 - D. A dashboard nobody is required to check
 - E. Enabling verbose logging
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A, B
 
@@ -1311,6 +1591,8 @@ Which **two** meet the visibility requirements? (Choose two.)
 **The pairing is deliberate:** the alert catches **acute** breakage, the weekly report catches
 **gradual** decline — which is what has been happening for three months.
 
+</details>
+
 ---
 
 ## Q45
@@ -1322,6 +1604,9 @@ Which **two** metrics best diagnose the 9–11 AM queue spike? (Choose two.)
 - C. Code coverage percentage
 - D. Test pass rate
 - E. Flaky test count
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A, B
 
@@ -1336,6 +1621,8 @@ self-hosted agents. Challenge 35 makes that trade-off explicitly.
 
 **Why the others fail** — C, D and E measure test quality, not scheduling.
 
+</details>
+
 ---
 
 ## Q46
@@ -1347,6 +1634,9 @@ Which **two** ensure test result honesty? (Choose two.)
 - C. Remove `condition: always()` from the publish task
 - D. `continueOnError: true` on the test task
 - E. `failTaskOnMissingResultsFile: false`
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A, B
 
@@ -1361,6 +1651,8 @@ Which **two** ensure test result honesty? (Choose two.)
   results file passes silently. Line 673 sets it to `true` precisely so "no results" is treated as a
   failure rather than as nothing to report
 
+</details>
+
 ---
 
 ## Q47
@@ -1374,6 +1666,9 @@ What is missing, and what should Contoso do?
 - B. More retries
 - C. A faster pipeline
 - D. Deleting the five tests
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -1399,6 +1694,8 @@ blocking suite and its issue is assigned. That caps the damage while the fix is 
 - **D** — **the tempting one.** Deleting removes the noise *and* the coverage, so the untested
   behaviour ships silently. Quarantine keeps the test visible and non-blocking; deletion loses it
 
+</details>
+
 ---
 
 ## Q48
@@ -1412,6 +1709,9 @@ What is happening, and what should Contoso investigate?
 - B. The average is calculated incorrectly
 - C. The success rate target is too low
 - D. Developers are exaggerating
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -1436,6 +1736,8 @@ they experience the run they are waiting on, and they remember the bad ones.
 **The general lesson, and it is worth carrying into Challenge 35:** **averages hide tails, and users
 live in the tail.** A target that only checks the mean will report health while the experience is
 poor.
+
+</details>
 
 ---
 ---

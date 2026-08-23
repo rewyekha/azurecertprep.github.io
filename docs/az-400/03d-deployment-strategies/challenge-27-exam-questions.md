@@ -1,6 +1,8 @@
 ---
-sidebar_position: 93
+sidebar_position: 3.5
+toc_max_heading_level: 2
 title: "Challenge 27: exam questions"
+sidebar_label: "Exam questions (48 Q)"
 ---
 
 # Challenge 27 — AZ-400 exam questions
@@ -44,6 +46,9 @@ Which Azure App Configuration tier is required for feature flags?
 - C. Premium
 - D. Any tier supports feature flags
 
+<details>
+<summary>Show answer</summary>
+
 ### Answer: B
 
 **In `challenge-27.md`:** line **49**.
@@ -66,6 +71,8 @@ az appconfig create \
 App Configuration. **Free tiers do not do production features**, and the exam hides the tier in the
 scenario's background details.
 
+</details>
+
 ---
 
 ## Q2
@@ -76,6 +83,9 @@ Which RBAC role lets an application read feature flags from App Configuration?
 - B. App Configuration Data Reader
 - C. Reader
 - D. App Configuration Contributor
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: B
 
@@ -105,6 +115,8 @@ az role assignment create \
 **Note the assignee is a managed identity** (line 67), so no secret is stored anywhere — the same
 secretless pattern as your OIDC block.
 
+</details>
+
 ---
 
 ## Q3
@@ -117,6 +129,9 @@ Which **two** causes are most likely? (Pick the single best answer for this ques
 - B. The application needs restarting after every flag change
 - C. The RBAC role assignment has not propagated
 - D. Feature flags require a redeployment to take effect
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -143,6 +158,8 @@ in practice.
   would not be a kill switch
 - **C** — an RBAC problem produces a **403 at startup**, not stale values
 
+</details>
+
 ---
 
 ## Q4
@@ -156,6 +173,9 @@ What is the cause?
 - B. `IHttpContextAccessor` is not registered, so the targeting context is empty
 - C. The default rollout percentage overrides group percentages
 - D. Targeting filters require the Premium tier
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: B
 
@@ -180,6 +200,8 @@ group — and anonymous falls through to `DefaultRolloutPercentage`, which is 0 
 - **C** — group percentages take precedence over the default. That is what makes groups useful
 - **D** — Standard supports targeting filters
 
+</details>
+
 ---
 
 ## Q5
@@ -192,6 +214,9 @@ What is the cause?
 - B. Production lacks the Data Reader role
 - C. The production app uses a connection string instead of managed identity
 - D. The flag has a time window filter that has expired
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -219,6 +244,8 @@ the label it was configured for (line 198).
 **Why labels exist:** one store, many environments. It is the same pattern as environment-scoped
 secrets — same name, different scope, different value.
 
+</details>
+
 ---
 
 ## Q6
@@ -229,6 +256,9 @@ Which filter enables a feature only between two timestamps?
 - B. `Microsoft.TimeWindow`
 - C. `Microsoft.Percentage`
 - D. `Microsoft.Schedule`
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: B
 
@@ -257,6 +287,8 @@ az appconfig feature filter add \
   user**, which is what an A/B test needs
 - **D** — does not exist
 
+</details>
+
 ---
 
 ## Q7
@@ -267,6 +299,9 @@ In a targeting filter, what does `Audience.DefaultRolloutPercentage=0` mean?
 - B. Users not in a named group or user list do not get the feature
 - C. The feature rolls out to 0% and then increases automatically
 - D. The filter is ignored
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: B
 
@@ -294,6 +329,8 @@ InternalTeam at 100% is Ring 0/1, BetaTesters at 50% is Ring 1, and raising
 
 **Precedence to remember:** named **users** win, then **groups**, then the **default** percentage.
 
+</details>
+
 ---
 
 ## Q8
@@ -304,6 +341,9 @@ Which attribute gates an entire controller action behind a feature flag?
 - B. `[Authorize("FeatureName")]`
 - C. `[RequireFeature("FeatureName")]`
 - D. `[FeatureFlag("FeatureName")]`
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -329,6 +369,8 @@ whether it is the new one or the legacy one.
 
 **Why the others fail** — `[Authorize]` is authentication; the other two do not exist.
 
+</details>
+
 ---
 
 ## Q9
@@ -339,6 +381,9 @@ Which middleware call enables dynamic feature-flag refresh in a .NET application
 - B. `app.UseFeatureManagement()`
 - C. `app.UseConfigurationRefresh()`
 - D. `builder.Services.AddAzureAppConfiguration()`
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -362,6 +407,8 @@ reach your controllers before the refresh check runs.
 
 **Why the others fail** — B and C do not exist.
 
+</details>
+
 ---
 
 ## Q10
@@ -372,6 +419,9 @@ Which two NuGet packages does the challenge install for feature management?
 - B. `Azure.Identity` and `Microsoft.Extensions.Configuration`
 - C. `Microsoft.ApplicationInsights` and `Microsoft.FeatureManagement`
 - D. `Azure.Data.AppConfiguration` and `Microsoft.AspNetCore.Mvc`
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -388,6 +438,8 @@ Two packages doing two jobs: the first **connects** to App Configuration and ref
 **Why the others fail** — `Azure.Identity` is used (line 187) but is a dependency, not the feature
 package. `Azure.Data.AppConfiguration` is the low-level data SDK without ASP.NET integration.
 
+</details>
+
 ---
 
 ## Q11
@@ -398,6 +450,9 @@ How does the application authenticate to App Configuration in `Program.cs`?
 - B. `DefaultAzureCredential` with a managed identity
 - C. A stored access key
 - D. A service principal secret
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: B
 
@@ -424,6 +479,8 @@ that received the Data Reader role at line 74.
   store and rotate. This is the same argument as OIDC versus a service principal secret
 - **D** — again a stored secret
 
+</details>
+
 ---
 
 ## Q12
@@ -434,6 +491,9 @@ What is the effect of `CacheExpirationInterval = TimeSpan.FromSeconds(30)`?
 - B. Flags expire and become disabled after 30 seconds
 - C. The application restarts every 30 seconds
 - D. Flag changes take exactly 30 seconds to apply
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -456,6 +516,8 @@ until the interval elapses, then checks for changes on the next request.
 **The trade-off:** shorter interval means faster kill-switch response and more requests to App
 Configuration. 30 seconds is a reasonable production value; the default is longer.
 
+</details>
+
 ---
 
 ## Q13
@@ -466,6 +528,9 @@ In the CI/CD workflow, when is the feature flag enabled?
 - B. After the slot swap to production succeeds
 - C. During the build stage
 - D. Only manually, never in the pipeline
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: B
 
@@ -489,6 +554,8 @@ time, so if the flag causes a problem you disable it without touching the deploy
 - **A** and **C** — enabling before the code is live would expose a feature whose code is not there
 - **D** — the pipeline does it, though a manual workflow also exists (Task 6, line 476)
 
+</details>
+
 ---
 
 ## Q14
@@ -501,6 +568,9 @@ What pattern is this?
 - B. An automated kill switch driven by deployment health
 - C. A canary release
 - D. A rolling update
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: B
 
@@ -522,6 +592,8 @@ nothing.
 **Why the others fail** — A, C and D are all deployment strategies. Nothing is being deployed here;
 only configuration changes.
 
+</details>
+
 ---
 
 ## Q15
@@ -532,6 +604,9 @@ An A/B test uses `Audience.DefaultRolloutPercentage=50`. How are users assigned 
 - B. Consistently per user, based on a hash of their identifier
 - C. Alternately, one user to each variant in turn
 - D. By geographic region
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: B
 
@@ -555,6 +630,8 @@ checkout in one flow and finish in the other — and your conversion data would 
 - **C** — no round-robin exists, and it would not be sticky
 - **D** — geography is not part of the targeting filter
 
+</details>
+
 ---
 
 ## Q16
@@ -565,6 +642,9 @@ Which KQL function counts only the rows matching a condition, for A/B analysis?
 - B. `countif()`
 - C. `sum()`
 - D. `dcount()`
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: B
 
@@ -593,6 +673,8 @@ group — a conversion rate per variant in one query.
 **Two details worth carrying into Challenge 49:** `customDimensions` is dynamic so values need
 `tostring()`, and `100.0` forces floating-point division — `100` alone would truncate to an integer.
 
+</details>
+
 ---
 
 # Section B — Multiple answer
@@ -610,6 +692,9 @@ Which **three** are built-in Azure App Configuration feature filters? (Choose th
 - E. `Microsoft.DeviceType`
 - F. `Microsoft.Schedule`
 
+<details>
+<summary>Show answer</summary>
+
 ### Answer: A, B, C
 
 **In `challenge-27.md`:** lines **114** and **134**.
@@ -624,6 +709,8 @@ Which **three** are built-in Azure App Configuration feature filters? (Choose th
 not exist as built-ins. You can write **custom** filters implementing `IFeatureFilter` for exactly
 these kinds of rules, which is the more useful thing to know.
 
+</details>
+
 ---
 
 ## Q18
@@ -635,6 +722,9 @@ Which **two** are required for a targeting filter to identify users correctly? (
 - C. `AddFeatureFilter<PercentageFilter>()`
 - D. A connection string instead of managed identity
 - E. `CacheExpirationInterval` set below 60 seconds
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A, B
 
@@ -659,6 +749,8 @@ builder.Services.AddSingleton<ITargetingContextAccessor,
 - **D** — authentication method, unrelated to user identity inside the app
 - **E** — affects refresh speed, not identity
 
+</details>
+
 ---
 
 ## Q19
@@ -671,6 +763,9 @@ two.)
 - C. Enable the flag before deploying so users see it immediately
 - D. Deploy and enable in the same step to reduce pipeline duration
 - E. Disable the flag before every deployment as a matter of routine
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A, B
 
@@ -696,6 +791,8 @@ az appconfig feature disable --feature NewCheckoutFlow --label production --yes
   working feature off for every unrelated release. Flags carry state deliberately; only *new* flags
   start disabled
 
+</details>
+
 ---
 
 ## Q20
@@ -707,6 +804,9 @@ Which **two** make an A/B test statistically valid with feature flags? (Choose t
 - C. Using `Microsoft.Percentage` for random assignment
 - D. Reassigning users to variants hourly
 - E. Enabling the feature for all users
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A, B
 
@@ -733,6 +833,8 @@ produces no comparison at all.
 - **D** — the same problem, deliberately
 - **E** — with everyone on one variant there is no control group
 
+</details>
+
 ---
 
 ## Q21
@@ -744,6 +846,9 @@ Which **two** advantages do feature flags have over blue-green deployment for ro
 - C. Rollback is faster than a slot swap in every case
 - D. Rollback requires no infrastructure duplication
 - E. Rollback automatically reverts database changes
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A, B
 
@@ -766,6 +871,8 @@ about *rollback*, while D is about cost.
 - **E** — **the important one.** Neither flags nor slot swaps revert database changes. That is exactly
   why Challenge 29 insists on additive, backward-compatible migrations
 
+</details>
+
 ---
 
 ## Q22
@@ -777,6 +884,9 @@ Which **two** are true about feature flag labels? (Choose two.)
 - C. Labels are optional and default to `production`
 - D. Labels control which users see a feature
 - E. Labels must match the Azure region
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A, B
 
@@ -794,6 +904,8 @@ featureFlagOptions.Label = "production";
   **audiences**. Do not mix them
 - **E** — nothing to do with regions
 
+</details>
+
 ---
 
 ## Q23
@@ -806,6 +918,9 @@ alone cannot? (Choose two.)
 - C. Achieve zero downtime during deployment
 - D. Update instances gradually
 - E. Warm the application before receiving traffic
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A, B
 
@@ -826,6 +941,8 @@ slots, batches and warm-up. They are orthogonal: you still need a deployment str
 | Turning a feature off | Feature flags |
 | Turning a *release* back | Slot swap |
 
+</details>
+
 ---
 
 # Section C — Repeated scenario
@@ -842,7 +959,10 @@ instantly if problems appear.
 `Microsoft.Targeting` filter with `DefaultRolloutPercentage=0`, `InternalTeam` at 100% and
 `BetaTesters` at 50%, and enable the flag.
 
-Does this meet the goal? **Yes**
+Does this meet the goal?
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: Yes
 
@@ -859,6 +979,8 @@ Every requirement maps to a line of the filter:
 
 The code is live for everyone; only the **evaluation** differs per user.
 
+</details>
+
 ---
 
 ## Q25
@@ -866,7 +988,10 @@ The code is live for everyone; only the **evaluation** differs per user.
 **Proposed solution:** Deploy the new checkout to a staging slot and use
 `az webapp traffic-routing set --distribution staging=10` to send 10% of traffic to it.
 
-Does this meet the goal? **No**
+Does this meet the goal?
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: No
 
@@ -883,6 +1008,8 @@ the scenario, and this mechanism has no concept of audience.
 **The distinction to carry:** traffic routing selects **requests**; targeting filters select
 **users**. When a requirement names a group of people, you need flags.
 
+</details>
+
 ---
 
 ## Q26
@@ -890,7 +1017,10 @@ the scenario, and this mechanism has no concept of audience.
 **Proposed solution:** Deploy the code with `NewCheckoutFlow` disabled, add a `Microsoft.Percentage`
 filter set to 50, and enable the flag once the internal team has approved.
 
-Does this meet the goal? **No**
+Does this meet the goal?
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: No
 
@@ -909,6 +1039,8 @@ and behave correctly, because it hashes the user identifier.
 **The rule:** *anything user-facing and multi-step needs sticky assignment.* That means Targeting, not
 Percentage.
 
+</details>
+
 ---
 
 # Section D — Yes/No statement grid
@@ -916,6 +1048,16 @@ Percentage.
 ---
 
 ## Q27 — App Configuration setup
+
+| # | Statement | Answer |
+|---|---|---|
+| 1 | Feature flags require the Standard tier |  |
+| 2 | The Contributor role allows reading feature flag values |  |
+| 3 | An application can authenticate with a managed identity |  |
+| 4 | `App Configuration Data Reader` is a data-plane role |  |
+
+<details>
+<summary>Show answer</summary>
 
 | # | Statement | Answer |
 |---|---|---|
@@ -930,9 +1072,21 @@ Row 2 is the control-plane versus data-plane split, and it genuinely surprises p
 can **delete the whole store** but cannot read a single key inside it. Azure separates managing a
 resource from accessing its data — the same model as Key Vault and Storage.
 
+</details>
+
 ---
 
 ## Q28 — flag evaluation
+
+| # | Statement | Answer |
+|---|---|---|
+| 1 | A flag change requires an application restart |  |
+| 2 | `CacheExpirationInterval` sets how often flags are re-read |  |
+| 3 | `app.UseAzureAppConfiguration()` is required for dynamic refresh |  |
+| 4 | Named users in a targeting filter override the default percentage |  |
+
+<details>
+<summary>Show answer</summary>
 
 | # | Statement | Answer |
 |---|---|---|
@@ -949,9 +1103,21 @@ kill switch — and the "instantly disable without redeploying" requirement woul
 Row 3 is Break & fix Exercise 1: register the service *and* add the middleware, in that order, before
 `MapControllers()`.
 
+</details>
+
 ---
 
 ## Q29 — targeting and A/B testing
+
+| # | Statement | Answer |
+|---|---|---|
+| 1 | `Microsoft.Targeting` assigns users consistently |  |
+| 2 | `Microsoft.Percentage` assigns users consistently |  |
+| 3 | An A/B test needs a variant dimension on telemetry |  |
+| 4 | Group percentages take precedence over the default percentage |  |
+
+<details>
+<summary>Show answer</summary>
 
 | # | Statement | Answer |
 |---|---|---|
@@ -968,9 +1134,21 @@ anything a user experiences; random (Percentage) only for stateless sampling.**
 Row 3: without `["variant"] = variant` on the telemetry, the KQL at line 650 has nothing to group by
 and the experiment yields no answer.
 
+</details>
+
 ---
 
 ## Q30 — flags versus deployment strategies
+
+| # | Statement | Answer |
+|---|---|---|
+| 1 | Disabling a flag requires a deployment |  |
+| 2 | Feature flags remove the need for a deployment strategy |  |
+| 3 | Feature flags can roll back a database schema change |  |
+| 4 | Feature flags let code ship before the feature is released |  |
+
+<details>
+<summary>Show answer</summary>
 
 | # | Statement | Answer |
 |---|---|---|
@@ -988,6 +1166,8 @@ Row 3 matters and leads directly into Challenge 29: a flag toggles **code paths*
 the new code dropped a column, turning the flag off will not bring it back — which is why migrations
 must be additive and backward-compatible.
 
+</details>
+
 ---
 
 # Section E — Drag and drop
@@ -1001,6 +1181,9 @@ Arrange the steps to ship a feature safely with a flag, in order.
 **Items:** Enable the flag for the internal team · Deploy the code to production · Create the flag,
 disabled · Raise the default rollout percentage · Verify the deployment is healthy
 
+<details>
+<summary>Show answer</summary>
+
 ### Answer
 
 1. Create the flag, disabled — lines **87–99**
@@ -1013,11 +1196,25 @@ disabled · Raise the default rollout percentage · Verify the deployment is hea
 step 4 separates *deployment* failure from *feature* failure — if step 3 fails you have a deployment
 problem; if something breaks after step 4 you have a feature problem, and one API call reverses it.
 
+</details>
+
 ---
 
 ## Q32
 
 Match each feature filter to its behaviour.
+
+| Filter | Behaviour |
+|---|---|
+| `Microsoft.TimeWindow` |  |
+| `Microsoft.Targeting` |  |
+| `Microsoft.Percentage` |  |
+| Custom `IFeatureFilter` |  |
+
+**Options:** Any rule you implement · Enabled between a start and end time · Enabled for a random share of evaluations — **not sticky** · Enabled per user, group, or percentage — **sticky**
+
+<details>
+<summary>Show answer</summary>
 
 | Filter | Behaviour |
 |---|---|
@@ -1039,11 +1236,27 @@ Match each feature filter to its behaviour.
 
 For anything a person interacts with, the answer is Targeting.
 
+</details>
+
 ---
 
 ## Q33
 
 Match each Contoso requirement to its configuration.
+
+| Requirement | Configuration |
+|---|---|
+| Nobody sees the feature by default |  |
+| Internal team sees it |  |
+| Half the beta testers see it |  |
+| Two named people always see it |  |
+| Maintenance banner during a window |  |
+| Instant kill switch |  |
+
+**Options:** `Audience.DefaultRolloutPercentage=0` · `Audience.Users.0`, `Audience.Users.1` · `az appconfig feature disable` · `Groups.0.Name="InternalTeam"`, `RolloutPercentage=100` · `Groups.1.RolloutPercentage=50` · `Microsoft.TimeWindow` filter
+
+<details>
+<summary>Show answer</summary>
 
 | Requirement | Configuration |
 |---|---|
@@ -1060,6 +1273,8 @@ Match each Contoso requirement to its configuration.
 needed slots, a Traffic Manager profile and a bash script. Here the entire progression is six
 parameters, and moving between rings is an `az` command with no deployment.
 
+</details>
+
 ---
 
 ## Q34
@@ -1068,6 +1283,9 @@ Arrange the .NET configuration steps in `Program.cs`, in order.
 
 **Items:** `app.UseAzureAppConfiguration()` · `builder.Configuration.AddAzureAppConfiguration(...)` ·
 `app.MapControllers()` · `builder.Services.AddFeatureManagement()` · `var app = builder.Build()`
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer
 
@@ -1084,11 +1302,26 @@ middleware before it.
 **Step 4 before step 5 is the requirement from Break & fix Exercise 1** (line 694): the refresh
 middleware must run before requests reach controllers, or flags are evaluated from a stale cache.
 
+</details>
+
 ---
 
 ## Q35
 
 Match each symptom to its cause.
+
+| Symptom | Cause |
+|---|---|
+| Flag change not visible after 10 minutes |  |
+| Internal team not seeing a 100% group flag |  |
+| Works in staging, not production |  |
+| Application gets 403 reading flags |  |
+| A user sees both variants in one session |  |
+
+**Options:** Cache interval too high, or refresh middleware missing · `IHttpContextAccessor` not registered · Label mismatch · `Microsoft.Percentage` used instead of Targeting · Missing `App Configuration Data Reader` role
+
+<details>
+<summary>Show answer</summary>
 
 | Symptom | Cause |
 |---|---|
@@ -1102,6 +1335,8 @@ Match each symptom to its cause.
 
 **Read the symptom shape:** *stale* means caching. *Everyone anonymous* means identity. *Environment
 differs* means labels. *403* means RBAC. *Inconsistent per request* means the wrong filter.
+
+</details>
 
 ---
 
@@ -1126,12 +1361,17 @@ az role assignment create \
 - **BLANK 2:** `App Configuration Data Reader` / `Reader` / `Contributor` /
   `App Configuration Contributor`
 
+<details>
+<summary>Show answer</summary>
+
 ### Answer: `Standard`, `App Configuration Data Reader`
 
 **In `challenge-27.md`:** lines **49** and **75**.
 
 Free has no feature management. `Reader` and `Contributor` are **control-plane** roles — they can see
 and manage the resource but cannot read a single flag inside it.
+
+</details>
 
 ---
 
@@ -1147,12 +1387,17 @@ az appconfig feature filter add \
 - **BLANK 1:** `Microsoft.TimeWindow` / `Microsoft.Targeting` / `Microsoft.Percentage` /
   `Microsoft.Schedule`
 
+<details>
+<summary>Show answer</summary>
+
 ### Answer: `Microsoft.TimeWindow`
 
 **In `challenge-27.md`:** lines **110–115**.
 
 The timestamps are UTC (`Z`). Note this is a **maintenance banner**, not a maintenance mode that
 blocks traffic — the flag controls what the application displays.
+
+</details>
 
 ---
 
@@ -1172,12 +1417,17 @@ az appconfig feature filter add \
   `GlobalPercentage`
 - **BLANK 2:** `RolloutPercentage` / `Percentage` / `Weight` / `Share`
 
+<details>
+<summary>Show answer</summary>
+
 ### Answer: `DefaultRolloutPercentage`, `RolloutPercentage`
 
 **In `challenge-27.md`:** lines **136** and **138**.
 
 The naming is worth memorising exactly: **`DefaultRolloutPercentage`** at audience level, and
 **`RolloutPercentage`** inside each group. Groups and users are indexed from `0`.
+
+</details>
 
 ---
 
@@ -1199,6 +1449,9 @@ builder.Configuration.AddAzureAppConfiguration(options =>
   `AzureKeyCredential`
 - **BLANK 2:** `CacheExpirationInterval` / `RefreshInterval` / `PollingInterval` / `TimeToLive`
 
+<details>
+<summary>Show answer</summary>
+
 ### Answer: `DefaultAzureCredential`, `CacheExpirationInterval`
 
 **In `challenge-27.md`:** lines **195** and **199**.
@@ -1206,6 +1459,8 @@ builder.Configuration.AddAzureAppConfiguration(options =>
 `DefaultAzureCredential` picks up the managed identity in Azure and your developer login locally —
 the same credential class as your OIDC block, and the reason nothing secret sits in
 `appsettings.json`.
+
+</details>
 
 ---
 
@@ -1223,6 +1478,9 @@ Requirement: feature flag changes must take effect without restarting the app.
 - **BLANK 1:** `UseAzureAppConfiguration` / `UseFeatureManagement` / `UseConfigurationRefresh` /
   `AddAzureAppConfiguration`
 
+<details>
+<summary>Show answer</summary>
+
 ### Answer: `UseAzureAppConfiguration`
 
 **In `challenge-27.md`:** lines **218–220**, and Break & fix Exercise 1 at line **694**.
@@ -1231,6 +1489,8 @@ Requirement: feature flag changes must take effect without restarting the app.
 208) and is also required — but it is not middleware and cannot be called on `app`.
 
 **Order matters.** This line must come before `MapControllers()`.
+
+</details>
 
 ---
 
@@ -1248,6 +1508,9 @@ Requirement: feature flag changes must take effect without restarting the app.
 - **BLANK 1:** `FeatureGate` / `RequireFeature` / `FeatureFlag` / `Authorize`
 - **BLANK 2:** `IsEnabledAsync` / `GetFlagAsync` / `EvaluateAsync` / `CheckFeatureAsync`
 
+<details>
+<summary>Show answer</summary>
+
 ### Answer: `FeatureGate`, `IsEnabledAsync`
 
 **In `challenge-27.md`:** lines **268** and **257**.
@@ -1255,6 +1518,8 @@ Requirement: feature flag changes must take effect without restarting the app.
 Both appear in the same controller because they solve different problems: `[FeatureGate]` makes the
 endpoint **return 404** when off, while `IsEnabledAsync` picks between the new and legacy checkout —
 there is always a checkout.
+
+</details>
 
 ---
 
@@ -1298,6 +1563,9 @@ Which configuration meets "invisible to customers, internal staff first, beta te
 - C. Separate deployments per audience
 - D. App Service traffic routing at 5%
 
+<details>
+<summary>Show answer</summary>
+
 ### Answer: A
 
 **In `challenge-27.md`:** lines **130–142**.
@@ -1316,6 +1584,8 @@ Which configuration meets "invisible to customers, internal staff first, beta te
 - **C** — separate deployments per audience is the maintenance burden flags exist to remove
 - **D** — routes **requests**, not **users**. It cannot express "internal staff"
 
+</details>
+
 ---
 
 ## Q43
@@ -1326,6 +1596,9 @@ Which configuration meets the instant kill-switch requirement?
 - B. A slot swap back to the previous version
 - C. Redeploying the previous build
 - D. Scaling the App Service to zero
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -1345,6 +1618,8 @@ their next cache refresh.
 - **C** — minutes, and a build
 - **D** — that is an outage, not a rollback
 
+</details>
+
 ---
 
 ## Q44
@@ -1356,6 +1631,9 @@ Which **two** configurations make the A/B test produce usable data? (Choose two.
 - C. `Microsoft.Percentage` set to 50
 - D. Enabling the feature for all users after one day
 - E. Recording only successful checkouts
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A, B
 
@@ -1369,6 +1647,8 @@ Which **two** configurations make the A/B test produce usable data? (Choose two.
   `countif()` for successes. Recording only successes leaves you with a numerator and no
   denominator — you cannot compute a conversion rate at all
 
+</details>
+
 ---
 
 ## Q45
@@ -1379,6 +1659,9 @@ Which configuration meets "no secret in application configuration"?
 - B. The App Configuration connection string in `appsettings.json`
 - C. An App Configuration access key in an environment variable
 - D. A service principal secret in Key Vault
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -1400,6 +1683,8 @@ An endpoint URL is not a secret, so this file is safe in source control.
 **This is the same reasoning as OIDC versus a stored service principal secret**, and it is the pattern
 that has cost you marks in every mock.
 
+</details>
+
 ---
 
 ## Q46
@@ -1410,6 +1695,9 @@ Which setting ensures flag changes reach instances within about a minute?
 - B. `CacheExpirationInterval = TimeSpan.FromHours(1)`
 - C. Restarting the App Service after every change
 - D. `WEBSITE_SWAP_WARMUP_PING_PATH`
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -1427,6 +1715,8 @@ minute".
 **The trade-off to state:** shorter interval means faster kill-switch response and more requests to
 App Configuration. Thirty seconds is a sensible production balance.
 
+</details>
+
 ---
 
 ## Q47
@@ -1437,6 +1727,9 @@ Which configuration lets staging and production hold different values for `NewCh
 - B. Two App Configuration stores
 - C. A targeting filter with an `Environment` group
 - D. Two feature names, `NewCheckoutFlow_Staging` and `NewCheckoutFlow_Prod`
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -1462,6 +1755,8 @@ featureFlagOptions.Label = "production";
 **And the failure mode to remember:** enabling a flag under the wrong label is Break & fix Exercise 3
 — it looks enabled in the portal and does nothing in production.
 
+</details>
+
 ---
 
 ## Q48
@@ -1475,6 +1770,9 @@ What happened, and what should Contoso do?
 - B. Removing a flag requires restarting the application
 - C. The Data Reader role was revoked with the flag
 - D. The cache expiration interval was too short
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -1504,6 +1802,8 @@ downstream services.
 **The wider point — flag debt is real.** Forty flags means forty conditionals, and the number of code
 paths grows combinatorially. Every flag needs a planned removal date, and Challenge 34's pipeline
 health work is where you would track it.
+
+</details>
 
 ---
 ---

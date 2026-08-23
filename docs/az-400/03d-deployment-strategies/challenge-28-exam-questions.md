@@ -1,6 +1,8 @@
 ---
-sidebar_position: 94
+sidebar_position: 4.5
+toc_max_heading_level: 2
 title: "Challenge 28: exam questions"
+sidebar_label: "Exam questions (48 Q)"
 ---
 
 # Challenge 28 — AZ-400 exam questions
@@ -48,6 +50,9 @@ What should you do?
 - C. Assign the `Contributor` role on the resource group
 - D. Regenerate the ACR access keys
 
+<details>
+<summary>Show answer</summary>
+
 ### Answer: B
 
 **In `challenge-28.md`:** Break & fix Exercise 1, lines **606–634**.
@@ -78,6 +83,8 @@ az role assignment create \
   the registry but is not a data-plane push role
 - **D** — keys belong to the admin account, which is disabled
 
+</details>
+
 ---
 
 ## Q2
@@ -88,6 +95,9 @@ Which `build-push-action` setting builds the image on a pull request but only pu
 - B. `push: ${{ github.event_name != 'pull_request' }}`
 - C. `if: github.ref == 'refs/heads/main'`
 - D. `load: true`
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: B
 
@@ -113,6 +123,8 @@ One expression gives you both.
 - **D** — `load: true` loads the image into the local Docker daemon for testing. Useful, but it does
   not control pushing
 
+</details>
+
 ---
 
 ## Q3
@@ -126,6 +138,9 @@ What is the fix?
 - B. Set the ingress target port to 8080 and `ASPNETCORE_URLS` to listen on 8080
 - C. Increase the minimum replica count
 - D. Restart the Container Apps environment
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: B
 
@@ -152,6 +167,8 @@ az containerapp ingress update --target-port 8080
 **Note `EXPOSE` alone does nothing.** It is documentation. The container listens where the process
 binds.
 
+</details>
+
 ---
 
 ## Q4
@@ -162,6 +179,9 @@ Which Kubernetes rolling update setting guarantees no reduction in capacity duri
 - B. `maxSurge: 0, maxUnavailable: 1`
 - C. `maxSurge: 1, maxUnavailable: 1`
 - D. `replicas: 3`
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -189,6 +209,8 @@ to become **ready** before removing an old one. Capacity never drops below 3.
 `maxBatchInstancePercent` and Challenge 25's 2x blue-green cost — availability is bought with spare
 capacity.
 
+</details>
+
 ---
 
 ## Q5
@@ -199,6 +221,9 @@ What is the difference between a Kubernetes liveness probe and a readiness probe
 - B. Liveness runs once at startup; readiness runs continuously
 - C. Liveness checks the node; readiness checks the container
 - D. They are interchangeable
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -236,6 +261,8 @@ readiness checks *dependencies*.
 **Why the others fail** — B, C and D all misstate the mechanism. Both probes run continuously, both
 target the container.
 
+</details>
+
 ---
 
 ## Q6
@@ -246,6 +273,9 @@ Which Azure Container Apps command shifts all traffic to a previous revision?
 - B. `az containerapp ingress traffic set --revision-weight "<revision>=100"`
 - C. `az containerapp restart`
 - D. `az containerapp revision restart`
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: B
 
@@ -273,6 +303,8 @@ Note `[-2]` — the second from the end of the list, i.e. the revision before th
 **This is the same shape as an App Service slot swap:** the previous version survives, so reverting is
 a routing decision. And the same mechanism gives you canary — `--revision-weight` with a split.
 
+</details>
+
 ---
 
 ## Q7
@@ -283,6 +315,9 @@ Which Azure Pipelines task deploys manifests to AKS and substitutes the image ta
 - B. `KubernetesManifest@1`
 - C. `Docker@2`
 - D. `HelmDeploy@0`
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: B
 
@@ -311,6 +346,8 @@ replaces it with the built tag at deploy time — so the manifest never needs ed
 **`KubernetesManifest@1` also does** `bake`, `promote`, `reject` and `createSecret`, and supports
 `canary` deployment strategies. The `action` input is what selects behaviour.
 
+</details>
+
 ---
 
 ## Q8
@@ -321,6 +358,9 @@ Which command verifies that an AKS deployment finished rolling out?
 - B. `kubectl rollout status deployment/product-catalog-api --timeout=300s`
 - C. `kubectl describe deployment`
 - D. `kubectl logs deployment/product-catalog-api`
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: B
 
@@ -345,6 +385,8 @@ on failure — which is what fails the pipeline stage.
 **The general lesson:** a verification step must **fail** when the thing it verifies fails. A command
 that only prints information verifies nothing, no matter how useful the output is to a human.
 
+</details>
+
 ---
 
 ## Q9
@@ -355,6 +397,9 @@ Which ACR SKU supports geo-replication and content trust?
 - B. Standard
 - C. Premium
 - D. All SKUs
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: C
 
@@ -375,6 +420,8 @@ these.
 access. Disabling it forces identity-based authentication, which is the pattern the whole challenge
 follows.
 
+</details>
+
 ---
 
 ## Q10
@@ -385,6 +432,9 @@ Which ACR retention setting deletes untagged manifests after seven days?
 - B. `az acr purge --ago 7d`
 - C. `az acr repository delete --untagged`
 - D. `az acr config content-trust update --days 7`
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -412,6 +462,8 @@ collects that garbage automatically.
 **The two together (lines 170–180)** are a complete lifecycle: retention for untagged manifests, purge
 keeping the last 10 tagged versions over 30 days old.
 
+</details>
+
 ---
 
 ## Q11
@@ -422,6 +474,9 @@ Which Trivy setting makes the workflow fail when a CRITICAL vulnerability is fou
 - B. `exit-code: '1'`
 - C. `format: 'sarif'`
 - D. `ignore-unfixed: true`
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: B
 
@@ -449,6 +504,8 @@ gate.
 - **D** — real and useful: it hides vulnerabilities with no available fix. That is a policy choice,
   not the blocking mechanism
 
+</details>
+
 ---
 
 ## Q12
@@ -459,6 +516,9 @@ Where do Trivy SARIF results appear, and which step sends them there?
 - B. The GitHub Security tab, via `github/codeql-action/upload-sarif`
 - C. Azure Monitor, via `azure/login`
 - D. The workflow summary, automatically
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: B
 
@@ -481,6 +541,8 @@ precisely when there are results worth seeing. Same pattern as `PublishTestResul
 
 **Why the others fail** — A stores a file nobody opens; C and D are wrong destinations.
 
+</details>
+
 ---
 
 ## Q13
@@ -491,6 +553,9 @@ Which **two** actions are needed for a multi-architecture build? (Pick the singl
 - B. `docker/setup-buildx-action` only
 - C. A self-hosted ARM64 runner
 - D. `docker/metadata-action` with a platform tag
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -519,6 +584,8 @@ builder** that produces a multi-platform manifest. You need both.
 **The trade-off:** emulated arm64 builds are slow — often several times slower than native. For
 occasional builds that is fine; for frequent ones, native ARM runners win.
 
+</details>
+
 ---
 
 ## Q14
@@ -529,6 +596,9 @@ Which Container Apps setting lets the app pull from ACR without a stored credent
 - B. `--registry-username` and `--registry-password`
 - C. `--admin-enabled true` on the registry
 - D. An image pull secret in the environment
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -552,6 +622,8 @@ nothing is stored anywhere.
 **Same reasoning as your OIDC block and Challenge 27's Data Reader role:** an identity beats a stored
 secret every time, and "no stored credential" in a question is the phrase that selects it.
 
+</details>
+
 ---
 
 ## Q15
@@ -562,6 +634,9 @@ Why does the Dockerfile create and switch to a non-root user?
 - B. To limit the impact if the container is compromised
 - C. To allow binding to port 80
 - D. To enable multi-architecture builds
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: B
 
@@ -587,6 +662,8 @@ misconfigurations, a path toward the host.
 **The chain to see:** non-root → cannot bind 80 → use 8080 → ingress must target 8080 (line 245). Get
 the last step wrong and you get Break & fix Exercise 2.
 
+</details>
+
 ---
 
 ## Q16
@@ -597,6 +674,9 @@ Which registry does `${{ secrets.GITHUB_TOKEN }}` authenticate to without extra 
 - B. GitHub Container Registry
 - C. Docker Hub
 - D. Any OCI registry
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: B
 
@@ -625,6 +705,8 @@ Which registry does `${{ secrets.GITHUB_TOKEN }}` authenticate to without extra 
 supports private endpoints, geo-replication, content trust and Defender integration. Contoso uses ACR
 for production and GHCR for convenience — which is why both appear here.
 
+</details>
+
 ---
 
 # Section B — Multiple answer
@@ -641,6 +723,9 @@ Which **three** permissions does the container build job declare? (Choose three.
 - D. `id-token: write`
 - E. `deployments: write`
 - F. `actions: write`
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A, B, C
 
@@ -663,6 +748,8 @@ you can read the job's capabilities off its permission block.
   that says "no stored credential", you would add `id-token: write` and remove that secret
 - **E** and **F** — not needed here
 
+</details>
+
 ---
 
 ## Q18
@@ -674,6 +761,9 @@ Which **three** tag types does the metadata action generate for the ACR image? (
 - C. `type=raw,value=latest,enable={{is_default_branch}}`
 - D. `type=schedule,pattern=nightly`
 - E. `type=ref,event=pr`
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A, B, C
 
@@ -701,6 +791,8 @@ line.
 **Why the others fail** — `type=schedule` only applies to scheduled runs; `type=ref,event=pr` tags PR
 builds, which this workflow does not push (line 115).
 
+</details>
+
 ---
 
 ## Q19
@@ -712,6 +804,9 @@ Which **two** guarantee an AKS deployment never drops below its desired capacity
 - C. `maxSurge: 0`
 - D. `replicas: 3`
 - E. A liveness probe on the container
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A, B
 
@@ -728,6 +823,8 @@ while the new one is still initialising, and capacity really does dip.
 - **D** — the target count, not the update behaviour
 - **E** — liveness restarts a wedged container. It plays no part in rollout accounting
 
+</details>
+
 ---
 
 ## Q20
@@ -739,6 +836,9 @@ Which **two** are Premium-only ACR features used in this challenge? (Choose two.
 - C. Retention policies for untagged manifests
 - D. Webhooks
 - E. The admin account
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A, B
 
@@ -760,6 +860,8 @@ az acr config content-trust update --status enabled
 images. That is supply-chain integrity — the same concern as artifact attestation in Challenge 19's
 gap list.
 
+</details>
+
 ---
 
 ## Q21
@@ -771,6 +873,9 @@ Which **two** stop a vulnerable image reaching production? (Choose two.)
 - C. Uploading SARIF to the Security tab
 - D. `severity: 'CRITICAL,HIGH'` alone
 - E. `.trivyignore` listing known CVEs
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A, B
 
@@ -793,6 +898,8 @@ March without a single line changing.
 - **D** — filters what is reported. Without `exit-code: '1'` the step passes
 - **E** — the opposite: it **allows** listed CVEs through
 
+</details>
+
 ---
 
 ## Q22
@@ -804,6 +911,9 @@ Which **two** are true about Azure Container Apps revisions? (Choose two.)
 - C. Only one revision can exist at a time
 - D. A revision must be deleted before a new one is created
 - E. Revisions are only available in the Premium tier
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A, B
 
@@ -826,6 +936,8 @@ previous revision to 100 to roll back. No image rebuild, no redeploy.
 Apps shifts **revision weights**, Kubernetes rolls back a **deployment**. All three keep the previous
 version alive, which is what makes reversal fast.
 
+</details>
+
 ---
 
 ## Q23
@@ -837,6 +949,9 @@ Which **two** correctly describe `KubernetesManifest@1` with `action: 'deploy'`?
 - C. It waits for the rollout to complete and fails on timeout
 - D. It builds the container image before deploying
 - E. It requires a kubeconfig file in the repository
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A, B
 
@@ -861,6 +976,8 @@ build's real tag, so the manifest is a **template** rather than something a pipe
 - **D** — `Docker@2` does that (line 441)
 - **E** — auth comes from the Azure service connection (`connectionType: 'azureResourceManager'`)
 
+</details>
+
 ---
 
 # Section C — Repeated scenario
@@ -877,7 +994,10 @@ must be reversible without rebuilding.
 `AcrPull`. Run Trivy with `exit-code: '1'` before pushing. Roll back with
 `az containerapp ingress traffic set --revision-weight "<previous>=100"`.
 
-Does this meet the goal? **Yes**
+Does this meet the goal?
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: Yes
 
@@ -892,6 +1012,8 @@ Each requirement maps to one mechanism:
 The ordering matters too: scanning **before** pushing means a vulnerable image never enters the
 registry at all, so it cannot be deployed by accident later.
 
+</details>
+
 ---
 
 ## Q25
@@ -900,7 +1022,10 @@ registry at all, so it cannot be deployed by accident later.
 secrets. Run Trivy in report-only mode and review findings weekly. Roll back by rebuilding the
 previous commit.
 
-Does this meet the goal? **No**
+Does this meet the goal?
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: No
 
@@ -919,6 +1044,8 @@ is sitting right there, ready.
 **Each wrong choice is the "easy" one**, which is what makes this a realistic distractor. Convenience
 in all three places, correctness in none.
 
+</details>
+
 ---
 
 ## Q26
@@ -926,7 +1053,10 @@ in all three places, correctness in none.
 **Proposed solution:** Use `--registry-identity system` with `AcrPull`, run Trivy with
 `exit-code: '1'`, and roll back with `az containerapp update --image <previous-tag>`.
 
-Does this meet the goal? **No**
+Does this meet the goal?
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: No
 
@@ -943,6 +1073,8 @@ The previous revision already exists and is warm. Shifting traffic to it is imme
 *routing back to the revision you still have*. The same distinction separates a slot swap from a
 redeploy.
 
+</details>
+
 ---
 
 # Section D — Yes/No statement grid
@@ -950,6 +1082,16 @@ redeploy.
 ---
 
 ## Q27 — registries and authentication
+
+| # | Statement | Answer |
+|---|---|---|
+| 1 | `AcrPull` allows pushing images |  |
+| 2 | `--admin-enabled false` forces identity-based authentication |  |
+| 3 | `secrets.GITHUB_TOKEN` can authenticate to ACR |  |
+| 4 | Content trust requires the Premium SKU |  |
+
+<details>
+<summary>Show answer</summary>
 
 | # | Statement | Answer |
 |---|---|---|
@@ -966,9 +1108,21 @@ Row 1 is Break & fix Exercise 1 stated as a fact. The roles are strictly ordered
 Row 3: `GITHUB_TOKEN` is a GitHub credential. ACR needs an Azure identity, which is why the workflow
 runs `azure/login` and then `az acr login`.
 
+</details>
+
 ---
 
 ## Q28 — Kubernetes deployment
+
+| # | Statement | Answer |
+|---|---|---|
+| 1 | `maxUnavailable: 0` prevents capacity dropping during a roll |  |
+| 2 | A liveness probe failure removes the pod from the Service |  |
+| 3 | A readiness probe failure restarts the container |  |
+| 4 | `rollout status` fails the pipeline when the rollout does not complete |  |
+
+<details>
+<summary>Show answer</summary>
 
 | # | Statement | Answer |
 |---|---|---|
@@ -987,9 +1141,21 @@ runs `azure/login` and then `az acr login`.
 Practical consequence: a liveness probe that checks a database means a database blip restarts every
 pod simultaneously, turning a partial outage into a total one. Check dependencies in **readiness**.
 
+</details>
+
 ---
 
 ## Q29 — Container Apps
+
+| # | Statement | Answer |
+|---|---|---|
+| 1 | Multiple revisions can receive traffic simultaneously |  |
+| 2 | `--registry-identity system` avoids storing registry credentials |  |
+| 3 | The ingress target port must match the port the app listens on |  |
+| 4 | Rolling back requires rebuilding the image |  |
+
+<details>
+<summary>Show answer</summary>
 
 | # | Statement | Answer |
 |---|---|---|
@@ -1006,9 +1172,21 @@ Row 3 is Break & fix Exercise 2, and it needs three things to agree: `ASPNETCORE
 Row 1 is what enables canary on Container Apps: weights across revisions, per request, no DNS
 involved.
 
+</details>
+
 ---
 
 ## Q30 — scanning and supply chain
+
+| # | Statement | Answer |
+|---|---|---|
+| 1 | `severity` alone causes the build to fail on findings |  |
+| 2 | `exit-code: '1'` makes Trivy block the pipeline |  |
+| 3 | SARIF results can be uploaded to the GitHub Security tab |  |
+| 4 | Defender for Containers scans images already in the registry |  |
+
+<details>
+<summary>Show answer</summary>
 
 | # | Statement | Answer |
 |---|---|---|
@@ -1026,6 +1204,8 @@ Row 4 is why both layers exist. Build-time scanning uses the vulnerability datab
 build day*. Registry scanning re-evaluates continuously, so an image that was clean in January is
 flagged when a CVE is disclosed in March.
 
+</details>
+
 ---
 
 # Section E — Drag and drop
@@ -1038,6 +1218,9 @@ Arrange the container build and push workflow steps in order.
 
 **Items:** Build and push the image · Log in to the registry · Check out the repository · Generate
 image metadata · Set up Docker Buildx
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer
 
@@ -1056,11 +1239,26 @@ default Docker builder cannot use that cache backend.
 **Note ACR login is two steps** (lines 91–97): `azure/login` to get an Azure identity, then
 `az acr login` to exchange it for a registry token. GHCR needs only one (line 199).
 
+</details>
+
 ---
 
 ## Q32
 
 Match each rollback mechanism to its platform.
+
+| Mechanism | Platform |
+|---|---|
+| Swap the staging and production slots |  |
+| Set a previous revision to 100% traffic |  |
+| `kubectl rollout undo` on the deployment |  |
+| Set a Traffic Manager endpoint weight to 0 |  |
+| Disable a feature flag |  |
+
+**Options:** AKS · App Configuration · App Service · Container Apps · Traffic Manager (DNS)
+
+<details>
+<summary>Show answer</summary>
 
 | Mechanism | Platform |
 |---|---|
@@ -1078,11 +1276,25 @@ configuration decision rather than a deployment. That is why they are fast.
 **And the one that is different:** disabling a feature flag reverts *behaviour* without touching the
 deployed artifact at all — which is why Challenge 25's table rates it instant at 1x cost.
 
+</details>
+
 ---
 
 ## Q33
 
 Match each image tag to what it identifies.
+
+| Tag | Identifies |
+|---|---|
+| `1.2.3` |  |
+| `1.2` |  |
+| `a1b2c3d` |  |
+| `latest` |  |
+
+**Options:** The exact **commit** · The **minor line**, following every patch · The most recent build **on the default branch** · The **release version** (semver)
+
+<details>
+<summary>Show answer</summary>
 
 | Tag | Identifies |
 |---|---|
@@ -1104,6 +1316,8 @@ Match each image tag to what it identifies.
 `latest` moves under you, and even a semver tag can be re-pushed. That is why the Container Apps
 deploy workflow derives its tag from `workflow_run.head_sha` (lines 284–295).
 
+</details>
+
 ---
 
 ## Q34
@@ -1112,6 +1326,9 @@ Arrange the AKS deployment stages in order.
 
 **Items:** Verify rollout status · Build and push the image to ACR · Deploy the manifests ·
 Substitute the image tag into the manifests
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer
 
@@ -1126,11 +1343,26 @@ Steps 2 and 3 are one task; the substitution happens as part of the deploy.
 **applied**, not once the pods are **running**. Without `rollout status --timeout=300s`, a deployment
 whose pods crash-loop forever still reports success.
 
+</details>
+
 ---
 
 ## Q35
 
 Match each symptom to its cause.
+
+| Symptom | Cause |
+|---|---|
+| `unauthorized: authentication required` pushing to ACR |  |
+| A Container App revision restarts repeatedly |  |
+| The build fails on a CVE with no available fix |  |
+| The pipeline reports success but pods crash-loop |  |
+| An arm64 build fails on a GitHub-hosted runner |  |
+
+**Options:** Ingress target port does not match the listening port · No `rollout status` verification step · QEMU not set up · Service principal has `AcrPull`, not `AcrPush` · Trivy `exit-code: '1'` with no `.trivyignore` entry
+
+<details>
+<summary>Show answer</summary>
 
 | Symptom | Cause |
 |---|---|
@@ -1144,6 +1376,8 @@ Match each symptom to its cause.
 
 **Read the failure's layer:** authorisation, networking, policy, verification, tooling. Naming the
 layer usually names the fix.
+
+</details>
 
 ---
 
@@ -1168,6 +1402,9 @@ RUN adduser --disabled-password --gecos "" appuser
 - **BLANK 2:** `8080` / `80` / `443` / `5000`
 - **BLANK 3:** `USER` / `RUN AS` / `SETUSER` / `ENV USER`
 
+<details>
+<summary>Show answer</summary>
+
 ### Answer: `aspnet`, `8080`, `USER`
 
 **In `challenge-28.md`:** lines **43–49**.
@@ -1177,6 +1414,8 @@ RUN adduser --disabled-password --gecos "" appuser
 self-contained apps.
 
 **8080 rather than 80 is a consequence of `USER appuser`:** ports below 1024 require root.
+
+</details>
 
 ---
 
@@ -1197,6 +1436,9 @@ self-contained apps.
 - **BLANK 2:** `gha` / `registry` / `local` / `inline`
 - **BLANK 3:** `max` / `min` / `all` / `full`
 
+<details>
+<summary>Show answer</summary>
+
 ### Answer: `${{ github.event_name != 'pull_request' }}`, `gha`, `max`
 
 **In `challenge-28.md`:** lines **115–119**.
@@ -1206,6 +1448,8 @@ work happens in the build stage.
 
 The `github.ref` option is close but wrong: it would also block pushes from release branches, and it
 does not express the PR intent as directly.
+
+</details>
 
 ---
 
@@ -1222,6 +1466,9 @@ az acr config retention update \
 - **BLANK 2:** `false` / `true`
 - **BLANK 3:** `UntaggedManifests` / `TaggedImages` / `AllManifests` / `Repositories`
 
+<details>
+<summary>Show answer</summary>
+
 ### Answer: `Premium`, `false`, `UntaggedManifests`
 
 **In `challenge-28.md`:** lines **137–174**.
@@ -1229,6 +1476,8 @@ az acr config retention update \
 Premium is required for content trust and geo-replication. `--admin-enabled false` forces
 identity-based auth. `UntaggedManifests` is the only valid retention type — those are the orphaned
 layers you keep paying for after a tag moves.
+
+</details>
 
 ---
 
@@ -1247,6 +1496,9 @@ Requirement: capacity must never drop below the desired replica count.
 - **BLANK 1:** `RollingUpdate` / `Recreate` / `BlueGreen` / `Canary`
 - **BLANK 2:** `0` / `1` / `25%` / `100%`
 
+<details>
+<summary>Show answer</summary>
+
 ### Answer: `RollingUpdate`, `0`
 
 **In `challenge-28.md`:** lines **353–357**.
@@ -1254,6 +1506,8 @@ Requirement: capacity must never drop below the desired replica count.
 `Recreate` is the other **built-in** strategy: it terminates every pod, then starts the new ones —
 guaranteed downtime, which is what Contoso is escaping. `BlueGreen` and `Canary` are patterns you
 build with extra tooling, not `strategy.type` values.
+
+</details>
 
 ---
 
@@ -1273,6 +1527,9 @@ build with extra tooling, not `strategy.type` values.
 - **BLANK 2:** `exit-code` / `fail-on` / `severity-threshold` / `block`
 - **BLANK 3:** `.trivyignore` / `.securityignore` / `trivy-exclusions.txt` / `.cveignore`
 
+<details>
+<summary>Show answer</summary>
+
 ### Answer: `sarif`, `exit-code`, `.trivyignore`
 
 **In `challenge-28.md`:** lines **502–509** and **690–706**.
@@ -1283,6 +1540,8 @@ a gate.
 **A `.trivyignore` entry should always carry a reason and a tracking reference** — line 692 does
 exactly that: `# No fix available - tracked in issue #1234`. An unexplained ignore is how a real
 vulnerability gets permanently suppressed.
+
+</details>
 
 ---
 
@@ -1302,6 +1561,9 @@ vulnerability gets permanently suppressed.
 - **BLANK 1:** `QEMU` / `Kubernetes` / `Helm` / `Docker Compose`
 - **BLANK 2:** `platforms` / `architectures` / `targets` / `variants`
 
+<details>
+<summary>Show answer</summary>
+
 ### Answer: `QEMU`, `platforms`
 
 **In `challenge-28.md`:** lines **562–580**.
@@ -1309,6 +1571,8 @@ vulnerability gets permanently suppressed.
 QEMU emulates the foreign architecture; buildx assembles the multi-platform manifest. Both are
 required, and emulated builds are noticeably slower than native — a native ARM runner is the faster
 alternative if build time matters.
+
+</details>
 
 ---
 
@@ -1354,6 +1618,9 @@ Which configuration meets the build-on-PR, publish-on-merge requirement?
 - C. Two separate workflows, one per event
 - D. `push: true` with a branch filter on the trigger
 
+<details>
+<summary>Show answer</summary>
+
 ### Answer: A
 
 **In `challenge-28.md`:** line **115**, with the trigger at lines **62–70**.
@@ -1364,6 +1631,8 @@ Which configuration meets the build-on-PR, publish-on-merge requirement?
 - **C** — duplicated definitions that drift apart. This is the problem Challenge 23 solves with
   reuse, not something to introduce deliberately
 - **D** — a branch filter on the trigger stops PRs firing the workflow at all
+
+</details>
 
 ---
 
@@ -1376,6 +1645,9 @@ Which **two** meet the registry requirements? (Choose two.)
 - C. Standard SKU with the admin account enabled
 - D. Basic SKU with an access token stored as a secret
 - E. GHCR with `secrets.GITHUB_TOKEN`
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A, B
 
@@ -1396,6 +1668,8 @@ admin account **off**.
   it offers neither content trust nor geo-replication, so it fails the other two. A partially correct
   option is still wrong
 
+</details>
+
 ---
 
 ## Q44
@@ -1407,6 +1681,9 @@ Which **two** meet the security requirements? (Choose two.)
 - C. Trivy running after the push, in report-only mode
 - D. A weekly manual review of the registry
 - E. `.trivyignore` covering all CRITICAL findings
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A, B
 
@@ -1424,6 +1701,8 @@ build-time scanning structurally cannot do.
 - **D** — not automatic, and slower than the CVE feed
 - **E** — suppresses exactly what must block
 
+</details>
+
 ---
 
 ## Q45
@@ -1434,6 +1713,9 @@ Which configuration meets the AKS capacity requirement?
 - B. `maxSurge: 0, maxUnavailable: 1`
 - C. `strategy: type: Recreate`
 - D. `replicas: 5`
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -1449,6 +1731,8 @@ starts and capacity really does dip.
 - **C** — `Recreate` terminates everything before starting anything. Guaranteed downtime
 - **D** — more replicas, same percentage dip
 
+</details>
+
 ---
 
 ## Q46
@@ -1459,6 +1743,9 @@ Which configuration makes the pipeline fail when pods do not become healthy?
 - B. `Kubernetes@1` running `rollout status --timeout=300s`
 - C. `kubectl get pods` after deployment
 - D. A liveness probe on the container
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: B
 
@@ -1475,6 +1762,8 @@ Which configuration makes the pipeline fail when pods do not become healthy?
 **The general rule, worth carrying:** *applying* is not *verifying*. Any deployment step needs a
 companion that **fails** when the result is wrong.
 
+</details>
+
 ---
 
 ## Q47
@@ -1485,6 +1774,9 @@ Which configuration reverses a bad Container Apps release without a rebuild?
 - B. `az containerapp update --image <previous-tag>`
 - C. Re-running the previous successful pipeline
 - D. `az containerapp restart`
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -1502,6 +1794,8 @@ The previous revision already exists and is warm. Shifting traffic is immediate.
 **Note the rollback runs under `if: failure()`** (line 317) — the same pattern as Challenge 25's slot
 swap-back. Detect, then react.
 
+</details>
+
 ---
 
 ## Q48
@@ -1516,6 +1810,9 @@ What should they configure, and why does the problem exist?
 - B. Upgrade to a larger Premium tier
 - C. Delete the repository and start again
 - D. Disable SHA tagging so fewer images are created
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -1543,6 +1840,8 @@ manages tagged images by age and count, keeping the last 10.
 
 **This is Challenge 36's subject in miniature** — retention strategy for artifacts, packages and
 images.
+
+</details>
 
 ---
 ---

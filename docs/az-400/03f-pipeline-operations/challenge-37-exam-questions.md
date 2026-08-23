@@ -1,6 +1,8 @@
 ---
-sidebar_position: 94
+sidebar_position: 4.5
+toc_max_heading_level: 2
 title: "Challenge 37: exam questions"
+sidebar_label: "Exam questions (48 Q)"
 ---
 
 # Challenge 37 — AZ-400 exam questions
@@ -45,6 +47,9 @@ What is the YAML equivalent of a classic release definition's **pre-deployment g
 - C. A `dependsOn` between stages
 - D. A `gates:` block in the YAML
 
+<details>
+<summary>Show answer</summary>
+
 ### Answer: A
 
 **In `challenge-37.md`:** the mapping table at line **156**, with configuration at lines **168–173**.
@@ -67,6 +72,8 @@ the thing that surprises people mid-migration.
 - **D** — **no `gates:` key exists in YAML.** That is precisely the trap: people look for the classic
   concept as a YAML keyword and it is not there
 
+</details>
+
 ---
 
 ## Q2
@@ -79,6 +86,9 @@ What is missing?
 - B. A `PublishPipelineArtifact` task in the CD pipeline
 - C. A service connection
 - D. `fetchDepth: 0` on the checkout
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -113,6 +123,8 @@ whole migration — configuration that lived in a form now lives in the file.
 **Note the download path** (line 700): `$(Pipeline.Workspace)/ci-build/api-build` — workspace, then
 **alias**, then artifact name.
 
+</details>
+
 ---
 
 ## Q3
@@ -125,6 +137,9 @@ Where must the approval be configured?
 - B. In the YAML pipeline as an `approvals:` block
 - C. In a branch policy
 - D. In the variable group
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -149,6 +164,8 @@ definition's approvals were left behind.
 
 **Why the others fail** — B does not exist, C gates merges, D holds values.
 
+</details>
+
 ---
 
 ## Q4
@@ -159,6 +176,9 @@ What is the YAML equivalent of a classic **task group**?
 - B. A variable group
 - C. A composite action
 - D. A deployment group
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -189,6 +209,8 @@ Line 389 shows the last row in use: `${{ if eq(parameters.publishArtifact, true)
 
 **Why the others fail** — B holds values, C is GitHub Actions, D is a set of target machines.
 
+</details>
+
 ---
 
 ## Q5
@@ -199,6 +221,9 @@ What replaces a classic **deployment group** in YAML?
 - B. An agent pool
 - C. A self-hosted runner group
 - D. A variable group
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -224,6 +249,8 @@ tag some `web` and some `worker`, and each stage targets only the ones it needs.
 
 **Why the others fail** — B runs pipeline jobs, C is GitHub Actions, D holds values.
 
+</details>
+
 ---
 
 ## Q6
@@ -234,6 +261,9 @@ Which strategy deploys to VM environment resources a few at a time?
 - B. `runOnce`
 - C. `matrix`
 - D. `canary` with `increments`
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -261,6 +291,8 @@ now applied to registered environment resources.
 - **D** — `canary` is real and splits by **traffic increments** rather than by machine count. Valid,
   and not what "a few at a time" describes
 
+</details>
+
 ---
 
 ## Q7
@@ -271,6 +303,9 @@ How do variable groups transfer from classic to YAML?
 - B. They must be recreated as YAML variables
 - C. They are converted automatically during export
 - D. They are replaced by environment secrets
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -294,6 +329,8 @@ expression, different value — the pattern from Challenge 20.
 **Why the others fail** — B discards the secret management, C is untrue (export handles steps, not
 Library resources), D is the GitHub concept.
 
+</details>
+
 ---
 
 ## Q8
@@ -304,6 +341,9 @@ How do service connections transfer to YAML?
 - B. They must be recreated for YAML pipelines
 - C. They are replaced by managed identities automatically
 - D. They only work with classic pipelines
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -324,6 +364,8 @@ deploy to one.
 
 **Why the others fail** — B, C and D are all untrue.
 
+</details>
+
 ---
 
 ## Q9
@@ -334,6 +376,9 @@ Which classic concept maps to `jobs:` with different `pool:` settings?
 - B. Release stages
 - C. Task groups
 - D. Deployment groups
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -350,6 +395,8 @@ appropriate `pool:` or `environment:`.
 **Why the others fail** — B maps to `stages:` (line 152), C to templates (line 158), D to environments
 with VM resources (line 157).
 
+</details>
+
 ---
 
 ## Q10
@@ -360,6 +407,9 @@ Where is the export-to-YAML feature found for a classic build pipeline?
 - B. Project Settings, then Pipelines, then Export
 - C. `az pipelines export`
 - D. The Analytics tab
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -381,6 +431,8 @@ you assemble manually. Slower and always available.
 
 **Why the others fail** — B is project-level settings, C is not a valid command, D shows metrics.
 
+</details>
+
 ---
 
 ## Q11
@@ -391,6 +443,9 @@ In the phased migration, what happens during **Phase 2**?
 - B. The classic pipeline is deleted
 - C. Both pipelines run in parallel against the same environments
 - D. The YAML pipeline is created for the first time
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -415,6 +470,8 @@ would make that a rebuild.
   not the real one
 - **D** — Phase 1
 
+</details>
+
 ---
 
 ## Q12
@@ -425,6 +482,9 @@ Why does the Phase 1 YAML pipeline deploy to a **shadow** environment?
 - B. To reduce cost
 - C. Because YAML cannot deploy to production
 - D. To skip approvals during migration
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -449,6 +509,8 @@ same tests, same deployment result — while the classic pipeline remains the on
 - **D** — approvals should be *validated* during migration, not bypassed. Break & fix Exercise 2 is
   what happens when they are forgotten
 
+</details>
+
 ---
 
 ## Q13
@@ -459,6 +521,9 @@ What should be done with the classic definition before deleting it?
 - B. Nothing — deletion is reversible
 - C. Convert it to a task group
 - D. Move it to another project
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -479,6 +544,8 @@ condition. Months later, when someone asks why a step exists, that file is the o
 
 **Why the others fail** — B is false, C solves nothing, D moves the problem.
 
+</details>
+
 ---
 
 ## Q14
@@ -489,6 +556,9 @@ Which CLI command lists classic build definitions in a project?
 - B. `az pipelines runs list`
 - C. `az devops project list`
 - D. `az pipelines build queue`
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -510,6 +580,8 @@ definition — the raw material for the conversion.
 
 **Why the others fail** — B lists runs, C lists projects, D queues a build.
 
+</details>
+
 ---
 
 ## Q15
@@ -520,6 +592,9 @@ Which YAML construct replaces a classic release definition's **artifact source**
 - B. `steps: - checkout:`
 - C. `variables: - group:`
 - D. `pool: vmImage:`
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -544,6 +619,8 @@ resource-not-found error — the same distinction as Challenge 22 Q34.
 
 **Why the others fail** — B fetches source code, C holds values, D selects an agent.
 
+</details>
+
 ---
 
 ## Q16
@@ -554,6 +631,9 @@ Which classic feature has **no direct YAML keyword**, forcing configuration else
 - B. Variable groups
 - C. Task groups
 - D. Agent phases
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -567,6 +647,8 @@ the exception — they are properties of the **environment**, and the YAML only 
 
 **That asymmetry is the single most testable fact in this challenge**, and the reason Break & fix
 Exercise 2 exists: the YAML looks complete and the gate is simply absent.
+
+</details>
 
 ---
 
@@ -585,6 +667,9 @@ Which **three** classic concepts map to **environment** features in YAML? (Choos
 - E. Variable groups
 - F. Agent phases
 
+<details>
+<summary>Show answer</summary>
+
 ### Answer: A, B, C
 
 **In `challenge-37.md`:** the mapping table at lines **155–157**.
@@ -602,6 +687,8 @@ a release stage. In YAML they are all properties of one object.
 **Why the others fail** — D maps to templates (line 158), E to `variables: - group:` (line 159), F to
 `jobs:` with a `pool:` (line 160).
 
+</details>
+
 ---
 
 ## Q18
@@ -613,6 +700,9 @@ Which **two** advantages do YAML templates have over classic task groups? (Choos
 - C. They are edited in a visual designer
 - D. They support only one parameter
 - E. They cannot be shared across repositories
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A, B
 
@@ -634,6 +724,8 @@ stages:
 **Why the others fail** — C is the task group's model, D is false (line 351 declares four), E is false
 (Challenge 23's `resources: repositories:`).
 
+</details>
+
 ---
 
 ## Q19
@@ -645,6 +737,9 @@ Which **two** are required for a migrated CD pipeline to consume CI artifacts? (
 - C. `download: current`
 - D. A `PublishPipelineArtifact` task in the CD pipeline
 - E. A shared variable group
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A, B
 
@@ -659,6 +754,8 @@ files land at `$(Pipeline.Workspace)/ci-build/api-build`.
 - **D** — publishing in the CD pipeline would create a *new* artifact, not fetch the CI one
 - **E** — variable groups carry values, not files
 
+</details>
+
 ---
 
 ## Q20
@@ -670,6 +767,9 @@ Which **two** are true about the phased migration approach? (Choose two.)
 - C. Phase 1 deletes the classic pipeline immediately
 - D. Phase 3 happens the day after Phase 2
 - E. The classic definition is discarded without archiving
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A, B
 
@@ -686,6 +786,8 @@ Which **two** are true about the phased migration approach? (Choose two.)
 warm, and only then remove it. That is the same instinct as slot swaps and revision weights — the
 previous version stays alive until you are sure.
 
+</details>
+
 ---
 
 ## Q21
@@ -697,6 +799,9 @@ Which **two** transfer to YAML **without modification**? (Choose two.)
 - C. Task groups
 - D. Release gates
 - E. Deployment groups
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A, B
 
@@ -712,6 +817,8 @@ connection rather than a permissions problem.
 **Why the others fail** — C must be rewritten as templates, D must be reconfigured as environment
 checks, E must be recreated as an environment with VM resources.
 
+</details>
+
 ---
 
 ## Q22
@@ -723,6 +830,9 @@ Which **two** steps register an on-premises VM with a YAML environment? (Choose 
 - C. Add the VM to an agent pool
 - D. Create a deployment group
 - E. Install the Guest Configuration extension
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A, B
 
@@ -744,6 +854,8 @@ pool agent.
 - **D** — the classic construct being replaced
 - **E** — Challenge 32's Machine Configuration, unrelated
 
+</details>
+
 ---
 
 ## Q23
@@ -755,6 +867,9 @@ Which **two** describe how approvals differ between classic and YAML? (Choose tw
 - C. YAML configures them in the pipeline file
 - D. Classic approvals apply to every pipeline automatically
 - E. YAML has no approval mechanism
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A, B
 
@@ -770,6 +885,8 @@ is visible in a code review.
 
 **Why the others fail** — C contradicts line 724, D is false (classic approvals belong to one release
 definition), E is false.
+
+</details>
 
 ---
 
@@ -788,7 +905,10 @@ CI build, deployment jobs targeting an environment with VM resources, and config
 approvers on that environment in the UI. Run it in parallel against a shadow environment for two
 weeks before switching over.
 
-Does this meet the goal? **Yes**
+Does this meet the goal?
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: Yes
 
@@ -803,6 +923,8 @@ Does this meet the goal? **Yes**
 
 The approval being configured in the UI is not a gap — it is where it belongs (line 744).
 
+</details>
+
 ---
 
 ## Q25
@@ -810,7 +932,10 @@ The approval being configured in the UI is not a gap — it is where it belongs 
 **Proposed solution:** Export the classic build to YAML, add `download: current` for the artifacts,
 reference `environment: production`, and delete the classic pipelines the same day.
 
-Does this meet the goal? **No**
+Does this meet the goal?
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: No
 
@@ -829,6 +954,8 @@ moment it is most likely to be needed. Phase 3 exists two weeks after Phase 2 fo
 **And export only covers builds** (line 55), so the classic **release** definitions were never
 converted at all.
 
+</details>
+
 ---
 
 ## Q26
@@ -837,7 +964,10 @@ converted at all.
 entry and VM environment, run it in parallel for two weeks, then switch over and retain the classic
 definition — but assume the environment inherits the classic definition's approvals.
 
-Does this meet the goal? **No**
+Does this meet the goal?
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: No
 
@@ -855,6 +985,8 @@ matching artifacts and matching deployment results, so the migration looks valid
 **What to add:** an explicit checklist item verifying environment checks exist before Phase 2. The
 challenge lists exactly what to configure at lines 726–741.
 
+</details>
+
 ---
 
 # Section D — Yes/No statement grid
@@ -862,6 +994,16 @@ challenge lists exactly what to configure at lines 726–741.
 ---
 
 ## Q27 — the mapping
+
+| # | Statement | Answer |
+|---|---|---|
+| 1 | A classic release definition becomes a multi-stage YAML pipeline |  |
+| 2 | Task groups become YAML templates |  |
+| 3 | Deployment groups become agent pools |  |
+| 4 | Variable groups are referenced unchanged |  |
+
+<details>
+<summary>Show answer</summary>
 
 | # | Statement | Answer |
 |---|---|---|
@@ -875,9 +1017,21 @@ challenge lists exactly what to configure at lines 726–741.
 Row 3 is the near-miss: deployment groups become **environments with VM resources**, not pools. A pool
 runs pipeline **jobs**; an environment is a **deployment target** with history, approvals and tags.
 
+</details>
+
 ---
 
 ## Q28 — artifacts and triggers
+
+| # | Statement | Answer |
+|---|---|---|
+| 1 | `download: current` works for artifacts from another pipeline |  |
+| 2 | `resources: pipelines:` can also trigger the pipeline |  |
+| 3 | `source:` is the pipeline's real name; `pipeline:` is the alias |  |
+| 4 | Classic linked artifacts automatically; YAML requires a declaration |  |
+
+<details>
+<summary>Show answer</summary>
 
 | # | Statement | Answer |
 |---|---|---|
@@ -894,9 +1048,21 @@ continuous-deployment trigger.
 Row 4 is the theme of the whole migration — implicit UI configuration becomes explicit file
 configuration.
 
+</details>
+
 ---
 
 ## Q29 — approvals and checks
+
+| # | Statement | Answer |
+|---|---|---|
+| 1 | Environment checks can be defined in YAML |  |
+| 2 | Checks apply to every pipeline deploying to that environment |  |
+| 3 | Referencing an environment creates its approvals automatically |  |
+| 4 | Classic gates map to environment checks |  |
+
+<details>
+<summary>Show answer</summary>
 
 | # | Statement | Answer |
 |---|---|---|
@@ -912,9 +1078,21 @@ configured."* The YAML is valid, the deployment succeeds, and the gate simply is
 
 Row 2 is the upside: configure once, and every pipeline deploying to production inherits the gate.
 
+</details>
+
 ---
 
 ## Q30 — migration process
+
+| # | Statement | Answer |
+|---|---|---|
+| 1 | Phase 1 runs both pipelines against the same production environment |  |
+| 2 | Phase 2 retains the classic definition as a fallback |  |
+| 3 | The classic definition should be archived as JSON before deletion |  |
+| 4 | Export to YAML works for classic release definitions |  |
+
+<details>
+<summary>Show answer</summary>
 
 | # | Statement | Answer |
 |---|---|---|
@@ -932,6 +1110,8 @@ Row 4 is a practical limit worth knowing before planning the work: **8 build def
 exported; the 12 release definitions must be converted by hand** against the mapping table. That is
 where the effort actually is.
 
+</details>
+
 ---
 
 # Section E — Drag and drop
@@ -941,6 +1121,26 @@ where the effort actually is.
 ## Q31
 
 Match each classic concept to its YAML equivalent.
+
+| Classic | YAML |
+|---|---|
+| Build definition |  |
+| Release definition |  |
+| Release stages |  |
+| Environment (classic) |  |
+| Artifacts source |  |
+| Pre-deployment approvals |  |
+| Pre-deployment gates |  |
+| Deployment groups |  |
+| Task groups |  |
+| Variable groups |  |
+| Agent phases |  |
+| Parallel deployment |  |
+
+**Options:** Environment approvals and checks · Environment checks (Invoke REST API, Azure Monitor) · `environment:` in deployment jobs · `environment:` with VM resources · `jobs:` with different `pool:` settings · Multi-stage YAML pipeline with `stages` · `resources: pipelines:` · `stages:` with `- stage:` blocks · `strategy: parallel:` or matrix · `trigger`, `pool`, `steps` in a YAML file · `variables: - group:` · YAML templates (`template:`)
+
+<details>
+<summary>Show answer</summary>
 
 | Classic | YAML |
 |---|---|
@@ -966,6 +1166,8 @@ give you one side and ask for the other.
 live on the environment), and artifact sources need an **explicit declaration** that classic did
 implicitly.
 
+</details>
+
 ---
 
 ## Q32
@@ -974,6 +1176,9 @@ Arrange the migration phases in order, with their key action.
 
 **Items:** Delete classic and archive the JSON · Disable classic triggers, keep the definition ·
 Run both pipelines with YAML on a shadow environment
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer
 
@@ -988,6 +1193,8 @@ Run both pipelines with YAML on a shadow environment
 **The retained-but-disabled middle phase is the safety net.** Re-enabling a trigger is one click;
 rebuilding a deleted definition from memory is not.
 
+</details>
+
 ---
 
 ## Q33
@@ -997,6 +1204,9 @@ Arrange the steps to make a migrated CD pipeline consume CI artifacts.
 **Items:** Add `download: <alias>` in the deployment steps · Declare `resources: pipelines:` ·
 Set `source:` to the CI pipeline's exact name · Give the resource an alias · Reference
 `$(Pipeline.Workspace)/<alias>/<artifact>`
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer
 
@@ -1009,11 +1219,27 @@ Set `source:` to the CI pipeline's exact name · Give the resource an alias · R
 **The alias appears three times** — in the declaration, in the download, and in the path. Getting it
 consistent is most of the fix.
 
+</details>
+
 ---
 
 ## Q34
 
 Match each migration artefact to where it must be configured.
+
+| Item | Configured in |
+|---|---|
+| Multi-stage structure |  |
+| Artifact source and trigger |  |
+| Approvals and gates |  |
+| VM registration |  |
+| Variable group contents |  |
+| Service connection |  |
+
+**Options:** Azure DevOps UI — on the environment · **Library** — unchanged · **On the VM** (`config.sh --environment`) · **Project settings** — unchanged, plus pipeline permissions · YAML file · **YAML file** (`resources: pipelines:`)
+
+<details>
+<summary>Show answer</summary>
 
 | Item | Configured in |
 |---|---|
@@ -1030,11 +1256,26 @@ Match each migration artefact to where it must be configured.
 complete-looking YAML pipeline can still be missing the approval, the VM registration or the pipeline
 permission — none of which appear in the diff.
 
+</details>
+
 ---
 
 ## Q35
 
 Match each symptom to its cause.
+
+| Symptom | Cause |
+|---|---|
+| CD pipeline finds no artifact |  |
+| Production deploys with no approval |  |
+| Task input references an unknown service connection |  |
+| VMs never receive a deployment |  |
+| Only 8 of 20 pipelines could be exported |  |
+
+**Options:** `download: current` with no `resources: pipelines:` · Environment exists but has no checks configured · Export to YAML covers builds, not classic releases · Machines not registered with `--environment`, or wrong `tags:` · Pipeline lacks permission on the connection
+
+<details>
+<summary>Show answer</summary>
 
 | Symptom | Cause |
 |---|---|
@@ -1048,6 +1289,8 @@ Match each symptom to its cause.
 
 **The second row is the dangerous one** because it produces a **successful** deployment. Every other
 symptom here is a visible failure.
+
+</details>
 
 ---
 
@@ -1071,12 +1314,17 @@ symptom here is a visible failure.
 - **BLANK 2:** `pipeline` / `name` / `alias` / `id`
 - **BLANK 3:** `source` / `pipeline` / `definition` / `path`
 
+<details>
+<summary>Show answer</summary>
+
 ### Answer: `resources`, `pipeline`, `source`
 
 **In `challenge-37.md`:** lines **681–684**.
 
 `pipeline:` is the **alias** used everywhere else in the file; `source:` is the pipeline's **real
 name** in Azure DevOps. Swapping them gives a resource-not-found error at compile time.
+
+</details>
 
 ---
 
@@ -1097,12 +1345,17 @@ name** in Azure DevOps. Swapping them gives a resource-not-found error at compil
 - **BLANK 2:** `tags` / `labels` / `filter` / `select`
 - **BLANK 3:** `rolling` / `runOnce` / `canary` / `matrix`
 
+<details>
+<summary>Show answer</summary>
+
 ### Answer: `resourceType`, `tags`, `rolling`
 
 **In `challenge-37.md`:** lines **504–507**.
 
 `tags: "web"` is what replaces classic deployment group tags — register 20 VMs and target only the
 subset a given stage needs. `rolling` with `maxParallel: 2` updates two machines at a time.
+
+</details>
 
 ---
 
@@ -1123,6 +1376,9 @@ steps:
 - **BLANK 2:** `if` / `when` / `condition` / `case`
 - **BLANK 3:** `true` / `'true'` / `"true"` / `1`
 
+<details>
+<summary>Show answer</summary>
+
 ### Answer: `boolean`, `if`, `true`
 
 **In `challenge-37.md`:** lines **362** and **389**.
@@ -1130,6 +1386,8 @@ steps:
 All three are Challenge 20's parameter traps recurring: `bool` is invalid, `condition:` is a **runtime**
 step key rather than compile-time insertion, and comparing a boolean to the string `'true'` silently
 never matches.
+
+</details>
 
 ---
 
@@ -1149,6 +1407,9 @@ stages:
 - **BLANK 1:** `variables` / `parameters` / `env` / `settings`
 - **BLANK 2:** `$(DB_HOST)` / `${{ DB_HOST }}` / `$[DB_HOST]` / `%DB_HOST%`
 
+<details>
+<summary>Show answer</summary>
+
 ### Answer: `variables`, `$(DB_HOST)`
 
 **In `challenge-37.md`:** lines **304–309**.
@@ -1156,6 +1417,8 @@ stages:
 Stage-scoped variable groups let the **same expression** resolve differently per stage — `contoso-api-dev`
 here, `contoso-api-production` at line 313. `$( )` is macro syntax, correct inside a task input or
 script.
+
+</details>
 
 ---
 
@@ -1170,12 +1433,17 @@ script.
 - **BLANK 1:** `environment` / `deploymentgroup` / `pool` / `agent`
 - **BLANK 2:** `environmentname` / `groupname` / `poolname` / `targetname`
 
+<details>
+<summary>Show answer</summary>
+
 ### Answer: `environment`, `environmentname`
 
 **In `challenge-37.md`:** lines **476–478**.
 
 `--deploymentgroup` is the **classic** flag being replaced; `--pool` registers a normal build agent
 rather than a deployment target.
+
+</details>
 
 ---
 
@@ -1192,12 +1460,17 @@ az pipelines [BLANK 2] --id 42 --yes
 - **BLANK 1:** `show` / `list` / `export` / `get`
 - **BLANK 2:** `delete` / `disable` / `archive` / `remove`
 
+<details>
+<summary>Show answer</summary>
+
 ### Answer: `show`, `delete`
 
 **In `challenge-37.md`:** lines **567–571** and **589–593**.
 
 `az pipelines export` does not exist — the archive is simply `show --output json` redirected to a file.
 Deletion is irreversible, which is why the archive comes first and Phase 3 waits two weeks.
+
+</details>
 
 ---
 
@@ -1246,6 +1519,9 @@ Which **two** are needed for the 12 classic release definitions? (Choose two.)
 - D. One YAML file per release stage
 - E. Conversion to task groups first
 
+<details>
+<summary>Show answer</summary>
+
 ### Answer: A, B
 
 **In `challenge-37.md`:** the mapping at line **151** and the export caveat at line **55**.
@@ -1261,6 +1537,8 @@ knowing before estimating the work.
   resources
 - **E** — task groups are step-level and cannot express a release stage
 
+</details>
+
 ---
 
 ## Q43
@@ -1271,6 +1549,9 @@ Which configuration preserves production approvals?
 - B. Add an `approvals:` block to the YAML
 - C. Add a branch policy on `main`
 - D. Set `condition: succeeded()` on the production stage
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -1285,6 +1566,8 @@ Which configuration preserves production approvals?
 **And the migration hazard:** approvals do **not** carry across. The environment is a new object with
 no checks until someone adds them, and the pipeline works perfectly without them.
 
+</details>
+
 ---
 
 ## Q44
@@ -1296,6 +1579,9 @@ Which configuration keeps the on-premises VM deployments working with the same m
 - B. A self-hosted agent pool
 - C. A `pool: name:` targeting the VMs
 - D. `strategy: matrix` over VM names
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -1316,6 +1602,8 @@ Which configuration keeps the on-premises VM deployments working with the same m
   approvals and per-machine tracking
 - **D** — a matrix is a regular-job strategy and is not available on deployment jobs
 
+</details>
+
 ---
 
 ## Q45
@@ -1327,6 +1615,9 @@ Which **two** meet the reuse requirements? (Choose two.)
 - C. Copy the shared steps into each pipeline
 - D. Recreate the variable groups as inline YAML variables
 - E. Publish task groups to a package feed
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A, B
 
@@ -1342,6 +1633,8 @@ their Key Vault links and secrets. Only the reference moves.
   `secure-parameter-default` lint rule guards against
 - **E** — task groups are not packages
 
+</details>
+
 ---
 
 ## Q46
@@ -1354,6 +1647,9 @@ Which **two** meet the safety requirements? (Choose two.)
 - D. Running both pipelines against production simultaneously
 - E. Migrating all 20 pipelines in one weekend
 
+<details>
+<summary>Show answer</summary>
+
 ### Answer: A, B
 
 **In `challenge-37.md`:** lines **547–557**.
@@ -1364,6 +1660,8 @@ Which **two** meet the safety requirements? (Choose two.)
 - **D** — two pipelines contending for the same environment race and overwrite each other, and a
   failure cannot be attributed to either
 - **E** — a big-bang migration of 20 pipelines removes any chance of learning from the first few
+
+</details>
 
 ---
 
@@ -1379,6 +1677,9 @@ What is the most likely cause?
 - B. The environment is missing approvals
 - C. The variable group is not linked
 - D. The service connection expired
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -1398,6 +1699,8 @@ archives it — it is the record of every stage and every consumer.
 
 **Why the others fail** — B blocks with a pending approval, C and D produce visible failures.
 
+</details>
+
 ---
 
 ## Q48
@@ -1412,6 +1715,9 @@ What should Contoso be able to produce, and what does this illustrate?
 - B. Nothing — the classic pipelines are gone
 - C. The YAML file only
 - D. A screenshot from before migration
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -1436,6 +1742,8 @@ looks like tidiness and is actually compliance.
 - **B** — true only if the archive step was skipped, which is the failure the challenge warns against
 - **C** — the YAML answers what happens now, not what happened then
 - **D** — a screenshot is not an auditable record
+
+</details>
 
 ---
 ---

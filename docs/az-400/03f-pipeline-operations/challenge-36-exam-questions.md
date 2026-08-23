@@ -1,6 +1,8 @@
 ---
-sidebar_position: 93
+sidebar_position: 3.5
+toc_max_heading_level: 2
 title: "Challenge 36: exam questions"
+sidebar_label: "Exam questions (48 Q)"
 ---
 
 # Challenge 36 — AZ-400 exam questions
@@ -47,6 +49,9 @@ Which approach meets both?
 - C. A single 7-day policy with manual copies of releases
 - D. Disable retention and delete manually
 
+<details>
+<summary>Show answer</summary>
+
 ### Answer: B
 
 **In `challenge-36.md`:** the tiers at lines **66–70** and the lease at lines **219–239**.
@@ -68,6 +73,8 @@ year.
 - **C** — manual copies are unauditable and get forgotten. Compliance requires a guarantee
 - **D** — the current situation, which is why storage grows 50 GB a month
 
+</details>
+
 ---
 
 ## Q2
@@ -78,6 +85,9 @@ What is the default GitHub Actions artifact retention period, and the maximum?
 - B. 90 days default, 400 maximum
 - C. 7 days default, 90 maximum
 - D. 365 days default, unlimited
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: B
 
@@ -97,6 +107,8 @@ Release** instead (Q6).
 
 **Why the others fail** — A, C and D all misstate one or both figures.
 
+</details>
+
 ---
 
 ## Q3
@@ -107,6 +119,9 @@ Which `upload-artifact` input sets per-artifact retention?
 - B. `expires-in`
 - C. `ttl`
 - D. `keep-days`
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -126,6 +141,8 @@ does not error loudly; it is silently clamped.
 
 **Why the others fail** — none exist as inputs.
 
+</details>
+
 ---
 
 ## Q4
@@ -136,6 +153,9 @@ Which Azure DevOps mechanism protects a specific pipeline run from the retention
 - B. A branch policy
 - C. A pipeline variable
 - D. An exclusive lock
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -162,6 +182,8 @@ artifacts are what compliance cares about.
 **Why the others fail** — B governs merging, C is a value, D prevents concurrent deployments
 (Challenge 24).
 
+</details>
+
 ---
 
 ## Q5
@@ -174,6 +196,9 @@ Which **two** defects are present? (Pick the single best answer.)
 - B. `daysValid` is too low
 - C. The pipeline lacks permissions to publish artifacts
 - D. The artifact name is wrong
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -204,6 +229,8 @@ header; it is not applied automatically.
 
 **Why the others fail** — B, C and D would produce different, visible failures.
 
+</details>
+
 ---
 
 ## Q6
@@ -214,6 +241,9 @@ Why are GitHub Releases suitable for long-term artifact retention?
 - B. They are compressed more efficiently
 - C. They cost less per gigabyte
 - D. They are automatically replicated
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -235,6 +265,8 @@ For anything with a genuine multi-year retention requirement, a Release is the c
 
 **Why the others fail** — B, C and D are all untrue; the storage is the same underlying service.
 
+</details>
+
 ---
 
 ## Q7
@@ -245,6 +277,9 @@ Which Azure Artifacts view holds promoted stable versions that are excluded from
 - B. `@prerelease`
 - C. `@release`
 - D. `@latest`
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: C
 
@@ -265,6 +300,8 @@ old pre-release versions and never touches promoted ones.
 **Why the others fail** — A is the default view where everything lands, B is what gets cleaned up,
 D does not exist as an Azure Artifacts view.
 
+</details>
+
 ---
 
 ## Q8
@@ -275,6 +312,9 @@ Which feed retention setting caps how many versions of each package are kept?
 - B. `daysToKeepRecentlyCreatedPackages`
 - C. `packageTypes`
 - D. `views`
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -298,6 +338,8 @@ consuming.
 
 **Why the others fail** — C scopes which package types the policy applies to, D scopes which views.
 
+</details>
+
 ---
 
 ## Q9
@@ -308,6 +350,9 @@ Which ACR command deletes untagged manifests older than 7 days?
 - B. `az acr repository delete --name contoso-api`
 - C. `az acr manifest list-metadata`
 - D. `az acr build --no-cache`
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -329,6 +374,8 @@ your machine, so no image pulling is involved. The `/dev/null` is an empty build
 
 **Why the others fail** — B deletes the entire repository, C lists metadata, D is a build command.
 
+</details>
+
 ---
 
 ## Q10
@@ -341,6 +388,9 @@ What was wrong?
 - B. The schedule ran too often
 - C. `--ago 7d` was too long
 - D. The registry was the wrong SKU
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -369,6 +419,8 @@ the narrower filter `sha-.*` targets only the commit-tagged CI images rather tha
 whether something is in use — a stable release image from last year may be exactly what production
 runs.
 
+</details>
+
 ---
 
 ## Q11
@@ -379,6 +431,9 @@ Which ACR purge flag retains the most recent N tags?
 - B. `--untagged`
 - C. `--ago 30d`
 - D. `--filter`
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -398,6 +453,8 @@ tags loses nothing regardless of age.
 **Why the others fail** — B targets untagged manifests, C is the age threshold, D selects which
 repositories and tags are in scope.
 
+</details>
+
 ---
 
 ## Q12
@@ -408,6 +465,9 @@ Which command creates a scheduled, self-running ACR cleanup?
 - B. `az acr run` with `--schedule`
 - C. An Azure Automation runbook only
 - D. A GitHub Actions cron workflow only
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -432,6 +492,8 @@ external scheduler to keep alive. Both alternatives work and add moving parts.
 
 **Why B fails** — `az acr run` executes once. `az acr task create` registers a recurring task.
 
+</details>
+
 ---
 
 ## Q13
@@ -442,6 +504,9 @@ Contoso's storage is 500 GB at $0.30/GB/month. What is the projected saving afte
 - B. ~$114/month
 - C. ~$150/month
 - D. ~$1,368/month
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: B
 
@@ -464,6 +529,8 @@ Contoso's storage is 500 GB at $0.30/GB/month. What is the projected saving afte
 The biggest absolute win is the artifacts, which is also the easiest — it is a policy setting, not a
 cleanup script.
 
+</details>
+
 ---
 
 ## Q14
@@ -474,6 +541,9 @@ Which schedule setting makes a weekly cleanup pipeline run even when no code has
 - B. `batch: true`
 - C. `trigger: none`
 - D. `enabled: true`
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -499,6 +569,8 @@ schedule.
 **Why the others fail** — B batches CI triggers, C disables CI triggering, D is not a schedule
 property. This is the same pair as Challenge 22 Q2.
 
+</details>
+
 ---
 
 ## Q15
@@ -509,6 +581,9 @@ Which GitHub CLI pattern deletes untagged container versions in GHCR?
 - B. `gh release delete`
 - C. `gh api --method DELETE /repos/{owner}/{repo}/actions/artifacts`
 - D. `docker rmi`
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -530,6 +605,8 @@ versions is barely touched and the script appears to have worked.
 **Why the others fail** — B deletes releases, C deletes **Actions artifacts** (a different store),
 D removes a local image.
 
+</details>
+
 ---
 
 ## Q16
@@ -540,6 +617,9 @@ Which Azure DevOps setting controls how long pull request runs are kept?
 - B. Days to keep artifacts
 - C. Minimum days to keep
 - D. Days to keep runs with release artifacts
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -561,6 +641,8 @@ cleanup. It protects against a misconfigured policy wiping today's builds.
 
 **Why the others fail** — B is the general default, C is the floor, D is the release tier.
 
+</details>
+
 ---
 
 # Section B — Multiple answer
@@ -577,6 +659,9 @@ Which **three** storage areas does Contoso's retention strategy address? (Choose
 - D. Source code repositories
 - E. Work item attachments
 - F. Wiki pages
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A, B, C
 
@@ -599,6 +684,8 @@ Which **three** storage areas does Contoso's retention strategy address? (Choose
 **Why the others fail** — D, E and F consume storage and are not part of this strategy. Git history is
 not something you prune on a schedule.
 
+</details>
+
 ---
 
 ## Q18
@@ -610,6 +697,9 @@ Which **two** are needed for a retention lease to work? (Choose two.)
 - C. `protectPipeline: true`
 - D. A personal access token stored as a secret
 - E. `daysValid` under 30
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A, B
 
@@ -626,6 +716,8 @@ Which **two** are needed for a retention lease to work? (Choose two.)
 **Note the failure is silent.** Both defects produce a green pipeline and an artifact that vanishes a
 month later.
 
+</details>
+
 ---
 
 ## Q19
@@ -637,6 +729,9 @@ Which **two** correctly tier GitHub Actions artifact retention? (Choose two.)
 - C. `retention-days: 400` for everything
 - D. No `retention-days`, relying on the 90-day default
 - E. `retention-days: 0` for CI builds
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A, B
 
@@ -652,6 +747,8 @@ Which **two** correctly tier GitHub Actions artifact retention? (Choose two.)
 **The selection is by branch** (lines 132, 141, 150), so the tier follows the artifact's purpose
 automatically rather than depending on anyone remembering.
 
+</details>
+
 ---
 
 ## Q20
@@ -663,6 +760,9 @@ Which **two** protect a package version from feed cleanup? (Choose two.)
 - C. Deleting the `@prerelease` view
 - D. Setting `packageTypes` to an empty list
 - E. Publishing it as a pre-release
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A, B
 
@@ -681,6 +781,8 @@ is a third protection, covering versions that are both old-ranked and recently p
   version
 - **E** — pre-release is exactly what the policy targets
 
+</details>
+
 ---
 
 ## Q21
@@ -692,6 +794,9 @@ Which **two** make an ACR purge safe for production? (Choose two.)
 - C. `--ago 1d` for faster cleanup
 - D. Removing `--keep`
 - E. Purging every tag older than 7 days
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A, B
 
@@ -707,6 +812,8 @@ the filter restricts it to the CI-generated commit tags.
 - **D** — `--keep 10` (line 423) is a guard; removing it deletes more
 - **E** — the exact broken command that deleted production images
 
+</details>
+
 ---
 
 ## Q22
@@ -718,6 +825,9 @@ Which **two** are true about GitHub Releases as a retention mechanism? (Choose t
 - C. They expire after 400 days
 - D. They are automatically created for every build
 - E. They cannot hold binary assets
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A, B
 
@@ -737,6 +847,8 @@ releases that no longer exist.
 **Why the others fail** — C is the *artifact* maximum, D requires an explicit `gh release create`,
 E is false (line 246 attaches `dist/*.zip`).
 
+</details>
+
 ---
 
 ## Q23
@@ -748,6 +860,9 @@ Which **two** should a cleanup pipeline configure? (Choose two.)
 - C. `trigger` on every push to main
 - D. `always: false` to skip when nothing changed
 - E. A `pr` trigger
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A, B
 
@@ -763,6 +878,8 @@ would compete for agents with real builds.
   concurrent run is still using
 - **D** — the inverse of the requirement. A week with no commits is still a week of accumulated
   storage
+
+</details>
 
 ---
 
@@ -780,7 +897,10 @@ on.
 365-day retention lease on runs that deploy to production, cap the feed at 5 versions per package
 scoped to `@prerelease`, and schedule an ACR purge of untagged manifests keeping the last 20 tags.
 
-Does this meet the goal? **Yes**
+Does this meet the goal?
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: Yes
 
@@ -797,6 +917,8 @@ Does this meet the goal? **Yes**
 **The last row is what makes it a Yes.** Every deletion path is scoped to something nothing references
 — untagged manifests and unpromoted pre-releases.
 
+</details>
+
 ---
 
 ## Q25
@@ -804,7 +926,10 @@ Does this meet the goal? **Yes**
 **Proposed solution:** Set a single 7-day retention policy across the project and schedule a daily ACR
 purge of everything older than 7 days.
 
-Does this meet the goal? **No**
+Does this meet the goal?
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: No
 
@@ -820,6 +945,8 @@ fails to pull its image.
 **Storage would fall dramatically**, which is why the proposal is tempting. It achieves the number by
 deleting the things that matter.
 
+</details>
+
 ---
 
 ## Q26
@@ -829,7 +956,10 @@ production runs, cap the feed at 5 versions per package, and schedule an ACR pur
 `--untagged --ago 7d`. Configure the lease with `daysValid: 365` but omit the `Authorization` header
 from the REST call.
 
-Does this meet the goal? **No**
+Does this meet the goal?
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: No
 
@@ -846,6 +976,8 @@ when someone needs that build.
 **The pattern:** a tightened default plus a broken exception is worse than a loose default, because it
 looks compliant. Verify the lease exists after deployment rather than assuming the API call worked.
 
+</details>
+
 ---
 
 # Section D — Yes/No statement grid
@@ -853,6 +985,16 @@ looks compliant. Verify the lease exists after deployment rather than assuming t
 ---
 
 ## Q27 — Azure Pipelines retention
+
+| # | Statement | Answer |
+|---|---|---|
+| 1 | A retention lease overrides the project policy for one run |  |
+| 2 | "Minimum days to keep" is a floor that manual deletion respects |  |
+| 3 | Pull request runs use the same retention as main-branch runs |  |
+| 4 | `$(System.AccessToken)` must be passed explicitly as a header |  |
+
+<details>
+<summary>Show answer</summary>
 
 | # | Statement | Answer |
 |---|---|---|
@@ -869,9 +1011,21 @@ shortest-lived value.
 Row 4 is Break & fix Exercise 1's first defect. The token exists in the pipeline; it is not applied to
 outbound REST calls automatically.
 
+</details>
+
 ---
 
 ## Q28 — GitHub Actions retention
+
+| # | Statement | Answer |
+|---|---|---|
+| 1 | The default artifact retention is 90 days |  |
+| 2 | The maximum is 400 days |  |
+| 3 | GitHub Releases expire with artifact retention |  |
+| 4 | `retention-days` can be set per upload |  |
+
+<details>
+<summary>Show answer</summary>
 
 | # | Statement | Answer |
 |---|---|---|
@@ -887,9 +1041,21 @@ them right for multi-year retention — and what makes them need their own pruni
 
 Row 1 explains the drift: 90 days is generous, and nobody chooses it. It is simply what happens.
 
+</details>
+
 ---
 
 ## Q29 — package feeds
+
+| # | Statement | Answer |
+|---|---|---|
+| 1 | `@release` holds promoted versions excluded from cleanup |  |
+| 2 | `countLimit` caps versions kept per package |  |
+| 3 | Recently published versions can be protected regardless of count |  |
+| 4 | Deleting a package version also deletes its downstream consumers' locks |  |
+
+<details>
+<summary>Show answer</summary>
 
 | # | Statement | Answer |
 |---|---|---|
@@ -907,9 +1073,21 @@ Row 4 matters operationally: a lock file referencing a deleted version means eve
 `npm ci` fails. That is why the two guards exist and why `@release` promotion is the durable answer for
 anything shipped.
 
+</details>
+
 ---
 
 ## Q30 — container registry
+
+| # | Statement | Answer |
+|---|---|---|
+| 1 | `--untagged` deletes manifests nothing references |  |
+| 2 | `--keep 10` and `--ago 30d` compose as an AND |  |
+| 3 | Age alone is a safe deletion criterion |  |
+| 4 | `az acr task create` can run a purge on a schedule |  |
+
+<details>
+<summary>Show answer</summary>
 
 | # | Statement | Answer |
 |---|---|---|
@@ -927,6 +1105,8 @@ one-day-old untagged manifest is genuinely garbage.
 Row 2 is why the combination is safe — a repository with three tags loses nothing however old they
 are.
 
+</details>
+
 ---
 
 # Section E — Drag and drop
@@ -936,6 +1116,20 @@ are.
 ## Q31
 
 Match each artifact class to its retention tier.
+
+| Artifact class | Tier |
+|---|---|
+| Pull request build output |  |
+| Main-branch build output |  |
+| Release build output |  |
+| Untagged container manifest |  |
+| Pre-release package version |  |
+| Production release asset |  |
+
+**Options:** 30 days · 3–10 days · 365 days · 7 days · Indefinite — GitHub Release · Newest 5, or 30 days if recent
+
+<details>
+<summary>Show answer</summary>
 
 | Artifact class | Tier |
 |---|---|
@@ -952,11 +1146,27 @@ Match each artifact class to its retention tier.
 valuable; release artifacts are rare and must survive an audit. Any single policy is wrong for one end
 or the other.
 
+</details>
+
 ---
 
 ## Q32
 
 Match each store to its cleanup mechanism.
+
+| Store | Mechanism |
+|---|---|
+| Azure Pipelines run artifacts |  |
+| GitHub Actions artifacts |  |
+| Azure Artifacts feed |  |
+| GitHub Packages |  |
+| Azure Container Registry |  |
+| Long-term release assets |  |
+
+**Options:** `acr purge --untagged --keep N --ago Nd` · `countLimit` + views, scoped to `@prerelease` · `gh api` DELETE by version id · GitHub Releases — exempt from retention · Project retention policy + retention leases · `retention-days` per upload; 90-day default, 400 max
+
+<details>
+<summary>Show answer</summary>
 
 | Store | Mechanism |
 |---|---|
@@ -973,6 +1183,8 @@ Match each store to its cleanup mechanism.
 **Five stores, five mechanisms, no shared setting.** That is why the scenario's 500 GB needed seven
 tasks — reducing it is not one policy change.
 
+</details>
+
 ---
 
 ## Q33
@@ -980,6 +1192,9 @@ tasks — reducing it is not one policy change.
 Arrange the storage reduction by size of saving, largest first.
 
 **Items:** Container images 120 → 40 GB · Package feed 180 → 50 GB · Pipeline artifacts 200 → 30 GB
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer
 
@@ -997,6 +1212,8 @@ Arrange the storage reduction by size of saving, largest first.
 leases on release runs. The feed and registry need cleanup scripts and careful filters. Start where
 the ratio of saving to risk is best.
 
+</details>
+
 ---
 
 ## Q34
@@ -1005,6 +1222,9 @@ Arrange the ACR purge safety checks from most to least important.
 
 **Items:** Restrict the tag filter to CI-generated patterns · Add `--untagged` · Set `--keep N` ·
 Set `--ago Nd`
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer
 
@@ -1019,11 +1239,26 @@ Set `--ago Nd`
 `--ago` alone makes it dangerous — which is exactly the Break & fix Exercise 2 failure, where age was
 the *only* criterion.
 
+</details>
+
 ---
 
 ## Q35
 
 Match each symptom to its cause.
+
+| Symptom | Cause |
+|---|---|
+| Release artifacts deleted after 30 days |  |
+| Production pods fail to pull their image |  |
+| Storage grows despite a weekly cleanup pipeline |  |
+| A consumer's `npm ci` fails after cleanup |  |
+| GHCR cleanup deletes almost nothing |  |
+
+**Options:** A package version still referenced was evicted · `always: false`, so the schedule skips quiet weeks · `--paginate` omitted, so only the first page is processed · Purge without `--untagged` deleted a tagged image · Retention lease failed — missing header or non-array body
+
+<details>
+<summary>Show answer</summary>
 
 | Symptom | Cause |
 |---|---|
@@ -1037,6 +1272,8 @@ Match each symptom to its cause.
 
 **The first and last are both silent.** A failed lease and a single-page cleanup both leave a green
 pipeline and an unchanged outcome — you discover them by measuring storage, not by reading logs.
+
+</details>
 
 ---
 
@@ -1057,12 +1294,17 @@ Project Settings > Pipelines > Retention
 - **BLANK 2:** `10` / `30` / `90` / `365`
 - **BLANK 3:** `365` / `30` / `10` / `1`
 
+<details>
+<summary>Show answer</summary>
+
 ### Answer: `30`, `10`, `365`
 
 **In `challenge-36.md`:** lines **67–70**.
 
 Three tiers ordered by value: PR runs shortest, general artifacts in the middle, release artifacts
 longest. `400` is the **GitHub** maximum, offered here as a cross-platform distractor.
+
+</details>
 
 ---
 
@@ -1086,12 +1328,17 @@ longest. `400` is the **GitHub** maximum, offered here as a cross-platform distr
 - **BLANK 2:** `@` / `$` / `%` / *(omit)*
 - **BLANK 3:** `365` / `30` / `7` / `1`
 
+<details>
+<summary>Show answer</summary>
+
 ### Answer: `Authorization`, `@`, `365`
 
 **In `challenge-36.md`:** lines **592–604**.
 
 Both blanks 1 and 2 are Break & fix Exercise 1's defects. `ConvertTo-Json @( ... )` produces a JSON
 **array**, which the leases API requires — omitting `@(` sends a single object and the call fails.
+
+</details>
 
 ---
 
@@ -1111,12 +1358,17 @@ Both blanks 1 and 2 are Break & fix Exercise 1's defects. `ConvertTo-Json @( ...
 - **BLANK 2:** `retention-days` / `expires-in` / `ttl` / `keep`
 - **BLANK 3:** `365` / `3` / `90` / `400`
 
+<details>
+<summary>Show answer</summary>
+
 ### Answer: `refs/heads/release/`, `retention-days`, `365`
 
 **In `challenge-36.md`:** lines **150–155**.
 
 `github.ref` holds the **full ref** — the same value trap as Challenge 31 Q41. `400` is the maximum
 rather than the requirement; compliance asks for one year.
+
+</details>
 
 ---
 
@@ -1134,12 +1386,17 @@ rather than the requirement; compliance asks for one year.
 - **BLANK 1:** `countLimit` / `maxVersions` / `versionLimit` / `keepCount`
 - **BLANK 2:** `@prerelease` / `@release` / `@local` / `@latest`
 
+<details>
+<summary>Show answer</summary>
+
 ### Answer: `countLimit`, `@prerelease`
 
 **In `challenge-36.md`:** lines **330** and **333**.
 
 Scoping to `@prerelease` is what protects promoted versions: anything in `@release` is out of the
 policy's scope entirely. Targeting `@release` would delete the stable versions consumers depend on.
+
+</details>
 
 ---
 
@@ -1157,12 +1414,17 @@ Requirement: remove CI images that nothing references, without touching `latest`
 - **BLANK 1:** `sha-.*` / `.*` / `latest` / `v.*`
 - **BLANK 2:** `untagged` / `force` / `all` / `dry-run`
 
+<details>
+<summary>Show answer</summary>
+
 ### Answer: `sha-.*`, `untagged`
 
 **In `challenge-36.md`:** lines **631–634**.
 
 `.*` is the broken filter that deleted production images. `--untagged` is the primary safety flag —
 delete by reference, not by age.
+
+</details>
 
 ---
 
@@ -1185,12 +1447,17 @@ Requirement: run every Sunday at 02:00 whether or not code changed, and never on
 - **BLANK 2:** `always` / `batch` / `enabled` / `force`
 - **BLANK 3:** `trigger` / `pr` / `schedule` / `pool`
 
+<details>
+<summary>Show answer</summary>
+
 ### Answer: `0 2 * * 0`, `always`, `trigger`
 
 **In `challenge-36.md`:** lines **348–354**.
 
 Minute, hour, day-of-month, month, day-of-week — so `0 2` is 02:00 and `0` in the fifth field is
 Sunday. `always: true` is essential: a cleanup that skips quiet weeks defeats its own purpose.
+
+</details>
 
 ---
 
@@ -1240,6 +1507,9 @@ Which **two** meet the tiered compliance requirement? (Choose two.)
 - D. A single 7-day policy for all runs
 - E. Manually downloading release artifacts to a file share
 
+<details>
+<summary>Show answer</summary>
+
 ### Answer: A, B
 
 **In `challenge-36.md`:** lines **66–105** (Azure DevOps) and **131–155** (GitHub).
@@ -1252,6 +1522,8 @@ Which **two** meet the tiered compliance requirement? (Choose two.)
 - **D** — deletes the production artifacts compliance requires
 - **E** — unauditable, manual, and it will be forgotten. Compliance needs a guarantee
 
+</details>
+
 ---
 
 ## Q43
@@ -1262,6 +1534,9 @@ Which configuration reduces the 180 GB feed without breaking consumers?
 - B. `countLimit: 5` applied to all views
 - C. Deleting every package older than 30 days
 - D. Deleting the feed and recreating it
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -1278,6 +1553,8 @@ Which configuration reduces the 180 GB feed without breaking consumers?
 **`daysToKeepRecentlyCreatedPackages: 30`** is the second guard, protecting a version that is both
 outside the newest five and recently published.
 
+</details>
+
 ---
 
 ## Q44
@@ -1289,6 +1566,9 @@ Which **two** safely reduce the 120 GB of container images? (Choose two.)
 - C. `acr purge --ago 7d` with no other flags
 - D. `az acr repository delete` for old repositories
 - E. Reducing the ACR SKU
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A, B
 
@@ -1305,6 +1585,8 @@ conservative on tagged ones.
   throughput and features — and may increase the overage bill. It also loses geo-replication and
   content trust (Challenge 28)
 
+</details>
+
 ---
 
 ## Q45
@@ -1315,6 +1597,9 @@ Which configuration bounds **future** growth rather than reducing storage once?
 - B. A one-time manual purge
 - C. Increasing the storage quota
 - D. Archiving old artifacts to blob storage
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -1334,6 +1619,8 @@ periods, which are exactly when nobody notices growth.
   gigabyte, and it does nothing about growth — you now have an unbounded, cheaper pile, plus a
   restore process nobody has tested
 
+</details>
+
 ---
 
 ## Q46
@@ -1344,6 +1631,9 @@ Which mechanism lets a team keep one specific build beyond the default?
 - B. Renaming the artifact
 - C. Changing the project default temporarily
 - D. Re-running the pipeline monthly
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -1365,6 +1655,8 @@ while one build survives.
 - **D** — re-running produces a **new** build, not the one being preserved. The original artifact is
   still deleted, and the rebuilt one may not even be identical
 
+</details>
+
 ---
 
 ## Q47
@@ -1379,6 +1671,9 @@ What went wrong?
 - B. The project policy is not being enforced
 - C. The leases have expired but artifacts remain
 - D. The 30-day policy is too long
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -1403,6 +1698,8 @@ Count them against your actual release cadence.
 - **C** — an expired lease stops protecting, so the artifact would be deleted
 - **D** — 30 days is not the problem; the exception is
 
+</details>
+
 ---
 
 ## Q48
@@ -1417,6 +1714,9 @@ What is the most likely explanation?
 - B. Retention leases do not work
 - C. The auditor is looking in the wrong project
 - D. Artifacts cannot be kept longer than 90 days
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -1448,6 +1748,8 @@ compliance move release artifacts somewhere outside the pipeline's lifecycle —
 
 **Why the others fail** — B is contradicted by the design, C is not a technical answer, D is the
 GitHub *default*, not a cap on Azure DevOps.
+
+</details>
 
 ---
 ---

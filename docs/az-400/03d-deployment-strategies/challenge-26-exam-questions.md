@@ -1,6 +1,8 @@
 ---
-sidebar_position: 92
+sidebar_position: 2.5
+toc_max_heading_level: 2
 title: "Challenge 26: exam questions"
+sidebar_label: "Exam questions (48 Q)"
 ---
 
 # Challenge 26 — AZ-400 exam questions
@@ -47,6 +49,9 @@ Which setting enforces this?
 - C. `pauseTimeBetweenBatches="PT30S"`
 - D. `automaticRepairsPolicy.enabled=true`
 
+<details>
+<summary>Show answer</summary>
+
 ### Answer: A
 
 **In `challenge-26.md`:** lines **180–187**.
@@ -73,6 +78,8 @@ instances, 25% = one instance per batch.
 **The distinction that gets tested:** batch size controls *how many at a time*; the unhealthy
 percentages control *when to give up*.
 
+</details>
+
 ---
 
 ## Q2
@@ -85,6 +92,9 @@ What is the most likely cause?
 - B. The first batch is failing health checks and hit the unhealthy threshold
 - C. The scale set has reached its instance limit
 - D. The custom script extension timed out
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: B
 
@@ -113,6 +123,8 @@ Restarting without fixing the application just fails at the same point.
 - **D** — an extension timeout would fail individual instances, and the diagnostic at lines 677–682
   shows provisioning states, not extension errors
 
+</details>
+
 ---
 
 ## Q3
@@ -125,6 +137,9 @@ What is the most likely cause?
 - B. The staging slot has no traffic routing configured
 - C. `WEBSITE_WARMUP_PATH` is not set
 - D. The production slot is stopped
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -149,6 +164,8 @@ Same tier constraint as slots themselves — F1 and B1 support neither.
 for `slotsswap` operations. If the config is set and no operation was ever attempted, look at the
 tier.
 
+</details>
+
 ---
 
 ## Q4
@@ -159,6 +176,9 @@ How does auto-swap decide when to perform the swap?
 - B. After Azure warms up the slot by requesting its root path
 - C. After a fixed 60-second delay
 - D. After the health check path returns 200 three times
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: B
 
@@ -184,6 +204,8 @@ How does auto-swap decide when to perform the swap?
 `WEBSITE_SWAP_WARMUP_PING_PATH` (line 377) redirects that to a real readiness endpoint, which is far
 more meaningful than whether `/` returns something.
 
+</details>
+
 ---
 
 ## Q5
@@ -194,6 +216,9 @@ Which command routes 10% of live production traffic to the staging slot?
 - B. `az network traffic-manager endpoint update --weight 10`
 - C. `az webapp deployment slot swap --percentage 10`
 - D. `az webapp config set --traffic staging=10`
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -224,6 +249,8 @@ apply immediately.
 | Split across regions or services | Front Door (per request) or Traffic Manager (DNS) |
 | Instant full cutover | Slot swap |
 
+</details>
+
 ---
 
 ## Q6
@@ -235,6 +262,9 @@ balancer?
 - B. `deploy`
 - C. `routeTraffic`
 - D. `postRouteTraffic`
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: C
 
@@ -261,6 +291,8 @@ of rolling deployment: never update an instance that is still serving requests.
 - **B** — `deploy` installs the new version while the instance is out of rotation
 - **D** — `postRouteTraffic` verifies health **after** traffic returns (lines 283–298)
 
+</details>
+
 ---
 
 ## Q7
@@ -271,6 +303,9 @@ Which VMSS extension reports instance health to the platform?
 - B. `ApplicationHealthLinux`
 - C. `DependencyAgentLinux`
 - D. `AzureMonitorLinuxAgent`
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: B
 
@@ -303,6 +338,8 @@ with a broken one.
 unhealthy. Set it below your real startup time and the platform will kill instances that were merely
 still booting.
 
+</details>
+
 ---
 
 ## Q8
@@ -315,6 +352,9 @@ What is the fix?
 - B. Configure `WEBSITE_SWAP_WARMUP_PING_PATH` and `WEBSITE_SWAP_WARMUP_PING_STATUSES`
 - C. Enable auto-swap
 - D. Add a Traffic Manager health probe
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: B
 
@@ -340,6 +380,8 @@ The cost is paid either way — the question is whether **your pipeline** pays i
   connections are still cold. Setting an explicit readiness path is what actually helps
 - **D** — a probe removes an unhealthy endpoint from rotation. It does not warm anything
 
+</details>
+
 ---
 
 ## Q9
@@ -350,6 +392,9 @@ Which setting makes an app setting **swap** with the code rather than staying wi
 - B. `--settings`
 - C. `--sticky-settings`
 - D. `--slot-config-names`
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: B
 
@@ -374,6 +419,8 @@ so it travels. `ENVIRONMENT=production` describes the slot, so it stays.
 - **A** — the opposite: makes it sticky
 - **C** and **D** — not CLI flags. "Sticky" is the informal name for a slot setting
 
+</details>
+
 ---
 
 ## Q10
@@ -384,6 +431,9 @@ Which Azure Pipelines task performs a slot swap?
 - B. `AzureAppServiceManage@0` with `action: 'Swap Slots'`
 - C. `AzureCLI@2` only
 - D. `AzureRmWebAppDeployment@4` with `swapSlot: true`
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: B
 
@@ -412,6 +462,8 @@ Note only `sourceSlot` is given — the target defaults to production.
 **`AzureAppServiceManage@0` also does** Start, Stop, Restart, Delete Slot and Install Extensions. The
 action parameter is what makes it a swap.
 
+</details>
+
 ---
 
 ## Q11
@@ -422,6 +474,9 @@ Which Azure Pipelines condition triggers a rollback stage only when the previous
 - B. `condition: failed()`
 - C. `condition: succeededOrFailed()`
 - D. `condition: eq(variables['Build.Reason'], 'Failed')`
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: B
 
@@ -444,6 +499,8 @@ Which Azure Pipelines condition triggers a rollback stage only when the previous
 **Platform note:** Azure Pipelines uses `failed()`; GitHub Actions uses `failure()`. Same idea,
 different spelling, and the exam swaps them.
 
+</details>
+
 ---
 
 ## Q12
@@ -454,6 +511,9 @@ What does `##vso[task.logissue type=error]` do in a pipeline script?
 - B. Immediately cancels the pipeline
 - C. Sends an email to the pipeline owner
 - D. Creates a work item in Azure Boards
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -479,6 +539,8 @@ issue without exiting non-zero and the step still passes.
 **Other logging commands worth recognising:** `task.setvariable`, `task.setprogress`,
 `task.complete`, `artifact.upload`.
 
+</details>
+
 ---
 
 ## Q13
@@ -489,6 +551,9 @@ Which VMSS setting automatically replaces instances that stay unhealthy?
 - B. `upgradePolicy.mode=Rolling`
 - C. `maxUnhealthyInstancePercent`
 - D. `pauseTimeBetweenBatches`
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -515,6 +580,8 @@ able to read that format is worth an exam mark.
 **It depends on the health extension.** Without `ApplicationHealthLinux` (Q7), the platform has no
 health signal to repair against.
 
+</details>
+
 ---
 
 ## Q14
@@ -525,6 +592,9 @@ Which App Service configuration tells the platform which path to probe for insta
 - B. `healthCheckPath`
 - C. `WEBSITE_WARMUP_PATH`
 - D. `applicationInitialization`
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: B
 
@@ -546,6 +616,8 @@ challenge:**
 
 **Why the others fail** — each is real, and none is the ongoing instance health probe.
 
+</details>
+
 ---
 
 ## Q15
@@ -556,6 +628,9 @@ In the rolling strategy, what does `maxParallel: 25%` mean with 4 instances?
 - B. All four are updated with a 25% delay
 - C. 25% of requests go to the new version
 - D. The update completes in four batches of 25% each
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -581,6 +656,8 @@ the **size** of a batch, not how many batches there are.
 **`maxParallel` accepts a percentage or an absolute number.** `maxParallel: 1` would be identical
 here and clearer.
 
+</details>
+
 ---
 
 ## Q16
@@ -591,6 +668,9 @@ Which warm-up mechanism is specific to **Windows** App Service?
 - B. The `applicationInitialization` element in `web.config`
 - C. `healthCheckPath`
 - D. The `ApplicationHealthLinux` extension
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: B
 
@@ -612,6 +692,8 @@ which the single-path app setting cannot.
 - **A** and **C** — platform-agnostic app settings, working on Linux and Windows alike
 - **D** — a **VMSS** extension, and its name says Linux
 
+</details>
+
 ---
 
 # Section B — Multiple answer
@@ -628,6 +710,9 @@ Which **four** lifecycle hooks does the Azure Pipelines `rolling` strategy provi
 - D. `postRouteTraffic`
 - E. `preValidate`
 - F. `postSwap`
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A, B, C, D
 
@@ -652,6 +737,8 @@ Which **four** lifecycle hooks does the Azure Pipelines `rolling` strategy provi
 `increments` setting. That trio — `runOnce`, `rolling`, `canary` — is the complete set of deployment
 job strategies, and it is testable.
 
+</details>
+
 ---
 
 ## Q18
@@ -663,6 +750,9 @@ Which **two** settings control when a VMSS rolling upgrade aborts? (Choose two.)
 - C. `maxBatchInstancePercent`
 - D. `pauseTimeBetweenBatches`
 - E. `automaticRepairsPolicy.gracePeriod`
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A, B
 
@@ -683,6 +773,8 @@ in Break & fix Exercise 2.
 - **D** — pacing between batches
 - **E** — replacement of unhealthy instances during normal operation, not during an upgrade
 
+</details>
+
 ---
 
 ## Q19
@@ -694,6 +786,9 @@ Which **two** are true about App Service auto-swap? (Choose two.)
 - C. It can be disabled by setting the auto-swap slot to an empty string
 - D. It bypasses environment approvals
 - E. It performs a rollback automatically if production fails
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A, B
 
@@ -710,6 +805,8 @@ pair — the two *behaviours*, while C is the off switch.
   swap step behind an environment (lines 565–582)
 - **E** — no automatic rollback. That is the pipeline's job (lines 603–621)
 
+</details>
+
 ---
 
 ## Q20
@@ -721,6 +818,9 @@ Which **two** settings should be sticky on the staging slot? (Choose two.)
 - C. `API_VERSION=v2.3.1`
 - D. `FEATURE_NEW_CHECKOUT=true`
 - E. The published application build
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A, B
 
@@ -745,6 +845,8 @@ tested in staging, and Challenge 25's rollback alert would fire on a phantom.
   while advertising the old version
 - **E** — the build is the content. Making it sticky would break swapping entirely
 
+</details>
+
 ---
 
 ## Q21
@@ -756,6 +858,9 @@ Which **two** are required for VMSS automatic instance repair to work? (Choose t
 - C. `upgradePolicy.mode=Rolling`
 - D. `maxBatchInstancePercent` set below 100
 - E. A minimum of four instances
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A, B
 
@@ -773,6 +878,8 @@ gives the platform nothing to evaluate, so nothing is ever repaired.
 **`gracePeriod: "PT30M"`** stops repairs firing during normal startup. Too short and healthy
 instances get destroyed while still booting.
 
+</details>
+
 ---
 
 ## Q22
@@ -784,6 +891,9 @@ Which **two** improve availability during a rolling deployment? (Choose two.)
 - C. Updating all instances simultaneously to shorten the window
 - D. Disabling health probes during the update
 - E. Setting `maxBatchInstancePercent=100`
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A, B
 
@@ -798,6 +908,8 @@ a 3-minute outage that resulted in 4,200 failed requests."*
 - **D** — without probes, unhealthy instances stay in rotation and the upgrade never aborts. You lose
   both protections at once
 
+</details>
+
 ---
 
 ## Q23
@@ -810,6 +922,9 @@ two.)
 - C. App Service traffic routing requires a Traffic Manager profile
 - D. Traffic Manager can split traffic within a single App Service
 - E. App Service traffic routing changes require a slot swap
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A, B
 
@@ -834,6 +949,8 @@ az webapp traffic-routing set --distribution staging=10
 - **D** — Traffic Manager routes to endpoints, not between slots of one app
 - **E** — routing changes apply immediately; a swap is a separate operation
 
+</details>
+
 ---
 
 # Section C — Repeated scenario
@@ -849,7 +966,10 @@ start for users.
 **Proposed solution:** Deploy to a staging slot, configure `WEBSITE_SWAP_WARMUP_PING_PATH` with an
 expected status of 200, validate staging, then swap to production.
 
-Does this meet the goal? **Yes**
+Does this meet the goal?
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: Yes
 
@@ -864,6 +984,8 @@ Both halves are covered:
 
 This is the intended answer, and it directly fixes both symptoms in the incident.
 
+</details>
+
 ---
 
 ## Q25
@@ -871,7 +993,10 @@ This is the intended answer, and it directly fixes both symptoms in the incident
 **Proposed solution:** Configure a VMSS rolling upgrade with `maxBatchInstancePercent=100` and
 `pauseTimeBetweenBatches="PT30S"`.
 
-Does this meet the goal? **No**
+Does this meet the goal?
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: No
 
@@ -886,6 +1011,8 @@ instances keep serving while one updates.
 **The exam pattern here:** the proposal uses the right *feature* with a value that defeats it. Read
 the numbers, not just the keywords.
 
+</details>
+
 ---
 
 ## Q26
@@ -893,7 +1020,10 @@ the numbers, not just the keywords.
 **Proposed solution:** Enable auto-swap on the staging slot so deployments promote automatically after
 warm-up.
 
-Does this meet the goal? **No**
+Does this meet the goal?
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: No
 
@@ -910,6 +1040,8 @@ makes bad releases reach production **faster**.
 **Where auto-swap does belong:** development and test environments, where speed matters more than
 gates.
 
+</details>
+
 ---
 
 # Section D — Yes/No statement grid
@@ -917,6 +1049,16 @@ gates.
 ---
 
 ## Q27 — deployment slots and swapping
+
+| # | Statement | Answer |
+|---|---|---|
+| 1 | Auto-swap requires Standard tier or higher |  |
+| 2 | Auto-swap performs the swap even if warm-up fails |  |
+| 3 | `az webapp traffic-routing` splits traffic per request |  |
+| 4 | A slot swap is atomic from the client's perspective |  |
+
+<details>
+<summary>Show answer</summary>
 
 | # | Statement | Answer |
 |---|---|---|
@@ -932,9 +1074,21 @@ not occur."*
 
 Row 4 explains why blue-green gives zero downtime — there is no moment when neither slot is serving.
 
+</details>
+
 ---
 
 ## Q28 — rolling deployments
+
+| # | Statement | Answer |
+|---|---|---|
+| 1 | `maxBatchInstancePercent` controls how many instances update at once |  |
+| 2 | A rolling upgrade continues even when the first batch is unhealthy |  |
+| 3 | `pauseTimeBetweenBatches` uses ISO 8601 duration format |  |
+| 4 | Rolling deployments require duplicate infrastructure |  |
+
+<details>
+<summary>Show answer</summary>
 
 | # | Statement | Answer |
 |---|---|---|
@@ -951,9 +1105,21 @@ is a small, reliable exam mark.
 Row 4 is the cost argument from Challenge 25's table: rolling is **1x** infrastructure because it
 updates in place, versus blue-green's 2x.
 
+</details>
+
 ---
 
 ## Q29 — health probes
+
+| # | Statement | Answer |
+|---|---|---|
+| 1 | `ApplicationHealthLinux` reports application-level health to the platform |  |
+| 2 | `healthCheckPath` removes unhealthy App Service instances from rotation |  |
+| 3 | Automatic instance repair works without a health signal |  |
+| 4 | `gracePeriod` prevents repairs during instance startup |  |
+
+<details>
+<summary>Show answer</summary>
 
 | # | Statement | Answer |
 |---|---|---|
@@ -971,9 +1137,21 @@ balancer probe.
 Row 4: set `gracePeriod` shorter than your real startup time and you get a repair loop — instances
 killed while booting, replaced, killed again.
 
+</details>
+
 ---
 
 ## Q30 — settings and swaps
+
+| # | Statement | Answer |
+|---|---|---|
+| 1 | `--slot-settings` values stay with the slot during a swap |  |
+| 2 | `--settings` values swap with the application code |  |
+| 3 | Connection strings can be marked as slot settings |  |
+| 4 | The App Insights key should swap with the code |  |
+
+<details>
+<summary>Show answer</summary>
 
 | # | Statement | Answer |
 |---|---|---|
@@ -990,6 +1168,8 @@ telemetry lands in the production Application Insights resource**. Your producti
 and DORA metrics all become wrong, and the rollback alert from Challenge 25 could fire because someone
 ran a load test in staging.
 
+</details>
+
 ---
 
 # Section E — Drag and drop
@@ -1001,6 +1181,9 @@ ran a load test in staging.
 Arrange the rolling deployment lifecycle hooks in execution order.
 
 **Items:** `routeTraffic` · `preDeploy` · `postRouteTraffic` · `deploy`
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: `preDeploy` → `deploy` → `routeTraffic` → `postRouteTraffic`
 
@@ -1017,11 +1200,26 @@ Arrange the rolling deployment lifecycle hooks in execution order.
 verified after it starts serving again — because working in isolation does not prove it works under
 real load. If `postRouteTraffic` fails, `on: failure` (line 299) rolls that instance back.
 
+</details>
+
 ---
 
 ## Q32
 
 Match each setting to what it controls.
+
+| Setting | Controls |
+|---|---|
+| `maxBatchInstancePercent` |  |
+| `maxUnhealthyInstancePercent` |  |
+| `maxUnhealthyUpgradedInstancePercent` |  |
+| `pauseTimeBetweenBatches` |  |
+| `automaticRepairsPolicy.gracePeriod` |  |
+
+**Options:** Abort threshold across the whole scale set · Abort threshold among upgraded instances · How many instances update at once · Time before an unhealthy instance is replaced · Wait between batches
+
+<details>
+<summary>Show answer</summary>
 
 | Setting | Controls |
 |---|---|
@@ -1036,11 +1234,26 @@ Match each setting to what it controls.
 **Two groups:** batch size and pause control **pace**; the two unhealthy percentages control **when to
 stop**. Grace period is not an upgrade setting at all — it belongs to ongoing repair.
 
+</details>
+
 ---
 
 ## Q33
 
 Match each configuration to its purpose.
+
+| Configuration | Purpose |
+|---|---|
+| `healthCheckPath` |  |
+| `WEBSITE_SWAP_WARMUP_PING_PATH` |  |
+| `WEBSITE_WARMUP_PATH` |  |
+| `applicationInitialization` in `web.config` |  |
+| `ApplicationHealthLinux` extension |  |
+
+**Options:** Block a swap until the app is ready · Path hit when the app starts · Remove unhealthy instances from rotation, continuously · Report VMSS application health to the platform · Warm several pages on Windows App Service
+
+<details>
+<summary>Show answer</summary>
 
 | Configuration | Purpose |
 |---|---|
@@ -1056,6 +1269,8 @@ Match each configuration to its purpose.
 (health check), during a swap (swap warm-up), at app start (warm-up path and applicationInit), and
 continuously on VMSS (health extension).
 
+</details>
+
 ---
 
 ## Q34
@@ -1063,6 +1278,9 @@ continuously on VMSS (health extension).
 Arrange the Azure Pipelines slot-swap pipeline stages in order.
 
 **Items:** `SwapToProduction` · `Build` · `Rollback` · `ValidateStaging` · `DeployStaging`
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer
 
@@ -1088,11 +1306,25 @@ including the post-swap validation loop at lines 592–601.
 **Note `ValidateStaging` is a plain `job`, not a `deployment`** (line 540). It only reads, so it needs
 no environment and no approval.
 
+</details>
+
 ---
 
 ## Q35
 
 Match each symptom to its cause.
+
+| Symptom | Cause |
+|---|---|
+| Auto-swap never fires |  |
+| Rolling update halts after one batch |  |
+| First requests after a swap take 10–15 seconds |  |
+| Production telemetry spikes when staging is tested |  |
+
+**Options:** App Insights key not marked as a slot setting · App Service Plan on Free or Basic tier · No warm-up path configured · Upgraded instances failing health checks
+
+<details>
+<summary>Show answer</summary>
 
 | Symptom | Cause |
 |---|---|
@@ -1105,6 +1337,8 @@ Match each symptom to its cause.
 
 **The diagnostic habit:** each symptom points at a different layer — platform tier, application
 health, application startup, and configuration stickiness. Name the layer first.
+
+</details>
 
 ---
 
@@ -1127,12 +1361,17 @@ Requirement: update one instance at a time out of four, pausing 30 seconds betwe
 - **BLANK 2:** `maxBatchInstancePercent` / `maxUnhealthyInstancePercent` / `maxParallel` / `batchSize`
 - **BLANK 3:** `PT30S` / `30s` / `00:00:30` / `PT30M`
 
+<details>
+<summary>Show answer</summary>
+
 ### Answer: `Rolling`, `maxBatchInstancePercent`, `PT30S`
 
 **In `challenge-26.md`:** lines **183–187**.
 
 The other upgrade modes are real: `Automatic` updates everything at once with no health gating, and
 `Manual` requires you to trigger each instance yourself. `PT30M` would be thirty **minutes**.
+
+</details>
 
 ---
 
@@ -1150,6 +1389,9 @@ Requirement: deployments to staging should promote themselves automatically.
 - **BLANK 1:** `auto-swap` / `swap` / `create` / `config`
 - **BLANK 2:** `auto-swap-slot` / `target-slot` / `destination` / `promote-to`
 
+<details>
+<summary>Show answer</summary>
+
 ### Answer: `auto-swap`, `auto-swap-slot`
 
 **In `challenge-26.md`:** lines **81–85**.
@@ -1159,6 +1401,8 @@ manual swap**. This command **configures** automatic behaviour. One does it now;
 for it to happen every time.
 
 To disable, pass an empty string (line 109).
+
+</details>
 
 ---
 
@@ -1174,6 +1418,9 @@ az webapp config appsettings set \
 - **BLANK 1:** `slot-settings` / `settings` / `sticky` / `slot-config`
 - **BLANK 2:** `settings` / `slot-settings` / `app-settings` / `shared`
 
+<details>
+<summary>Show answer</summary>
+
 ### Answer: `slot-settings`, `settings`
 
 **In `challenge-26.md`:** lines **133** and **142**.
@@ -1182,6 +1429,8 @@ az webapp config appsettings set \
 **what**, so it travels with the build.
 
 (In practice these are two separate commands; combined here to test the distinction.)
+
+</details>
 
 ---
 
@@ -1202,6 +1451,9 @@ az webapp config appsettings set \
 - **BLANK 1:** `rolling` / `runOnce` / `canary` / `matrix`
 - **BLANK 2:** `25%` / `4` / `100%` / `all`
 
+<details>
+<summary>Show answer</summary>
+
 ### Answer: `rolling`, `25%`
 
 **In `challenge-26.md`:** lines **240–241**.
@@ -1210,6 +1462,8 @@ az webapp config appsettings set \
 `increments`. `matrix` is for regular jobs, not deployment jobs.
 
 `100%` would update all four at once — the original outage.
+
+</details>
 
 ---
 
@@ -1231,12 +1485,17 @@ az vmss extension set \
   `DependencyAgentLinux`
 - **BLANK 2:** `gracePeriod` / `timeout` / `startupDelay` / `warmupSeconds`
 
+<details>
+<summary>Show answer</summary>
+
 ### Answer: `ApplicationHealthLinux`, `gracePeriod`
 
 **In `challenge-26.md`:** lines **332** and **341**.
 
 `gracePeriod: 600` gives a new instance ten minutes to become healthy before it counts against you.
 Set it below real startup time and healthy instances get killed while booting.
+
+</details>
 
 ---
 
@@ -1265,6 +1524,9 @@ Set it below real startup time and healthy instances get killed while booting.
 - **BLANK 3:** `Swap Slots` / `Restart Azure App Service` / `Stop Azure App Service` /
   `Start Swap With Preview`
 
+<details>
+<summary>Show answer</summary>
+
 ### Answer: `failed()`, `AzureAppServiceManage@0`, `Swap Slots`
 
 **In `challenge-26.md`:** lines **606**, **614**, **618**.
@@ -1273,6 +1535,8 @@ Set it below real startup time and healthy instances get killed while booting.
 
 **`Start Swap With Preview` is worth knowing** — it is a real multi-phase swap that applies production
 settings to the staging slot so you can validate before completing. It is not what a rollback needs.
+
+</details>
 
 ---
 
@@ -1318,6 +1582,9 @@ Which VMSS configuration meets the 75% capacity requirement?
 - C. `maxUnhealthyInstancePercent=75`
 - D. `upgradePolicy.mode=Automatic`
 
+<details>
+<summary>Show answer</summary>
+
 ### Answer: A
 
 **In `challenge-26.md`:** line **184**.
@@ -1331,6 +1598,8 @@ Which VMSS configuration meets the 75% capacity requirement?
 - **D** — `Automatic` mode updates all instances with no batching and no health gating. It is the
   fastest way to repeat the incident
 
+</details>
+
 ---
 
 ## Q43
@@ -1342,6 +1611,9 @@ Which **two** configurations prevent users hitting a cold instance? (Choose two.
 - C. Increasing the instance count to 8
 - D. `healthCheckPath` set to `/health`
 - E. Enabling auto-swap
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A, B
 
@@ -1372,6 +1644,8 @@ cache and the repository before answering.
 - **E** — auto-swap warms only the **root path** by default, which may answer while caches are cold.
   It also removes the validation stage (Q26)
 
+</details>
+
 ---
 
 ## Q44
@@ -1382,6 +1656,9 @@ Which configuration sends a small share of real traffic to staging before the sw
 - B. `az network traffic-manager endpoint update --weight 10`
 - C. `az webapp deployment slot swap --percentage 10`
 - D. `maxParallel: 10%`
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -1400,6 +1677,8 @@ change applies immediately.
 **Useful detail:** `x-ms-routing-name=staging` in the URL pins a session to the staging slot, which is
 how you test deliberately rather than waiting to be randomly routed.
 
+</details>
+
 ---
 
 ## Q45
@@ -1411,6 +1690,9 @@ Which **two** meet the post-swap validation requirement? (Choose two.)
 - C. `continue-on-error: true` on the validation step
 - D. Auto-swap
 - E. A Traffic Manager health probe
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A, B
 
@@ -1435,6 +1717,8 @@ The retry loop **detects**; the rollback stage **reacts**. You need both.
 - **E** — removes an unhealthy endpoint from Traffic Manager rotation. That is failover, not rollback,
   and the bad build stays deployed
 
+</details>
+
 ---
 
 ## Q46
@@ -1447,6 +1731,9 @@ two.)
 - C. Both values as normal app settings
 - D. Both values stored in Key Vault without slot settings
 - E. Identical values in both slots
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A, B
 
@@ -1463,6 +1750,8 @@ break, and your production dashboards go quiet while staging's fill with real us
   still swaps
 - **E** — identical values would point staging at production Redis, which is worse
 
+</details>
+
 ---
 
 ## Q47
@@ -1476,6 +1765,9 @@ What should they change?
 - B. Add more warm-up paths to auto-swap
 - C. Increase the warm-up timeout
 - D. Enable automatic instance repair
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -1497,6 +1789,8 @@ whether it is *correct*.
 **The trade-off, stated plainly:** auto-swap trades control for speed. Right for dev and test, wrong
 for production once you have a validation stage worth running.
 
+</details>
+
 ---
 
 ## Q48
@@ -1511,6 +1805,9 @@ What is happening, and what should Contoso do?
   the upgrade
 - C. `pauseTimeBetweenBatches` is too short; increase it
 - D. `gracePeriod` expired; increase it to 30 minutes
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: B
 
@@ -1538,6 +1835,8 @@ az vmss rolling-upgrade start --name $VMSS_NAME --resource-group $RESOURCE_GROUP
 
 **The habit:** when a safety mechanism stops something, ask whether it was **right** before you loosen
 it. Most "fix the pipeline" options on the exam are really "disable the safety net".
+
+</details>
 
 ---
 ---

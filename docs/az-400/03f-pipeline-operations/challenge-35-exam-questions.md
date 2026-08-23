@@ -1,6 +1,8 @@
 ---
-sidebar_position: 92
+sidebar_position: 2.5
+toc_max_heading_level: 2
 title: "Challenge 35: exam questions"
+sidebar_label: "Exam questions (48 Q)"
 ---
 
 # Challenge 35 — AZ-400 exam questions
@@ -48,6 +50,9 @@ What is wrong?
 - C. `hashFiles` requires an absolute path
 - D. The cache path is wrong
 
+<details>
+<summary>Show answer</summary>
+
 ### Answer: A
 
 **In `challenge-35.md`:** Break & fix Exercise 1, lines **574–596**.
@@ -75,6 +80,8 @@ restored, so a single new dependency does not throw away the whole cache.
 
 **Why the others fail** — B, C and D are all valid as written.
 
+</details>
+
 ---
 
 ## Q2
@@ -87,6 +94,9 @@ What is the cause?
 - B. Coverage is disabled in the shards
 - C. `fail-fast: true` cancels the other shards
 - D. The merge job runs before the shards
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -118,6 +128,8 @@ tests, so four partial reports must be **merged** (`npx nyc merge`) before the n
   quarter of the coverage
 - **D** — `needs: test-unit` (line 198) orders it correctly
 
+</details>
+
 ---
 
 ## Q3
@@ -128,6 +140,9 @@ Which cache does `actions/setup-node` with `cache: "npm"` populate?
 - B. The global npm download cache (`~/.npm`)
 - C. The Docker layer cache
 - D. The build output
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: B
 
@@ -152,6 +167,8 @@ install time goes.
 
 **Why the others fail** — C is buildx cache (line 116), D is an artifact.
 
+</details>
+
 ---
 
 ## Q4
@@ -162,6 +179,9 @@ Which condition skips dependency installation when the `node_modules` cache hit?
 - B. `if: always()`
 - C. `continue-on-error: true`
 - D. `if: cache-hit == true`
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -188,6 +208,8 @@ Which condition skips dependency installation when the `node_modules` cache hit?
 - **C** — failure handling
 - **D** — no `steps.<id>` prefix, so it references nothing
 
+</details>
+
 ---
 
 ## Q5
@@ -198,6 +220,9 @@ Which Docker cache configuration reuses layers across runs?
 - B. `push: true`
 - C. `load: true`
 - D. `pull: always`
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -227,6 +252,8 @@ survives cache eviction; local cache is faster to read but scoped to whatever re
 **Why the others fail** — B pushes the image, C loads it into the local daemon, D is not a
 `build-push-action` input.
 
+</details>
+
 ---
 
 ## Q6
@@ -237,6 +264,9 @@ Which Jest flag splits a test suite across parallel runners?
 - B. `--maxWorkers=4`
 - C. `--runInBand`
 - D. `--bail`
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -260,6 +290,8 @@ the other three, so you see one failure instead of all of them and have to re-ru
 
 **Why the others fail** — C forces serial execution, D stops on first failure.
 
+</details>
+
 ---
 
 ## Q7
@@ -270,6 +302,9 @@ Which Azure Pipelines variables let a job know its shard position?
 - B. `$(Agent.Id)` and `$(Agent.MachineName)`
 - C. `$(Build.BuildId)` and `$(Build.BuildNumber)`
 - D. `$(System.JobId)` and `$(System.StageName)`
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -292,6 +327,8 @@ Pipelines just takes a number and supplies the position.
 **Why the others fail** — B identifies the agent, C identifies the build, D identifies the job and
 stage without any position information.
 
+</details>
+
 ---
 
 ## Q8
@@ -302,6 +339,9 @@ Which action detects which paths changed and exposes the result to later jobs?
 - B. `actions/checkout` with `fetch-depth: 0`
 - C. `actions/cache`
 - D. `tj-actions/changed-files` only
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -333,6 +373,8 @@ expensive ones.
 **Why the others fail** — B enables history for a script to diff manually, C caches, D is a real
 alternative action but not the one used.
 
+</details>
+
 ---
 
 ## Q9
@@ -343,6 +385,9 @@ Why does the deploy job use `always()` in its condition?
 - B. To deploy even when tests fail
 - C. To run on schedule
 - D. To ignore the docs-only check
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -368,6 +413,8 @@ form: only `always()` runs after a **skipped** dependency.
 **Why B is wrong and worth being precise about:** the condition does **not** deploy on failure. It
 accepts only `success` or `skipped`; a `failure` result fails both clauses and the deploy is blocked.
 
+</details>
+
 ---
 
 ## Q10
@@ -378,6 +425,9 @@ What was inefficient about the "before" artifact configuration?
 - B. It used too short a retention period
 - C. It compressed the artifact
 - D. It uploaded to the wrong path
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -402,6 +452,8 @@ storage is billed. Compare with Challenge 36's retention strategy.
 
 **Why the others fail** — B, C and D describe the **fixed** version's settings.
 
+</details>
+
 ---
 
 ## Q11
@@ -412,6 +464,9 @@ At $0.008 per Linux minute, what is Contoso's current monthly spend?
 - B. ~$120
 - C. ~$216
 - D. ~$400
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: C
 
@@ -432,6 +487,8 @@ from ~$216 to ~$72 with no change in runner strategy.
 **Why the others fail** — A is the **post**-optimisation figure, B is the four-parallel-job Azure
 Pipelines cost (line 508), D is not derived from the numbers.
 
+</details>
+
 ---
 
 ## Q12
@@ -442,6 +499,9 @@ Where is the self-hosted break-even, and what does it imply after optimisation?
 - B. ~5,000 minutes/month — self-hosting is always cheaper
 - C. ~50,000 minutes/month — self-hosting is never worth it
 - D. There is no break-even
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -461,6 +521,8 @@ was justified. After, at 6,600, hosted is cheaper *and* has no maintenance.
 pipeline faster. And Challenge 21's ~$500/month maintenance figure is not even in this calculation —
 including it pushes the break-even much higher.
 
+</details>
+
 ---
 
 ## Q13
@@ -471,6 +533,9 @@ Which jobs should stay on hosted runners in a mixed strategy?
 - B. Long integration test jobs
 - C. All jobs
 - D. Only deployment jobs
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -492,6 +557,8 @@ persist between runs.
 
 **Why the others fail** — B is the inversion, C ignores the trade-off, D has no basis.
 
+</details>
+
 ---
 
 ## Q14
@@ -502,6 +569,9 @@ What is Azure Pipelines' free parallel job allowance, and the cost beyond it?
 - B. 5 free parallel jobs; $15/month per extra
 - C. Unlimited free; pay per minute
 - D. 1 free job; $120/month per extra
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -522,6 +592,8 @@ Pipelines, running longer costs nothing extra; running *wider* does.
 **Why the others fail** — B mixes in the $15 self-hosted licence from Challenge 21, C describes GitHub,
 D miscounts the free job.
 
+</details>
+
 ---
 
 ## Q15
@@ -532,6 +604,9 @@ Which Turborepo flag builds only packages affected by the last commit?
 - B. `--force`
 - C. `--parallel`
 - D. `--no-cache`
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -555,6 +630,8 @@ rather than rebuilt.
 
 **Why the others fail** — B forces a rebuild, C is about concurrency, D disables the optimisation.
 
+</details>
+
 ---
 
 ## Q16
@@ -565,6 +642,9 @@ What is the `nx` equivalent for building only affected projects?
 - B. `npx nx run-many --target=build --all`
 - C. `npx nx build`
 - D. `npx nx reset`
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -588,6 +668,8 @@ otherwise run with no projects, and the `skip=true` output lets the later steps 
 - **C** — builds the default project
 - **D** — clears the local cache
 
+</details>
+
 ---
 
 # Section B — Multiple answer
@@ -604,6 +686,9 @@ Which **three** caches does the optimised pipeline use? (Choose three.)
 - D. Test results
 - E. Deployment artifacts
 - F. Source code
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A, B, C
 
@@ -624,6 +709,8 @@ source comes from `checkout`.
 be reproducible without it. An **artifact** is a deliverable that must exist. Never cache something a
 later job cannot rebuild.
 
+</details>
+
 ---
 
 ## Q18
@@ -635,6 +722,9 @@ Which **two** are required to make sharded coverage reports meaningful? (Choose 
 - C. `fail-fast: true`
 - D. A single shared artifact name
 - E. `--runInBand`
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A, B
 
@@ -657,6 +747,8 @@ Which **two** are required to make sharded coverage reports meaningful? (Choose 
 - **D** — Break & fix Exercise 2's bug: the last upload wins and you see 25%
 - **E** — forces serial execution, undoing the sharding
 
+</details>
+
 ---
 
 ## Q19
@@ -668,6 +760,9 @@ Which **two** correctly describe path-based conditional execution? (Choose two.)
 - C. It replaces trigger-level path filters
 - D. It costs nothing when nothing matches
 - E. It requires `fetch-depth: 0`
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A, B
 
@@ -683,6 +778,8 @@ Which **two** correctly describe path-based conditional execution? (Choose two.)
 - **E** — `paths-filter` handles the comparison itself; the deep history requirement belongs to the
   Turborepo and nx approaches (line 523)
 
+</details>
+
 ---
 
 ## Q20
@@ -694,6 +791,9 @@ Which **two** reduce artifact transfer time between jobs? (Choose two.)
 - C. `compression-level: 0`
 - D. Uploading `node_modules` to every job
 - E. Setting `path: .`
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A, B
 
@@ -717,6 +817,8 @@ the content is already compressed.
 
 **Why D and E fail** — both are the "before" anti-pattern.
 
+</details>
+
 ---
 
 ## Q21
@@ -728,6 +830,9 @@ Which **two** are true about Azure Pipelines parallel jobs? (Choose two.)
 - C. Azure Pipelines charges per minute like GitHub Actions
 - D. `dependsOn: []` forces a job to run last
 - E. `strategy: parallel: 4` requires a matrix definition
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A, B
 
@@ -744,6 +849,8 @@ pipeline costs nothing extra, but a wider one does.
   482). The exact opposite
 - **E** — `parallel: 4` needs no matrix; the platform supplies the position (Q7)
 
+</details>
+
 ---
 
 ## Q22
@@ -755,6 +862,9 @@ Which **two** conditions must the deploy job tolerate for conditional execution 
 - C. An upstream job result of `failure`
 - D. `docs_only == 'true'`
 - E. A cancelled run
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A, B
 
@@ -774,6 +884,8 @@ and a skipped dependency is not a failed one.
 - **D** — line 313 explicitly requires `docs_only != 'true'`, so a docs-only change does **not** deploy
 - **E** — cancellation should not deploy
 
+</details>
+
 ---
 
 ## Q23
@@ -785,6 +897,9 @@ Which **two** monorepo tools build only affected packages? (Choose two.)
 - C. `npm ci --workspaces`
 - D. `jest --shard`
 - E. `docker build --no-cache`
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A, B
 
@@ -802,6 +917,8 @@ someone else already built is **restored rather than rebuilt**, even on a fresh 
 - **D** — splits **tests** across machines, a different lever
 - **E** — explicitly disables caching
 
+</details>
+
 ---
 
 # Section C — Repeated scenario
@@ -817,7 +934,10 @@ under 15 minutes and under $100/month, without reducing test coverage or reliabi
 tests across 4 parallel runners and merge coverage, add Docker layer caching, skip unaffected package
 jobs with a paths filter, and upload only `dist/` between jobs.
 
-Does this meet the goal? **Yes**
+Does this meet the goal?
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: Yes
 
@@ -838,13 +958,18 @@ Coverage is preserved because the shards are **merged** (line 216) rather than d
 
 **And the cost follows the duration:** 20 × 15 × $0.008 ≈ $72/month (line 405).
 
+</details>
+
 ---
 
 ## Q25
 
 **Proposed solution:** Move all jobs to a self-hosted Azure VM to eliminate per-minute charges.
 
-Does this meet the goal? **No**
+Does this meet the goal?
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: No
 
@@ -863,6 +988,8 @@ nothing visible, so it stays slow — while developers keep waiting 45 minutes.
 **The correct order:** optimise first, then re-evaluate the runner question. After optimisation the
 break-even calculation (line 412) says stay hosted.
 
+</details>
+
 ---
 
 ## Q26
@@ -870,7 +997,10 @@ break-even calculation (line 412) says stay hosted.
 **Proposed solution:** Cache `~/.npm` keyed on `package.json`, shard unit tests across 4 runners, and
 upload each shard's coverage as an artifact named `coverage`.
 
-Does this meet the goal? **No**
+Does this meet the goal?
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: No
 
@@ -887,6 +1017,8 @@ coverage" requirement, or at least the ability to prove it.
 is right and two small details silently undo it. The duration improves somewhat; the cache saving and
 the coverage do not.
 
+</details>
+
 ---
 
 # Section D — Yes/No statement grid
@@ -894,6 +1026,16 @@ the coverage do not.
 ---
 
 ## Q27 — caching
+
+| # | Statement | Answer |
+|---|---|---|
+| 1 | Cache keys should hash the lock file, not `package.json` |  |
+| 2 | `restore-keys` allows a partial cache hit |  |
+| 3 | `setup-node` with `cache: "npm"` caches `node_modules` |  |
+| 4 | A cache miss should fail the build |  |
+
+<details>
+<summary>Show answer</summary>
 
 | # | Statement | Answer |
 |---|---|---|
@@ -910,9 +1052,21 @@ Row 3 is the distinction from Q3: `setup-node` caches `~/.npm`, the **download**
 Row 4 is the defining property of a cache. A miss must simply cost time — line 81 falls back to
 `npm ci`. Anything that *must* exist is an **artifact**, not a cache.
 
+</details>
+
 ---
 
 ## Q28 — parallelism
+
+| # | Statement | Answer |
+|---|---|---|
+| 1 | `--shard=1/4` splits tests across machines |  |
+| 2 | `--maxWorkers` splits across cores on one machine |  |
+| 3 | Sharded coverage reports must be merged |  |
+| 4 | `fail-fast: true` is correct for a test matrix |  |
+
+<details>
+<summary>Show answer</summary>
 
 | # | Statement | Answer |
 |---|---|---|
@@ -928,9 +1082,21 @@ Rows 1 and 2 compose rather than compete: four runners each using several worker
 Row 4: with `fail-fast: true`, one failing shard cancels the rest, so you learn about one failure and
 have to re-run to find the others. `fail-fast: false` (line 167) reports everything in one pass.
 
+</details>
+
 ---
 
 ## Q29 — conditional execution
+
+| # | Statement | Answer |
+|---|---|---|
+| 1 | A shared package must appear in every dependent's filter |  |
+| 2 | A skipped job counts as a failure for downstream jobs |  |
+| 3 | `always()` is needed when a dependency may be skipped |  |
+| 4 | Trigger path filters and job conditions are interchangeable |  |
+
+<details>
+<summary>Show answer</summary>
 
 | # | Statement | Answer |
 |---|---|---|
@@ -948,9 +1114,21 @@ a skipped dependency skips the downstream job**, which is why row 3's `always()`
 Row 4: a trigger filter costs **nothing** when it does not match; a job condition costs a runner and a
 checkout for the detection job.
 
+</details>
+
 ---
 
 ## Q30 — cost
+
+| # | Statement | Answer |
+|---|---|---|
+| 1 | GitHub Actions charges per minute consumed |  |
+| 2 | Azure Pipelines charges per parallel job, not per minute |  |
+| 3 | Self-hosting is cheaper at any usage level |  |
+| 4 | Reducing duration reduces GitHub Actions cost proportionally |  |
+
+<details>
+<summary>Show answer</summary>
 
 | # | Statement | Answer |
 |---|---|---|
@@ -969,6 +1147,8 @@ GitHub.
 Row 3: break-even is ~17,500 minutes/month (line 410), and Contoso lands **below** it after
 optimisation.
 
+</details>
+
 ---
 
 # Section E — Drag and drop
@@ -978,6 +1158,19 @@ optimisation.
 ## Q31
 
 Match each optimisation lever to the job it fixes in Contoso's pipeline.
+
+| Job (before) | Lever |
+|---|---|
+| Install deps — 5 min |  |
+| Unit tests — 12 min |  |
+| Integration tests — 15 min |  |
+| Docker build — 8 min |  |
+| Artifact transfer |  |
+
+**Options:** **Cache** build layers · **Cache** `~/.npm` and `node_modules` · **Parallelise** into 4 shards · **Shrink** to `dist/` only · **Skip** when the package is unaffected
+
+<details>
+<summary>Show answer</summary>
 
 | Job (before) | Lever |
 |---|---|
@@ -995,11 +1188,26 @@ cache. Unit tests are slow because there is a lot of it → parallelise. Integra
 often irrelevant → skip. Choosing the wrong lever — parallelising an install, or caching a test run —
 is how the distractors in this section work.
 
+</details>
+
 ---
 
 ## Q32
 
 Match each cache to what it stores.
+
+| Cache | Stores |
+|---|---|
+| `setup-node` with `cache: "npm"` |  |
+| `actions/cache` on `node_modules` |  |
+| buildx `type=local` |  |
+| buildx `type=registry` |  |
+| Turborepo remote cache |  |
+
+**Options:** Built package outputs, shared across machines · Docker layers in a container registry · Docker layers on the runner's disk · `~/.npm` — downloaded packages · The installed dependency tree
+
+<details>
+<summary>Show answer</summary>
 
 | Cache | Stores |
 |---|---|
@@ -1014,6 +1222,8 @@ Match each cache to what it stores.
 **Local versus registry cache is a real decision.** Local is faster to read but scoped to whatever
 restored it; registry is shared by every runner and survives cache eviction, at the cost of a network
 round-trip.
+
+</details>
 
 ---
 
@@ -1030,6 +1240,9 @@ Arrange the optimised pipeline's jobs into execution waves.
   merge-coverage:  needs: test-unit
   deploy:          needs: [test-api, test-web, detect-changes]
 ```
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer — four waves
 
@@ -1051,11 +1264,25 @@ means parallel, the rule from Challenge 22.
 **Total duration is the critical path**, not the sum — which is why four 3-minute shards cost 3
 minutes, not 12.
 
+</details>
+
 ---
 
 ## Q34
 
 Match each cost model to its platform.
+
+| Model | Platform |
+|---|---|
+| $0.008 per Linux minute consumed |  |
+| 1 free parallel job, $40/month per extra, unlimited minutes |  |
+| ~$140/month VM, unlimited minutes, you maintain it |  |
+| ~17,500 min/month break-even against a self-hosted VM |  |
+
+**Options:** Azure Pipelines · GitHub Actions · GitHub Actions vs self-hosted · Self-hosted
+
+<details>
+<summary>Show answer</summary>
 
 | Model | Platform |
 |---|---|
@@ -1070,11 +1297,26 @@ Match each cost model to its platform.
 **narrower** saves money. Sharding into four costs $120/month on Azure Pipelines and nothing extra on
 GitHub — so the same optimisation has opposite cost implications depending on the platform.
 
+</details>
+
 ---
 
 ## Q35
 
 Match each symptom to its cause.
+
+| Symptom | Cause |
+|---|---|
+| Cache always misses |  |
+| Coverage report shows 25% |  |
+| Deploy is skipped when only the API changed |  |
+| Turborepo rebuilds everything |  |
+| Artifact upload takes minutes |  |
+
+**Options:** All shards upload to the same artifact name · `fetch-depth` too shallow to diff `HEAD~1` · Key hashes `package.json` instead of the lock file · Missing `always()` and a `skipped` check · `path: .` including `node_modules`
+
+<details>
+<summary>Show answer</summary>
 
 | Symptom | Cause |
 |---|---|
@@ -1089,6 +1331,8 @@ Match each symptom to its cause.
 **The fourth row is the quiet one.** With a shallow clone there is no `HEAD~1` to compare against, so
 "affected" resolves to everything — the optimisation silently reverts to a full build and nothing
 errors.
+
+</details>
 
 ---
 
@@ -1115,12 +1359,17 @@ errors.
 - **BLANK 1:** `package-lock.json` / `package.json` / `node_modules/**` / `*.js`
 - **BLANK 2:** `true` / `false` / `1` / `yes`
 
+<details>
+<summary>Show answer</summary>
+
 ### Answer: `package-lock.json`, `true`
 
 **In `challenge-35.md`:** lines **78** and **81**.
 
 The lock file changes only when dependencies change. And `cache-hit` is a **string**, so the comparison
 is against `'true'` — the same string-versus-boolean trap as Challenge 22 Q10.
+
+</details>
 
 ---
 
@@ -1142,12 +1391,17 @@ is against `'true'` — the same string-versus-boolean trap as Challenge 22 Q10.
 - **BLANK 2:** `shard` / `maxWorkers` / `split` / `partition`
 - **BLANK 3:** `${{ matrix.shard }}` / `latest` / `all` / *(omit)*
 
+<details>
+<summary>Show answer</summary>
+
 ### Answer: `fail-fast`, `shard`, `${{ matrix.shard }}`
 
 **In `challenge-35.md`:** lines **167**, **186**, **193**.
 
 `fail-fast: false` reports every shard's failures in one run. BLANK 3 is Break & fix Exercise 2 — a
 fixed name means the last shard overwrites the rest and you see 25% coverage.
+
+</details>
 
 ---
 
@@ -1163,6 +1417,9 @@ fixed name means the last shard overwrites the rest and you see 25% coverage.
 - **BLANK 1:** `local` / `gha` / `registry` / `inline`
 - **BLANK 2:** `max` / `min` / `full` / `all`
 
+<details>
+<summary>Show answer</summary>
+
 ### Answer: `local`, `max`
 
 **In `challenge-35.md`:** lines **116–117**.
@@ -1170,6 +1427,8 @@ fixed name means the last shard overwrites the rest and you see 25% coverage.
 `src`/`dest` paths indicate `type=local` — `gha` and `registry` use different parameters (`ref` for
 registry, line 153). `mode=max` caches **intermediate** layers, which is what makes a multi-stage build
 benefit.
+
+</details>
 
 ---
 
@@ -1187,12 +1446,17 @@ benefit.
 - **BLANK 1:** `always()` / `success()` / `failure()` / `cancelled()`
 - **BLANK 2:** `skipped` / `failure` / `cancelled` / `neutral`
 
+<details>
+<summary>Show answer</summary>
+
 ### Answer: `always()`, `skipped`
 
 **In `challenge-35.md`:** lines **312** and **314**.
 
 Without `always()`, a skipped dependency skips the deploy. Accepting `'skipped'` is what allows a
 change touching only one package to still deploy — while `'failure'` remains excluded.
+
+</details>
 
 ---
 
@@ -1213,12 +1477,17 @@ Requirement: pass only the deployable output to the next job, and do not pay to 
 - **BLANK 2:** `1` / `90` / `30` / `0`
 - **BLANK 3:** `6` / `0` / `9` / `12`
 
+<details>
+<summary>Show answer</summary>
+
 ### Answer: `packages/api/dist/`, `1`, `6`
 
 **In `challenge-35.md`:** lines **348–350**.
 
 `path: .` is the 500 MB anti-pattern. Level 0 means **no compression** — faster to write, more to
 transfer; level 9 is slowest. Six is the stated balance, and 12 is not a valid value.
+
+</details>
 
 ---
 
@@ -1237,12 +1506,17 @@ transfer; level 9 is slowest. Six is the stated balance, and 12 is not a valid v
 - **BLANK 2:** `...[HEAD~1]` / `[HEAD]` / `*` / `all`
 - **BLANK 3:** `TURBO_TOKEN` / `NPM_TOKEN` / `GITHUB_TOKEN` / `TURBO_CACHE`
 
+<details>
+<summary>Show answer</summary>
+
 ### Answer: `2`, `...[HEAD~1]`, `TURBO_TOKEN`
 
 **In `challenge-35.md`:** lines **523**, **534**, **536**.
 
 Depth **2** is the minimum for a `HEAD~1` comparison; `0` (full history) works and is slower. The `...`
 prefix includes **dependents**, so a change to `shared` also builds `api` and `web`.
+
+</details>
 
 ---
 
@@ -1291,6 +1565,9 @@ Which **two** eliminate the 5-minute install on most runs? (Choose two.)
 - D. Committing `node_modules` to the repository
 - E. `--prefer-offline` alone
 
+<details>
+<summary>Show answer</summary>
+
 ### Answer: A, B
 
 **In `challenge-35.md`:** lines **67–82**.
@@ -1306,6 +1583,8 @@ entirely, because the `if:` at line 81 skips `npm ci` on a hit.
   dependency change
 - **E** — helps only when there is already a populated cache, which is what A provides
 
+</details>
+
 ---
 
 ## Q43
@@ -1316,6 +1595,9 @@ Which configuration cuts the 12-minute unit test job to roughly 3 minutes?
 - B. `--maxWorkers=4` on a single runner
 - C. Running only a quarter of the tests
 - D. `--bail` to stop on first failure
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -1332,6 +1614,8 @@ Which configuration cuts the 12-minute unit test job to roughly 3 minutes?
 **Coverage is preserved by the merge job** (line 216), which is the part that makes A satisfy the
 quality requirement rather than just the speed one.
 
+</details>
+
 ---
 
 ## Q44
@@ -1342,6 +1626,9 @@ Which configuration skips the 15-minute integration tests when they are irreleva
 - B. `continue-on-error: true` on the integration job
 - C. Running integration tests only nightly
 - D. Deleting the integration tests
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -1359,6 +1646,8 @@ Which configuration skips the 15-minute integration tests when they are irreleva
 **And remember `shared/**` must be in the filter** (lines 273, 276), or a change to the shared package
 skips the tests most likely to catch its impact.
 
+</details>
+
 ---
 
 ## Q45
@@ -1370,6 +1659,9 @@ does that imply?
 - B. ~$216/month — move to self-hosted
 - C. ~$140/month — self-host
 - D. ~$120/month — buy parallel jobs
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -1386,6 +1678,8 @@ than the minutes it replaces — before any maintenance time.
 **The sequence matters more than the number.** Optimising first changed the correct answer to the
 runner question. Self-hosting a 45-minute pipeline would have locked in the waste.
 
+</details>
+
 ---
 
 ## Q46
@@ -1397,6 +1691,9 @@ Which **two** preserve coverage and reliability while sharding? (Choose two.)
 - C. `continue-on-error: true` on the test jobs
 - D. Reporting coverage from shard 1 only
 - E. `--bail` in each shard
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A, B
 
@@ -1411,6 +1708,8 @@ Which **two** preserve coverage and reliability while sharding? (Choose two.)
 - **D** — a quarter of the truth presented as the whole
 - **E** — stops early, so the remaining tests in that shard never run
 
+</details>
+
 ---
 
 ## Q47
@@ -1424,6 +1723,9 @@ What should Contoso change?
 - B. Remove the paths filter entirely
 - C. Increase the runner size
 - D. Cache the `detect-changes` job
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -1450,6 +1752,8 @@ trigger for docs-only pushes, the job filter for which package changed.
 **Why the others fail** — B loses the per-package skipping, C makes a mostly-idle job faster, D cannot
 cache a decision that depends on the current diff.
 
+</details>
+
 ---
 
 ## Q48
@@ -1464,6 +1768,9 @@ What is wrong with this reasoning?
 - B. Parallel jobs are free
 - C. Azure Pipelines cannot run jobs in parallel
 - D. The pipeline is already fast enough
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -1486,6 +1793,8 @@ more aggressive layer caching, or removing a dependency edge so two jobs can sha
 **Why D is tempting and wrong to state that way:** 12 minutes may well be fine, and that is a judgement
 for the team. The exam answer is the technical one — the proposal fails its own cost target and would
 not achieve the duration goal either.
+
+</details>
 
 ---
 ---

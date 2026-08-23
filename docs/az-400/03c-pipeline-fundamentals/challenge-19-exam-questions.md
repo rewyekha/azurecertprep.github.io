@@ -1,6 +1,8 @@
 ---
-sidebar_position: 91
+sidebar_position: 1.5
+toc_max_heading_level: 2
 title: "Challenge 19: exam questions"
+sidebar_label: "Exam questions (48 Q)"
 ---
 
 # Challenge 19 — AZ-400 exam questions
@@ -48,6 +50,9 @@ What is the most likely cause?
 - C. The value must be written to `$GITHUB_ENV` instead of `$GITHUB_OUTPUT`
 - D. Job outputs cannot be passed between jobs that run on different runners
 
+<details>
+<summary>Show answer</summary>
+
 ### Answer: B
 
 **In `challenge-19.md`:** lines **78–80** (`build` job `outputs`), line **98** (`id: version`),
@@ -89,6 +94,8 @@ jobs:
 
 **Term:** *step output* → *job output* → *needs context*.
 
+</details>
+
 ---
 
 ## Q2
@@ -102,6 +109,9 @@ Which trigger configuration should you use?
 - B. `on: workflow_dispatch` with an input of `type: choice` and an `options` list
 - C. `on: workflow_call` with a required input of `type: string`
 - D. `on: schedule` combined with a job-level `if` condition
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: B
 
@@ -134,6 +144,8 @@ Which trigger configuration should you use?
 **Gotcha:** the "Run workflow" button only appears once the workflow file exists on the **default
 branch**.
 
+</details>
+
 ---
 
 ## Q3
@@ -147,6 +159,9 @@ What should you add to resolve the failure?
 - B. A `packages: write` entry under the `permissions` key
 - C. A `contents: write` entry under the `permissions` key
 - D. A classic PAT with the `write:packages` scope in the org
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: B
 
@@ -174,6 +189,8 @@ packages.
 **Term:** *least-privilege workflow permissions*. Built-in token failing → add a permission, not a
 secret.
 
+</details>
+
 ---
 
 ## Q4
@@ -187,6 +204,9 @@ What is missing from the step?
 - B. A `shell` property
 - C. A `working-directory` property
 - D. A `continue-on-error` property
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: B
 
@@ -212,6 +232,8 @@ action it is mandatory on every `run` step.**
 
 **Term:** *composite action step requirements*. This is the single most common authoring error.
 
+</details>
+
 ---
 
 ## Q5
@@ -225,6 +247,9 @@ What should you create?
 - B. A composite action stored in `.github/actions`
 - C. A starter workflow in the organization `.github` repository
 - D. A job template referenced with the `extends` keyword
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: B
 
@@ -251,6 +276,8 @@ same workspace.
 
 **Term:** *composite action = steps, same runner. Reusable workflow = jobs, own runner.*
 
+</details>
+
 ---
 
 ## Q6
@@ -263,6 +290,9 @@ Which job-level condition meets the requirement?
 - B. `if: github.event_name == 'push' && github.ref == 'refs/heads/main'`
 - C. `if: github.base_ref == 'main' && github.event_name == 'push'`
 - D. `if: startsWith(github.ref, 'refs/pull/') == false`
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: B
 
@@ -287,6 +317,8 @@ You need **both** halves: the event excludes pull requests, the ref pins the bra
 **Values to know:** push to main → `github.ref` = `refs/heads/main`. Pull request → `github.ref` =
 `refs/pull/42/merge`.
 
+</details>
+
 ---
 
 ## Q7
@@ -300,6 +332,9 @@ How should the step reference the value?
 - B. `${{ secrets.APP_NAME }}`
 - C. `${{ github.APP_NAME }}`
 - D. `${{ inputs.APP_NAME }}`
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -335,6 +370,8 @@ env:
 
 **Term:** *`vars` for repository/environment variables. `env` only for values the workflow defined.*
 
+</details>
+
 ---
 
 ## Q8
@@ -347,6 +384,9 @@ How many jobs does this produce, and how do they execute?
 - B. Two jobs that run in parallel, one per matrix value
 - C. Two jobs that run sequentially in the declared order
 - D. One job per runner label available in the pool
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: B
 
@@ -375,6 +415,8 @@ graph this appeared as "Matrix: Run tests".
 **Defaults worth memorising:** parallel by default, `fail-fast: true` by default, `max-parallel` caps
 concurrency, and each leg gets its **own** workspace.
 
+</details>
+
 ---
 
 ## Q9
@@ -387,6 +429,9 @@ What is the purpose of the `--health-cmd` and `--health-retries` options?
 - B. They delay the job's steps until the service reports it is ready
 - C. They publish container health metrics to the workflow run summary
 - D. They limit how long the service container is allowed to run
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: B
 
@@ -418,6 +463,8 @@ when it succeeds does step 1 of your job begin.
 **Why it matters:** without this, your first integration test hits a database that is still booting.
 That is the classic flaky-test cause Challenge 34 revisits.
 
+</details>
+
 ---
 
 ## Q10
@@ -431,6 +478,9 @@ Which permission must the job declare?
 - B. `contents: write`
 - C. `actions: write`
 - D. `deployments: write`
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -474,6 +524,8 @@ a federated credential. Nothing secret is stored.
 **Memorise this block.** Security auth is your weakest domain, and forgetting `id-token: write` is
 the number-one OIDC failure.
 
+</details>
+
 ---
 
 ## Q11
@@ -487,6 +539,9 @@ When does the approval gate take effect?
 - B. When the job reaches the front of the queue, before its first step runs
 - C. After the job's first step completes and before the deploy step
 - D. Only when the workflow is triggered by `workflow_dispatch`
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: B
 
@@ -512,6 +567,8 @@ someone approves.
 
 **Term:** *environment protection rule*. It gates the **job**, not a step.
 
+</details>
+
 ---
 
 ## Q12
@@ -525,6 +582,9 @@ Which value does `${{ secrets.DB_CONNECTION_STRING }}` resolve to in that job?
 - B. The production value
 - C. An empty string, because environment secrets need a prefix
 - D. Whichever secret was created most recently
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -551,6 +611,8 @@ gh secret set DB_CONNECTION_STRING --env production --body "Server=prod-db..."  
 **The important corollary:** the `build` job has **no** `environment:` (line 75), so it cannot read
 either value — even though it is in the same workflow file.
 
+</details>
+
 ---
 
 ## Q13
@@ -563,6 +625,9 @@ What does this configuration do?
 - B. Stores Docker layer cache in the GitHub Actions cache backend
 - C. Caches npm dependencies used inside the Dockerfile
 - D. Reuses the previous job's runner filesystem between runs
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: B
 
@@ -591,6 +656,8 @@ the build-stage layers are the expensive ones.
 
 **Term:** *buildx layer cache backend*. Different from `actions/cache`, which caches files.
 
+</details>
+
 ---
 
 ## Q14
@@ -603,6 +670,9 @@ What does this setting cache?
 - B. The global npm download cache, keyed on the lock file
 - C. The built output produced by `npm run build`
 - D. The Node.js runtime binary for reuse across jobs
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: B
 
@@ -633,6 +703,8 @@ Change a dependency → the lock file hash changes → the key changes → cache
 - **C** — build output goes to an artifact (line 109), not a cache
 - **D** — `setup-node` downloads the runtime separately; that is tool caching, not this setting
 
+</details>
+
 ---
 
 ## Q15
@@ -646,6 +718,9 @@ What should you check first?
 - B. The `.dockerignore` file
 - C. The runner's disk space quota
 - D. The `permissions` block of the job
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: B
 
@@ -677,6 +752,8 @@ everything `.dockerignore` excludes.**
 
 **Term:** *build context*. `.gitignore` → git. `.dockerignore` → the Docker daemon.
 
+</details>
+
 ---
 
 ## Q16
@@ -689,6 +766,9 @@ Which Azure Pipelines keyword corresponds to `runs-on:`?
 - B. `pool:`
 - C. `stage:`
 - D. `container:`
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: B
 
@@ -715,6 +795,8 @@ Which Azure Pipelines keyword corresponds to `runs-on:`?
 
 **Term:** memorise the full mapping table (see Q32). It generates questions in every domain.
 
+</details>
+
 ---
 
 # Section B — Multiple answer
@@ -733,6 +815,9 @@ Which **three** items are required? (Choose three.)
 - D. The value must also be written to `$GITHUB_ENV`
 - E. The consuming job must run on the same runner label
 - F. The producing job must set `continue-on-error: false`
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A, B, C
 
@@ -762,6 +847,8 @@ Which **three** items are required? (Choose three.)
 
 **Term:** *the three-part output chain*. Break any link and you get `""` with no error message.
 
+</details>
+
 ---
 
 ## Q18
@@ -773,6 +860,9 @@ Which **two** statements about composite actions are correct? (Choose two.)
 - C. They are invoked with the `workflow_call` trigger
 - D. They appear as a separate job in the run graph
 - E. They require an `on:` key at the top of the file
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A, B
 
@@ -799,6 +889,8 @@ runs:
 - **D** — it never appears as its own job. Its steps show inline within the calling job
 - **E** — `on:` belongs to workflows. An action file has `name`, `inputs`, `outputs`, `runs`
 
+</details>
+
 ---
 
 ## Q19
@@ -813,6 +905,9 @@ Which **two** `docker/metadata-action` tag entries meet the requirement? (Choose
 - C. `type=ref,event=pr`
 - D. `type=schedule,pattern=nightly`
 - E. `type=raw,value=latest`
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A, B
 
@@ -834,6 +929,8 @@ Which **two** `docker/metadata-action` tag entries meet the requirement? (Choose
 
 **Term:** *conditional tagging*. `enable={{is_default_branch}}` is the guard.
 
+</details>
+
 ---
 
 ## Q20
@@ -846,6 +943,9 @@ built-in token? (Choose two.)
 - C. Create a fine-grained PAT with package write scope
 - D. Set `id-token: write` in the job `permissions`
 - E. Enable Dependabot on the repository
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A, B
 
@@ -872,6 +972,8 @@ Permission without login = not authenticated. Login without permission = 403. **
 - **D** — `id-token: write` is for OIDC to a cloud provider. GHCR does not use it
 - **E** — Dependabot scans dependencies. Nothing to do with registry auth
 
+</details>
+
 ---
 
 ## Q21
@@ -884,6 +986,9 @@ two.)
 - C. `runner`
 - D. `strategy`
 - E. `matrix`
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A, B
 
@@ -907,6 +1012,8 @@ All three are **runtime** contexts supplied by the platform — you cannot confi
 - **D** — `strategy.job-index`, `strategy.fail-fast`. Facts about the matrix run
 - **E** — `matrix.test-type` (line 147). The current matrix leg's values
 
+</details>
+
 ---
 
 ## Q22
@@ -922,6 +1029,9 @@ Which **three** trigger keys are required? (Choose three.)
 - D. `workflow_call`
 - E. `repository_dispatch`
 - F. `schedule`
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A, B, C
 
@@ -943,6 +1053,8 @@ on:
 - **E** — `repository_dispatch` fires from an **external API call**, not from a UI button
 - **F** — `schedule` is cron-based. Nothing in the requirement mentions time
 
+</details>
+
 ---
 
 ## Q23
@@ -955,6 +1067,9 @@ pipeline jobs? (Choose two.)
 - C. The resulting image will always be smaller than a single-stage build
 - D. Docker layer caching becomes unavailable when tests are present
 - E. Multi-stage builds cannot run commands in the build stage
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A, B
 
@@ -985,6 +1100,8 @@ RUN npm run build
 
 **Term:** *the Dockerfile produces the artifact; the pipeline decides whether it is allowed to exist.*
 
+</details>
+
 ---
 
 # Section C — Repeated scenario
@@ -1003,7 +1120,10 @@ the same time as `build` and receives no tag.
 **Proposed solution:** Add `needs: build` to the `deploy` job, declare an `outputs` mapping on the
 `build` job, and read the value with the `needs` context in `deploy`.
 
-Does this meet the goal? **Yes / No**
+Does this meet the goal?
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: Yes
 
@@ -1026,6 +1146,8 @@ Does this meet the goal? **Yes / No**
 `needs` does **two** jobs at once: it creates the ordering **and** unlocks the `needs` context. One
 keyword solves both halves of the requirement.
 
+</details>
+
 ---
 
 ## Q25
@@ -1033,7 +1155,10 @@ keyword solves both halves of the requirement.
 **Proposed solution:** Add `if: success()` to the `deploy` job and read the value with
 `${{ env.IMAGE_TAG }}` in `deploy`.
 
-Does this meet the goal? **No**
+Does this meet the goal?
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: No
 
@@ -1055,6 +1180,8 @@ Two independent failures:
 **Term:** *only `needs` creates ordering.* A condition decides whether an already-started job
 proceeds; it never decides when it starts.
 
+</details>
+
 ---
 
 ## Q26
@@ -1062,7 +1189,10 @@ proceeds; it never decides when it starts.
 **Proposed solution:** Move the deploy steps into the `build` job so they run after the build steps
 in the same job.
 
-Does this meet the goal? **No**
+Does this meet the goal?
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: No
 
@@ -1085,6 +1215,8 @@ Collapse the jobs and you lose:
 **Term:** on the exam, *"merge the jobs"* is nearly always the wrong answer. Job boundaries exist so
 that environments, approvals and permissions can differ.
 
+</details>
+
 ---
 
 # Section D — Yes/No statement grid
@@ -1094,6 +1226,16 @@ Each row is scored separately.
 ---
 
 ## Q27 — `GITHUB_TOKEN`
+
+| # | Statement | Answer |
+|---|---|---|
+| 1 | It is created automatically for each workflow run |  |
+| 2 | It can push to a different repository in the same organization by default |  |
+| 3 | Its permissions can be narrowed with a `permissions` key |  |
+| 4 | It expires when the workflow run completes |  |
+
+<details>
+<summary>Show answer</summary>
 
 | # | Statement | Answer |
 |---|---|---|
@@ -1120,9 +1262,21 @@ fine-grained PAT — that is exactly Challenge 40.
 
 Row 4 is why the built-in token beats a PAT: it is revoked the moment the run ends.
 
+</details>
+
 ---
 
 ## Q28 — environments
+
+| # | Statement | Answer |
+|---|---|---|
+| 1 | Environment secrets are readable by any job in the workflow |  |
+| 2 | An environment can restrict which branches may deploy to it |  |
+| 3 | The `url` value appears as a link on the deployment |  |
+| 4 | A wait timer delays the job before its first step runs |  |
+
+<details>
+<summary>Show answer</summary>
 
 | # | Statement | Answer |
 |---|---|---|
@@ -1146,9 +1300,21 @@ Row 4 is why the built-in token beats a PAT: it is revoked the moment the run en
 Rows 2 and 4 are configured in **repository Settings → Environments**, not in YAML. That split
 matters: someone editing the workflow cannot remove them.
 
+</details>
+
 ---
 
 ## Q29 — composite action vs reusable workflow
+
+| # | Statement | Answer |
+|---|---|---|
+| 1 | A composite action can define its own `jobs` |  |
+| 2 | A reusable workflow is referenced with `uses` at job level |  |
+| 3 | A composite action runs on the caller's runner |  |
+| 4 | A reusable workflow can receive secrets from the caller |  |
+
+<details>
+<summary>Show answer</summary>
 
 | # | Statement | Answer |
 |---|---|---|
@@ -1184,9 +1350,21 @@ Row 1: an action file has `name`, `inputs`, `outputs`, `runs` (line 299). There 
 **Notice the indentation difference between the two `uses:` lines.** That alone is a
 spot-the-difference exam question.
 
+</details>
+
 ---
 
 ## Q30 — matrix strategy
+
+| # | Statement | Answer |
+|---|---|---|
+| 1 | Matrix jobs run in parallel by default |  |
+| 2 | `fail-fast` defaults to `true` |  |
+| 3 | `max-parallel` limits how many matrix jobs run at once |  |
+| 4 | Each matrix job shares one workspace on one runner |  |
+
+<details>
+<summary>Show answer</summary>
 
 | # | Statement | Answer |
 |---|---|---|
@@ -1212,6 +1390,8 @@ shared between legs.
 Row 2 matters in practice: if the `unit` leg fails, the `integration` leg is **cancelled**. Set
 `fail-fast: false` when you want to see every failure in one run.
 
+</details>
+
 ---
 
 # Section E — Drag and drop
@@ -1223,6 +1403,9 @@ Row 2 matters in practice: if the `unit` leg fails, the `integration` leg is **c
 Arrange these workflow keys into the order they appear in a valid GitHub Actions file, top to bottom.
 
 **Items:** `jobs:` · `env:` · `name:` · `on:`
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: `name:` → `on:` → `env:` → `jobs:`
 
@@ -1247,11 +1430,26 @@ jobs:                        # line 74
 YAML itself does not enforce order — but this is the convention the exam uses, and `jobs:` always
 comes last because it is the body of the file.
 
+</details>
+
 ---
 
 ## Q32
 
 Match each GitHub Actions keyword to its Azure Pipelines equivalent.
+
+| GitHub Actions | Azure Pipelines |
+|---|---|
+| `on:` |  |
+| `runs-on:` |  |
+| `needs:` |  |
+| `run:` |  |
+| `uses:` |  |
+
+**Options:** `dependsOn:` · `pool:` · `script:` · `task:` · `trigger:`
+
+<details>
+<summary>Show answer</summary>
 
 | GitHub Actions | Azure Pipelines |
 |---|---|
@@ -1301,6 +1499,8 @@ Two more worth adding to the table, because they appear constantly:
 
 **Memorise this.** It generates questions in every domain, not just this one.
 
+</details>
+
 ---
 
 ## Q33
@@ -1308,6 +1508,9 @@ Two more worth adding to the table, because they appear constantly:
 Arrange the jobs of the Challenge 19 workflow into their execution order.
 
 **Items:** `deploy-production` · `docker` · `build` · `deploy-staging` · `test`
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: `build` → `test` → `docker` → `deploy-staging` → `deploy-production`
 
@@ -1330,6 +1533,8 @@ version) and `test` for the guarantee that tests passed.
 
 **Term:** *`needs` is the dependency graph.* The exam draws these as ordering questions constantly.
 
+</details>
+
 ---
 
 ## Q34
@@ -1338,6 +1543,9 @@ Arrange these steps into the correct order for a job that pushes an image to GHC
 
 **Items:** Extract metadata · Build and push · Check out the repository · Log in to the registry ·
 Set up Buildx
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: Check out → Set up Buildx → Log in → Extract metadata → Build and push
 
@@ -1369,11 +1577,23 @@ Set up Buildx
 Buildx must come before the build step because `cache-from: type=gha` (line 208) requires the buildx
 driver — the default Docker builder cannot use that cache backend.
 
+</details>
+
 ---
 
 ## Q35
 
 Match each value to the place it should be stored.
+
+| Value | Storage | Command in `challenge-19.md` |
+|---|---|---|
+| Azure service principal JSON |  |  |
+| Application name used everywhere |  |  |
+| Staging database connection string |  |  |
+| App Service plan name for production |  |  |
+
+<details>
+<summary>Show answer</summary>
 
 | Value | Storage | Command in `challenge-19.md` |
 |---|---|---|
@@ -1401,6 +1621,8 @@ gh variable set APP_SERVICE_PLAN       --env production --body "contoso-..." # 3
 
 That table is the whole model. Learn it as a grid, not as four facts.
 
+</details>
+
 ---
 
 # Section F — Hot area
@@ -1424,6 +1646,9 @@ on:
 - **BLANK 1:** `workflow_call` / `workflow_dispatch` / `repository_dispatch` / `schedule`
 - **BLANK 2:** `string` / `choice` / `environment` / `boolean`
 
+<details>
+<summary>Show answer</summary>
+
 ### Answer: `workflow_dispatch`, `choice`
 
 **In `challenge-19.md`:** lines **53** and **59**.
@@ -1441,6 +1666,8 @@ Note line **63** uses the other input type you should know:
 
 which is then consumed at line **119** as `if: ${{ !inputs.skip_tests }}`.
 
+</details>
+
 ---
 
 ## Q37
@@ -1456,12 +1683,17 @@ docker:
 - **BLANK 1:** `permissions` / `defaults` / `concurrency` / `strategy`
 - **BLANK 2:** `packages` / `contents` / `id-token` / `deployments`
 
+<details>
+<summary>Show answer</summary>
+
 ### Answer: `permissions`, `packages`
 
 **In `challenge-19.md`:** lines **170–172**.
 
 `defaults` sets shell and working directory. `concurrency` cancels overlapping runs. `strategy` holds
 the matrix. Only `permissions` scopes the token.
+
+</details>
 
 ---
 
@@ -1482,6 +1714,9 @@ build:
 - **BLANK 2:** `name` / `id` / `key` / `ref`
 - **BLANK 3:** `$GITHUB_ENV` / `$GITHUB_OUTPUT` / `$GITHUB_STATE` / `$GITHUB_PATH`
 
+<details>
+<summary>Show answer</summary>
+
 ### Answer: `outputs`, `id`, `$GITHUB_OUTPUT`
 
 **In `challenge-19.md`:** lines **78**, **98**, **102**.
@@ -1494,6 +1729,8 @@ The distractors, so you know what they actually do:
 - `$GITHUB_PATH` — prepends a directory to `PATH` for later steps
 - `$GITHUB_STATE` — passes state between an action's main and post phases
 - `name:` — the label shown in the UI. It is **not** the reference key; only `id:` is
+
+</details>
 
 ---
 
@@ -1512,12 +1749,17 @@ runs:
 - **BLANK 1:** `using` / `type` / `mode` / `kind`
 - **BLANK 2:** `shell` / `run-with` / `interpreter` / `env`
 
+<details>
+<summary>Show answer</summary>
+
 ### Answer: `using`, `shell`
 
 **In `challenge-19.md`:** lines **300** and **322**.
 
 `using` also accepts `node20` and `docker` for the other two action types. `composite` is the one
 that runs a list of steps.
+
+</details>
 
 ---
 
@@ -1535,12 +1777,17 @@ deploy-staging:
 - **BLANK 1:** `environment` / `concurrency` / `defaults` / `container`
 - **BLANK 2:** `url` / `link` / `endpoint` / `host`
 
+<details>
+<summary>Show answer</summary>
+
 ### Answer: `environment`, `url`
 
 **In `challenge-19.md`:** lines **224–226**.
 
 `container:` would run the job's steps inside a container image — a completely different feature that
 looks similar because it also takes a nested block.
+
+</details>
 
 ---
 
@@ -1560,6 +1807,9 @@ steps:
 - **BLANK 1:** `id-token` / `contents` / `packages` / `actions`
 - **BLANK 2:** `secrets` / `env` / `inputs` / `needs`
 
+<details>
+<summary>Show answer</summary>
+
 ### Answer: `id-token`, `secrets`
 
 **In `challenge-19.md`:** line **229** shows the credential-based version this replaces.
@@ -1569,6 +1819,8 @@ is the domain that has cost you points in every mock.
 
 `id-token: write` is what lets the job request the OIDC token. Without it, `azure/login` fails with a
 token-request error, and the message does not say "add a permission".
+
+</details>
 
 ---
 
@@ -1619,6 +1871,9 @@ job?
 - C. A single job with two sequential `run` steps
 - D. A `services` block with two container definitions
 
+<details>
+<summary>Show answer</summary>
+
 ### Answer: B
 
 **In `challenge-19.md`:** lines **120–122**, consumed at line **147**.
@@ -1636,6 +1891,8 @@ job?
 - **C** — sequential steps in one job is the opposite of the requirement
 - **D** — `services` starts **support containers** (line 123, Redis). It does not run tests
 
+</details>
+
 ---
 
 ## Q43
@@ -1646,6 +1903,9 @@ You must meet the approval requirement for production. What should you configure
 - B. A branch protection rule requiring one approving review
 - C. A `workflow_dispatch` trigger with a confirmation input
 - D. A `concurrency` group scoped to the production job
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -1668,6 +1928,8 @@ You must meet the approval requirement for production. What should you configure
 **The boundary to memorise:** environments gate **deployments**; branch protection gates **merges**.
 The exam swaps them on purpose.
 
+</details>
+
 ---
 
 ## Q44
@@ -1680,6 +1942,9 @@ options achieve this? (Choose two.)
 - C. A `concurrency` group named after the branch
 - D. A `paths-ignore` filter on the push trigger
 - E. A required status check on the `main` branch
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A, B
 
@@ -1701,6 +1966,8 @@ Both are accepted, and using both is defence in depth: the environment rule surv
 - **D** — `paths-ignore` decides whether the workflow **triggers**, based on which files changed
 - **E** — a status check governs merging into `main`, not deploying from it
 
+</details>
+
 ---
 
 ## Q45
@@ -1711,6 +1978,9 @@ You must meet the security requirement for Azure credentials. What should you im
 - B. A service principal secret stored as `AZURE_CREDENTIALS`
 - C. A system-assigned managed identity on the runner
 - D. A fine-grained PAT rotated every thirty days
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -1748,6 +2018,8 @@ The constraint is in the requirements: **"No long-lived Azure credential may be 
 - **D** — a PAT is a long-lived credential. Rotating it does not make it short-lived, and it
   authenticates to GitHub, not Azure
 
+</details>
+
 ---
 
 ## Q46
@@ -1758,6 +2030,9 @@ You must meet the requirement for the six repeated setup steps. What should you 
 - B. A starter workflow in the `.github` repository
 - C. A YAML anchor at the top of each workflow
 - D. A `defaults` block applied to every job
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -1777,6 +2052,8 @@ You must meet the requirement for the six repeated setup steps. What should you 
 - **C** — GitHub Actions does **not** support YAML anchors. The parser rejects them
 - **D** — `defaults` sets `shell` and `working-directory`. It cannot contain steps
 
+</details>
+
 ---
 
 ## Q47
@@ -1788,6 +2065,9 @@ requirement?
 - B. A smoke-test step in `deploy-production` running before the swap step
 - C. A scheduled workflow that checks staging every fifteen minutes
 - D. A branch protection rule requiring a passing status check on `main`
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -1817,6 +2097,8 @@ requirement?
 - **C** — a schedule is not tied to a deployment. It could pass fifteen minutes before a bad deploy
 - **D** — status checks gate merges, not deployments (same boundary as Q43)
 
+</details>
+
 ---
 
 ## Q48
@@ -1830,6 +2112,9 @@ What should you do?
 - B. Create a classic PAT with `write:packages` and store it as a secret
 - C. Change the registry to Azure Container Registry
 - D. Grant the repository `admin` role to the workflow actor
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -1851,6 +2136,8 @@ What should you do?
   change what `GITHUB_TOKEN` is allowed to do
 
 **Name the constraint, then eliminate.** "No PAT" removes B before you evaluate anything else.
+
+</details>
 
 ---
 ---

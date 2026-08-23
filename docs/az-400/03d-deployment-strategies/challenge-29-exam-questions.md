@@ -1,6 +1,8 @@
 ---
-sidebar_position: 95
+sidebar_position: 5.5
+toc_max_heading_level: 2
 title: "Challenge 29: exam questions"
+sidebar_label: "Exam questions (48 Q)"
 ---
 
 # Challenge 29 — AZ-400 exam questions
@@ -46,6 +48,9 @@ Which EF Core command produces a script suitable for a CI/CD pipeline?
 - C. `dotnet ef migrations add`
 - D. `dotnet ef dbcontext scaffold`
 
+<details>
+<summary>Show answer</summary>
+
 ### Answer: B
 
 **In `challenge-29.md`:** lines **37–42**, and again at **86–92**.
@@ -73,6 +78,8 @@ retried, or when the same script runs against environments at different versions
 **The reviewable-artifact argument is the exam answer:** generate SQL in build, apply it in a gated
 deployment stage.
 
+</details>
+
 ---
 
 ## Q2
@@ -85,6 +92,9 @@ What is the cause?
 - B. The connection string is wrong
 - C. The application was built against the wrong framework version
 - D. The table was created in the wrong schema
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -116,6 +126,8 @@ that did not exist, and it took 45 minutes and a DBA to recover.
 **Note this is Challenge 22's `dependsOn` lesson with data at stake.** Missing ordering there made a
 pipeline slow; here it makes production fail.
 
+</details>
+
 ---
 
 ## Q3
@@ -126,6 +138,9 @@ In what order must a database change and its application code be deployed?
 - B. Database first (additive), then application
 - C. Simultaneously
 - D. Order does not matter with idempotent scripts
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: B
 
@@ -153,6 +168,8 @@ That is why step 1 says "additive/non-breaking" and step 6 defers removal to a l
 - **C** — a race with no winner
 - **D** — idempotency makes a script **safe to re-run**. It does not make objects exist earlier
 
+</details>
+
 ---
 
 ## Q4
@@ -163,6 +180,9 @@ Which rollback strategy does the challenge prefer for a bad migration in product
 - B. Point-in-time restore
 - C. Restoring from a pre-migration backup copy
 - D. Manually reversing the SQL
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -187,6 +207,8 @@ happened in between.
 **The general principle:** *databases roll forward.* Rolling back is a recovery action, not a
 deployment step.
 
+</details>
+
 ---
 
 ## Q5
@@ -197,6 +219,9 @@ What does the expand-contract pattern's **expand** phase do?
 - B. Removes deprecated columns
 - C. Increases database storage
 - D. Copies data to a new database
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -222,6 +247,8 @@ still succeed; and the backfill populates it for existing rows. The old code nev
 **The name is the pattern:** expand the schema so old and new can coexist, migrate the application,
 then contract once nothing uses the old shape.
 
+</details>
+
 ---
 
 ## Q6
@@ -232,6 +259,9 @@ In the expand-contract timeline, when are the old columns dropped?
 - B. In the release after the application stops writing to them
 - C. Immediately after the backfill completes
 - D. Never
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: B
 
@@ -257,6 +287,8 @@ Line 472 states the gate: *"Only run after ALL application instances use FullNam
 **Why the middle release matters for rollback:** if v2.2 has to be rolled back, the old columns are
 still there. Skip it and you have no safe way back.
 
+</details>
+
 ---
 
 ## Q7
@@ -270,6 +302,9 @@ What is the recommended fix?
 - B. Use the expand-contract pattern instead of dropping columns directly
 - C. Delete the affected rows first
 - D. Switch to `deployType: SqlTask`
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: B
 
@@ -290,6 +325,8 @@ were about to drop a column containing data.
 **The habit worth carrying:** when a safety mechanism blocks you, ask whether it is right before you
 turn it off. It usually is.
 
+</details>
+
 ---
 
 ## Q8
@@ -303,6 +340,9 @@ What is missing?
 - B. The SQL firewall blocks the runner
 - C. The connection string uses the wrong port
 - D. The database is paused
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -332,6 +372,8 @@ without granting `db_owner`.
 **Same shape as Challenge 27 and 28:** control plane versus data plane. Managing the resource is not
 the same as accessing what is inside it.
 
+</details>
+
 ---
 
 ## Q9
@@ -342,6 +384,9 @@ What does `baselineOnMigrate = true` do in a Flyway configuration?
 - B. Rolls back all migrations to the baseline
 - C. Validates that migration checksums match
 - D. Allows migrations to run out of order
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -369,6 +414,8 @@ current state as the starting point and applies only later versions.
 **All three settings together describe a disciplined pipeline:** adopt an existing database, refuse
 edited migrations, refuse out-of-order application.
 
+</details>
+
 ---
 
 ## Q10
@@ -379,6 +426,9 @@ What does `validateOnMigrate = true` protect against?
 - B. A previously applied migration file being modified
 - C. Migrations running against the wrong database
 - D. Data loss during a migration
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: B
 
@@ -397,6 +447,8 @@ you. Migrations are **immutable once applied** — fix them with a new `V003`.
 - **C** — the connection URL decides that
 - **D** — Flyway does not evaluate data loss. That is a DACPAC feature (line 649)
 
+</details>
+
 ---
 
 ## Q11
@@ -407,6 +459,9 @@ What does the `R__` prefix mean in a Flyway migration filename?
 - B. Repeatable migration, re-applied whenever its checksum changes
 - C. Required migration
 - D. Reference data migration
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: B
 
@@ -428,6 +483,8 @@ functions — anything written as `CREATE OR ALTER`. You edit the file rather th
 
 **Why the others fail** — Flyway's undo migrations use `U`; `R` is not "required" or "reference data".
 
+</details>
+
 ---
 
 ## Q12
@@ -438,6 +495,9 @@ Which `SqlAzureDacpacDeployment@1` argument prevents a schema change that would 
 - B. `/p:DropObjectsNotInSource=false`
 - C. `deploymentAction: 'Publish'`
 - D. `authenticationType: 'servicePrincipal'`
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -462,6 +522,8 @@ a reporting view, a DBA's index. Left at `true`, a publish would remove them.
 - **C** — `Publish` is the action being performed
 - **D** — how the task authenticates
 
+</details>
+
 ---
 
 ## Q13
@@ -472,6 +534,9 @@ Which `deployType` runs a plain SQL migration script rather than a DACPAC?
 - B. `SqlTask`
 - C. `InlineSqlTask`
 - D. `ScriptTask`
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: B
 
@@ -496,6 +561,8 @@ The challenge's EF Core path produces a script (line 92), so `SqlTask` is what a
 **Why the others fail** — `InlineSqlTask` is a real third option for inline SQL text; `ScriptTask`
 does not exist.
 
+</details>
+
 ---
 
 ## Q14
@@ -506,6 +573,9 @@ Which GitHub Actions action applies a SQL script to Azure SQL in the challenge's
 - B. `azure/CLI@v1`
 - C. `microsoft/sql-deploy@v1`
 - D. `flyway/flyway-action@v1`
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -528,6 +598,8 @@ approvals and environment secrets apply to the migration, not just to the app de
 - **C** — does not exist
 - **D** — real (line 245) and used for the **Flyway** path, which is Task 2's alternative approach
 
+</details>
+
 ---
 
 ## Q15
@@ -539,6 +611,9 @@ job?
 - B. Because the build agent has database access
 - C. To reduce deployment time
 - D. Because EF Core tools cannot run in a deployment job
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -564,6 +639,8 @@ job?
 - **C** — a marginal effect, not the reason
 - **D** — they can; it is a design choice
 
+</details>
+
 ---
 
 ## Q16
@@ -574,6 +651,9 @@ Which strategy does the challenge reserve for **catastrophic** migration failure
 - B. Point-in-time restore
 - C. Re-running the idempotent script
 - D. Dropping and recreating the schema
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: B
 
@@ -602,6 +682,8 @@ last resort and forward-fix is the default.
 - **C** — re-running an idempotent script changes nothing; it is already applied
 - **D** — destroys all data with no recovery at all
 
+</details>
+
 ---
 
 # Section B — Multiple answer
@@ -618,6 +700,9 @@ Which **three** phases make up the expand-contract pattern? (Choose three.)
 - D. Restore — revert to a backup
 - E. Baseline — mark the current state
 - F. Validate — check migration checksums
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A, B, C
 
@@ -644,6 +729,8 @@ settings (lines 198–200).
 **The pattern's real product is a window** in which both schemas work, so deployment and rollback are
 both safe at any moment inside it.
 
+</details>
+
 ---
 
 ## Q18
@@ -655,6 +742,9 @@ Which **two** make a migration safe to apply **before** the application deploys?
 - C. It drops unused columns in the same release
 - D. It renames columns to match the new model
 - E. It is wrapped in a transaction
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A, B
 
@@ -672,6 +762,8 @@ is invisible to it. Dropping or renaming one is not.
 - **E** — a transaction makes the migration atomic, which is good and unrelated. An atomic breaking
   change is still breaking
 
+</details>
+
 ---
 
 ## Q19
@@ -683,6 +775,9 @@ Which **two** Flyway settings enforce migration discipline? (Choose two.)
 - C. `baselineOnMigrate = true`
 - D. `locations = ["filesystem:sql"]`
 - E. `schemas = ["dbo"]`
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A, B
 
@@ -702,6 +797,8 @@ paths. Setting it `false` means a late-arriving migration fails loudly instead.
 - **C** — adoption behaviour for an existing database
 - **D** and **E** — where migrations live and which schema to target. Configuration, not discipline
 
+</details>
+
 ---
 
 ## Q20
@@ -713,6 +810,9 @@ Which **two** rollback options lose data written since the migration? (Choose tw
 - C. Forward-fix with a compensating migration
 - D. Re-running the idempotent script
 - E. Swapping the App Service slot back
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A, B
 
@@ -732,6 +832,8 @@ API that means real customer orders disappearing.
 **That last point connects the whole domain.** Challenges 25–28 make code reversible. Only additive
 migrations make the *combination* reversible.
 
+</details>
+
 ---
 
 ## Q21
@@ -743,6 +845,9 @@ Which **two** database roles must the pipeline identity hold to run migrations? 
 - C. `db_owner`
 - D. `db_denydatareader`
 - E. `sysadmin`
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A, B
 
@@ -765,6 +870,8 @@ migrations frequently move data — the backfill at line 445 is an `UPDATE`.
 - **D** — explicitly **denies** reads
 - **E** — a server-level role that does not exist in Azure SQL Database in that form
 
+</details>
+
 ---
 
 ## Q22
@@ -776,6 +883,9 @@ Which **two** are true about `dotnet ef migrations script --idempotent`? (Choose
 - C. It applies migrations directly to the target database
 - D. It reverses the most recent migration
 - E. It must be regenerated per environment
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A, B
 
@@ -794,6 +904,8 @@ That is why it can run in the build job with no credentials and no network path 
 - **E** — **the opposite is the value.** One script for every environment is what makes staging a real
   rehearsal for production
 
+</details>
+
 ---
 
 ## Q23
@@ -805,6 +917,9 @@ Which **two** guards should a DACPAC publish keep enabled in production? (Choose
 - C. `/p:BlockOnPossibleDataLoss=false`
 - D. `/p:DropObjectsNotInSource=true`
 - E. `deploymentAction: 'Script'`
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A, B
 
@@ -820,6 +935,8 @@ the DACPAC.
   answer
 - **E** — `deploymentAction: 'Script'` generates the change script **without applying it**. That is
   genuinely useful for review, and it is not a guard on a real publish
+
+</details>
 
 ---
 
@@ -837,7 +954,10 @@ reversible without losing customer data.
 `deploy-database` stage that the `deploy-application` stage depends on. If the release is bad, swap
 the App Service slot back and fix forward with a new migration.
 
-Does this meet the goal? **Yes**
+Does this meet the goal?
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: Yes
 
@@ -854,6 +974,8 @@ Each requirement is met by one decision:
 `CREATE TABLE dbo.CustomerPreferences` is invisible to the old code, so the running application is
 unaffected by the migration and unaffected again if the app is rolled back.
 
+</details>
+
 ---
 
 ## Q25
@@ -861,7 +983,10 @@ unaffected by the migration and unaffected again if the app is rolled back.
 **Proposed solution:** Deploy the application first, then run migrations from the application's
 startup code using `Database.Migrate()`.
 
-Does this meet the goal? **No**
+Does this meet the goal?
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: No
 
@@ -879,6 +1004,8 @@ environment approval, no separate identity — the *application's* runtime crede
 **Where it is acceptable:** local development and single-instance test environments. Never
 production.
 
+</details>
+
 ---
 
 ## Q26
@@ -887,7 +1014,10 @@ production.
 `deploy-application` depends on, and include `DROP COLUMN` statements for columns the new version no
 longer uses.
 
-Does this meet the goal? **No**
+Does this meet the goal?
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: No
 
@@ -906,6 +1036,8 @@ running instance references them.
 **Q25 and Q26 together are the whole lesson.** Right order with a breaking change fails; additive
 change in the wrong order fails. You need **both**.
 
+</details>
+
 ---
 
 # Section D — Yes/No statement grid
@@ -913,6 +1045,16 @@ change in the wrong order fails. You need **both**.
 ---
 
 ## Q27 — migration ordering
+
+| # | Statement | Answer |
+|---|---|---|
+| 1 | Additive migrations should run before the application deploys |  |
+| 2 | Destructive migrations should run in the same release as the code change |  |
+| 3 | `dependsOn` between stages guarantees the migration finishes first |  |
+| 4 | An idempotent script makes ordering unnecessary |  |
+
+<details>
+<summary>Show answer</summary>
 
 | # | Statement | Answer |
 |---|---|---|
@@ -929,9 +1071,21 @@ every instance has stopped using the old shape.
 Row 4 is the tempting misread. Idempotency means **safe to re-run**, not **applied sooner**. The app
 still fails if it arrives first.
 
+</details>
+
 ---
 
 ## Q28 — rollback
+
+| # | Statement | Answer |
+|---|---|---|
+| 1 | Forward-fix is preferred for a bad migration in production |  |
+| 2 | Point-in-time restore loses data written after the restore point |  |
+| 3 | An App Service slot swap rolls back database changes |  |
+| 4 | Disabling a feature flag reverts a schema change |  |
+
+<details>
+<summary>Show answer</summary>
 
 | # | Statement | Answer |
 |---|---|---|
@@ -948,9 +1102,21 @@ slot swap, revision weight, feature flag — reverts **code only**. The database
 That asymmetry is the reason for every rule in this challenge: the schema must remain compatible with
 **both** the old and the new code for as long as either might run.
 
+</details>
+
 ---
 
 ## Q29 — Flyway
+
+| # | Statement | Answer |
+|---|---|---|
+| 1 | `V` migrations run once, in version order |  |
+| 2 | `R__` migrations re-run when their checksum changes |  |
+| 3 | Editing an applied migration is safe when `validateOnMigrate` is true |  |
+| 4 | `baselineOnMigrate` lets Flyway adopt an existing database |  |
+
+<details>
+<summary>Show answer</summary>
 
 | # | Statement | Answer |
 |---|---|---|
@@ -968,9 +1134,21 @@ diverged.
 Row 2 is why views and stored procedures belong in `R__` files: you edit the definition rather than
 accumulating `V004`, `V005`, `V006` for the same object.
 
+</details>
+
 ---
 
 ## Q30 — permissions and tooling
+
+| # | Statement | Answer |
+|---|---|---|
+| 1 | An Azure RBAC role alone lets a pipeline run DDL inside a database |  |
+| 2 | `CREATE USER ... FROM EXTERNAL PROVIDER` creates a user from an Entra identity |  |
+| 3 | `db_ddladmin` permits `CREATE TABLE` and `ALTER TABLE` |  |
+| 4 | `BlockOnPossibleDataLoss=true` should be disabled to unblock a deployment |  |
+
+<details>
+<summary>Show answer</summary>
 
 | # | Statement | Answer |
 |---|---|---|
@@ -987,6 +1165,8 @@ Row 1 is the two-layer model: Azure RBAC governs the **resource**; database role
 Row 4: the guard fired because a column with data was about to be dropped. Turning it off deletes the
 data. The answer is expand-contract.
 
+</details>
+
 ---
 
 # Section E — Drag and drop
@@ -999,6 +1179,9 @@ Arrange the database-aware deployment sequence in order.
 
 **Items:** Swap staging to production · Deploy the application to staging · Run additive migrations ·
 Validate staging against the new schema · Verify migrations applied
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer
 
@@ -1015,11 +1198,26 @@ the **contract** phase, deliberately in a different release.
 correct. Verifying before deploying code means a partial migration is caught while only the database
 has changed.
 
+</details>
+
 ---
 
 ## Q32
 
 Match each rollback strategy to when it should be used.
+
+| Strategy | Use when |
+|---|---|
+| Forward-fix with a compensating migration |  |
+| Point-in-time restore |  |
+| Pre-migration database copy |  |
+| Slot swap back |  |
+| Expand-contract |  |
+
+**Options:** **A high-risk migration**, taken as insurance beforehand · **Catastrophic corruption**, data loss acceptable · **Normal production bug** — preferred · **Planned** removal of schema, over several releases · The **application** is bad; the schema is fine
+
+<details>
+<summary>Show answer</summary>
 
 | Strategy | Use when |
 |---|---|
@@ -1036,6 +1234,8 @@ since the copy. A point-in-time restore loses everything since the restore point
 
 **The order to try them in is that same order.**
 
+</details>
+
 ---
 
 ## Q33
@@ -1044,6 +1244,9 @@ Arrange the expand-contract releases with their changes.
 
 **Items:** Drop old columns · Add the new nullable column and backfill · Read new only, stop writing
 old
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer
 
@@ -1062,6 +1265,8 @@ instance writes to the old columns, which is the precondition line 472 states fo
 tightened once every row is populated and every instance writes it — tightening it in v2.1 would have
 broken inserts from the old code.
 
+</details>
+
 ---
 
 ## Q34
@@ -1069,6 +1274,9 @@ broken inserts from the old code.
 Arrange the pipeline jobs in the database-aware workflow, in order.
 
 **Items:** `deploy-application` · `build` · `deploy-database`
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer
 
@@ -1090,11 +1298,26 @@ Arrange the pipeline jobs in the database-aware workflow, in order.
 
 And the script is produced in `build`, so `deploy-database` only *applies* a reviewed artifact.
 
+</details>
+
 ---
 
 ## Q35
 
 Match each symptom to its cause.
+
+| Symptom | Cause |
+|---|---|
+| `Invalid object name 'CustomerPreferences'` |  |
+| `The server principal is not able to access the database` |  |
+| `Rows were detected... data loss might occur` |  |
+| Flyway fails with a checksum mismatch |  |
+| Two instances race on DDL at startup |  |
+
+**Options:** An already-applied migration file was edited · Dropping a populated column with `BlockOnPossibleDataLoss=true` · Migrations run from application startup code · Missing `dependsOn` — app deployed before the migration · No database user or `db_ddladmin` for the pipeline identity
+
+<details>
+<summary>Show answer</summary>
 
 | Symptom | Cause |
 |---|---|
@@ -1108,6 +1331,8 @@ Match each symptom to its cause.
 
 **Read the failure's layer:** ordering, authorisation, data safety, immutability, concurrency. Each
 one has a different fix and a different owner.
+
+</details>
 
 ---
 
@@ -1129,12 +1354,17 @@ Requirement: produce a re-runnable SQL artifact during the build.
 - **BLANK 1:** `script` / `add` / `remove` / `list`
 - **BLANK 2:** `idempotent` / `dry-run` / `no-build` / `verbose`
 
+<details>
+<summary>Show answer</summary>
+
 ### Answer: `script`, `idempotent`
 
 **In `challenge-29.md`:** lines **86–92**.
 
 `add` creates a migration during development. `--idempotent` is what guards each migration against
 `__EFMigrationsHistory` so re-running is safe.
+
+</details>
 
 ---
 
@@ -1159,12 +1389,17 @@ Requirement: produce a re-runnable SQL artifact during the build.
   `flyway/flyway-action@v1`
 - **BLANK 3:** `deploy-database` / `build` / `deploy-application` / `test`
 
+<details>
+<summary>Show answer</summary>
+
 ### Answer: `build`, `azure/sql-action@v2.3`, `deploy-database`
 
 **In `challenge-29.md`:** lines **102**, **117**, **132**.
 
 BLANK 3 is the one that matters. `needs: build` there would let the app deploy **in parallel** with
 the migration — Break & fix Exercise 2, and the incident in the scenario.
+
+</details>
 
 ---
 
@@ -1184,11 +1419,16 @@ Requirements: adopt an existing database, forbid out-of-order migrations, detect
 - **BLANK 2:** `outOfOrder` / `validateOnMigrate` / `baselineOnMigrate` / `ignoreMissing`
 - **BLANK 3:** `validateOnMigrate` / `outOfOrder` / `placeholderReplacement` / `skipDefault`
 
+<details>
+<summary>Show answer</summary>
+
 ### Answer: `baselineOnMigrate`, `outOfOrder`, `validateOnMigrate`
 
 **In `challenge-29.md`:** lines **198–200**.
 
 Each maps to one requirement in order: adopt, forbid gaps, detect edits.
+
+</details>
 
 ---
 
@@ -1211,6 +1451,9 @@ ALTER TABLE dbo.Customers ALTER COLUMN FullName NVARCHAR(512) [BLANK 3];
 - **BLANK 2:** `DROP` / `REMOVE` / `DELETE` / `TRUNCATE`
 - **BLANK 3:** `NOT NULL` / `NULL` / `SPARSE` / `DEFAULT ''`
 
+<details>
+<summary>Show answer</summary>
+
 ### Answer: `NULL`, `DROP`, `NOT NULL`
 
 **In `challenge-29.md`:** lines **441**, **473**, **477**.
@@ -1220,6 +1463,8 @@ column with no default would make every one of those inserts fail the moment the
 
 **BLANK 3 tightens it in phase 3**, once the backfill is done and every instance writes the column.
 Same constraint, two releases apart, and the gap is the entire point.
+
+</details>
 
 ---
 
@@ -1239,12 +1484,17 @@ Same constraint, two releases apart, and the gap is the entire point.
   `VerifyDeployment`
 - **BLANK 3:** `false` / `true`
 
+<details>
+<summary>Show answer</summary>
+
 ### Answer: `DacpacTask`, `BlockOnPossibleDataLoss`, `false`
 
 **In `challenge-29.md`:** lines **646–649**.
 
 Both flags are guards: block changes that would delete row data, and do not remove objects that exist
 in the database but not in the project.
+
+</details>
 
 ---
 
@@ -1260,6 +1510,9 @@ Requirement: let the pipeline identity create and alter tables, with least privi
 - **BLANK 1:** `EXTERNAL PROVIDER` / `LOGIN` / `CERTIFICATE` / `ASYMMETRIC KEY`
 - **BLANK 2:** `db_ddladmin` / `db_owner` / `db_datareader` / `db_securityadmin`
 
+<details>
+<summary>Show answer</summary>
+
 ### Answer: `EXTERNAL PROVIDER`, `db_ddladmin`
 
 **In `challenge-29.md`:** lines **697–698**.
@@ -1269,6 +1522,8 @@ identity or service principal — so no SQL password exists.
 
 `db_owner` would work and grants far more, including permission management. `db_ddladmin` is the
 least-privilege answer for schema changes.
+
+</details>
 
 ---
 
@@ -1315,6 +1570,9 @@ Which **two** meet the ordering and reviewability requirements? (Choose two.)
 - D. A DBA applying migrations manually before each release
 - E. Running migrations in the same job as the deployment
 
+<details>
+<summary>Show answer</summary>
+
 ### Answer: A, B
 
 **In `challenge-29.md`:** lines **86–98** and **130–132**.
@@ -1330,6 +1588,8 @@ the `production` environment.
 - **D** — a manual step is what caused the 45-minute incident
 - **E** — one job means no separate environment gate on the migration, and no clean failure boundary
 
+</details>
+
 ---
 
 ## Q43
@@ -1341,6 +1601,9 @@ Which **two** meet the permission requirements? (Choose two.)
 - C. `ALTER ROLE db_owner ADD MEMBER [pipeline-sp]`
 - D. A SQL admin username and password in a GitHub secret
 - E. Contributor on the SQL server resource
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A, B
 
@@ -1357,6 +1620,8 @@ exactly the DDL rights migrations need.
   delete the entire server and still cannot create a table inside a database. Azure RBAC and database
   roles are two separate systems, and migrations need the second
 
+</details>
+
 ---
 
 ## Q44
@@ -1367,6 +1632,9 @@ Which approach merges `FirstName` and `LastName` into `FullName` without data lo
 - B. `ALTER TABLE ... DROP COLUMN` and `ADD COLUMN` in one migration
 - C. `sp_rename` on `FirstName` to `FullName`
 - D. Create a new table and copy the data
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -1381,6 +1649,8 @@ Which approach merges `FirstName` and `LastName` into `FullName` without data lo
 - **D** — a new table changes every query, every foreign key and every index, and the two tables
   diverge during the switchover. Far more disruptive than adding a column
 
+</details>
+
 ---
 
 ## Q45
@@ -1391,6 +1661,9 @@ During the expand phase, why must `FullName` be nullable?
 - B. To reduce storage
 - C. Because `NVARCHAR(512)` cannot be `NOT NULL`
 - D. To allow the backfill to run
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -1406,6 +1679,8 @@ insert it makes — turning an "additive, non-breaking" migration into an immedi
 - **D** — **close, and inverted.** The backfill is an `UPDATE` and works either way. The nullability
   is about the **old application's inserts**, not the backfill
 
+</details>
+
 ---
 
 ## Q46
@@ -1416,6 +1691,9 @@ A migration succeeds but the new API version has a bug. What is the correct resp
 - B. Restore the database to a point before the migration
 - C. Drop the new table and redeploy
 - D. Disable a feature flag to revert the schema
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -1434,6 +1712,8 @@ sits unused until the fixed version ships.
 **This question is the payoff for making migrations additive.** Because the schema tolerates both
 versions, application rollback stays a simple, fast, lossless operation.
 
+</details>
+
 ---
 
 ## Q47
@@ -1446,6 +1726,9 @@ Which practice achieves this?
 - B. Regenerate the migration script separately per environment
 - C. Use `dotnet ef database update` directly against each database
 - D. Maintain a separate migration folder per environment
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -1464,6 +1747,8 @@ One artifact, produced once in `build`, downloaded by each deployment job. Stagi
 **This is the "build once, deploy many" principle applied to the database.** The same rule as
 container images: build the artifact once, promote the same one through environments.
 
+</details>
+
 ---
 
 ## Q48
@@ -1477,6 +1762,9 @@ What should they do, and what does this illustrate?
 - B. Delete all migrations and recreate the database from the current model
 - C. Set `outOfOrder = true` so failing migrations are skipped
 - D. Increase the pipeline timeout
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -1499,6 +1787,8 @@ the baseline; existing ones are already past it.
 
 **What it illustrates:** migrations accumulate the same way feature flags do (Challenge 27 Q48). Both
 need periodic, deliberate cleanup, and both break in confusing ways if you clean up carelessly.
+
+</details>
 
 ---
 ---

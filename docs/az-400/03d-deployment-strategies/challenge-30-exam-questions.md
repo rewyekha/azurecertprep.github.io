@@ -1,6 +1,8 @@
 ---
-sidebar_position: 96
+sidebar_position: 6.5
+toc_max_heading_level: 2
 title: "Challenge 30: exam questions"
+sidebar_label: "Exam questions (48 Q)"
 ---
 
 # Challenge 30 — AZ-400 exam questions
@@ -45,6 +47,9 @@ From where should a hotfix branch be created?
 - C. From the previous known-good release tag
 - D. From `develop`
 
+<details>
+<summary>Show answer</summary>
+
 ### Answer: B
 
 **In `challenge-30.md`:** lines **36–40**.
@@ -69,6 +74,8 @@ You want production plus one change, and nothing else.
   it is a different decision
 - **D** — no `develop` branch exists in this model, and it would have the same problem as `main`
 
+</details>
+
 ---
 
 ## Q2
@@ -79,6 +86,9 @@ Which gate must **never** be skipped in a hotfix pipeline?
 - B. Security scanning
 - C. Progressive rollout through rings
 - D. Full regression smoke tests
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: B
 
@@ -100,6 +110,8 @@ under pressure is exactly when one gets committed.
 
 **Why the others fail** — all three are explicitly reduced or skipped in the table.
 
+</details>
+
 ---
 
 ## Q3
@@ -112,6 +124,9 @@ What is the most likely cause?
 - B. Traffic routing is still sending a share of traffic to the staging slot
 - C. The build used the wrong branch
 - D. The health check passed incorrectly
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: B
 
@@ -140,6 +155,8 @@ matters.
 - **C** — a wrong branch would fail for **all** customers, not some
 - **D** — a health check on `/health` cannot detect a payment-amount bug. It confirms the app is up
 
+</details>
+
 ---
 
 ## Q4
@@ -150,6 +167,9 @@ Which condition makes the frontend deployment wait for the backend?
 - B. `condition: always()`
 - C. `pool: vmImage`
 - D. A longer timeout on the frontend stage
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -177,6 +197,8 @@ may start; `condition` decides **whether** it runs once it may.
 **This is the `dependsOn` lesson again** — Challenge 22 Q13, Challenge 29 Q2. Third appearance, and
 it is on the exam every time.
 
+</details>
+
 ---
 
 ## Q5
@@ -187,6 +209,9 @@ What does a deployment circuit breaker do?
 - B. Halts progressive rollout when a failure threshold is exceeded
 - C. Limits how many pipelines run concurrently
 - D. Throttles requests to a failing dependency
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: B
 
@@ -216,6 +241,8 @@ is normal — an instance restarting, a transient network blip. Five within two 
   engineering, protecting a caller from a failing dependency. This is a **deployment** circuit
   breaker: same name, same idea, applied to a rollout
 
+</details>
+
 ---
 
 ## Q6
@@ -226,6 +253,9 @@ Which step runs when the circuit breaker trips?
 - B. `if: failure()` — clear traffic routing
 - C. `if: always()` — notify the team
 - D. `continue-on-error: true` — proceed anyway
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: B
 
@@ -250,6 +280,8 @@ removing a rule.
 - **C** — notification is useful and changes nothing
 - **D** — would let a tripped breaker continue the rollout, defeating the entire mechanism
 
+</details>
+
 ---
 
 ## Q7
@@ -260,6 +292,9 @@ In the progressive rollout, what happens immediately before the final swap to 10
 - B. The staging slot is deleted
 - C. A new revision is created
 - D. The canary weight is set to 100
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -284,6 +319,8 @@ staging. That is Break & fix Exercise 1, arriving from a different direction.
 - **D** — setting the routing weight to 100 would route everything at staging **without swapping**,
   leaving production still holding the old code and the deployment in a half-finished state
 
+</details>
+
 ---
 
 ## Q8
@@ -294,6 +331,9 @@ Why does the emergency rollback script swap the **staging** slot back into produ
 - B. Staging is a copy of the last backup
 - C. Staging is redeployed automatically
 - D. Production cannot be modified directly
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -317,6 +357,8 @@ you must redeploy it.
 **Note `set -euo pipefail` at line 396:** exit on error, on undefined variable, and on any failure in
 a pipe. In an emergency script, silently continuing after a failed command is the worst outcome.
 
+</details>
+
 ---
 
 ## Q9
@@ -327,6 +369,9 @@ Which `dotnet test` filter runs only critical tests in the hotfix pipeline?
 - B. `--filter "FullyQualifiedName~Critical"`
 - C. `--no-build`
 - D. `--configuration Release`
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -352,6 +397,8 @@ built in advance — during the outage is too late to start tagging tests.
 - **C** — skips rebuilding, a speed optimisation with no selection effect
 - **D** — the build configuration
 
+</details>
+
 ---
 
 ## Q10
@@ -362,6 +409,9 @@ Which trigger starts the hotfix workflow?
 - B. `pull_request` to `main`
 - C. `workflow_dispatch` only
 - D. `schedule`
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -389,6 +439,8 @@ after a PR review cycle.
 **Note `hotfix/**` uses a double asterisk** so it matches `hotfix/payment-over-10k` and any nested
 path.
 
+</details>
+
 ---
 
 ## Q11
@@ -399,6 +451,9 @@ Which environment does the hotfix deployment job target?
 - B. `production-hotfix`
 - C. `staging`
 - D. No environment
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: B
 
@@ -423,6 +478,8 @@ deployment. It is *lighter*, not *absent*.
 - **C** — the hotfix targets production
 - **D** — no environment means no approval and no deployment record
 
+</details>
+
 ---
 
 ## Q12
@@ -433,6 +490,9 @@ What does the cherry-pick workflow do when the cherry-pick conflicts?
 - B. Creates a branch and opens a pull request for manual resolution
 - C. Force-pushes the change to `main`
 - D. Retries with `--strategy=ours`
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: B
 
@@ -459,6 +519,8 @@ conflicted one becomes a reviewable PR. The automation never guesses at a merge.
 - **C** — force-pushing to `main` in an automated workflow is destructive
 - **D** — `--strategy=ours` **discards the incoming change**, so the fix would not be applied at all
 
+</details>
+
 ---
 
 ## Q13
@@ -469,6 +531,9 @@ Why does the cherry-pick workflow use `fetch-depth: 0`?
 - B. To speed up the checkout
 - C. To fetch only the latest commit
 - D. To avoid fetching tags
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -494,6 +559,8 @@ clone.
 **Also note `token: ${{ secrets.PAT_TOKEN }}`.** This is Q16's subject: pushing to `main` needs a
 credential the default `GITHUB_TOKEN` may not have.
 
+</details>
+
 ---
 
 ## Q14
@@ -504,6 +571,9 @@ Which Container Apps commands implement a revision-based circuit breaker?
 - B. `az containerapp restart`
 - C. `az containerapp revision deactivate`
 - D. `az containerapp env update`
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -533,6 +603,8 @@ rollback command under pressure — `--hotfix-v241` is legible where a generated
 **Same pattern as App Service, different nouns:** slots and traffic routing there, revisions and
 weights here. Both keep the old version alive so reverting is a routing change.
 
+</details>
+
 ---
 
 ## Q15
@@ -543,6 +615,9 @@ In the dependency graph, which build jobs depend on `BuildCore`?
 - B. `BuildPaymentService` and `BuildNotificationService`
 - C. All build jobs including `BuildFrontend`
 - D. None — they build in parallel
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: B
 
@@ -572,6 +647,8 @@ dotnet nuget add source $(Pipeline.Workspace)/core-package --name local
 
 They consume the freshly built package from the pipeline artifact, so it has to exist first.
 
+</details>
+
 ---
 
 ## Q16
@@ -582,6 +659,9 @@ Why does the cherry-pick workflow use `secrets.PAT_TOKEN` rather than `secrets.G
 - B. `GITHUB_TOKEN` expires too quickly
 - C. `PAT_TOKEN` is faster
 - D. `GITHUB_TOKEN` cannot read the repository
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -604,6 +684,8 @@ Why does the cherry-pick workflow use `secrets.PAT_TOKEN` rather than `secrets.G
 An App has its own identity, scoped permissions and no dependency on an individual's account — which
 is exactly Challenge 40's subject, and why your `deploy-manifests` repo exists.
 
+</details>
+
 ---
 
 # Section B — Multiple answer
@@ -621,6 +703,9 @@ Which **three** gates does the hotfix pipeline reduce or skip? (Choose three.)
 - E. Unit tests — removed
 - F. Health checks — removed
 
+<details>
+<summary>Show answer</summary>
+
 ### Answer: A, B, C
 
 **In `challenge-30.md`:** the comparison table, lines **220–228**.
@@ -635,6 +720,8 @@ Which **three** gates does the hotfix pipeline reduce or skip? (Choose three.)
 **The pattern to read off the table:** gates that verify *this specific change* survive in reduced
 form. Gates that verify *the whole system* are deferred. Nothing is removed outright.
 
+</details>
+
 ---
 
 ## Q18
@@ -646,6 +733,9 @@ Which **two** are true about the hotfix branching model? (Choose two.)
 - C. The branch is created from `main`
 - D. The hotfix branch becomes the new `main`
 - E. The fix is merged to `main` before deploying
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A, B
 
@@ -662,6 +752,8 @@ hotfix failure in real teams, and it always shows up weeks later when nobody con
 - **E** — merging to `main` first means shipping everything else on `main` too, and it costs time
   production does not have
 
+</details>
+
 ---
 
 ## Q19
@@ -673,6 +765,9 @@ Which **two** happen when the circuit breaker trips? (Choose two.)
 - C. The application is restarted
 - D. The staging slot is deleted
 - E. The rollout promotes to 50% anyway
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A, B
 
@@ -696,6 +791,8 @@ and does nothing.
 - **D** — the slot is preserved for diagnosis
 - **E** — promotion is guarded by `if: success()` (line 563)
 
+</details>
+
 ---
 
 ## Q20
@@ -707,6 +804,9 @@ Which **two** are correct about the progressive rollout stages? (Choose two.)
 - C. Traffic weight is set to 100% instead of swapping
 - D. Each stage runs regardless of the previous result
 - E. The 50% stage skips monitoring
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A, B
 
@@ -727,6 +827,8 @@ az webapp traffic-routing clear && az webapp deployment slot swap   # 100%
 - **D** — every promotion step is `if: success()` (lines 563, 571, 585)
 - **E** — the 50% stage monitors too (lines 570–582)
 
+</details>
+
 ---
 
 ## Q21
@@ -738,6 +840,9 @@ Which **two** ensure services deploy in dependency order? (Choose two.)
 - C. A `sleep` before the frontend deployment
 - D. `condition: always()` on the frontend stage
 - E. Deploying everything in one stage
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A, B
 
@@ -761,6 +866,8 @@ explicitly here (Challenge 20 Q20).
 - **E** — one stage means no ordering, no separate approvals and no clean failure boundary. This is
   the "merge the jobs" distractor from Challenge 22 Q26
 
+</details>
+
 ---
 
 ## Q22
@@ -772,6 +879,9 @@ Which **two** are true about the shared-library dependency graph? (Choose two.)
 - C. `BuildFrontend` depends on `BuildCore`
 - D. `BuildNotificationService` depends on `BuildPaymentService`
 - E. `BuildCore` runs last
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A, B
 
@@ -798,6 +908,8 @@ Core package from this run, not the published feed version. The artifact must ex
 - **D** — would serialise them for no reason
 - **E** — `BuildCore` runs first; everything else waits on it
 
+</details>
+
 ---
 
 ## Q23
@@ -809,6 +921,9 @@ Which **two** cause a cherry-pick to `main` to conflict? (Choose two.)
 - C. The hotfix branch was deleted
 - D. `fetch-depth: 0` was not set
 - E. The tag was pushed before the branch
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A, B
 
@@ -830,6 +945,8 @@ moved, what you actually need to move is the **change in behaviour**.
   conflict
 - **E** — push order does not affect merging
 
+</details>
+
 ---
 
 # Section C — Repeated scenario
@@ -846,7 +963,10 @@ unreleased work and without skipping security checks.
 CodeQL, deploy to the staging slot, health-check for 30 seconds, swap to production, then cherry-pick
 to `main`.
 
-Does this meet the goal? **Yes**
+Does this meet the goal?
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: Yes
 
@@ -863,6 +983,8 @@ Every constraint is satisfied:
 
 The cherry-pick is the part that is easy to omit and the reason the bug would otherwise return.
 
+</details>
+
 ---
 
 ## Q25
@@ -870,7 +992,10 @@ The cherry-pick is the part that is easy to omit and the reason the bug would ot
 **Proposed solution:** Branch from `main`, apply the fix, run the full test suite and security scan,
 deploy through rings 0 to 3, then merge to `main`.
 
-Does this meet the goal? **No**
+Does this meet the goal?
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: No
 
@@ -886,6 +1011,8 @@ production.
 The safety is real, and the requirement was **15 minutes**. This is the normal pipeline wearing a
 hotfix label.
 
+</details>
+
 ---
 
 ## Q26
@@ -893,7 +1020,10 @@ hotfix label.
 **Proposed solution:** Branch from `release/2.4.0`, apply the fix, skip all tests and the security
 scan to save time, deploy straight to the production slot, and verify manually afterwards.
 
-Does this meet the goal? **No**
+Does this meet the goal?
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: No
 
@@ -911,6 +1041,8 @@ overwritten — you have no way back at the moment you are most likely to need o
 **The exam pattern:** "skip everything to go faster" is never right. The correct hotfix path is
 **reduced** gates, not **absent** ones.
 
+</details>
+
 ---
 
 # Section D — Yes/No statement grid
@@ -918,6 +1050,16 @@ overwritten — you have no way back at the moment you are most likely to need o
 ---
 
 ## Q27 — hotfix branching
+
+| # | Statement | Answer |
+|---|---|---|
+| 1 | A hotfix branch is created from the release tag |  |
+| 2 | Branching from `main` avoids unreleased changes |  |
+| 3 | The fix must be cherry-picked to `main` afterwards |  |
+| 4 | The hotfix branch is deleted after the cherry-pick |  |
+
+<details>
+<summary>Show answer</summary>
 
 | # | Statement | Answer |
 |---|---|---|
@@ -934,9 +1076,21 @@ precisely why the model avoids it.
 Row 3 is the step teams forget. The hotfix ships from a tag-based branch, so `main` never sees it, and
 the next release quietly reintroduces the bug.
 
+</details>
+
 ---
 
 ## Q28 — expedited pipeline
+
+| # | Statement | Answer |
+|---|---|---|
+| 1 | Integration tests are skipped in the hotfix pipeline |  |
+| 2 | Security scanning is skipped in the hotfix pipeline |  |
+| 3 | The hotfix uses a separate environment with a lighter approval |  |
+| 4 | The hotfix deploys to staging and swaps, rather than straight to production |  |
+
+<details>
+<summary>Show answer</summary>
 
 | # | Statement | Answer |
 |---|---|---|
@@ -954,9 +1108,21 @@ preserves the rollback path.
 Row 3: `production-hotfix` exists so a single on-call lead can approve, where `production` requires
 two reviewers.
 
+</details>
+
 ---
 
 ## Q29 — circuit breaker and rollback
+
+| # | Statement | Answer |
+|---|---|---|
+| 1 | The circuit breaker trips on the first failed health check |  |
+| 2 | Tripping clears traffic routing, restoring 100% to production |  |
+| 3 | Traffic routing must be cleared before the final swap |  |
+| 4 | Swapping twice returns you to the broken version |  |
+
+<details>
+<summary>Show answer</summary>
 
 | # | Statement | Answer |
 |---|---|---|
@@ -973,9 +1139,21 @@ blip aborting a good rollout.
 Row 4 is the limit worth remembering: a swap **exchanges**, so you get exactly **one** free rollback.
 A third swap puts the broken build back into production.
 
+</details>
+
 ---
 
 ## Q30 — dependency ordering
+
+| # | Statement | Answer |
+|---|---|---|
+| 1 | Jobs sharing `dependsOn: BuildCore` run in parallel |  |
+| 2 | A `sleep` is an acceptable substitute for `dependsOn` |  |
+| 3 | `condition: succeeded('DeployBackend')` replaces the implicit `succeeded()` |  |
+| 4 | Frontend must deploy before the backend API |  |
+
+<details>
+<summary>Show answer</summary>
 
 | # | Statement | Answer |
 |---|---|---|
@@ -992,6 +1170,8 @@ Row 4 is the incident from Break & fix Exercise 2: the frontend went out first a
 for two minutes because the API it calls did not exist yet. **Dependencies deploy before their
 consumers** — the same principle as schema before code in Challenge 29.
 
+</details>
+
 ---
 
 # Section E — Drag and drop
@@ -1004,6 +1184,9 @@ Arrange the hotfix lifecycle in order.
 
 **Items:** Cherry-pick the fix to `main` · Create a branch from the release tag · Swap staging to
 production · Tag the hotfix release · Apply the minimal fix · Delete the hotfix branch
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer
 
@@ -1026,6 +1209,8 @@ git branch -d hotfix/payment-over-10k                    # 6
 **Steps 5 and 6 happen *after* production is verified.** Cherry-picking first would delay the fix
 reaching customers, and deleting the branch before the cherry-pick would lose the reference.
 
+</details>
+
 ---
 
 ## Q32
@@ -1034,6 +1219,9 @@ Arrange the progressive rollout with its circuit-breaker checkpoints.
 
 **Items:** Clear routing and swap to 100% · Monitor the canary for 120 seconds · Route 10% to staging
 · Monitor at 50% · Promote to 50%
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer
 
@@ -1049,11 +1237,26 @@ step that clears routing. Exposure only ever increases after the previous level 
 **This is Challenge 25's ring model implemented with slot traffic routing** — and unlike Traffic
 Manager it splits **per request**, so 10% really means 10%.
 
+</details>
+
 ---
 
 ## Q33
 
 Match each recovery mechanism to its situation.
+
+| Mechanism | Use when |
+|---|---|
+| Slot swap back |  |
+| `traffic-routing clear` |  |
+| Container Apps revision weight to stable |  |
+| Forward-fix migration |  |
+| Manual port + PR |  |
+
+**Options:** A **canary** is bad and no swap has happened yet · A **cherry-pick conflicts** because the code moved · The bad release is a **Container Apps revision** · The **database schema** is wrong · The **new release** is bad and the previous build is in staging
+
+<details>
+<summary>Show answer</summary>
 
 | Mechanism | Use when |
 |---|---|
@@ -1070,6 +1273,8 @@ Match each recovery mechanism to its situation.
 domain. Except the last two, which acknowledge the cases where you cannot simply route backwards:
 schema and source history both only move forward.
 
+</details>
+
 ---
 
 ## Q34
@@ -1082,6 +1287,9 @@ Arrange the build jobs into execution waves.
       - job: BuildNotificationService  dependsOn: BuildCore
       - job: BuildFrontend             (no dependsOn)
 ```
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer — two waves
 
@@ -1098,11 +1306,26 @@ starts immediately alongside `BuildCore` — it does not consume the shared pack
 Total duration is the **critical path**: `BuildCore` plus the slower of the two consumers. If the
 frontend takes longer than that whole chain, it becomes the critical path instead.
 
+</details>
+
 ---
 
 ## Q35
 
 Match each symptom to its cause.
+
+| Symptom | Cause |
+|---|---|
+| Hotfix swapped but some customers still see the bug |  |
+| UI errors for 2 minutes after deployment |  |
+| Cherry-pick fails with conflicts |  |
+| Cherry-pick cannot find the commit |  |
+| The next release reintroduces the fixed bug |  |
+
+**Options:** Frontend stage missing `dependsOn` on the backend · Leftover traffic routing sending traffic to staging · `main` diverged; the code was refactored elsewhere · Shallow clone — `fetch-depth: 0` not set · The fix was never cherry-picked to `main`
+
+<details>
+<summary>Show answer</summary>
 
 | Symptom | Cause |
 |---|---|
@@ -1116,6 +1339,8 @@ Match each symptom to its cause.
 
 **The last row is the one that bites weeks later**, long after the incident is closed and nobody
 connects the regression to the hotfix that was never merged back.
+
+</details>
 
 ---
 
@@ -1134,6 +1359,9 @@ git tag -a [BLANK 2] -m "Hotfix: payment amount overflow fix"
 - **BLANK 1:** `release/2.4.0` / `main` / `release/2.3.1` / `develop`
 - **BLANK 2:** `release/2.4.1` / `release/2.5.0` / `hotfix/2.4.0` / `v2.4.0`
 
+<details>
+<summary>Show answer</summary>
+
 ### Answer: `release/2.4.0`, `release/2.4.1`
 
 **In `challenge-30.md`:** lines **40** and **54**.
@@ -1143,6 +1371,8 @@ Branch from the **broken** release, not the last-good one — branching from 2.3
 
 The tag increments the **patch** number: 2.4.0 → 2.4.1. A hotfix is by definition the smallest
 possible change, so semver says patch.
+
+</details>
 
 ---
 
@@ -1159,12 +1389,17 @@ on:
 
 - **BLANK 1:** `hotfix/**` / `hotfix` / `main` / `release/**`
 
+<details>
+<summary>Show answer</summary>
+
 ### Answer: `hotfix/**`
 
 **In `challenge-30.md`:** line **99**.
 
 `**` matches any depth, so `hotfix/payment-over-10k` and `hotfix/team/urgent-fix` both trigger. A bare
 `hotfix` would match only a branch named exactly that.
+
+</details>
 
 ---
 
@@ -1184,6 +1419,9 @@ on:
 - **BLANK 2:** `github/codeql-action/analyze@v3` / `actions/setup-dotnet@v4` /
   `aquasecurity/trivy-action@master` / `azure/login@v2`
 
+<details>
+<summary>Show answer</summary>
+
 ### Answer: `Category=Critical|Category=Payment`, `github/codeql-action/analyze@v3`
 
 **In `challenge-30.md`:** lines **128** and **132**.
@@ -1192,6 +1430,8 @@ on:
 an incident is far too late to start adding traits.
 
 Trivy is real and scans **container images** (Challenge 28). This is a .NET source scan, so CodeQL.
+
+</details>
 
 ---
 
@@ -1209,6 +1449,9 @@ Trivy is real and scans **container images** (Challenge 28). This is a .NET sour
 - **BLANK 1:** `failure()` / `always()` / `success()` / `cancelled()`
 - **BLANK 2:** `clear` / `set --distribution staging=0` / `show` / `delete`
 
+<details>
+<summary>Show answer</summary>
+
 ### Answer: `failure()`, `clear`
 
 **In `challenge-30.md`:** lines **554–559**.
@@ -1217,6 +1460,8 @@ Trivy is real and scans **container images** (Challenge 28). This is a .NET sour
 
 `set --distribution staging=0` would technically stop traffic reaching staging, but `clear` removes
 the rule entirely — which is what prevents the leftover-rule failure in Break & fix Exercise 1.
+
+</details>
 
 ---
 
@@ -1234,12 +1479,17 @@ the rule entirely — which is what prevents the leftover-rule failure in Break 
 - **BLANK 2:** `staging` / `production` / `canary` / `hotfix`
 - **BLANK 3:** `production` / `staging` / `canary` / `default`
 
+<details>
+<summary>Show answer</summary>
+
 ### Answer: `clear`, `staging`, `production`
 
 **In `challenge-30.md`:** lines **587–594**.
 
 **Omitting BLANK 1 is the trap.** After the swap, a surviving routing rule would send traffic to the
 **old** code now sitting in staging — Break & fix Exercise 1 exactly.
+
+</details>
 
 ---
 
@@ -1257,6 +1507,9 @@ Requirement: cherry-pick commits between branches and push the result to `main`.
 - **BLANK 1:** `0` / `1` / `2` / `10`
 - **BLANK 2:** `PAT_TOKEN` / `GITHUB_TOKEN` / `AZURE_CREDENTIALS` / `NPM_TOKEN`
 
+<details>
+<summary>Show answer</summary>
+
 ### Answer: `0`, `PAT_TOKEN`
 
 **In `challenge-30.md`:** lines **644–645**.
@@ -1267,6 +1520,8 @@ default is a shallow depth-1 clone.
 `PAT_TOKEN` is needed because pushes made with `GITHUB_TOKEN` **do not trigger further workflows**,
 and protected-branch pushes typically need a principal with a bypass. In production a **GitHub App**
 installation token is better than a personal PAT — Challenge 40's subject.
+
+</details>
 
 ---
 
@@ -1311,6 +1566,9 @@ Where should the hotfix branch be created from, and why?
 - C. `release/2.3.1` — the last known-good version
 - D. A new branch from the default branch protection ruleset
 
+<details>
+<summary>Show answer</summary>
+
 ### Answer: A
 
 **In `challenge-30.md`:** lines **36–40**.
@@ -1324,6 +1582,8 @@ sometimes right, and a different decision from a hotfix, with different stakehol
 - **B** — ships unreleased work through a pipeline that has skipped integration tests
 - **D** — a branch protection ruleset is a policy, not a source
 
+</details>
+
 ---
 
 ## Q43
@@ -1335,6 +1595,9 @@ Which **two** keep the hotfix under 15 minutes while preserving essential safety
 - C. Skip the security scan
 - D. Deploy directly to the production slot with no staging step
 - E. Skip the health check
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A, B
 
@@ -1352,6 +1615,8 @@ SAST still runs; only the slower dynamic scan is deferred.
 - **E** — the health check is already cut to 30 seconds (line 171). Removing it means swapping a
   build nobody has verified
 
+</details>
+
 ---
 
 ## Q44
@@ -1363,6 +1628,9 @@ Which configuration halts the canary automatically when errors exceed the thresh
 - B. `continue-on-error: true` on the canary step
 - C. An Azure Monitor alert emailing the on-call engineer
 - D. A manual approval gate after the canary
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -1389,6 +1657,8 @@ without acting.
 - **C** — a human in the loop is not *automatic*, and email latency is minutes
 - **D** — a manual gate stops the rollout waiting for a person even when everything is healthy
 
+</details>
+
 ---
 
 ## Q45
@@ -1400,6 +1670,9 @@ Which **two** ensure the frontend never deploys before the API? (Choose two.)
 - C. A 120-second sleep before the frontend deploys
 - D. Deploying both in the same stage
 - E. `condition: always()` on the frontend stage
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A, B
 
@@ -1414,6 +1687,8 @@ Which **two** ensure the frontend never deploys before the API? (Choose two.)
 **The wider principle across this domain:** dependencies deploy before consumers. Shared library
 before services (line 274), schema before code (Challenge 29), API before frontend.
 
+</details>
+
 ---
 
 ## Q46
@@ -1424,6 +1699,9 @@ Which mechanism reverses a bad release in seconds?
 - B. Re-run the pipeline on the previous tag
 - C. Restore the App Service from backup
 - D. Redeploy `release/2.3.1` from source
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -1442,6 +1720,8 @@ az webapp deployment slot swap --slot staging --target-slot production
 **The limit to state:** you get **one** free rollback. Swap again and the broken build returns. After
 using it, redeploy a known-good build into staging so a second rollback remains available.
 
+</details>
+
 ---
 
 ## Q47
@@ -1455,6 +1735,9 @@ What went wrong?
 - B. The hotfix tag was deleted
 - C. The staging slot was not cleared
 - D. The circuit breaker suppressed the error
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -1478,6 +1761,8 @@ PR when it cannot apply cleanly.
 - **C** — a slot issue affects the current deployment, not a future release
 - **D** — the breaker halts rollouts; it does not hide code
 
+</details>
+
 ---
 
 ## Q48
@@ -1491,6 +1776,9 @@ What is the most likely cause, and what should Contoso change?
 - B. The circuit breaker tripped
 - C. `fetch-depth` was not set
 - D. The security scan failed silently
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -1519,6 +1807,8 @@ A named individual is a single point of failure in the one process designed for 
 **The wider lesson:** an emergency process must be tested when there is no emergency. An approval
 nobody can grant, an on-call rota nobody updated, a test category nobody applied — all of them look
 fine until the day they matter.
+
+</details>
 
 ---
 ---

@@ -1,6 +1,8 @@
 ---
-sidebar_position: 91
+sidebar_position: 1.5
+toc_max_heading_level: 2
 title: "Challenge 39: exam questions"
+sidebar_label: "Exam questions (48 Q)"
 ---
 
 # Challenge 39 — AZ-400 exam questions
@@ -51,6 +53,9 @@ Which method should you use?
 - C. A system-assigned managed identity on the runner
 - D. A user-assigned managed identity
 
+<details>
+<summary>Show answer</summary>
+
 ### Answer: B
 
 **In `challenge-39.md`:** the decision table at lines **212–220**, with the implementation at
@@ -72,6 +77,8 @@ consequence: a shared secret in a plain-text pipeline variable, unrotated for 14
 **The phrase that selects WIF on the exam:** *"without storing a secret"*, *"secretless"*, *"eliminate
 credential rotation"*.
 
+</details>
+
 ---
 
 ## Q2
@@ -84,6 +91,9 @@ Which method?
 - B. A managed identity assigned to the VM
 - C. A service principal with a certificate
 - D. A shared access signature
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: B
 
@@ -104,6 +114,8 @@ and cannot be simpler than the identity the VM already has.
 **Why the others fail** — C stores a certificate (still a credential to manage and rotate), D is a
 storage-specific token with no relationship to Key Vault.
 
+</details>
+
 ---
 
 ## Q3
@@ -116,6 +128,9 @@ What is the cause?
 - B. The service principal has no role assignment
 - C. `id-token: write` is missing
 - D. The client secret expired
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -142,6 +157,8 @@ per subject.
   a token-request error
 - **D** — federated credentials have no secret to expire. That is the point
 
+</details>
+
 ---
 
 ## Q4
@@ -153,6 +170,9 @@ What is the correct federated credential **subject** for a GitHub Actions workfl
 - B. `repo:contoso/webapp:branch:main`
 - C. `contoso/webapp:main`
 - D. `repo:contoso/webapp:ref:main`
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -175,6 +195,8 @@ What is the correct federated credential **subject** for a GitHub Actions workfl
 `github.ref`. That consistency is the memory hook: the subject contains what the workflow context
 already reports.
 
+</details>
+
 ---
 
 ## Q5
@@ -185,6 +207,9 @@ Which subject restricts authentication to jobs that declare `environment: produc
 - B. `repo:contoso/webapp:ref:refs/heads/production`
 - C. `repo:contoso/webapp:env:production`
 - D. `environment:production`
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -204,6 +229,8 @@ approved".
 **Why the others fail** — B is a branch literally named `production`, C uses the wrong keyword,
 D omits the repository so it identifies nothing.
 
+</details>
+
 ---
 
 ## Q6
@@ -214,6 +241,9 @@ Which issuer URL does **Azure DevOps** use for workload identity federation?
 - B. `https://token.actions.githubusercontent.com`
 - C. `https://login.microsoftonline.com/<tenant-id>`
 - D. `https://dev.azure.com/<org>`
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -238,6 +268,8 @@ own pipeline permissions and approvals.
 **Why the others fail** — B is GitHub's, C is the Entra token endpoint (not an issuer for this),
 D is the organisation URL.
 
+</details>
+
 ---
 
 ## Q7
@@ -248,6 +280,9 @@ Which permission must a GitHub Actions job declare to request an OIDC token?
 - B. `contents: write`
 - C. `actions: write`
 - D. `deployments: write`
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -269,6 +304,8 @@ ability to have a token **minted**, not to modify anything.
 **And `permissions:` is restrictive:** the moment you declare the block, everything not listed is set
 to `none`. That is why `contents: read` appears alongside it — without it, checkout fails.
 
+</details>
+
 ---
 
 ## Q8
@@ -279,6 +316,9 @@ Which **three** values does `azure/login@v2` need for OIDC?
 - B. `client-id`, `client-secret`, `tenant-id`
 - C. `creds` JSON only
 - D. `username`, `password`, `tenant`
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -302,6 +342,8 @@ from a legacy one at a glance.
 **Why the others fail** — B and D supply a password; C is the `AZURE_CREDENTIALS` service principal
 JSON, the pattern being migrated away from.
 
+</details>
+
 ---
 
 ## Q9
@@ -314,6 +356,9 @@ What is missing?
 - B. A federated credential
 - C. `id-token: write`
 - D. A client secret
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -342,6 +387,8 @@ The same distinction as Challenge 27's App Configuration Data Reader and Challen
 | `AADSTS70021` | Authentication — no federated credential matches |
 | `AuthorizationFailed` | Authorisation — authenticated, but no role |
 
+</details>
+
 ---
 
 ## Q10
@@ -353,6 +400,9 @@ Why does `az role assignment create` for a managed identity use `--assignee-obje
 - B. Because managed identities have no client ID
 - C. Because object IDs are shorter
 - D. It is required for all role assignments
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -375,6 +425,8 @@ Passing the object ID and the type skips the lookup entirely, which makes script
 **Why the others fail** — B is false (line 75 fetches `clientId`), C is irrelevant, D is false since
 `--assignee` works for interactive use.
 
+</details>
+
 ---
 
 ## Q11
@@ -385,6 +437,9 @@ A managed identity has both a **principal ID** and a **client ID**. What is each
 - B. Both are interchangeable
 - C. Principal ID for authentication; client ID for billing
 - D. Client ID for role assignments; principal ID for the resource
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -407,6 +462,8 @@ A system-assigned identity needs no such hint, because there is only one.
 **Mixing them up gives a confusing failure:** using the client ID in a role assignment either errors or
 silently assigns to the wrong object.
 
+</details>
+
 ---
 
 ## Q12
@@ -420,6 +477,9 @@ Which should they use?
 - B. A system-assigned managed identity
 - C. A service principal with a secret
 - D. Workload identity federation
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -442,6 +502,8 @@ outlive the compute — which is what makes it right for infrastructure that is 
 
 **Why the others fail** — B is per-resource, C stores a secret, D is for external workloads.
 
+</details>
+
 ---
 
 ## Q13
@@ -452,6 +514,9 @@ Which statement about federated credential subjects is correct?
 - B. `refs/tags/v*` matches all v-prefixed tags
 - C. One credential covers all branches automatically
 - D. Subjects are case-insensitive and flexible
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -472,6 +537,8 @@ production, whatever tag triggered it — and it inherits the environment's appr
 **Note:** Entra has since added limited wildcard support in preview for some subject patterns. The
 challenge — and the exam — treat subjects as exact matches, which is the safe answer.
 
+</details>
+
 ---
 
 ## Q14
@@ -482,6 +549,9 @@ Which subject allows pull request workflows to authenticate?
 - B. `repo:contoso/webapp:ref:refs/pull/*`
 - C. `repo:contoso/webapp:pr`
 - D. `repo:contoso/webapp:environment:pr`
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -501,6 +571,8 @@ throwaway resource group — rather than the same Contributor role your deployme
 
 **Why the others fail** — B assumes wildcards, C and D use invalid keywords.
 
+</details>
+
 ---
 
 ## Q15
@@ -511,6 +583,9 @@ Which audience value do Azure federated credentials use?
 - B. `https://management.azure.com`
 - C. `https://token.actions.githubusercontent.com`
 - D. `azure-cli`
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -530,6 +605,8 @@ some other service that trusts the same issuer.
 
 **Why the others fail** — B is the ARM resource identifier, C is the **issuer**, D is a client ID.
 
+</details>
+
 ---
 
 ## Q16
@@ -540,6 +617,9 @@ A service principal secret was created with `--years 1`. What happens after a ye
 - B. It renews automatically
 - C. The service principal is deleted
 - D. Role assignments are removed
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -563,6 +643,8 @@ unpredictable moment breaks deployments during an incident, and the failure — 
 
 **Neither MI nor WIF has this failure mode**, which is the strongest practical argument for migrating.
 
+</details>
+
 ---
 
 # Section B — Multiple answer
@@ -579,6 +661,9 @@ Which **three** are true about workload identity federation? (Choose three.)
 - D. It works on any Azure VM without configuration
 - E. It requires a client secret with a 1-year expiry
 - F. It replaces RBAC role assignments
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A, B, C
 
@@ -599,6 +684,8 @@ Which **three** are true about workload identity federation? (Choose three.)
   RBAC role assignment (line 125), and forgetting it produces `AuthorizationFailed` after a
   perfectly successful login
 
+</details>
+
 ---
 
 ## Q18
@@ -611,6 +698,9 @@ Which **two** describe managed identity's limitations? (Choose two.)
 - D. It cannot be granted RBAC roles
 - E. It cannot be used with Key Vault
 
+<details>
+<summary>Show answer</summary>
+
 ### Answer: A, B
 
 **In `challenge-39.md`:** line **216** and lines **60–66**.
@@ -622,6 +712,8 @@ runner cannot use MI; an Azure VM should.
 every role assignment with it. A user-assigned identity is its own resource and survives.
 
 **Why the others fail** — C is what MI **eliminates**, D and E are exactly what it is for.
+
+</details>
 
 ---
 
@@ -636,6 +728,9 @@ three.)
 - D. A client secret
 - E. A managed identity on the runner
 - F. A stored `AZURE_CREDENTIALS` JSON
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A, B, C
 
@@ -663,6 +758,8 @@ receives role assignments.
 
 **Why D, E and F fail** — all three are the patterns WIF replaces.
 
+</details>
+
 ---
 
 ## Q20
@@ -674,6 +771,9 @@ Which **two** subject formats are valid for GitHub Actions federated credentials
 - C. `repo:contoso/webapp:branch:main`
 - D. `github:contoso/webapp:main`
 - E. `repo:contoso/webapp:*`
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A, B
 
@@ -688,6 +788,8 @@ Which **two** subject formats are valid for GitHub Actions federated credentials
 **The memory hook:** the subject mirrors what the workflow already knows about itself. `github.ref`
 gives `refs/heads/main`; the subject embeds that exact string.
 
+</details>
+
 ---
 
 ## Q21
@@ -699,6 +801,9 @@ Which **two** problems in Contoso's scenario does workload identity federation s
 - C. Three teams with Contributor on the entire production subscription
 - D. Forty microservices deployed across two platforms
 - E. Pipelines running on self-hosted agents
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A, B
 
@@ -715,6 +820,8 @@ findings for exactly this reason.
 
 **Why D and E fail** — D is scale, E is where agents run.
 
+</details>
+
 ---
 
 ## Q22
@@ -726,6 +833,9 @@ Which **two** distinguish system-assigned from user-assigned managed identity? (
 - C. System-assigned can be shared by multiple resources
 - D. User-assigned requires a client secret
 - E. System-assigned survives resource deletion
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A, B
 
@@ -740,6 +850,8 @@ simpler choice for a long-lived resource with one purpose.
 
 **Why the others fail** — C and E invert A, D is false for both kinds.
 
+</details>
+
 ---
 
 ## Q23
@@ -752,6 +864,9 @@ two.)
 - C. `AADSTS70021` — authorisation
 - D. `AuthorizationFailed` — expired secret
 - E. Both mean the role assignment is missing
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A, B
 
@@ -770,6 +885,8 @@ authentication chain worked. Only the permission is missing.
 **Why the others fail** — C inverts the meaning, D describes a different symptom, E is true for only
 one of them.
 
+</details>
+
 ---
 
 # Section C — Repeated scenario
@@ -787,7 +904,10 @@ with issuer `https://token.actions.githubusercontent.com` and subject
 `repo:contoso/webapp:environment:production`, assign Contributor scoped to the resource group, and run
 the workflow with `permissions: id-token: write` and a job declaring `environment: production`.
 
-Does this meet the goal? **Yes**
+Does this meet the goal?
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: Yes
 
@@ -804,6 +924,8 @@ Does this meet the goal? **Yes**
 that does **not** declare `environment: production` produces a different subject and gets
 `AADSTS70021` — the restriction is enforced by Azure, not by convention.
 
+</details>
+
 ---
 
 ## Q25
@@ -812,7 +934,10 @@ that does **not** declare `environment: production` produces a different subject
 secret as a repository secret, assign Contributor at the subscription scope, and use
 `azure/login@v2` with `creds`.
 
-Does this meet the goal? **No**
+Does this meet the goal?
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: No
 
@@ -829,6 +954,8 @@ teams already did this.
 
 **It works**, which is why it persists. Every requirement is about what happens when it goes wrong.
 
+</details>
+
 ---
 
 ## Q26
@@ -837,7 +964,10 @@ teams already did this.
 with the correct issuer and subject `repo:contoso/webapp:environment:production`, run the workflow with
 `permissions: id-token: write` and `environment: production` — but do not assign any RBAC role.
 
-Does this meet the goal? **No**
+Does this meet the goal?
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: No
 
@@ -860,6 +990,8 @@ az role assignment create \
 **Federation is authentication. RBAC is authorisation.** Two configurations, two failure modes, two
 different error messages — and this is the pairing the exam tests most often in Domain 4.
 
+</details>
+
 ---
 
 # Section D — Yes/No statement grid
@@ -867,6 +999,16 @@ different error messages — and this is the pairing the exam tests most often i
 ---
 
 ## Q27 — the three methods
+
+| # | Statement | Answer |
+|---|---|---|
+| 1 | Managed identity works from a GitHub-hosted runner |  |
+| 2 | Workload identity federation stores no secret |  |
+| 3 | A service principal secret requires rotation |  |
+| 4 | Managed identity requires rotation |  |
+
+<details>
+<summary>Show answer</summary>
 
 | # | Statement | Answer |
 |---|---|---|
@@ -885,9 +1027,21 @@ right.
 Rows 3 and 4 together are the operational argument: one method has an expiry date that will break a
 deployment at an unpredictable moment, and two do not.
 
+</details>
+
 ---
 
 ## Q28 — federated credentials
+
+| # | Statement | Answer |
+|---|---|---|
+| 1 | The subject must match the token's claim exactly |  |
+| 2 | Wildcards can match multiple tags |  |
+| 3 | The audience is always `api://AzureADTokenExchange` |  |
+| 4 | One credential covers every branch in the repository |  |
+
+<details>
+<summary>Show answer</summary>
 
 | # | Statement | Answer |
 |---|---|---|
@@ -905,9 +1059,21 @@ hold several.
 Row 3 is the constant amid two variables — issuer changes per platform, subject changes per scope,
 audience never changes.
 
+</details>
+
 ---
 
 ## Q29 — managed identity
+
+| # | Statement | Answer |
+|---|---|---|
+| 1 | Creating an identity grants it permissions |  |
+| 2 | Principal ID is used for role assignments |  |
+| 3 | Client ID tells an application which identity to use |  |
+| 4 | A user-assigned identity survives deletion of a resource using it |  |
+
+<details>
+<summary>Show answer</summary>
 
 | # | Statement | Answer |
 |---|---|---|
@@ -924,9 +1090,21 @@ services, one lesson.
 
 Row 3 matters when a resource carries several user-assigned identities — the code must name one.
 
+</details>
+
 ---
 
 ## Q30 — errors and diagnosis
+
+| # | Statement | Answer |
+|---|---|---|
+| 1 | `AADSTS70021` means the federated credential subject did not match |  |
+| 2 | `AuthorizationFailed` means authentication succeeded |  |
+| 3 | A missing `id-token: write` produces `AADSTS70021` |  |
+| 4 | `az ad app federated-credential list` shows configured subjects |  |
+
+<details>
+<summary>Show answer</summary>
 
 | # | Statement | Answer |
 |---|---|---|
@@ -944,6 +1122,8 @@ ever asked to match a subject. Three failures, three different messages, three d
 Row 4 is the first diagnostic command to reach for: list the subjects and compare them against what
 the workflow actually is.
 
+</details>
+
 ---
 
 # Section E — Drag and drop
@@ -953,6 +1133,20 @@ the workflow actually is.
 ## Q31
 
 Match each requirement to the correct authentication method.
+
+| Requirement | Method |
+|---|---|
+| GitHub Actions deploying to Azure, no stored secret |  |
+| An Azure VM reading from Key Vault |  |
+| An on-premises build agent outside Azure |  |
+| One identity shared by several Azure resources |  |
+| Azure Pipelines service connection, no secret |  |
+| A legacy script that cannot use OIDC |  |
+
+**Options:** Managed identity · Service principal + secret · User-assigned managed identity · Workload identity federation
+
+<details>
+<summary>Show answer</summary>
 
 | Requirement | Method |
 |---|---|
@@ -971,11 +1165,26 @@ Match each requirement to the correct authentication method.
 - On a platform with a trusted OIDC issuer (GitHub, Azure DevOps) → **WIF**
 - Anywhere else → **service principal**, accepting the secret and its rotation
 
+</details>
+
 ---
 
 ## Q32
 
 Match each federated credential subject to what it authorises.
+
+| Subject | Authorises |
+|---|---|
+| `repo:contoso/webapp:ref:refs/heads/main` |  |
+| `repo:contoso/webapp:ref:refs/tags/v1.0.0` |  |
+| `repo:contoso/webapp:environment:production` |  |
+| `repo:contoso/webapp:pull_request` |  |
+| `sc://contoso-org/contoso-project/azure-production` |  |
+
+**Options:** An **Azure DevOps service connection** · **Any pull request** — including forks · Jobs declaring the **production environment** · That **one specific tag** · Workflows on the **main branch**
+
+<details>
+<summary>Show answer</summary>
 
 | Subject | Authorises |
 |---|---|
@@ -993,6 +1202,8 @@ the branch, then `pull_request` — which anyone who can open a PR can trigger.
 **The service connection subject is the Azure DevOps equivalent of the environment one:** it names the
 protected object rather than the code.
 
+</details>
+
 ---
 
 ## Q33
@@ -1001,6 +1212,9 @@ Arrange the steps to configure workload identity federation for GitHub Actions.
 
 **Items:** Assign an RBAC role to the service principal · Create the app registration · Add the
 federated credential · Create the service principal · Add `id-token: write` to the workflow
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer
 
@@ -1023,11 +1237,23 @@ they may do**. Skip 3 and you get `AADSTS70021`; skip 4 and you get `Authorizati
 **Note the two different IDs:** the federated credential uses `$OBJECT_ID` (the app registration's
 object), the role assignment uses `$APP_ID` (the application ID).
 
+</details>
+
 ---
 
 ## Q34
 
 Match each error to its cause and fix.
+
+| Error | Cause | Fix |
+|---|---|---|
+| `AADSTS70021` |  |  |
+| `AuthorizationFailed` |  |  |
+| Token request failed |  |  |
+| Authentication fails after ~1 year |  |  |
+
+<details>
+<summary>Show answer</summary>
 
 | Error | Cause | Fix |
 |---|---|---|
@@ -1041,11 +1267,26 @@ Match each error to its cause and fix.
 **Diagnose by stage.** Could it get a token? Did Azure recognise it? Was it allowed to act? Each
 question has one failure mode and one fix, and the error message tells you which.
 
+</details>
+
 ---
 
 ## Q35
 
 Match each risk to the method that mitigates it.
+
+| Risk | Mitigation |
+|---|---|
+| A leaked credential used from anywhere |  |
+| A credential expiring and breaking deployments |  |
+| An identity disappearing when a VM is rebuilt |  |
+| Over-broad access after a compromise |  |
+| A shared secret visible to all contributors |  |
+
+**Options:** MI or WIF — no expiry · RBAC scoped to a resource group · User-assigned managed identity · WIF — no secret exists · WIF — token bound to repo, branch or environment
+
+<details>
+<summary>Show answer</summary>
 
 | Risk | Mitigation |
 |---|---|
@@ -1060,6 +1301,8 @@ Match each risk to the method that mitigates it.
 **The last two rows are the audit findings from the scenario**, and they need different fixes: WIF
 removes the secret, and scoping fixes the permissions. Doing only one leaves half the finding open —
 the trap in Q21.
+
+</details>
 
 ---
 
@@ -1090,6 +1333,9 @@ Requirement: allow GitHub Actions workflows on the `main` branch of `contoso/web
 - **BLANK 3:** `api://AzureADTokenExchange` / `https://management.azure.com` / `azure-cli` /
   `https://token.actions.githubusercontent.com`
 
+<details>
+<summary>Show answer</summary>
+
 ### Answer: `https://token.actions.githubusercontent.com`, `repo:contoso/webapp:ref:refs/heads/main`,
 `api://AzureADTokenExchange`
 
@@ -1097,6 +1343,8 @@ Requirement: allow GitHub Actions workflows on the `main` branch of `contoso/web
 
 **Three fields, three rules:** issuer identifies the **platform**, subject identifies the **exact
 workload**, audience is **always** `api://AzureADTokenExchange`.
+
+</details>
 
 ---
 
@@ -1122,6 +1370,9 @@ jobs:
 - **BLANK 2:** `production` / `staging` / `default` / *(omit)*
 - **BLANK 3:** `subscription-id` / `client-secret` / `creds` / `resource-group`
 
+<details>
+<summary>Show answer</summary>
+
 ### Answer: `id-token`, `production`, `subscription-id`
 
 **In `challenge-39.md`:** lines **141**, **147**, **156**.
@@ -1131,6 +1382,8 @@ jobs:
 and the login fails with `AADSTS70021`. The credential and the workflow must agree.
 
 **The absence of `client-secret` is the tell** that this is OIDC.
+
+</details>
 
 ---
 
@@ -1150,6 +1403,9 @@ Requirement: let a managed identity read and write blobs, with least privilege.
 - **BLANK 2:** `ServicePrincipal` / `User` / `Group` / `ManagedIdentity`
 - **BLANK 3:** `Storage Blob Data Contributor` / `Contributor` / `Owner` / `Reader`
 
+<details>
+<summary>Show answer</summary>
+
 ### Answer: `assignee-object-id`, `ServicePrincipal`, `Storage Blob Data Contributor`
 
 **In `challenge-39.md`:** lines **303–307**.
@@ -1159,6 +1415,8 @@ Requirement: let a managed identity read and write blobs, with least privilege.
 type; managed identities are service principals in the directory.
 
 And `Contributor` is control-plane: it can delete the storage account and **cannot read a blob**.
+
+</details>
 
 ---
 
@@ -1180,6 +1438,9 @@ az ad app federated-credential create --id $OBJECT_ID --parameters '{
   `repo:contoso/webapp:ref:refs/heads/main` / `pipeline:contoso-project` /
   `contoso-org/azure-production`
 
+<details>
+<summary>Show answer</summary>
+
 ### Answer: `https://vstoken.dev.azure.com/<org-id>`, `sc://contoso-org/contoso-project/azure-production`
 
 **In `challenge-39.md`:** lines **173–174**.
@@ -1187,6 +1448,8 @@ az ad app federated-credential create --id $OBJECT_ID --parameters '{
 `sc://` = **service connection**, then organisation, project and connection name. Azure DevOps binds
 the credential to the **connection** rather than to a branch, because the connection is the object that
 carries pipeline permissions and approvals.
+
+</details>
 
 ---
 
@@ -1203,12 +1466,17 @@ IDENTITY_[BLANK 3]=$(az identity show ... --query clientId -o tsv)    # for the 
 - **BLANK 2:** `principalId` / `clientId` / `id` / `tenantId`
 - **BLANK 3:** `CLIENT_ID` / `PRINCIPAL_ID` / `APP_ID` / `SECRET`
 
+<details>
+<summary>Show answer</summary>
+
 ### Answer: `PRINCIPAL_ID`, `principalId`, `CLIENT_ID`
 
 **In `challenge-39.md`:** lines **70–78**.
 
 **Principal ID (object ID) → RBAC. Client ID (application ID) → the application says which identity to
 use.** Swapping them either errors or silently assigns a role to the wrong object.
+
+</details>
 
 ---
 
@@ -1230,6 +1498,9 @@ Requirement: least privilege, and the shortest practical credential lifetime.
   `/` / `/providers/Microsoft.Management/managementGroups/contoso`
 - **BLANK 3:** `1` / `2` / `5` / `99`
 
+<details>
+<summary>Show answer</summary>
+
 ### Answer: `Contributor`, the **resource group** scope, `1`
 
 **In `challenge-39.md`:** lines **40–42**.
@@ -1239,6 +1510,8 @@ teams did exactly that. Scoping to a resource group limits what a leaked secret 
 
 **And a shorter expiry is a feature**, not an inconvenience: it forces rotation to be a practised
 routine rather than a 14-month-old memory.
+
+</details>
 
 ---
 
@@ -1285,6 +1558,9 @@ Which method should the GitHub Actions workflows use?
 - C. A user-assigned managed identity on the runners
 - D. A certificate-based service principal
 
+<details>
+<summary>Show answer</summary>
+
 ### Answer: A
 
 **In `challenge-39.md`:** lines **103–128** and the decision table at **216**.
@@ -1297,6 +1573,8 @@ Which method should the GitHub Actions workflows use?
   resources and have no identity endpoint. Managed identity cannot work there
 - **D** — a certificate is still a credential with an expiry and a rotation burden
 
+</details>
+
 ---
 
 ## Q43
@@ -1307,6 +1585,9 @@ Which method should the Azure Pipelines service connections use?
 - B. A service principal with a secret in the connection
 - C. A managed identity on the Microsoft-hosted agent
 - D. A PAT stored in a variable group
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -1324,6 +1605,8 @@ one service connection — which in turn carries its own pipeline permissions an
 your Azure resource. On a **self-hosted** agent running in an Azure VM, managed identity would work —
 that nuance is exactly what the exam uses to make the wrong answer plausible.
 
+</details>
+
 ---
 
 ## Q44
@@ -1334,6 +1617,9 @@ Which method should Azure-hosted applications use for Key Vault access?
 - B. Workload identity federation
 - C. The shared service principal
 - D. A connection string with a Key Vault access key
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -1350,6 +1636,8 @@ Which method should Azure-hosted applications use for Key Vault access?
 **And note the role must be data-plane** — Key Vault Secrets User, not Contributor. Contributor can
 delete the vault and cannot read a secret from it (Q9).
 
+</details>
+
 ---
 
 ## Q45
@@ -1361,6 +1649,9 @@ Which **two** meet the least-privilege requirements? (Choose two.)
 - C. Contributor at subscription scope for each team
 - D. Owner scoped to the resource group
 - E. A single shared identity for all 40 services
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A, B
 
@@ -1377,6 +1668,8 @@ answer both halves of the requirement.
 - **E** — one identity for 40 services means one compromise reaches all of them, and the audit trail
   cannot attribute actions to a service
 
+</details>
+
 ---
 
 ## Q46
@@ -1387,6 +1680,9 @@ Which method meets "one identity shared across several resources, surviving thei
 - B. A system-assigned managed identity
 - C. Workload identity federation
 - D. A service principal with a secret
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -1399,6 +1695,8 @@ resource and is deleted with it, taking its role assignments along.
 redeploy created a new principal, every role assignment would need recreating — and the deployment
 that recreates them needs permission to assign roles, which is a much larger grant than the workload
 itself needs.
+
+</details>
 
 ---
 
@@ -1415,6 +1713,9 @@ What happened, and what is the fix?
 - B. The client secret expired
 - C. The role assignment was removed
 - D. `id-token: write` was removed
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -1439,6 +1740,8 @@ add it **before** the rename and remove the old one afterwards, avoiding any win
 - **C** — a missing role gives `AuthorizationFailed`, and the login itself would succeed
 - **D** — a missing permission fails at the token-request stage with a different error
 
+</details>
+
 ---
 
 ## Q48
@@ -1453,6 +1756,9 @@ What can Contoso produce, and what does this illustrate?
 - B. Nothing; sign-ins are not logged for federated identities
 - C. The pipeline log only
 - D. The client secret's usage history
+
+<details>
+<summary>Show answer</summary>
 
 ### Answer: A
 
@@ -1474,6 +1780,8 @@ the secret out of a plain-text variable — which is exactly the situation at li
 **What it illustrates:** the security benefit of WIF is not only that no secret exists. It is that
 **every authentication is attributable to a specific, approved workload**. That is the argument to make
 when someone asks why migrating was worth the effort.
+
+</details>
 
 ---
 ---
