@@ -13,7 +13,7 @@ const config = {
   },
   themes: ['@docusaurus/theme-mermaid'],
 
-  url: 'https://rewyekha.github.io',
+  url: 'https://reyaskhan.me',
   baseUrl: '/azurecertprep.github.io/',
 
   organizationName: 'rewyekha',
