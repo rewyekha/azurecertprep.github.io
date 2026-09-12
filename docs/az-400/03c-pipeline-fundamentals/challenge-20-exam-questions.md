@@ -45,14 +45,14 @@ A pipeline sets an output variable in the `Build` stage and must read it in the 
 Which expression correctly reads it?
 
 - A. `$(stageDependencies.Build.BuildJob.outputs['setVersion.buildVersion'])`
-- B. `$[ stageDependencies.Build.BuildJob.outputs['setVersion.buildVersion'] ]`
-- C. `${{ stageDependencies.Build.BuildJob.outputs['setVersion.buildVersion'] }}`
-- D. `$(Build.BuildJob.setVersion.buildVersion)`
+- B. `${{ stageDependencies.Build.BuildJob.outputs['setVersion.buildVersion'] }}`
+- C. `$(Build.BuildJob.setVersion.buildVersion)`
+- D. `$[ stageDependencies.Build.BuildJob.outputs['setVersion.buildVersion'] ]`
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: B
+### Answer: D
 
 **In `challenge-20.md`:** lines **636–647** (Break & fix Exercise 2 solution).
 
@@ -79,9 +79,9 @@ Which expression correctly reads it?
 
 - **A** — `$( )` is **macro** syntax. It substitutes a variable's value just before a task runs. It
   cannot evaluate a `stageDependencies` expression
-- **C** — `${{ }}` is **compile time**. The pipeline YAML is expanded before the run starts, so the
+- **B** — `${{ }}` is **compile time**. The pipeline YAML is expanded before the run starts, so the
   Build stage has not executed and the output does not exist yet. You get an empty value
-- **D** — not valid syntax. There is no such shorthand
+- **C** — not valid syntax. There is no such shorthand
 
 **Term:** *runtime expression*. `$[ ]` is the only one that can read another stage's output.
 
@@ -93,15 +93,15 @@ Which expression correctly reads it?
 
 What is the difference between `${{ }}` and `$[ ]` in Azure Pipelines?
 
-- A. `${{ }}` is for templates and `$[ ]` is for variables
-- B. `${{ }}` is evaluated at compile time and `$[ ]` is evaluated at runtime
-- C. `${{ }}` is for YAML pipelines and `$[ ]` is for classic pipelines
+- A. `${{ }}` is compile time and `$[ ]` is runtime
+- B. `${{ }}` is for templates and `$[ ]` is for variables
+- C. `${{ }}` is for YAML and `$[ ]` is for classic pipelines
 - D. There is no difference; they are interchangeable
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: B
+### Answer: A
 
 **In `challenge-20.md`:** `${{ }}` at lines **333–357** and **410**; `$[ ]` at line **643**.
 
@@ -125,7 +125,7 @@ What is the difference between `${{ }}` and `$[ ]` in Azure Pipelines?
 
 **Why the others fail**
 
-- **A** — half true and therefore wrong. `${{ }}` is used far beyond templates, and `$[ ]` appears in
+- **B** — half true and therefore wrong. `${{ }}` is used far beyond templates, and `$[ ]` appears in
   `variables:` and `condition:`, not "variables" generally
 - **C** — classic pipelines are not YAML at all. Neither syntax belongs to them
 - **D** — the whole point is that they differ in *when* they run
@@ -143,14 +143,14 @@ The `AzureKeyVault@2` task fetches a secret named `SqlConnectionString`. How do 
 it?
 
 - A. `$(keyVault.SqlConnectionString)`
-- B. `$(SqlConnectionString)`
-- C. `${{ variables.SqlConnectionString }}`
+- B. `${{ variables.SqlConnectionString }}`
+- C. `$(SqlConnectionString)`
 - D. `$(secrets.SqlConnectionString)`
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: B
+### Answer: C
 
 **In `challenge-20.md`:** the task at lines **184–190**, consumed at line **201**.
 
@@ -175,7 +175,7 @@ no namespace.
 
 - **A** and **D** — there is no `keyVault.` or `secrets.` namespace in Azure Pipelines. That
   `secrets.` shape is GitHub Actions syntax leaking in, which is exactly why the exam offers it
-- **C** — `${{ }}` is compile time. The secret is fetched during the run, so it does not exist yet
+- **B** — `${{ }}` is compile time. The secret is fetched during the run, so it does not exist yet
 
 **Term:** *secrets become variables of the same name.* Also note they are **masked** in logs.
 
@@ -188,14 +188,14 @@ no namespace.
 Which Azure Pipelines construct is required for a job to use an environment with approvals?
 
 - A. `job:` with a `condition` referencing the environment
-- B. `deployment:` with an `environment` property
-- C. `stage:` with a `dependsOn` on the environment
-- D. `job:` with a `pool` scoped to the environment
+- B. `stage:` with a `dependsOn` on the environment
+- C. `job:` with a `pool` scoped to the environment
+- D. `deployment:` with an `environment` property
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: B
+### Answer: D
 
 **In `challenge-20.md`:** lines **177–183**.
 
@@ -215,8 +215,8 @@ approvals and checks, and it requires a `strategy`.
 **Why the others fail**
 
 - **A** — a regular `job` has no `environment` property at all. A condition cannot create one
-- **C** — `dependsOn` orders stages. Environments are not stages
-- **D** — `pool` selects an agent. Nothing to do with approvals
+- **B** — `dependsOn` orders stages. Environments are not stages
+- **C** — `pool` selects an agent. Nothing to do with approvals
 
 **Term:** *deployment job*. Regular job = do work. Deployment job = record a deployment against an
 environment.
@@ -229,15 +229,15 @@ environment.
 
 Which strategy keyword is required inside a `deployment` job in Challenge 20's pipeline?
 
-- A. `matrix`
-- B. `runOnce`
+- A. `runOnce`
+- B. `matrix`
 - C. `parallel`
 - D. `maxParallel`
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: B
+### Answer: A
 
 **In `challenge-20.md`:** lines **180–183**.
 
@@ -253,7 +253,7 @@ Which strategy keyword is required inside a `deployment` job in Challenge 20's p
 
 **Why the others fail**
 
-- **A** — `matrix` is a strategy for **regular** jobs, not deployment jobs
+- **B** — `matrix` is a strategy for **regular** jobs, not deployment jobs
 - **C** — `parallel` is a real deployment strategy but only for **VM resources** in an environment,
   not for this App Service deployment
 - **D** — `maxParallel` is a setting inside a matrix, not a strategy
@@ -270,14 +270,14 @@ Challenge 25.
 Where is a build artifact available to a later stage?
 
 - A. `$(Build.ArtifactStagingDirectory)`
-- B. `$(Pipeline.Workspace)`
-- C. `$(System.DefaultWorkingDirectory)`
+- B. `$(System.DefaultWorkingDirectory)`
+- C. `$(Pipeline.Workspace)`
 - D. `$(Agent.TempDirectory)`
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: B
+### Answer: C
 
 **In `challenge-20.md`:** published from `$(Build.ArtifactStagingDirectory)` at line **126**,
 consumed from `$(Pipeline.Workspace)` at line **199**.
@@ -299,7 +299,7 @@ A deployment job **downloads artifacts automatically** into `$(Pipeline.Workspac
 
 - **A** — the staging directory is where you **put** files before publishing, on the *building*
   agent. A later stage runs on a different agent where that folder is empty
-- **C** — the source checkout directory. Deployment jobs do not check out source by default
+- **B** — the source checkout directory. Deployment jobs do not check out source by default
 - **D** — scratch space for the current job, used at line 154 for test results. Not shared
 
 **Term:** *publish from the staging directory, consume from the pipeline workspace.*
@@ -317,7 +317,7 @@ Which condition is correct?
 - A. `condition: eq(variables['Build.SourceBranch'], 'main')`
 - B. `condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))`
 - C. `condition: succeeded() && variables.Build.SourceBranch == 'main'`
-- D. `condition: ${{ eq(variables['Build.SourceBranch'], 'refs/heads/main') }}`
+- D. `condition: ${{ and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main')) }}`
 
 <details>
 <summary>Show answer</summary>
@@ -356,14 +356,14 @@ A pipeline must publish test results even when tests fail.
 Which configuration achieves this?
 
 - A. `continueOnError: true` on the test task
-- B. `condition: always()` on the publish task
-- C. `dependsOn: []` on the publish task
-- D. `enabled: true` on the publish task
+- B. `dependsOn: []` on the publish task
+- C. `enabled: true` on the publish task
+- D. `condition: always()` on the publish task
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: B
+### Answer: D
 
 **In `challenge-20.md`:** lines **156–163**.
 
@@ -385,8 +385,8 @@ results you most need to see**.
 
 - **A** — `continueOnError: true` on the **test** task would mark the failing tests as a warning and
   let the pipeline pass. That hides the failure instead of reporting it
-- **C** — `dependsOn` applies to jobs and stages, not steps
-- **D** — `enabled` controls whether a task is included at all. It does not override failure skipping
+- **B** — `dependsOn` applies to jobs and stages, not steps
+- **C** — `enabled` controls whether a task is included at all. It does not override failure skipping
 
 **Term:** *step condition*. `always()`, `succeeded()`, `failed()`, `succeededOrFailed()`.
 
@@ -401,15 +401,15 @@ changes.
 
 Which configuration is correct?
 
-- A. `trigger: [main, release/*]` with a separate `paths` block at pipeline root
-- B. `trigger:` with `branches: include:` and `paths: exclude:`
+- A. `trigger:` with `branches: include:` and `paths: exclude:`
+- B. `trigger: [main, release/*]` with a separate `paths` block
 - C. `pr:` with `branches: include:` and `paths: exclude:`
 - D. `trigger: none` plus a scheduled trigger filtered by path
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: B
+### Answer: A
 
 **In `challenge-20.md`:** lines **54–62**.
 
@@ -427,7 +427,7 @@ trigger:
 
 **Why the others fail**
 
-- **A** — the array shorthand `trigger: [main]` is valid, but it accepts **only** branches. You
+- **B** — the array shorthand `trigger: [main]` is valid, but it accepts **only** branches. You
   cannot attach path filters to it, and there is no root-level `paths` key
 - **C** — `pr:` controls **pull request** validation, a different event. Lines 64–71 show it used for
   exactly that
@@ -444,14 +444,14 @@ trigger:
 Which template type allows a template to contribute **jobs** rather than steps?
 
 - A. A template whose root key is `steps:`
-- B. A template whose root key is `jobs:`
-- C. A template referenced with `extends:`
+- B. A template referenced with `extends:`
+- C. A template whose root key is `jobs:`
 - D. A template referenced with `resources:`
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: B
+### Answer: C
 
 **In `challenge-20.md`:** the steps template starts at line **331** (`steps:`); the jobs template
 starts at line **386** (`jobs:`).
@@ -474,7 +474,7 @@ The root key decides where the template can be inserted. A `steps:` template goe
 **Why the others fail**
 
 - **A** — a steps template can only contribute steps
-- **C** — `extends:` makes the **whole pipeline** inherit from a template. Useful for governance
+- **B** — `extends:` makes the **whole pipeline** inherit from a template. Useful for governance
   (the "required template" check), but it is not what distinguishes jobs from steps
 - **D** — `resources:` declares external repos, pipelines and containers (line 470). It does not
   insert anything
@@ -491,15 +491,15 @@ A template parameter must accept only `dev`, `staging` or `prod`.
 
 Which parameter definition enforces that?
 
-- A. `type: string` with a `values` list
-- B. `type: enum` with an `options` list
+- A. `type: enum` with an `options` list
+- B. `type: string` with a `values` list
 - C. `type: choice` with an `options` list
 - D. `type: string` with a `default` list
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: B
 
 **In `challenge-20.md`:** lines **565–571**.
 
@@ -518,7 +518,7 @@ before a single agent is used.
 
 **Why the others fail**
 
-- **B** — there is no `enum` type in Azure Pipelines
+- **A** — there is no `enum` type in Azure Pipelines
 - **C** — `type: choice` with `options` is **GitHub Actions** `workflow_dispatch` syntax (Challenge
   19, line 59). The exam offers it deliberately, because both platforms solve the same problem with
   different keywords
@@ -535,14 +535,14 @@ A template parameter is declared `type: bool` and the pipeline fails validation.
 What is the correct type name?
 
 - A. `binary`
-- B. `boolean`
-- C. `flag`
-- D. `switch`
+- B. `flag`
+- C. `switch`
+- D. `boolean`
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: B
+### Answer: D
 
 **In `challenge-20.md`:** the error is at line **573**, the fix at line **593**.
 
@@ -583,15 +583,15 @@ nothing.
 
 Why?
 
-- A. Stage-level variables are only available within that stage
-- B. Variables must be defined in a variable group to be readable
-- C. The `Deploy` stage is missing a `dependsOn` on `Build`
+- A. Variables must be defined in a variable group to be readable
+- B. The `Deploy` stage is missing a `dependsOn` on `Build`
+- C. Stage-level variables are only available within that stage
 - D. Variables must use `${{ }}` syntax to cross stages
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: C
 
 **In `challenge-20.md`:** Break & fix Exercise 2, lines **604–622**.
 
@@ -615,9 +615,9 @@ Variable **scope** is pipeline → stage → job. A stage variable does not esca
 
 **Why the others fail**
 
-- **B** — variable groups make values available across a pipeline, but a plain stage variable is
+- **A** — variable groups make values available across a pipeline, but a plain stage variable is
   perfectly valid. The problem is scope, not where it was defined
-- **C** — `dependsOn` alone would not help. It creates ordering and unlocks `stageDependencies`, but
+- **B** — `dependsOn` alone would not help. It creates ordering and unlocks `stageDependencies`, but
   the plain `$(buildOutput)` macro still would not resolve
 - **D** — `${{ }}` is compile time and would not fix a runtime scope problem
 
@@ -634,15 +634,15 @@ A pipeline must consume a template stored in a different GitHub repository.
 
 What must be declared first?
 
-- A. A `resources: repositories:` entry with a service connection endpoint
-- B. A `variables: group:` entry pointing to the repository
+- A. A `variables: group:` entry pointing to the repository
+- B. A `resources: repositories:` entry with an endpoint
 - C. A `pool:` entry naming the external repository
 - D. A `checkout:` step for the external repository
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: B
 
 **In `challenge-20.md`:** lines **470–476**, used at line **502**.
 
@@ -664,7 +664,7 @@ Note the `@templates` suffix — it refers back to the **alias** defined under `
 
 **Why the others fail**
 
-- **B** — variable groups hold values, not repositories
+- **A** — variable groups hold values, not repositories
 - **C** — `pool` selects an agent
 - **D** — `checkout` would clone the repo into the workspace at **runtime**. Templates are resolved
   at **compile time**, before any agent exists, so a checkout is far too late
@@ -681,15 +681,15 @@ Note the `@templates` suffix — it refers back to the **alias** defined under `
 Which task publishes code coverage in the format `dotnet test --collect:"XPlat Code Coverage"`
 produces?
 
-- A. `PublishTestResults@2` with `testResultsFormat: "VSTest"`
-- B. `PublishCodeCoverageResults@2` with a cobertura summary file
+- A. `PublishCodeCoverageResults@2` with a cobertura summary file
+- B. `PublishTestResults@2` with `testResultsFormat: "VSTest"`
 - C. `PublishPipelineArtifact@1` with the coverage folder
 - D. `PublishBuildArtifacts@1` with `publishLocation: "Container"`
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: B
+### Answer: A
 
 **In `challenge-20.md`:** lines **165–168**.
 
@@ -704,7 +704,7 @@ local `dotnet test` run on `contoso-webapi` produced.
 
 **Why the others fail**
 
-- **A** — publishes **test results** (pass/fail counts) from `.trx` files. A different artifact
+- **B** — publishes **test results** (pass/fail counts) from `.trx` files. A different artifact
 - **C** and **D** — publish files for download. They produce no coverage report in the UI
 
 **Remember the pairing:** `--logger trx` → `PublishTestResults@2`.
@@ -718,15 +718,15 @@ local `dotnet test` run on `contoso-webapi` produced.
 
 Azure Pipelines must build from a GitHub repository. What must exist in Azure DevOps?
 
-- A. A GitHub service connection
-- B. A GitHub personal access token stored in a variable group
-- C. A GitHub Actions workflow that dispatches to Azure Pipelines
-- D. A repository resource of `type: git`
+- A. A GitHub personal access token stored in a variable group
+- B. A GitHub Actions workflow that dispatches to Azure Pipelines
+- C. A repository resource of `type: git` in YAML
+- D. A GitHub service connection in Azure DevOps
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: D
 
 **In `challenge-20.md`:** created at lines **515–519**, referenced at line **530**.
 
@@ -749,10 +749,10 @@ resources:
 
 **Why the others fail**
 
-- **B** — a raw PAT in a variable group is not how repository access is configured, and it bypasses
+- **A** — a raw PAT in a variable group is not how repository access is configured, and it bypasses
   the auditing and scoping a service connection provides
-- **C** — no dispatch is needed. Azure Pipelines connects to GitHub directly
-- **D** — `type: git` means **Azure Repos**. GitHub requires `type: github` plus an endpoint
+- **B** — no dispatch is needed. Azure Pipelines connects to GitHub directly
+- **C** — `type: git` means **Azure Repos**. GitHub requires `type: github` plus an endpoint
 
 **Term:** *service connection*. This is the object Challenge 41 secures in depth.
 
@@ -770,16 +770,16 @@ Which **three** are valid Azure Pipelines expression syntaxes, and when does eac
 three.)
 
 - A. `${{ }}` — compile time
-- B. `$[ ]` — runtime
-- C. `$( )` — macro, just before a task runs
-- D. `${ }` — deployment time
-- E. `#[ ]` — template time
+- B. `${ }` — deployment time
+- C. `$[ ]` — runtime
+- D. `#[ ]` — template time
+- E. `$( )` — macro, just before a task runs
 - F. `@( )` — variable group time
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A, B, C
+### Answer: A, C, E
 
 **In `challenge-20.md`:** `${{ }}` line **333**, `$[ ]` line **643**, `$( )` line **98**.
 
@@ -804,23 +804,23 @@ real ones or are pattern-matching on brackets.
 
 Which **two** items are required to share a value from one stage to another? (Choose two.)
 
-- A. The producing step must have a `name`
-- B. The variable must be set with `isOutput=true`
-- C. The consuming stage must use `${{ }}` to read it
-- D. Both stages must run on the same agent pool
+- A. The consuming stage must use `${{ }}` to read it
+- B. The producing step must have a `name`
+- C. Both stages must run on the same agent pool
+- D. The variable must be set with `isOutput=true`
 - E. The value must be published as a pipeline artifact
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A, B
+### Answer: B, D
 
 **In `challenge-20.md`:** lines **637–638** and **643**.
 
 ```yaml
           - script: |
               echo "##vso[task.setvariable variable=buildVersion;isOutput=true]1.2.3"
-            name: setVersion      # A - without this you cannot reference it
+            name: setVersion      # B - without this you cannot reference it
 ```
 
 ```yaml
@@ -832,8 +832,8 @@ step **name** is part of the address.
 
 **Why the others fail**
 
-- **C** — `${{ }}` is compile time and cannot see runtime output. It must be `$[ ]`
-- **D** — agent pools are irrelevant. The value travels through Azure DevOps, not the filesystem
+- **A** — `${{ }}` is compile time and cannot see runtime output. It must be `$[ ]`
+- **C** — agent pools are irrelevant. The value travels through Azure DevOps, not the filesystem
 - **E** — artifacts move **files**. This is a variable
 
 **Note:** `dependsOn` is also required in practice (line 641) — it was left out of the options here,
@@ -848,15 +848,15 @@ but the exam sometimes includes it as a third correct answer.
 Which **two** statements about `deployment` jobs are correct? (Choose two.)
 
 - A. They require a `strategy` such as `runOnce`
-- B. They automatically download pipeline artifacts
-- C. They automatically check out the source repository
-- D. They can use the `matrix` strategy
+- B. They automatically check out the source repository
+- C. They can use the `matrix` strategy
+- D. They automatically download pipeline artifacts
 - E. They cannot reference variable groups
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A, B
+### Answer: A, D
 
 **In `challenge-20.md`:** lines **177–183** (A), line **199** (B).
 
@@ -869,16 +869,16 @@ Which **two** statements about `deployment` jobs are correct? (Choose two.)
               steps:
                 - task: AzureRmWebAppDeployment@4
                   inputs:
-                    packageForLinux: "$(Pipeline.Workspace)/drop/**/*.zip"    # B
+                    packageForLinux: "$(Pipeline.Workspace)/drop/**/*.zip"    # D
 ```
 
 Nothing in that job downloads the artifact — it arrives automatically.
 
 **Why the others fail**
 
-- **C** — the reverse is true. A deployment job does **not** check out source by default. If you need
+- **B** — the reverse is true. A deployment job does **not** check out source by default. If you need
   the repo you must add `- checkout: self` explicitly. This catches people constantly
-- **D** — `matrix` is for regular jobs. Deployment strategies are `runOnce`, `rolling`, `canary`
+- **C** — `matrix` is for regular jobs. Deployment strategies are `runOnce`, `rolling`, `canary`
 - **E** — false. Lines 174–175 attach `contoso-staging` to the stage containing a deployment job
 
 </details>
@@ -889,23 +889,23 @@ Nothing in that job downloads the artifact — it arrives automatically.
 
 Which **two** are valid ways to restrict when a stage runs? (Choose two.)
 
-- A. `dependsOn` on the stage
-- B. `condition` on the stage
-- C. `trigger` on the stage
-- D. `pool` on the stage
-- E. `pr` on the stage
+- A. `trigger` on the stage
+- B. `pool` on the stage
+- C. `dependsOn` on the stage
+- D. `pr` on the stage
+- E. `condition` on the stage
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A, B
+### Answer: C, E
 
 **In `challenge-20.md`:** lines **172–173**.
 
 ```yaml
   - stage: DeployStaging
-    dependsOn: Test                                                          # A - ordering
-    condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))   # B - gate
+    dependsOn: Test                                                          # C - ordering
+    condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))   # E - gate
 ```
 
 They do different jobs and you usually need both:
@@ -915,9 +915,9 @@ They do different jobs and you usually need both:
 
 **Why the others fail**
 
-- **C** and **E** — `trigger` and `pr` are **pipeline-level** keys (lines 54 and 64). They control
+- **A** and **D** — `trigger` and `pr` are **pipeline-level** keys (lines 54 and 64). They control
   what starts the whole run, not individual stages
-- **D** — `pool` selects an agent
+- **B** — `pool` selects an agent
 
 **Trap worth knowing:** the moment you add a custom `condition`, the implicit `succeeded()` is
 **replaced**. That is why line 173 spells out `and(succeeded(), ...)` — omit it and the stage would
@@ -932,16 +932,16 @@ run even after a failure.
 Which **two** template features let a template include or exclude blocks based on a parameter?
 (Choose two.)
 
-- A. `${{ if ... }}` conditional insertion
-- B. `${{ each ... }}` iteration
-- C. `condition:` on the step
-- D. `$[ ]` runtime expression
-- E. `continueOnError`
+- A. `condition:` on the step
+- B. `${{ if ... }}` conditional insertion
+- C. `$[ ]` runtime expression
+- D. `${{ each ... }}` iteration
+- E. `continueOnError` on the step
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A, B
+### Answer: B, D
 
 **In `challenge-20.md`:** lines **351** and **410**.
 
@@ -961,9 +961,9 @@ not just whole steps.
 
 **Why the others fail**
 
-- **C** — `condition:` still **includes** the step; it just skips it at runtime, and the skipped step
+- **A** — `condition:` still **includes** the step; it just skips it at runtime, and the skipped step
   is visible in the log. Conditional insertion means the step never exists
-- **D** — `$[ ]` reads values at runtime. It cannot add or remove YAML
+- **C** — `$[ ]` reads values at runtime. It cannot add or remove YAML
 - **E** — controls what happens after a failure
 
 **The distinction the exam tests:** `${{ if }}` removes the step from the pipeline. `condition:`
@@ -977,25 +977,25 @@ keeps it and skips it.
 
 Which **two** resource types can be declared under `resources:`? (Choose two.)
 
-- A. `repositories`
-- B. `pipelines`
-- C. `environments`
-- D. `variables`
-- E. `pools`
+- A. `environments`
+- B. `repositories`
+- C. `variables`
+- D. `pools`
+- E. `pipelines`
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A, B
+### Answer: B, E
 
 **In `challenge-20.md`:** lines **470–493**.
 
 ```yaml
 resources:
-  repositories:                     # A - external repos for templates or checkout
+  repositories:                     # B - external repos for templates or checkout
     - repository: templates
       type: github
-  pipelines:                        # B - artifacts and triggers from another pipeline
+  pipelines:                        # E - artifacts and triggers from another pipeline
     - pipeline: infrastructurePipeline
       source: "Contoso-Infrastructure-Deploy"
       trigger:
@@ -1008,10 +1008,10 @@ resources:
 
 **Why the others fail**
 
-- **C** — environments are referenced by a deployment job's `environment:` key (line 179), never
+- **A** — environments are referenced by a deployment job's `environment:` key (line 179), never
   declared as a resource
-- **D** — variables have their own top-level `variables:` key (line 76)
-- **E** — pools are selected with `pool:` (line 73)
+- **C** — variables have their own top-level `variables:` key (line 76)
+- **D** — pools are selected with `pool:` (line 73)
 
 **The four resource types:** `repositories`, `pipelines`, `containers`, `builds`. That
 `pipelines` trigger at lines 485–489 is how one pipeline starts another — and it is the correct
@@ -1025,16 +1025,16 @@ answer whenever a question says "trigger after another pipeline completes".
 
 Which **two** GitHub Actions concepts map to Azure Pipelines templates? (Choose two.)
 
-- A. Reusable workflow
-- B. Composite action
-- C. Starter workflow
-- D. Repository dispatch
-- E. Environment
+- A. Starter workflow
+- B. Repository dispatch
+- C. Reusable workflow
+- D. Environment
+- E. Composite action
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A, B
+### Answer: C, E
 
 Both are "reuse" mechanisms; Azure Pipelines covers the same ground with template types.
 
@@ -1058,11 +1058,11 @@ Both are "reuse" mechanisms; Azure Pipelines covers the same ground with templat
 
 **Why the others fail**
 
-- **C** — a starter workflow is a one-time copy shown in the "New workflow" UI. Azure Pipelines has
+- **A** — a starter workflow is a one-time copy shown in the "New workflow" UI. Azure Pipelines has
   no equivalent, and it is not reuse
-- **D** — `repository_dispatch` is an external API trigger. Its Azure Pipelines counterpart is a
+- **B** — `repository_dispatch` is an external API trigger. Its Azure Pipelines counterpart is a
   `pipelines` resource trigger, not a template
-- **E** — environments exist on **both** platforms with the same name and purpose
+- **D** — environments exist on **both** platforms with the same name and purpose
 
 </details>
 
@@ -1506,7 +1506,7 @@ Match each item to where it belongs.
 | A secret shared by all stages |  |
 | A value that differs per stage |  |
 
-**Options:** output variable · pipeline **artifact** · stage-scoped variable group · variable group linked to Key Vault
+**Options:** output variable · pipeline artifact · stage-scoped variable group · variable group linked to Key Vault
 
 <details>
 <summary>Show answer</summary>
@@ -1553,8 +1553,8 @@ via a variable group. *Differs per environment* → scope the group to the stage
     [BLANK 2]: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))
 ```
 
-- **BLANK 1:** `dependsOn` / `needs` / `after` / `requires`
-- **BLANK 2:** `condition` / `if` / `when` / `filter`
+- **BLANK 1:** `needs` / `after` / `dependsOn` / `requires`
+- **BLANK 2:** `if` / `condition` / `when` / `filter`
 
 <details>
 <summary>Show answer</summary>
@@ -1582,9 +1582,9 @@ on either platform.
               steps:
 ```
 
-- **BLANK 1:** `job` / `deployment` / `stage` / `task`
-- **BLANK 2:** `environment` / `pool` / `container` / `resource`
-- **BLANK 3:** `runOnce` / `matrix` / `parallel` / `single`
+- **BLANK 1:** `job` / `stage` / `task` / `deployment`
+- **BLANK 2:** `pool` / `container` / `environment` / `resource`
+- **BLANK 3:** `matrix` / `runOnce` / `parallel` / `single`
 
 <details>
 <summary>Show answer</summary>
@@ -1611,9 +1611,9 @@ regular jobs; `parallel` applies only to VM resources; `single` does not exist.
           - script: echo [BLANK 2]
 ```
 
-- **BLANK 1:** `AzureKeyVault@2` / `AzureCLI@2` / `AzureRmWebAppDeployment@4` / `UseDotNet@2`
-- **BLANK 2:** `$(SqlConnectionString)` / `$(keyVault.SqlConnectionString)` /
-  `${{ secrets.SqlConnectionString }}` / `$(secrets.SqlConnectionString)`
+- **BLANK 1:** `AzureCLI@2` / `AzureRmWebAppDeployment@4` / `UseDotNet@2` / `AzureKeyVault@2`
+- **BLANK 2:** `$(keyVault.SqlConnectionString)` / `${{ secrets.SqlConnectionString }}` /
+  `$(SqlConnectionString)` / `$(secrets.SqlConnectionString)`
 
 <details>
 <summary>Show answer</summary>
@@ -1643,8 +1643,8 @@ steps:
       - script: echo "Running tests"
 ```
 
-- **BLANK 1:** `bool` / `boolean` / `binary` / `flag`
-- **BLANK 2:** `true` / `'true'` / `"true"` / `$(true)`
+- **BLANK 1:** `bool` / `binary` / `boolean` / `flag`
+- **BLANK 2:** `'true'` / `"true"` / `$(true)` / `true`
 
 <details>
 <summary>Show answer</summary>
@@ -1679,9 +1679,9 @@ stages:
           - template: dotnet/build.yml[BLANK 3]
 ```
 
-- **BLANK 1:** `resources` / `variables` / `extends` / `imports`
-- **BLANK 2:** `endpoint` / `connection` / `serviceConnection` / `auth`
-- **BLANK 3:** `@templates` / `#templates` / `:templates` / `/templates`
+- **BLANK 1:** `variables` / `resources` / `extends` / `imports`
+- **BLANK 2:** `connection` / `serviceConnection` / `endpoint` / `auth`
+- **BLANK 3:** `#templates` / `@templates` / `:templates` / `/templates`
 
 <details>
 <summary>Show answer</summary>
@@ -1715,9 +1715,9 @@ time.
       buildVersion: [BLANK 3] stageDependencies.Build.BuildJob.outputs['setVersion.buildVersion'] ]
 ```
 
-- **BLANK 1:** `isOutput=true` / `isSecret=true` / `global=true` / `scope=pipeline`
-- **BLANK 2:** `name` / `id` / `displayName` / `label`
-- **BLANK 3:** `$[` / `${{` / `$(` / `@[`
+- **BLANK 1:** `isSecret=true` / `global=true` / `isOutput=true` / `scope=pipeline`
+- **BLANK 2:** `id` / `displayName` / `label` / `name`
+- **BLANK 3:** `${{` / `$[` / `$(` / `@[`
 
 <details>
 <summary>Show answer</summary>
@@ -1773,15 +1773,15 @@ Service across staging and production. Source code lives in a **GitHub** reposit
 You must meet the requirement that documentation changes never trigger a build. What should you
 configure?
 
-- A. `trigger:` with `paths: exclude:`
-- B. `pr:` with `paths: exclude:`
-- C. A `condition` on the Build stage checking changed files
-- D. `trigger: none` with a scheduled build
+- A. `pr:` with `paths: exclude:` on the branch
+- B. `trigger:` with `paths: exclude:`
+- C. A `condition` on the Build stage checking paths
+- D. `trigger: none` with a nightly scheduled build
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: B
 
 **In `challenge-20.md`:** lines **59–62**.
 
@@ -1797,7 +1797,7 @@ trigger:
 
 **Why the others fail**
 
-- **B** — `pr:` filters pull request validation, a different event. Line 64 shows it doing that job
+- **A** — `pr:` filters pull request validation, a different event. Line 64 shows it doing that job
 - **C** — a condition evaluates **after** the run has started. An agent is already allocated and
   billed. Path filters stop the run from starting at all
 - **D** — disables CI entirely, which breaks the other build requirements
@@ -1852,15 +1852,15 @@ You must meet the requirement for test results and coverage. Which **two** confi
 You must meet the requirement that each environment uses its own connection string from Key Vault.
 What should you configure?
 
-- A. One variable group per environment, each scoped to its stage
-- B. One pipeline-level variable group holding both connection strings
-- C. A `${{ if }}` expression selecting the connection string per stage
-- D. Two separate pipelines, one per environment
+- A. One pipeline-level variable group holding both strings
+- B. A `${{ if }}` expression selecting the string per stage
+- C. One variable group per environment, scoped to its stage
+- D. Two separate pipelines, one for each environment
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: C
 
 **In `challenge-20.md`:** lines **174–175** and **224–225**, with the Key Vault tasks at **188** and
 **238**.
@@ -1879,8 +1879,8 @@ differs. That is the same model as GitHub environment secrets in Challenge 19.
 
 **Why the others fail**
 
-- **B** — both values in one scope means two different variable names and per-stage logic everywhere
-- **C** — compile-time selection of a **secret** would require the secret to be known at parse time,
+- **A** — both values in one scope means two different variable names and per-stage logic everywhere
+- **B** — compile-time selection of a **secret** would require the secret to be known at parse time,
   which defeats fetching it from Key Vault at runtime
 - **D** — duplicating a whole pipeline to change one value
 
@@ -1892,8 +1892,8 @@ differs. That is the same model as GitHub environment secrets in Challenge 19.
 
 You must meet the requirement that three teams share one build definition. What should you create?
 
-- A. A `steps:` template with parameters, referenced by each team's pipeline
-- B. A task group in the classic editor
+- A. A `steps:` template with parameters, per pipeline
+- B. A task group created in the classic editor
 - C. A variable group containing the build commands
 - D. A separate pipeline that each team triggers manually
 
@@ -1938,15 +1938,15 @@ Parameters are what make it shareable — each team passes its own project path.
 You must meet the requirement that production deployment is approved before it starts. What should
 you configure?
 
-- A. An approval check on the `contoso-production` environment
-- B. A branch policy requiring reviewers on `main`
+- A. A branch policy requiring reviewers on `main`
+- B. An approval check on the production environment
 - C. A `condition` on the DeployProduction stage
 - D. A manual `trigger` for the production stage
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: B
 
 **In `challenge-20.md`:** line **229**.
 
@@ -1957,7 +1957,7 @@ you configure?
 
 **Why the others fail**
 
-- **B** — branch policies gate **merging code**, not deploying it. Same boundary as Challenge 19 Q43
+- **A** — branch policies gate **merging code**, not deploying it. Same boundary as Challenge 19 Q43
 - **C** — a condition is automatic logic. It cannot ask a human
 - **D** — there is no per-stage `trigger` key. `trigger` is pipeline-level (line 54)
 
@@ -1975,15 +1975,15 @@ not.
 
 Which configuration meets the requirement?
 
-- A. `pr:` with `drafts: false`
-- B. `trigger:` with `drafts: false`
-- C. A branch policy in Azure Repos
-- D. `pr: none` with a status check
+- A. `trigger:` with `drafts: false`
+- B. A branch policy in Azure Repos
+- C. `pr: none` with a status check
+- D. `pr:` with `drafts: false`
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: D
 
 **In `challenge-20.md`:** lines **547–554**.
 
@@ -2000,10 +2000,10 @@ pr:
 
 **Why the others fail**
 
-- **B** — `trigger:` handles pushes. Drafts are a pull request concept, so the key has no meaning
+- **A** — `trigger:` handles pushes. Drafts are a pull request concept, so the key has no meaning
   there
-- **C** — the code is in **GitHub**, not Azure Repos. Azure Repos branch policies do not apply
-- **D** — `pr: none` disables PR validation completely, so nothing would run on any PR
+- **B** — the code is in **GitHub**, not Azure Repos. Azure Repos branch policies do not apply
+- **C** — `pr: none` disables PR validation completely, so nothing would run on any PR
 
 </details>
 
@@ -2015,15 +2015,15 @@ A deployment job fails because a Bicep file from the repository is missing at de
 
 What is the cause?
 
-- A. Deployment jobs do not check out the source repository by default
-- B. The artifact was published to the wrong directory
-- C. The service connection lacks permission to read the repository
+- A. The artifact was published to the wrong directory
+- B. The service connection lacks permission to read the repo
+- C. Deployment jobs do not check out source by default
 - D. `$(Pipeline.Workspace)` is only available in regular jobs
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: C
 
 **In `challenge-20.md`:** deployment jobs start at lines **177** and **227**. Notice there is **no**
 `checkout` step in either.
@@ -2051,8 +2051,8 @@ the `infra` folder:
 
 **Why the others fail**
 
-- **B** — the artifact question is a red herring; the file was never published *or* checked out
-- **C** — service connections authenticate to **Azure**, not to the repository
+- **A** — the artifact question is a red herring; the file was never published *or* checked out
+- **B** — service connections authenticate to **Azure**, not to the repository
 - **D** — `$(Pipeline.Workspace)` works in both. Line 199 uses it inside a deployment job
 
 </details>
