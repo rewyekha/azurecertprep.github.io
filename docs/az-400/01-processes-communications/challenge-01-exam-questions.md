@@ -46,15 +46,15 @@ The scenario at line 20 is what the absence costs: five teams, merges taking **t
 
 In GitHub Flow, what is the role of the `main` branch?
 
-- A. It is the integration branch where features are combined before release
-- B. It is always in a deployable state and represents production
-- C. It is locked and only updated during release windows
-- D. It mirrors the `develop` branch after each sprint
+- A. It collects finished features until a release branch is cut from it
+- B. It receives merges only inside a scheduled release window
+- C. It stays deployable at all times and is what production ships from
+- D. It tracks the `develop` branch and is resynchronised each sprint
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: B
+### Answer: C
 
 **In `challenge-01.md`:** line **44**.
 
@@ -68,7 +68,7 @@ is no other branch to deploy from, so the moment `main` breaks, the team cannot 
 **Why the others fail, and each describes a different strategy**
 
 - **A** — that is GitFlow's `develop` branch (line 48). GitHub Flow has no integration branch
-- **C** — release windows are GitFlow's model; GitHub Flow assumes continuous deployment (line 66)
+- **B** — release windows are GitFlow's model; GitHub Flow assumes continuous deployment (line 66)
 - **D** — there is no `develop` branch to mirror
 
 **Which is why the scenario is a crisis, not an inconvenience.** `main` broken once per sprint (line 20)
@@ -83,15 +83,15 @@ means the one deployable branch was undeployable, repeatedly.
 Which branch protection setting stops a PR merging when new commits have landed on `main` since the PR
 branch was created?
 
-- A. Require code owner reviews
-- B. Require status checks to pass before merging
-- C. Require branches to be up to date before merging — strict mode
-- D. Dismiss stale pull request approvals
+- A. Require branches to be up to date before merging, known as strict mode
+- B. Require status checks to pass before merging on the pull request branch
+- C. Require review from Code Owners for the paths the pull request touches
+- D. Dismiss stale pull request approvals when new commits are pushed
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: C
+### Answer: A
 
 **In `challenge-01.md`:** line **180**.
 
@@ -118,15 +118,15 @@ challenge and they guard different things.
 
 When should you choose GitFlow over GitHub Flow?
 
-- A. When you need continuous deployment to production
-- B. When you have a single team with trunk-based expertise
-- C. When you release packaged software with formal version numbers and support windows
-- D. When you want the simplest possible workflow
+- A. When every merge to `main` should deploy straight to production
+- B. When one team commits to trunk many times a day behind feature flags
+- C. When you want the fewest possible branch types and the simplest model
+- D. When you ship versioned releases and support several of them at once
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: C
+### Answer: D
 
 **In `challenge-01.md`:** line **52**.
 
@@ -142,7 +142,7 @@ does not have one.
 
 - **A** — continuous deployment is GitHub Flow's own use case (line 66)
 - **B** — that describes trunk-based development (line 60)
-- **D** — GitFlow is the **most** complex of the three: four branch types instead of one
+- **C** — GitFlow is the **most** complex of the three: four branch types instead of one
 
 **The exam's version of this question always hides the answer in the support model.** "We maintain the
 last three releases" is GitFlow. "We deploy on merge" is GitHub Flow.
@@ -155,15 +155,15 @@ last three releases" is GitFlow. "We deploy on merge" is GitHub Flow.
 
 What does enabling auto-merge with squash accomplish?
 
-- A. PRs merge immediately without any checks
-- B. PRs merge automatically once all required conditions are satisfied, combining commits into one
-- C. PRs are force-merged even if reviews are pending
-- D. PRs are rebased and merged on a nightly schedule
+- A. It merges once all required conditions pass, squashed into one commit
+- B. The PR merges at once, with required checks recorded but not enforced
+- C. The PR is queued and merged on the next scheduled nightly rebase run
+- D. The PR merges ahead of pending reviews if the author has write access
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: B
+### Answer: A
 
 **In `challenge-01.md`:** lines **315–320**.
 
@@ -179,7 +179,7 @@ gh pr merge --auto --squash
 **Auto-merge waits; it does not bypass.** It removes the delay between "everything passed" and
 "somebody noticed and clicked merge" — which on a five-team repository is often hours.
 
-**Why A and C are the same misreading, and it is worth killing now.** Nothing in this challenge lets a
+**Why B and D are the same misreading, and it is worth killing now.** Nothing in this challenge lets a
 PR skip branch protection. Auto-merge is the *opposite* of a bypass: it is a promise to merge **only**
 when every condition the repository requires is already satisfied.
 
@@ -192,15 +192,15 @@ when every condition the repository requires is already satisfied.
 A developer pushes directly to `main` and expects it to be rejected, but the push succeeds. They are a
 repository administrator. What setting is wrong?
 
-- A. `enforce_admins` is not enabled
-- B. `allow_force_pushes` is true
-- C. `required_approving_review_count` is 0
-- D. `allow_deletions` is true
+- A. `allow_force_pushes` is set to true on the protected branch
+- B. `enforce_admins` is not enabled on the protected branch
+- C. `required_approving_review_count` is set to 0 for the branch
+- D. `allow_deletions` is set to true on the protected branch
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: B
 
 **In `challenge-01.md`:** lines **440–442**.
 
@@ -216,7 +216,7 @@ production.** That is not a rule; it is a convention with an exception list.
 **And on a five-team repository, "who is an admin" grows quietly.** The setting matters most a year
 after it was configured.
 
-**Why B is the tempting wrong answer.** A force push *rewrites* history on `main`. This developer made
+**Why A is the tempting wrong answer.** A force push *rewrites* history on `main`. This developer made
 an ordinary commit and pushed it — which is a different operation, blocked by the pull-request
 requirement rather than by the force-push setting.
 
@@ -229,15 +229,15 @@ requirement rather than by the force-push setting.
 A PR merges even though CI failed. The required status checks are configured. What is the most likely
 cause?
 
-- A. The check names in branch protection do not match what CI actually reports
-- B. Auto-merge was enabled
-- C. The reviewer approved before CI finished
-- D. `strict` mode is disabled
+- A. Auto-merge was enabled on the pull request before CI had reported
+- B. `strict` mode is disabled, so the branch was never brought up to date
+- C. The reviewer approved the pull request before CI finished running
+- D. The required check names do not match the contexts CI actually reports
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: D
 
 **In `challenge-01.md`:** lines **453** and **459–467**.
 
@@ -270,15 +270,15 @@ green, the rule appears configured, and the gate is doing nothing.
 A reviewer approves a PR. The developer then pushes two more commits. What setting ensures the approval
 no longer counts?
 
-- A. `dismiss_stale_reviews`
-- B. `require_code_owner_reviews`
-- C. `strict` status checks
-- D. `require_last_push_approval`
+- A. `require_code_owner_reviews` on the paths the commits changed
+- B. `dismiss_stale_reviews` on the required pull request reviews
+- C. `require_last_push_approval` on the required pull request reviews
+- D. `strict` status checks on the required status checks object
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: B
 
 **In `challenge-01.md`:** lines **182** and **480–484**.
 
@@ -291,7 +291,7 @@ gh api repos/{owner}/{repo}/branches/main/protection/required_pull_request_revie
 **An approval is a statement about specific code.** Once the code changes, the statement is about
 something that no longer exists.
 
-**Why D is the closest wrong answer, and the distinction is real.** `require_last_push_approval`
+**Why C is the closest wrong answer, and the distinction is real.** `require_last_push_approval`
 (line 221) requires that someone **other than the last pusher** approves — it targets a person, not
 staleness. `dismiss_stale_reviews` targets the *commits*. This challenge sets `require_last_push_approval`
 to `false` and relies on dismissal.
@@ -304,15 +304,15 @@ to `false` and relies on dismissal.
 
 Which rule type in a ruleset prevents force pushes?
 
-- A. `deletion`
-- B. `non_fast_forward`
-- C. `pull_request`
-- D. `required_status_checks`
+- A. `deletion`, which rejects updates that remove the branch entirely
+- B. `required_status_checks`, which gates on the contexts CI reports
+- C. `pull_request`, which requires changes to arrive through a review
+- D. `non_fast_forward`, which rejects updates that discard history
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: B
+### Answer: D
 
 **In `challenge-01.md`:** lines **235–239**.
 
@@ -340,15 +340,15 @@ equivalents in the classic API are `allow_force_pushes=false` and `allow_deletio
 
 Why does the ADR record **Consequences** as well as the decision?
 
-- A. To satisfy an audit requirement
-- B. To record what the team is accepting, so the decision is not relitigated later
-- C. To list the tools that must be purchased
-- D. To assign owners
+- A. To satisfy the evidence requirements of an external compliance audit
+- B. To list the tooling the team must purchase before the decision lands
+- C. To record what the team is accepting, so it is not reopened later
+- D. To assign a named owner to each follow-up task the decision creates
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: B
+### Answer: C
 
 **In `challenge-01.md`:** lines **89–93**.
 
@@ -378,15 +378,15 @@ an auditor.
 
 The CI workflow rejects a branch named `add-user-service`. Why?
 
-- A. It contains no slash
-- B. It does not start with an approved prefix
-- C. It is too long
-- D. It contains a hyphen
+- A. It does not begin with one of the approved prefixes the pattern lists
+- B. It exceeds the maximum branch name length the validation job allows
+- C. It contains a hyphen, which the character class does not permit
+- D. It contains no slash, which the pattern requires as a separator
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: B
+### Answer: A
 
 **In `challenge-01.md`:** lines **385–389**.
 
@@ -397,7 +397,7 @@ The CI workflow rejects a branch named `add-user-service`. Why?
             echo "Valid prefixes: feature/, bugfix/, hotfix/, chore/, docs/"
 ```
 
-**The slash is required *because* of the prefix**, so A is a consequence rather than the rule — and a
+**The slash is required *because* of the prefix**, so D is a consequence rather than the rule — and a
 branch named `stuff/thing` also has a slash and is also rejected.
 
 **Why the convention earns its keep on a shared repository.** With five teams in one monorepo, the
@@ -412,15 +412,15 @@ queue. Hyphens are explicitly allowed by `[a-z0-9._-]`.
 
 The `enforce-no-long-lived-branches` job finds a branch 12 days old. What happens?
 
-- A. The PR is blocked
-- B. A warning is emitted and the job succeeds
-- C. The branch is deleted
-- D. The build fails
+- A. The pull request is blocked until the branch is recreated from `main`
+- B. The branch is deleted automatically once the job finishes running
+- C. A warning is emitted to the log and the job still finishes green
+- D. The build fails with a non-zero exit from the validation step
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: B
+### Answer: C
 
 **In `challenge-01.md`:** lines **405–406**.
 
@@ -447,15 +447,15 @@ which a shallow clone would not provide.
 
 Why does the CI workflow trigger on both `pull_request` and `push` to `main`?
 
-- A. To validate a PR before merge and confirm `main` is healthy after merge
-- B. Because `pull_request` alone does not run CI
-- C. To double the number of runs for statistics
-- D. Because branch protection requires it
+- A. Because `pull_request` on its own will not run the workflow at all
+- B. To validate a PR before merge and confirm `main` is healthy after it
+- C. Because branch protection requires both triggers to be configured
+- D. To double the run count so the pipeline statistics stay meaningful
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: B
 
 **In `challenge-01.md`:** lines **335–339**.
 
@@ -485,15 +485,15 @@ branch name is meaningless once the branch is merged and gone.
 
 Which merge settings does Task 5 configure to keep `main` history clean?
 
-- A. Squash and rebase allowed, merge commits disabled, branches deleted on merge
-- B. Merge commits only
-- C. All three merge types enabled
-- D. Rebase only, with branches retained
+- A. Merge commits only, with branches retained after the pull request lands
+- B. All three merge types enabled, with branches deleted once merged
+- C. Rebase only, with branches retained so the history can be re-read
+- D. Squash and rebase allowed, merge commits off, branches deleted on merge
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: D
 
 **In `challenge-01.md`:** lines **303–306**.
 
@@ -519,15 +519,15 @@ of the scenario's "nobody knows which branch represents the production state" (l
 
 What do `squash_merge_commit_title="PR_TITLE"` and `squash_merge_commit_message="PR_BODY"` achieve?
 
-- A. The squashed commit inherits the PR's title and description instead of a concatenated commit list
-- B. They require a specific commit format
-- C. They prevent empty commit messages
-- D. They add the PR number automatically
+- A. They enforce a specific conventional-commit format on the squashed subject
+- B. They prevent an empty commit message when the branch has no description
+- C. They make the squashed commit carry the PR's title and body instead
+- D. They append the pull request number to the squashed commit subject
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: C
 
 **In `challenge-01.md`:** lines **307–308**.
 
@@ -547,15 +547,15 @@ generated from (Challenge 05).
 
 Which is a genuine reason GitHub Flow suits Contoso, according to the challenge?
 
-- A. They deploy web services continuously with no formal release windows
-- B. They have four parallel release branches to maintain
-- C. They need to support three shipped versions
-- D. They deploy monthly on a fixed date
+- A. They maintain four parallel release branches that must stay in sync
+- B. They deploy web services continuously with no formal release windows
+- C. They must support the three most recently shipped product versions
+- D. They deploy on a fixed monthly date agreed with the business
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: B
 
 **In `challenge-01.md`:** lines **64–69**.
 
@@ -569,7 +569,7 @@ Which is a genuine reason GitHub Flow suits Contoso, according to the challenge?
 **Read the last line: the justification is partly about what they *do not* need.** Choosing the simpler
 strategy when the complex one buys you nothing is the actual skill being tested.
 
-**Why B is the trap, and it is a good one.** The scenario *does* mention a team maintaining four
+**Why A is the trap, and it is a good one.** The scenario *does* mention a team maintaining four
 parallel release branches (line 20) — as a **symptom of the chaos**, not a requirement. The exam
 regularly quotes the current broken state back at you as though it were a constraint.
 
@@ -582,15 +582,15 @@ regularly quotes the current broken state back at you as though it were a constr
 The PR template's "Type of change" section lists Breaking change as an option. What is its purpose in
 this workflow?
 
-- A. It makes the author declare compatibility impact where reviewers will see it
-- B. It automatically bumps the version
-- C. It blocks the merge
-- D. It notifies the security team
+- A. It bumps the package version automatically when the box is ticked
+- B. It blocks the merge until a second reviewer approves the change
+- C. It notifies the security team through a CODEOWNERS assignment
+- D. It makes the author declare compatibility impact for reviewers
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: D
 
 **In `challenge-01.md`:** lines **259–264**.
 
@@ -606,7 +606,7 @@ this workflow?
 checkbox. Its value is that the question gets asked at the moment the author still remembers the
 answer.
 
-**Why B is the near-miss worth separating.** Automatic version bumping from declared intent is real —
+**Why A is the near-miss worth separating.** Automatic version bumping from declared intent is real —
 it is what conventional commits and `BREAKING CHANGE` do (Challenge 03), and what GitVersion consumes
 (Challenge 14). A checkbox in Markdown is read by humans only.
 
@@ -622,17 +622,17 @@ it is what conventional commits and `BREAKING CHANGE` do (Challenge 03), and wha
 
 Which **three** describe GitHub Flow? (Choose three.)
 
-- A. A single long-lived branch, `main`
-- B. Short-lived feature branches created from `main`
-- C. `main` is always deployable and is what you deploy from
-- D. A permanent `develop` integration branch
-- E. Release branches cut for each version
-- F. Commits go directly to `main` behind feature flags
+- A. A single long-lived branch, `main`, that every change returns to
+- B. A permanent `develop` branch where features integrate first
+- C. Short-lived feature branches created from `main` and merged back
+- D. Release branches cut and maintained for each shipped version
+- E. `main` is always deployable and is what production deploys from
+- F. Commits land directly on `main` behind feature flags
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A, B, C
+### Answer: A, C, E
 
 **In `challenge-01.md`:** lines **39–44**.
 
@@ -645,7 +645,7 @@ Which **three** describe GitHub Flow? (Choose three.)
 - `main` is always deployable; deployments happen from `main`
 ```
 
-**D and E are GitFlow** (lines 48–50). **F is trunk-based** (lines 57–58).
+**B and D are GitFlow** (lines 48–50). **F is trunk-based** (lines 57–58).
 
 **All three wrong options are real practices from the same page**, which is exactly how the exam builds
 this question — you cannot eliminate by plausibility, only by knowing which list each line came from.
@@ -658,17 +658,17 @@ this question — you cannot eliminate by plausibility, only by knowing which li
 
 Which **three** are true of trunk-based development? (Choose three.)
 
-- A. Branches live less than one day, or work goes straight to `main`
-- B. It relies heavily on feature flags for incomplete work
-- C. It requires comprehensive automated testing
-- D. It uses a `develop` branch for integration
-- E. It is designed for formal release cycles
-- F. It forbids pull requests
+- A. It uses a `develop` branch to integrate work before release
+- B. Branches live less than one day, or work goes straight to `main`
+- C. It relies heavily on feature flags to hide incomplete work
+- D. It is designed around formal, scheduled release cycles
+- E. It requires comprehensive automated test coverage to be safe
+- F. It forbids pull requests in favour of direct commits
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A, B, C
+### Answer: B, C, E
 
 **In `challenge-01.md`:** lines **56–60**.
 
@@ -679,7 +679,7 @@ Which **three** are true of trunk-based development? (Choose three.)
 - Best for: high-performing teams with mature CI/CD and feature flag infrastructure
 ```
 
-**B and C are prerequisites, not benefits, and that is the point of the question.** Trunk-based without
+**C and E are prerequisites, not benefits, and that is the point of the question.** Trunk-based without
 feature flags means shipping half-finished work; trunk-based without comprehensive tests means shipping
 it unverified. Line 60 says so directly: *high-performing teams with mature CI/CD and feature flag
 infrastructure*.
@@ -696,16 +696,16 @@ PR that opens and merges the same day is entirely compatible with it.
 Which **three** guardrails does the branch protection configuration apply? (Choose three.)
 
 - A. At least one approving review, with stale approvals dismissed
-- B. Required status checks with strict mode
-- C. Force pushes and deletions blocked
-- D. A maximum PR size
-- E. A required branch naming pattern
-- F. Automatic deployment on merge
+- B. A maximum pull request size measured in changed lines
+- C. A required branch naming pattern checked before merge
+- D. Required status checks that must pass, running in strict mode
+- E. Automatic deployment to production once the PR merges
+- F. Force pushes and branch deletions blocked on `main`
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A, B, C
+### Answer: A, D, F
 
 **In `challenge-01.md`:** lines **180–185**.
 
@@ -718,7 +718,7 @@ Which **three** guardrails does the branch protection configuration apply? (Choo
   --field allow_deletions=false
 ```
 
-**Why E is the precise near-miss.** Branch naming **is** enforced in this challenge — by a **CI job**
+**Why C is the precise near-miss.** Branch naming **is** enforced in this challenge — by a **CI job**
 (lines 378–391), not by branch protection. It becomes a guardrail only if `validate-branch-name` is
 also listed as a required check, which is exactly what the corrected command at line 467 does.
 
@@ -734,16 +734,16 @@ check passed). CI enforces *content*. Wiring the CI job into the required list i
 Which **two** conditions must be satisfied before an auto-merge PR merges, beyond passing checks?
 (Choose two.)
 
-- A. Required reviews are approved
-- B. The branch is up to date with `main`, if strict mode is enabled
-- C. An administrator confirms
-- D. The branch is older than seven days
-- E. The PR body matches the template
+- A. An administrator confirms the merge from the pull request page
+- B. The pull request body matches the repository template exactly
+- C. Required reviews on the pull request have all been approved
+- D. The branch has existed for more than seven calendar days
+- E. The branch is up to date with `main`, if strict mode is on
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A, B
+### Answer: C, E
 
 **In `challenge-01.md`:** lines **317–320**.
 
@@ -758,7 +758,7 @@ Which **two** conditions must be satisfied before an auto-merge PR merges, beyon
 it, an auto-merge PR can merge against a `main` that has moved, which is precisely the merge skew Q2
 describes.
 
-**Why C inverts the feature.** Auto-merge exists to remove the human from the *merge click*, not to add
+**Why A inverts the feature.** Auto-merge exists to remove the human from the *merge click*, not to add
 one.
 
 </details>
@@ -769,24 +769,24 @@ one.
 
 Which **two** problems from the scenario does branch protection directly address? (Choose two.)
 
-- A. `main` broken at least once per sprint
-- B. Nobody knows which branch represents production
-- C. Merges taking two to three days
-- D. Five teams in one monorepo
-- E. Teams inventing their own strategies
+- A. Merges routinely taking two to three days to resolve
+- B. `main` broken at least once per sprint by incoming changes
+- C. Five development teams working in a single monorepo
+- D. Nobody knows which branch represents the production state
+- E. Each team having invented its own branching strategy
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A, B
+### Answer: B, D
 
 **In `challenge-01.md`:** line **20**, with the protection at lines **177–185**.
 
-**A is fixed by required status checks** — broken code cannot reach `main` if a green build is a
-precondition. **B is fixed by having one deployable branch and enforcing it**: once `main` is the only
+**B is fixed by required status checks** — broken code cannot reach `main` if a green build is a
+precondition. **D is fixed by having one deployable branch and enforcing it**: once `main` is the only
 merge target, "which branch is production" has a single answer.
 
-**Why C is fixed by something else, and this is the useful distinction.** Two-to-three-day merges are
+**Why A is fixed by something else, and this is the useful distinction.** Two-to-three-day merges are
 caused by **long-lived branches diverging**, and the cure is short-lived branches plus frequent
 integration — a *practice*, nudged by the branch-age warning at line 406. No protection rule shortens
 a merge conflict.
@@ -801,16 +801,16 @@ a merge conflict.
 
 Which **two** are true of the ruleset approach compared with classic branch protection? (Choose two.)
 
-- A. It is recommended for organisations
-- B. It expresses the same guardrails as typed rules with parameters
-- C. It replaces the need for CI
-- D. It applies only to tags
-- E. It cannot require status checks
+- A. It is the approach recommended for organisation-wide use
+- B. It removes the need for a CI system to report checks
+- C. It can only be applied to tags, never to branch names
+- D. It expresses the same guardrails as typed rules with parameters
+- E. It cannot require status checks the way protection can
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A, B
+### Answer: A, D
 
 **In `challenge-01.md`:** lines **197** and **214–240**.
 
@@ -841,18 +841,18 @@ than one named branch.
 
 ## Q23
 
-Which **two** CI jobs run only on pull requests? (Choose two.)
+Which **two** jobs in the challenge's CI workflow run only on pull requests? (Choose two.)
 
-- A. `validate-branch-name`
-- B. `enforce-no-long-lived-branches`
-- C. `build`
-- D. `test`
-- E. All four
+- A. `build`, which compiles the application and uploads artifacts
+- B. `test`, which runs the unit suite and publishes results
+- C. `validate-branch-name`, which checks the branch prefix pattern
+- D. `lint`, which checks formatting across the whole repository
+- E. `enforce-no-long-lived-branches`, which checks the branch age
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A, B
+### Answer: C, E
 
 **In `challenge-01.md`:** lines **380** and **395**.
 
@@ -1161,7 +1161,7 @@ Match each requirement to the setting that enforces it.
 | History cannot be rewritten |  |
 | Branch is removed after merge |  |
 
-**Options:** **`allow_force_pushes: false`** / `non_fast_forward` · `delete_branch_on_merge: true` · `dismiss_stale_reviews: true` · `enforce_admins: true` · Required pull request reviews · `strict: true`
+**Options:** `allow_force_pushes: false` / `non_fast_forward` · `delete_branch_on_merge: true` · `dismiss_stale_reviews: true` · `enforce_admins: true` · Required pull request reviews · `strict: true`
 
 <details>
 <summary>Show answer</summary>
@@ -1308,10 +1308,10 @@ gh api repos/OWNER/REPO/branches/main/protection \
 Requirement: checks must pass, the branch must be current with `main`, and the rules must bind
 administrators.
 
-- **BLANK 1:** `{"strict":true,"contexts":["ci/build","ci/test"]}` / `{"strict":false,"contexts":[]}` /
-  `{"required":true}` / `{"checks":"all"}`
-- **BLANK 2:** `enforce_admins` / `restrictions` / `allow_deletions` / `required_signatures`
-- **BLANK 3:** `false` / `true`
+- **BLANK 1:** `{"strict":false,"contexts":[]}` / `{"required":true}` /
+  `{"strict":true,"contexts":["ci/build","ci/test"]}` / `{"checks":"all"}`
+- **BLANK 2:** `restrictions` / `enforce_admins` / `allow_deletions` / `required_signatures`
+- **BLANK 3:** `true` / `false`
 
 <details>
 <summary>Show answer</summary>
@@ -1351,8 +1351,8 @@ that job instead.
 }
 ```
 
-- **BLANK 1:** `pull_request` / `required_reviews` / `branch_protection` / `merge_policy`
-- **BLANK 2:** `dismiss_stale_reviews_on_push` / `dismiss_stale_reviews` / `require_review` /
+- **BLANK 1:** `required_reviews` / `branch_protection` / `merge_policy` / `pull_request`
+- **BLANK 2:** `dismiss_stale_reviews` / `require_review` / `dismiss_stale_reviews_on_push` /
   `strict_reviews`
 
 <details>
@@ -1371,7 +1371,7 @@ that job instead.
 
 **The field name differs between the two APIs and the exam exploits it.** Classic protection calls it
 `dismiss_stale_reviews` (line 182); a ruleset calls it `dismiss_stale_reviews_on_push`. Same behaviour,
-different spelling — and BLANK 2's second option is the *other* API's name.
+different spelling — and BLANK 2's first option is the *other* API's name.
 
 </details>
 
@@ -1394,10 +1394,10 @@ different spelling — and BLANK 2's second option is the *other* API's name.
           fi
 ```
 
-- **BLANK 1:** `pull_request` / `push` / `workflow_dispatch` / `schedule`
-- **BLANK 2:** the `github.head_ref` expression / the `github.ref` expression /
-  the `github.base_ref` expression / the `github.sha` expression
-- **BLANK 3:** `error` / `warning` / `notice` / `debug`
+- **BLANK 1:** `push` / `pull_request` / `workflow_dispatch` / `schedule`
+- **BLANK 2:** the `github.ref` expression / the `github.base_ref` expression /
+  the `github.head_ref` expression / the `github.sha` expression
+- **BLANK 3:** `notice` / `warning` / `debug` / `error`
 
 <details>
 <summary>Show answer</summary>
@@ -1432,9 +1432,9 @@ gh api repos/OWNER/REPO \
 
 Requirement: linear history, and squashed commits that carry the reviewed description.
 
-- **BLANK 1:** `true` / `false`
-- **BLANK 2:** `false` / `true`
-- **BLANK 3:** `PR_TITLE` / `COMMIT_OR_PR_TITLE` / `DEFAULT` / `BRANCH_NAME`
+- **BLANK 1:** `false` / `true`
+- **BLANK 2:** `true` / `false`
+- **BLANK 3:** `COMMIT_OR_PR_TITLE` / `DEFAULT` / `PR_TITLE` / `BRANCH_NAME`
 
 <details>
 <summary>Show answer</summary>
@@ -1462,8 +1462,8 @@ gh api repos/OWNER/REPO/commits/main/[BLANK 1] \
   --jq '.check_runs[].[BLANK 2]'
 ```
 
-- **BLANK 1:** `check-runs` / `statuses` / `protection` / `pulls`
-- **BLANK 2:** `name` / `conclusion` / `id` / `status`
+- **BLANK 1:** `statuses` / `protection` / `check-runs` / `pulls`
+- **BLANK 2:** `conclusion` / `name` / `id` / `status`
 
 <details>
 <summary>Show answer</summary>
@@ -1496,9 +1496,9 @@ gh api repos/OWNER/REPO/branches/main/protection/[BLANK 1] \
 
 Requirement: correct the required checks so they match the workflow's actual job names.
 
-- **BLANK 1:** `required_status_checks` / `required_pull_request_reviews` / `enforce_admins` /
+- **BLANK 1:** `required_pull_request_reviews` / `enforce_admins` / `required_status_checks` /
   `restrictions`
-- **BLANK 2:** `["build","test","validate-branch-name"]` / `["ci/build","ci/test"]` / `["*"]` / `[]`
+- **BLANK 2:** `["ci/build","ci/test"]` / `["build","test","validate-branch-name"]` / `["*"]` / `[]`
 
 <details>
 <summary>Show answer</summary>
@@ -1564,15 +1564,15 @@ direct pushes and broken merges.
 
 How should the strategy decision be recorded?
 
-- A. An ADR with Status, Context, Decision and Consequences, committed to the repository
-- B. A message in the engineering channel
-- C. A wiki page owned by the VP
-- D. The README
+- A. A message in the engineering channel, pinned for visibility
+- B. A page in the team wiki, owned and maintained by the VP
+- C. An ADR recording Status, Context, Decision and Consequences
+- D. A section in the README describing the chosen workflow
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: C
 
 **In `challenge-01.md`:** lines **73–94**.
 
@@ -1601,28 +1601,28 @@ repository and has no reviewer.
 
 Which strategy meets the Strategy requirements, and why is the obvious alternative wrong?
 
-- A. GitHub Flow — continuous deployment, one simple model, no release branches needed
-- B. GitFlow — the team already maintains four parallel release branches
-- C. Trunk-based — the simplest possible model
-- D. Let each team keep its own, but standardise the names
+- A. GitFlow — the team already maintains four parallel release branches
+- B. Trunk-based — the simplest model available to a team this size
+- C. Let each team keep its own model, but standardise branch names
+- D. GitHub Flow — continuous deployment, one model, no release branches
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: D
 
 **In `challenge-01.md`:** lines **64–69**.
 
-**Why B is the strongest distractor in this paper.** The four parallel release branches are real — and
+**Why A is the strongest distractor in this paper.** The four parallel release branches are real — and
 they are listed at line 20 as a **symptom of the chaos being fixed**, not as a requirement to preserve.
 Nothing in the scenario says Contoso supports four shipped versions; one team invented the branches.
 **The exam quotes the broken state back at you and waits to see whether you treat it as a constraint.**
 
-**Why C fails on readiness rather than on principle.** Trunk-based needs feature flags and comprehensive
+**Why B fails on readiness rather than on principle.** Trunk-based needs feature flags and comprehensive
 automated testing (lines 58–59). A team whose `main` breaks every sprint has neither — adopting it would
 remove the PR gate that is the entire fix.
 
-**Why D is the status quo with better labels.**
+**Why C is the status quo with better labels.**
 
 </details>
 
@@ -1632,22 +1632,22 @@ remove the PR gate that is the entire fix.
 
 How is "direct pushes must be impossible, including for administrators" satisfied?
 
-- A. Required pull request reviews with `enforce_admins: true`
-- B. Required pull request reviews alone
-- C. A CI job that rejects pushes to `main`
-- D. Removing everyone's write access
+- A. Required pull request reviews on `main`, with no other setting
+- B. A CI job that rejects any push landing directly on `main`
+- C. Required pull request reviews with `enforce_admins` set to true
+- D. Removing write access from everyone except the release team
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: C
 
 **In `challenge-01.md`:** lines **181–182** and **440–442**.
 
-**Both halves are named in the requirement, and B supplies only one.** Without `enforce_admins`,
+**Both halves are named in the requirement, and A supplies only one.** Without `enforce_admins`,
 protection has a standing exception for the people under the most delivery pressure (Q5).
 
-**Why C cannot work, and the reason is worth internalising.** CI runs *after* a push is accepted. It can
+**Why B cannot work, and the reason is worth internalising.** CI runs *after* a push is accepted. It can
 report that `main` is broken; it cannot prevent the push. **Only the server-side rule prevents.**
 
 **Why D breaks the workflow it is protecting** — nobody could merge a PR either.
@@ -1660,24 +1660,24 @@ report that `main` is broken; it cannot prevent the push. **Only the server-side
 
 Which **two** prevent two independently-green PRs from combining into a broken `main`? (Choose two.)
 
-- A. `strict: true` on required status checks
-- B. CI triggered on pushes to `main` as well as pull requests
-- C. `dismiss_stale_reviews`
-- D. `delete_branch_on_merge`
-- E. The PR template
+- A. `dismiss_stale_reviews` on the required review settings
+- B. `strict: true` on the required status checks object
+- C. `delete_branch_on_merge` on the repository settings
+- D. CI triggered on pushes to `main` as well as pull requests
+- E. The pull request template's "Type of change" section
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A, B
+### Answer: B, D
 
 **In `challenge-01.md`:** lines **180** and **335–339**.
 
-**A is the prevention; B is the detection.** Strict mode stops the second PR merging until it has been
+**B is the prevention; D is the detection.** Strict mode stops the second PR merging until it has been
 validated against the first one's result. The push trigger on `main` catches anything that still slips
 through, so the team learns within one build rather than at the next deployment.
 
-**Why C guards a different failure.** Stale approvals are about the *reviewer's* knowledge going out of
+**Why A guards a different failure.** Stale approvals are about the *reviewer's* knowledge going out of
 date, not `main` moving.
 
 **Why the pairing matters for the exam.** When a question asks how to stop a class of failure, a
@@ -1692,19 +1692,19 @@ insufficient.
 
 How should branch naming be "enforced rather than requested"?
 
-- A. A CI job validating the pattern, listed as a required status check
-- B. A CI job validating the pattern
-- C. A line in the PR template
-- D. A note in the ADR
+- A. A CI job validating the pattern, reporting on every pull request
+- B. A CI job validating the pattern, listed as a required status check
+- C. A line in the pull request template asking authors to check it
+- D. A note in the ADR recording the agreed naming convention
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: B
 
 **In `challenge-01.md`:** lines **378–390** and **467**.
 
-**B is the answer that is 90% right and fails the requirement's last word.** The job runs, reports and
+**A is the answer that is 90% right and fails the requirement's last word.** The job runs, reports and
 fails — and a PR can still merge unless the job is in the `contexts` list. That promotion at line 467 is
 the difference between *requested* and *enforced*.
 
@@ -1724,18 +1724,17 @@ Nine months after the rollout, the team notices that PRs have been merging with 
 job still runs and still fails on bad names. The workflow file was recently refactored, and the job now
 reads `validate-branch:`.
 
-What happened, and what is the fix?
+What is the most likely cause?
 
-- A. Renaming the job broke the match with the required check, so the rule now waits on a context nothing
-  reports — update the required checks to the new job name, or revert the rename
-- B. `enforce_admins` was disabled
-- C. Auto-merge began bypassing checks
-- D. `strict` mode expired
+- A. `enforce_admins` was disabled at some point during the refactor
+- B. Auto-merge began bypassing the configured required checks
+- C. The rename broke the context match, so nothing reports that name
+- D. `strict` mode expired and is no longer applied to the branch
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: C
 
 **In `challenge-01.md`:** lines **453** and **459–467**.
 
@@ -1755,7 +1754,7 @@ which is how six weeks pass with a red job and green merges.
 is a change to a security control.** Treat workflow refactors as touching branch protection, and re-run
 the check-run listing at line 460 afterwards.
 
-**Why the others fail** — B would allow direct pushes, not bad merges; C contradicts Q4; and nothing in
+**Why the others fail** — A would allow direct pushes, not bad merges; B contradicts Q4; and nothing in
 branch protection expires.
 
 </details>
@@ -1767,20 +1766,17 @@ branch protection expires.
 A year on, Contoso's five teams merge into one monorepo without the old pain. `main` has not been broken
 in four months.
 
-Explain what each control contributed, and what actually changed.
+Which explanation best accounts for the change?
 
-- A. The ADR settled the argument once; required reviews and `enforce_admins` closed the direct-push path;
-  required checks kept broken code out; `strict` mode stopped green-plus-green producing red; squash and
-  auto-merge removed the manual delay — and every one of them is enforced by the platform rather than by
-  people remembering
-- B. The teams became more disciplined
-- C. The PR template made people careful
-- D. Fewer developers were working on the repository
+- A. The five teams became more disciplined once the new model was explained
+- B. Platform-enforced controls closed each path to a broken `main` in turn
+- C. The pull request template made authors more careful about their changes
+- D. Fewer developers were working in the monorepo than a year previously
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: B
 
 **In `challenge-01.md`:** lines **75–94**, **177–185**, **180**, **300–308**, **467**.
 

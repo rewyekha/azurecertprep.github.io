@@ -46,15 +46,15 @@ hours** to answer which commit, who approved it, and which work item authorised 
 
 What is the difference between `AB#1234` and `Fixes AB#1234` in a commit message?
 
-- A. `AB#1234` only works in PR descriptions; `Fixes AB#1234` works in commits
-- B. `AB#1234` creates a link; `Fixes AB#1234` creates a link and transitions the work item state
-- C. They behave identically
-- D. `AB#1234` links Azure Boards; `Fixes AB#1234` links GitHub Issues
+- A. `AB#1234` works only in PR descriptions; `Fixes AB#1234` works in commits
+- B. `AB#1234` links Azure Boards; `Fixes AB#1234` links GitHub Issues
+- C. `AB#1234` creates a link; `Fixes AB#1234` also transitions the item
+- D. They behave identically in commits and in pull request descriptions
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: B
+### Answer: C
 
 **In `challenge-03.md`:** lines **144–158**.
 
@@ -74,7 +74,7 @@ Fixes AB#2100"
 code is already in production is a board nobody trusts — and that distrust is how Contoso ended up
 spending four hours reconstructing what happened (line 20).
 
-**Why D mixes the platforms.** `AB#` is Azure Boards in both forms. GitHub Issues use a bare `#`
+**Why B mixes the platforms.** `AB#` is Azure Boards in both forms. GitHub Issues use a bare `#`
 (line 195).
 
 </details>
@@ -85,15 +85,15 @@ spending four hours reconstructing what happened (line 20).
 
 Which component of Conventional Commits indicates a breaking change?
 
-- A. The `breaking` type prefix
-- B. An exclamation mark after the type or scope, and/or a `BREAKING CHANGE:` footer
-- C. Capitalising the entire subject line
-- D. Adding `[BREAKING]` anywhere in the body
+- A. The `breaking` type prefix used in place of `feat` or `fix`
+- B. Capitalising the entire subject line of the commit message
+- C. Adding the text `[BREAKING]` anywhere in the commit body
+- D. A `!` after the type or scope, or a `BREAKING CHANGE:` footer
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: B
+### Answer: D
 
 **In `challenge-03.md`:** lines **66–68**.
 
@@ -121,16 +121,15 @@ feature.
 
 In a full traceability chain, what connects a merged PR to its deployed artifact?
 
-- A. The merge commit SHA matches the build's trigger commit, and the build produces a versioned artifact
-  deployed to the environment
-- B. The developer manually tags the deployment with the PR number
-- C. Azure Boards tracks deployments automatically
-- D. CODEOWNERS maps PRs to deployments
+- A. The developer tags the deployment with the pull request number
+- B. The merge commit SHA matches the build that produced the artifact
+- C. Azure Boards records deployments against work items automatically
+- D. CODEOWNERS maps each pull request to its deployment environment
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: B
 
 **In `challenge-03.md`:** lines **301–306**.
 
@@ -146,7 +145,7 @@ gh api repos/{owner}/{repo}/deployments \
 **The SHA is the join key**, and the query at line 306 is that join written out: select the deployment
 whose `sha` equals the merge commit.
 
-**Why B is what teams do when the chain is broken**, and why it fails: a manual tag is applied by
+**Why A is what teams do when the chain is broken**, and why it fails: a manual tag is applied by
 someone who remembers, at 2 AM, under pressure — which is exactly when it will not happen.
 
 **The whole chain in one sentence:** issue number links to work item, work item links to PR, PR
@@ -161,15 +160,15 @@ deployed. **Text references at the top, SHA at the bottom.**
 
 Why does the commitlint workflow use `fetch-depth: 0`?
 
-- A. To download all branches
-- B. To fetch full history so commitlint can read every commit in the PR range
-- C. To enable shallow cloning for speed
-- D. To include submodules
+- A. To fetch full history so commitlint can read the PR range
+- B. To enable shallow cloning so the checkout runs faster
+- C. To download every branch in the repository, not just one
+- D. To include submodules in the checkout alongside the repo
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: B
+### Answer: A
 
 **In `challenge-03.md`:** lines **448–450** and **480–483**.
 
@@ -188,7 +187,7 @@ Why does the commitlint workflow use `fetch-depth: 0`?
 **`actions/checkout` clones shallow by default — depth 1, one commit.** The linter is asked to inspect
 every commit from base to head, and those commits are not in the clone.
 
-**Why C is the exact inverse**, and it is the option that catches people who half-remember the flag.
+**Why B is the exact inverse**, and it is the option that catches people who half-remember the flag.
 `fetch-depth: 0` means **unlimited**, not shallow. Shallow is the default it is overriding.
 
 **The same line appears on the traceability workflow** (line 327) and the work-item check (line 490),
@@ -202,15 +201,15 @@ for the same reason — both run `git log` over a commit range.
 
 `AB#1234` in commit messages is not creating links in Azure Boards. What is the cause?
 
-- A. The Azure Boards GitHub App is not installed, or the repository is not connected in Azure DevOps
-- B. The commits were squashed
-- C. The syntax must be lowercase
-- D. Commit messages cannot link work items
+- A. The commits in the pull request were squashed on merge
+- B. The `AB#` syntax must be written entirely in lowercase
+- C. Commit messages cannot link work items, only PR bodies can
+- D. The Boards GitHub App is missing or the repo is not connected
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: D
 
 **In `challenge-03.md`:** line **538**.
 
@@ -227,7 +226,7 @@ under Boards > GitHub connections grants Azure DevOps's side.
 not connected will happily accept `AB#2045` in a commit message and do nothing with it — no error, no
 warning, just a reference that never becomes a link.
 
-**Why D is refuted by lines 144–168**, where three commit messages carry work item references.
+**Why C is refuted by lines 144–168**, where three commit messages carry work item references.
 
 </details>
 
@@ -237,15 +236,15 @@ warning, just a reference that never becomes a link.
 
 Commitlint rejects `Merge branch 'main' into feature/xyz`. What is the correct fix?
 
-- A. Add an `ignores` rule for commits starting with `Merge`
-- B. Disable commitlint
-- C. Rewrite the merge commit message
-- D. Ban merge commits entirely
+- A. Disable commitlint for the repository altogether
+- B. Add an `ignores` rule for commits starting with `Merge`
+- C. Rewrite the merge commit message by hand each time
+- D. Ban merge commits entirely with `allow_merge_commit`
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: B
 
 **In `challenge-03.md`:** lines **552–559**.
 
@@ -262,7 +261,7 @@ module.exports = {
 **A merge commit's message is generated by Git, not written by a developer** — so holding it to a
 human-authored convention punishes people for a message they did not choose.
 
-**Why B is the over-correction the exam offers** whenever a control produces friction. Turning off the
+**Why A is the over-correction the exam offers** whenever a control produces friction. Turning off the
 linter to accommodate one generated message removes it for every real one.
 
 **Why D is a defensible policy that is not this fix.** Banning merge commits is Challenge 01's
@@ -277,15 +276,15 @@ merged `main` into their own branch locally.
 
 The traceability check fails on Dependabot PRs. What is the fix?
 
-- A. Skip the check for bot accounts with an `if` condition on `github.actor`
-- B. Disable the traceability check
-- C. Ask Dependabot to include issue numbers
-- D. Merge Dependabot PRs manually
+- A. Disable the traceability check for all pull requests
+- B. Ask Dependabot to include issue numbers in its PR body
+- C. Skip the check for bot accounts using `github.actor`
+- D. Merge Dependabot pull requests manually without the check
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: C
 
 **In `challenge-03.md`:** lines **575–576**.
 
@@ -311,15 +310,15 @@ integration bypass traceability.
 
 Which commit type triggers a **minor** version bump?
 
-- A. `feat`
-- B. `fix`
-- C. `chore`
-- D. `docs`
+- A. `fix`, which corrects behaviour without adding capability
+- B. `perf`, which improves speed without changing behaviour
+- C. `chore`, which covers maintenance with no consumer impact
+- D. `feat`, which adds capability consumers can start using
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: D
 
 **In `challenge-03.md`:** lines **52–53**.
 
@@ -346,10 +345,10 @@ the repository without changing what consumers get.
 
 What does `'type-enum': [2, 'always', [...]]` mean in the commitlint config?
 
-- A. Severity 2 (error), always applied, restricted to the listed types
-- B. Two types are allowed
-- C. It runs on the second commit
-- D. It warns after two violations
+- A. Severity 2 (error), always applied, restricted to those types
+- B. Two commit types out of the list are permitted per commit
+- C. The rule begins running from the second commit in the range
+- D. It emits a warning only after two separate violations occur
 
 <details>
 <summary>Show answer</summary>
@@ -383,15 +382,15 @@ reference, but do not block.
 
 Which hook does husky create to validate a commit message?
 
-- A. `commit-msg`
-- B. `pre-commit`
-- C. `pre-push`
-- D. `post-merge`
+- A. `pre-commit`, which runs before the message is written
+- B. `post-merge`, which runs after a merge completes
+- C. `commit-msg`, which receives the message file path
+- D. `pre-push`, which runs before refs are sent upstream
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: C
 
 **In `challenge-03.md`:** lines **111–113**.
 
@@ -403,7 +402,7 @@ chmod +x .husky/commit-msg
 **`commit-msg` receives the path to the message file as `$1`**, which is what `--edit "$1"` reads. No
 other hook is handed the message.
 
-**Why B is the plausible near-miss.** `pre-commit` runs **before** the message exists — it is where
+**Why A is the plausible near-miss.** `pre-commit` runs **before** the message exists — it is where
 linters and formatters go. At that point there is nothing for commitlint to inspect.
 
 </details>
@@ -414,15 +413,15 @@ linters and formatters go. At that point there is nothing for commitlint to insp
 
 Which three keywords close a GitHub issue when a PR merges?
 
-- A. `closes`, `fixes`, `resolves`
-- B. `done`, `complete`, `finished`
-- C. `AB#`, `WI#`, `REF#`
-- D. `merge`, `ship`, `deploy`
+- A. `done`, `complete` and `finished`, in any capitalisation
+- B. `AB#`, `WI#` and `REF#`, followed by the item number
+- C. `merge`, `ship` and `deploy`, followed by the issue number
+- D. `closes`, `fixes` and `resolves`, in any capitalisation
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: D
 
 **In `challenge-03.md`:** lines **195–199**.
 
@@ -450,10 +449,10 @@ branch** (line 193). Merging into a release branch links without closing.
 
 What does the traceability workflow do when a PR has no issue or work item reference?
 
-- A. It fails the check with `core.setFailed`
-- B. It logs a warning and passes
-- C. It adds a label
-- D. It closes the PR
+- A. It fails the check by calling `core.setFailed` with a message
+- B. It logs a warning to the run log and lets the check pass
+- C. It adds a label to the pull request marking it untraceable
+- D. It closes the pull request and comments on the issue thread
 
 <details>
 <summary>Show answer</summary>
@@ -488,15 +487,15 @@ three that describe the problem.
 
 What does the `hasLinkedIssue` check add beyond `hasIssueRef`?
 
-- A. It accepts a bare `#123` mention without a closing keyword
-- B. It validates the issue exists
-- C. It checks the PR title
-- D. It requires an Azure Boards reference
+- A. It confirms the referenced issue actually exists in the repo
+- B. It accepts a bare `#123` mention with no closing keyword
+- C. It checks the pull request title as well as the body text
+- D. It requires an Azure Boards reference as well as the issue
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: B
 
 **In `challenge-03.md`:** lines **336–338**.
 
@@ -522,10 +521,10 @@ in the body.
 
 What does the commit-message validation step in the traceability workflow compare against?
 
-- A. `origin/main..HEAD`
-- B. The last 10 commits
-- C. The entire history
-- D. The default branch only
+- A. The `origin/main..HEAD` range of the branch's own commits
+- B. The entire history of the repository from the root
+- C. The last ten commits on the pull request branch
+- D. Only the tip commit of the repository default branch
 
 <details>
 <summary>Show answer</summary>
@@ -554,15 +553,15 @@ pre-convention commit in the repository, forever, and the check would be deleted
 
 Which audit-log query finds branch protection overrides?
 
-- A. `-f phrase='action:protected_branch.policy_override repo:contoso-org/contoso-payments'`
-- B. `-f phrase='action:repo'`
-- C. `-f phrase='actor:username'`
-- D. `--jq '.[] | select(.action == "push")'`
+- A. `-f phrase='action:repo'` to list repository-level events
+- B. `-f phrase='action:protected_branch.policy_override repo:...'`
+- C. `-f phrase='actor:username'` to list one person's actions
+- D. `--jq '.[] | select(.action == "push")'` to filter pushes
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: B
 
 **In `challenge-03.md`:** lines **394–397**.
 
@@ -589,15 +588,15 @@ same endpoint serves the three different queries at lines 380, 387 and 394.
 
 What does Azure DevOps audit **streaming** provide over querying the audit log?
 
-- A. Continuous export to a destination such as Log Analytics, for retention and correlation
-- B. Faster queries
-- C. Longer retention inside Azure DevOps
-- D. Alerting on work item changes
+- A. Faster queries against the audit log held in Azure DevOps
+- B. Longer retention of the audit log inside Azure DevOps itself
+- C. Alerting whenever a work item changes state on the board
+- D. Continuous export to a destination such as Log Analytics
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: D
 
 **In `challenge-03.md`:** lines **412–427**.
 
@@ -631,17 +630,17 @@ did it correlate with the incident?" becomes one query instead of three systems.
 
 Which **three** commit types trigger a version bump? (Choose three.)
 
-- A. `feat` — minor
-- B. `fix` — patch
-- C. `perf` — patch
-- D. `docs`
-- E. `chore`
-- F. `style`
+- A. `feat`, which produces a minor version bump
+- B. `docs`, which documents without changing code
+- C. `chore`, which covers repository maintenance
+- D. `fix`, which produces a patch version bump
+- E. `style`, which changes formatting alone
+- F. `perf`, which produces a patch version bump
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A, B, C
+### Answer: A, D, F
 
 **In `challenge-03.md`:** lines **52–61**.
 
@@ -665,17 +664,17 @@ the repository without changing the artifact consumers install.
 
 Which **three** are steps in the full traceability chain the challenge builds? (Choose three.)
 
-- A. Bug report as a GitHub issue
-- B. Work item in Azure Boards, linked to the issue
-- C. Deployment selected by matching the merge commit SHA
-- D. A spreadsheet of releases
-- E. A weekly status email
-- F. A manual deployment tag
+- A. A spreadsheet of releases kept by the release manager
+- B. A bug report raised as a GitHub issue by the QA team
+- C. A work item in Azure Boards linked to that issue
+- D. A weekly status email summarising what shipped
+- E. A deployment selected by matching the merge SHA
+- F. A deployment tag applied by hand after release
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A, B, C
+### Answer: B, C, E
 
 **In `challenge-03.md`:** lines **289–306**.
 
@@ -692,7 +691,7 @@ Which **three** are steps in the full traceability chain the challenge builds? (
 human to remember something, the chain breaks under pressure, which is what produced the four-hour
 investigation at line 20.
 
-**Why D, E and F are the alternatives teams build when the chain is broken**, and all three depend on
+**Why A, D and F are the alternatives teams build when the chain is broken**, and all three depend on
 somebody maintaining them by hand.
 
 </details>
@@ -703,16 +702,16 @@ somebody maintaining them by hand.
 
 Which **two** signals mark a breaking change? (Choose two.)
 
-- A. `!` after the type or scope
-- B. A `BREAKING CHANGE:` footer
-- C. A `breaking` type
-- D. Upper-case subject
-- E. A `major` scope
+- A. A `breaking` type in place of `feat` or `fix`
+- B. A `!` placed after the type or the scope
+- C. An upper-case subject line on the commit
+- D. A `BREAKING CHANGE:` footer in the body
+- E. A `major` scope such as `feat(major):`
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A, B
+### Answer: B, D
 
 **In `challenge-03.md`:** lines **66–70**.
 
@@ -725,7 +724,7 @@ BREAKING CHANGE: The /auth/token endpoint now returns a JSON object
 **Either is sufficient; the example uses both because they do different jobs.** The `!` is the machine
 signal that drives the major bump; the footer is the human explanation of what consumers must change.
 
-**Why C is the trap worth stating twice** (Q2): there is no `breaking` type in the table at lines
+**Why A is the trap worth stating twice** (Q2): there is no `breaking` type in the table at lines
 52–61. Breaking is a modifier on an existing type.
 
 </details>
@@ -736,16 +735,16 @@ signal that drives the major bump; the footer is the human explanation of what c
 
 Which **two** are true about GitHub closing keywords? (Choose two.)
 
-- A. `closes`, `fixes` and `resolves` all work
-- B. They are case-insensitive
-- C. They close the issue on merge into any branch
-- D. They transition Azure Boards work items
-- E. Only `closes` works in a PR body
+- A. They close the issue on merge into any target branch
+- B. They also transition Azure Boards work items directly
+- C. `closes`, `fixes` and `resolves` all close the issue
+- D. Only `closes` works when placed in a pull request body
+- E. They are case-insensitive in every documented form
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A, B
+### Answer: C, E
 
 **In `challenge-03.md`:** lines **195–199**.
 
@@ -753,11 +752,11 @@ Which **two** are true about GitHub closing keywords? (Choose two.)
 Case-insensitive variations all work: `Close`, `FIXES`, `Resolves`.
 ```
 
-**Why C is the constraint the exam tests.** Line 193 says "when the PR merges **to the default
+**Why A is the constraint the exam tests.** Line 193 says "when the PR merges **to the default
 branch**". Merge the same PR into `release/2.4` and the issue is linked but stays open — which is
 correct behaviour, since the fix has not reached production.
 
-**Why D crosses the platforms.** Azure Boards needs `AB#` and the `Fixes` keyword together (Q1).
+**Why B crosses the platforms.** Azure Boards needs `AB#` and the `Fixes` keyword together (Q1).
 
 </details>
 
@@ -767,16 +766,16 @@ correct behaviour, since the fix has not reached production.
 
 Which **two** checks does the commit-lint workflow run? (Choose two.)
 
-- A. `commitlint` over the PR's commit range
-- B. A search for work item references in commits, warning if absent
-- C. A test suite
-- D. A security scan
-- E. A coverage gate
+- A. A unit test suite run over the changed packages
+- B. `commitlint` run over the pull request's commit range
+- C. A dependency security scan of the lockfile
+- D. A search for work item references, warning if absent
+- E. A coverage gate comparing against the base branch
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A, B
+### Answer: B, D
 
 **In `challenge-03.md`:** lines **445–483** and **485–502**.
 
@@ -805,16 +804,16 @@ refactoring commit inside a referenced PR legitimately has none.
 
 Which **two** are needed for `AB#` links to work? (Choose two.)
 
-- A. The Azure Boards GitHub App installed on the repository
-- B. The repository connected under Boards > GitHub connections in Azure DevOps
-- C. A PAT stored in the repository
-- D. Commitlint configured
-- E. Branch protection enabled
+- A. A PAT for Azure DevOps stored in the repository secrets
+- B. The Azure Boards GitHub App installed on the repository
+- C. Commitlint configured to validate the `AB#` reference
+- D. Branch protection enabled on the default branch
+- E. The repository connected under Boards > GitHub connections
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A, B
+### Answer: B, E
 
 **In `challenge-03.md`:** line **538**.
 
@@ -832,23 +831,23 @@ usually noticed weeks later during a release review.
 
 Which **two** does the audit configuration provide? (Choose two.)
 
-- A. Querying the GitHub organisation audit log by action, actor and repository
-- B. Streaming Azure DevOps audit events to Log Analytics
-- C. Blocking policy overrides
-- D. Automatic rollback of unauthorised changes
-- E. Commit signing
+- A. Blocking policy overrides on protected branches
+- B. Querying the GitHub organisation audit log by action and actor
+- C. Automatic rollback of unauthorised configuration changes
+- D. Streaming Azure DevOps audit events to Log Analytics
+- E. Commit signing enforced across the organisation
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A, B
+### Answer: B, D
 
 **In `challenge-03.md`:** lines **380–397** and **412–427**.
 
-**Both are **detective** controls, and it is worth being precise about that.** They record what
+**Both are detective controls, and it is worth being precise about that.** They record what
 happened; they prevent nothing.
 
-**Why C is the specific misconception.** `protected_branch.policy_override` is an event **type you can
+**Why A is the specific misconception.** `protected_branch.policy_override` is an event **type you can
 search for** (line 396) — evidence that a bypass occurred, which is only useful because the bypass was
 possible. Preventing it is branch protection's job (Challenge 01).
 
@@ -1283,9 +1282,9 @@ Refs: AB#2001
 
 Requirement: a new feature that breaks existing API consumers.
 
-- **BLANK 1:** `feat` / `fix` / `breaking` / `chore`
-- **BLANK 2:** `!` / `*` / `#` / *(nothing)*
-- **BLANK 3:** `BREAKING CHANGE` / `BREAKING` / `MAJOR` / `INCOMPATIBLE`
+- **BLANK 1:** `fix` / `breaking` / `feat` / `chore`
+- **BLANK 2:** `*` / `!` / `#` / *(nothing)*
+- **BLANK 3:** `BREAKING` / `MAJOR` / `INCOMPATIBLE` / `BREAKING CHANGE`
 
 <details>
 <summary>Show answer</summary>
@@ -1319,9 +1318,9 @@ module.exports = {
 
 Requirement: an unlisted type must block the commit; an unlisted scope should only warn.
 
-- **BLANK 1:** `2` / `1` / `0`
-- **BLANK 2:** `1` / `2` / `0`
-- **BLANK 3:** `72` / `50` / `100` / `120`
+- **BLANK 1:** `1` / `2` / `0`
+- **BLANK 2:** `2` / `0` / `1`
+- **BLANK 3:** `50` / `100` / `72` / `120`
 
 <details>
 <summary>Show answer</summary>
@@ -1347,8 +1346,8 @@ numbers, and the challenge's own config makes exactly this choice.
 npx --no -- commitlint --[BLANK 2] "$1"
 ```
 
-- **BLANK 1:** `commit-msg` / `pre-commit` / `pre-push` / `post-commit`
-- **BLANK 2:** `edit` / `read` / `file` / `message`
+- **BLANK 1:** `pre-commit` / `pre-push` / `post-commit` / `commit-msg`
+- **BLANK 2:** `read` / `edit` / `file` / `message`
 
 <details>
 <summary>Show answer</summary>
@@ -1385,8 +1384,8 @@ is a favourite lab failure.
             --to ${{ github.event.pull_request.head.sha }}
 ```
 
-- **BLANK 1:** `0` / `1` / `10` / `50`
-- **BLANK 2:** `base.sha` / `merge_commit_sha` / `head.ref` / `number`
+- **BLANK 1:** `1` / `10` / `0` / `50`
+- **BLANK 2:** `merge_commit_sha` / `base.sha` / `head.ref` / `number`
 
 <details>
 <summary>Show answer</summary>
@@ -1416,8 +1415,8 @@ if (!hasIssueRef && !hasABRef && !hasLinkedIssue) {
 }
 ```
 
-- **BLANK 1:** `prTitle` / `prBody` / `context.sha` / `github.actor`
-- **BLANK 2:** `setFailed` / `warning` / `info` / `notice`
+- **BLANK 1:** `prBody` / `context.sha` / `prTitle` / `github.actor`
+- **BLANK 2:** `warning` / `info` / `notice` / `setFailed`
 
 <details>
 <summary>Show answer</summary>
@@ -1447,8 +1446,8 @@ gh api orgs/{org}/audit-log \
 
 Requirement: find occasions where branch protection was bypassed.
 
-- **BLANK 1:** `action:protected_branch.policy_override` / `action:push` / `actor:admin` /
-  `action:repo.create`
+- **BLANK 1:** `action:push` / `actor:admin` / `action:repo.create` /
+  `action:protected_branch.policy_override`
 
 <details>
 <summary>Show answer</summary>
@@ -1505,25 +1504,25 @@ end-to-end traceability with **no gaps in the audit chain**.
 
 How should commit format be enforced?
 
-- A. A husky `commit-msg` hook locally **and** commitlint as a required CI check over the PR range
-- B. A husky hook alone
-- C. A CI check alone
-- D. A note in CONTRIBUTING.md
+- A. A husky `commit-msg` hook on each developer's machine alone
+- B. A note in CONTRIBUTING.md describing the required format
+- C. A husky hook locally plus commitlint as a required CI check
+- D. A commitlint CI check on the pull request range alone
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: C
 
 **In `challenge-03.md`:** lines **107–113** and **437–483**.
 
 **The requirement asks for both, in its own words: "before the commit exists locally, and again where it
 cannot be skipped."**
 
-**Why B alone fails.** A hook lives in the developer's working copy and is bypassed by `--no-verify`, by
+**Why A alone fails.** A hook lives in the developer's working copy and is bypassed by `--no-verify`, by
 a fresh clone where nobody ran `husky init`, and by any commit made through a web UI.
 
-**Why C alone is worse for the developer.** Discovering a bad message after pushing means an interactive
+**Why D alone is worse for the developer.** Discovering a bad message after pushing means an interactive
 rebase to fix history — the hook catches it in two seconds, before it exists.
 
 **Together they are fast feedback plus a guarantee**, which is the same pattern as Challenge 43's
@@ -1537,11 +1536,10 @@ pre-commit hooks and push protection.
 
 How is "merging a fix must move its work item" satisfied?
 
-- A. `Fixes AB#2100` in the commit or PR, with the Azure Boards app installed and the repository
-  connected in Azure DevOps
-- B. `AB#2100` in the commit message
+- A. `Fixes AB#2100`, with the app installed and repo connected
+- B. A nightly job that syncs board state from merged PRs
 - C. A workflow that calls the Azure Boards API on merge
-- D. A nightly sync job
+- D. A bare `AB#2100` reference in the commit message
 
 <details>
 <summary>Show answer</summary>
@@ -1550,7 +1548,7 @@ How is "merging a fix must move its work item" satisfied?
 
 **In `challenge-03.md`:** lines **152–158** and **538**.
 
-**B is the near-miss that defines this challenge.** A bare `AB#2100` creates the link and leaves the
+**D is the near-miss that defines this challenge.** A bare `AB#2100` creates the link and leaves the
 work item exactly where it was — so the board says Active while the fix is in production.
 
 **Why C is real, unnecessary and worse.** You would be writing and maintaining code, with a credential
@@ -1567,22 +1565,22 @@ even the correct syntax does nothing (Q5, Q22).
 
 How should a production error be traced back to its authorisation?
 
-- A. Deployment SHA → build → merge commit → pull request → work item, each step a lookup
-- B. Search commit messages for the error text
-- C. Ask the team who deployed last
-- D. Check the release notes
+- A. Search the commit messages for the text of the error
+- B. Deployment SHA → build → merge commit → PR → work item
+- C. Ask the team which of them deployed to production last
+- D. Check the release notes published alongside the release
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: B
 
 **In `challenge-03.md`:** lines **289–306**.
 
 **Each step consumes an identifier the previous step produced** (Q33), which is what makes the trace
 deterministic rather than a search.
 
-**Why B and C are what happened on the night** and why it took four hours. Asking people reconstructs
+**Why A and C are what happened on the night** and why it took four hours. Asking people reconstructs
 memory; searching text finds what someone happened to write.
 
 **Why D is downstream of the chain, not a substitute for it.** Release notes are generated *from* the
@@ -1596,26 +1594,26 @@ commits (Challenge 05) — they are only as complete as the convention that prod
 
 Which **two** satisfy "every PR must reference an issue or work item, enforced"? (Choose two.)
 
-- A. A workflow step that fails with `core.setFailed` when no reference is found
-- B. Listing that workflow job as a required status check
-- C. A PR template asking for the reference
-- D. A `::warning::` when the reference is missing
-- E. A CONTRIBUTING.md rule
+- A. A pull request template asking for the reference
+- B. A workflow step failing with `core.setFailed` when absent
+- C. A `::warning::` annotation when the reference is missing
+- D. Listing that workflow job as a required status check
+- E. A rule written in the repository's CONTRIBUTING.md
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A, B
+### Answer: B, D
 
 **In `challenge-03.md`:** lines **340–344**, with the required-check pattern from Challenge 01.
 
-**A produces the failure; B makes the failure matter.** The word in the requirement is "enforced", and a
+**B produces the failure; D makes the failure matter.** The word in the requirement is "enforced", and a
 failing job that is not required is a red mark someone can merge past.
 
-**Why C is genuinely useful and not enforcement.** A template prompts (Challenge 02 Q35); the text can
+**Why A is genuinely useful and not enforcement.** A template prompts (Challenge 02 Q35); the text can
 be deleted.
 
-**Why D is the deliberate contrast inside this challenge.** The commit-level scan at line 500 warns on
+**Why C is the deliberate contrast inside this challenge.** The commit-level scan at line 500 warns on
 purpose, because not every individual commit needs a reference. The **PR-level** check fails, because
 every PR does.
 
@@ -1627,26 +1625,25 @@ every PR does.
 
 How should the audit requirements be met?
 
-- A. Query the GitHub audit log for `protected_branch.policy_override`, and stream Azure DevOps audit
-  events to Log Analytics
-- B. Query the audit log when an incident occurs
-- C. Enable branch protection
-- D. Require signed commits
+- A. Query the organisation audit log when an incident occurs
+- B. Enable branch protection on every production repository
+- C. Require signed commits across the whole organisation
+- D. Query for `policy_override` and stream events to Log Analytics
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: D
 
 **In `challenge-03.md`:** lines **394–397** and **412–427**.
 
 **Two requirements, two mechanisms.** The override query answers "was anything bypassed?"; streaming to
 Log Analytics answers "does the evidence outlive the platform's retention window?"
 
-**Why B fails the second requirement.** Querying only works while the events are still inside the
+**Why A fails the second requirement.** Querying only works while the events are still inside the
 platform — the query at line 409 takes an explicit start and end time for exactly that reason.
 
-**Why C is preventive rather than evidential.** Branch protection is what makes an override *rare*; the
+**Why B is preventive rather than evidential.** Branch protection is what makes an override *rare*; the
 audit log is what makes it *visible*. The scenario needs both, and this question asks about the second.
 
 </details>
@@ -1660,19 +1657,17 @@ three releases contains almost nothing, although development has been busy. Comm
 check and is passing on every PR. The repository recently adopted squash merging with the PR title as
 the commit subject.
 
-What happened, and what is the fix?
+What is the most likely cause?
 
-- A. Squash merging replaces the branch's validated commits with one commit whose subject is the **PR
-  title**, which commitlint never checked — enforce the Conventional Commits format on the PR title as
-  well
-- B. Commitlint stopped running
-- C. The changelog tool was misconfigured
-- D. `fetch-depth: 0` was removed
+- A. Commitlint stopped running as a required check on the repo
+- B. The changelog generation tool was misconfigured recently
+- C. Squash merging writes the PR title, unchecked by commitlint
+- D. `fetch-depth: 0` was removed from the commitlint workflow
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: C
 
 **In `challenge-03.md`:** lines **353–354**, **480–483**, and Challenge 01's squash settings.
 
@@ -1701,15 +1696,12 @@ part of the traceability surface, and format should be too.
 A year on, an on-call engineer answers "which change caused this, who approved it, and what authorised
 it" in under ten minutes.
 
-Explain what each piece contributed, and what actually changed.
+Which explanation best accounts for it?
 
-- A. The deployment records a SHA; the SHA identifies a build and a merge commit; the commit belongs to a
-  PR that could not have been opened without a reference; the reference names a work item; and the audit
-  log shows whether any protection was bypassed — every link created by doing the work, not by
-  remembering to record it
-- B. The team documented their releases better
-- C. The engineer had more experience
-- D. The audit log was easier to search
+- A. Each link is created by doing the work, not recording it
+- B. The team documented their releases in more detail
+- C. The on-call engineer simply had more experience by then
+- D. The organisation audit log became easier to search
 
 <details>
 <summary>Show answer</summary>
