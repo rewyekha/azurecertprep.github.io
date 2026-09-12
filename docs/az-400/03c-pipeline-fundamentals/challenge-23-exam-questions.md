@@ -45,15 +45,15 @@ A reusable workflow call fails because the called workflow cannot read `AZURE_CL
 
 What is missing from the caller?
 
-- A. A `secrets:` block or `secrets: inherit`
-- B. A `permissions:` block granting `secrets: read`
-- C. An `env:` block defining the secret
-- D. A `needs:` declaration on the calling job
+- A. A `permissions:` block granting `secrets: read`
+- B. An `env:` block defining the secret on the job
+- C. A `needs:` declaration on the calling job
+- D. A `secrets:` block or `secrets: inherit`
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: D
 
 **In `challenge-23.md`:** Break & fix Exercise 1, lines **824–851**.
 
@@ -83,9 +83,9 @@ handed across the boundary deliberately.
 
 **Why the others fail**
 
-- **B** — there is no `secrets: read` permission. `permissions` scopes `GITHUB_TOKEN`, not secrets
-- **C** — `env` holds non-secret values and does not cross the boundary either
-- **D** — `needs` sets ordering between jobs, not data flow into a reusable workflow
+- **A** — there is no `secrets: read` permission. `permissions` scopes `GITHUB_TOKEN`, not secrets
+- **B** — `env` holds non-secret values and does not cross the boundary either
+- **C** — `needs` sets ordering between jobs, not data flow into a reusable workflow
 
 **Which form to prefer:** `inherit` is convenient; explicit passing is least-privilege. If a question
 mentions minimal access, pick explicit.
@@ -99,14 +99,14 @@ mentions minimal access, pick explicit.
 Where does a reusable workflow execute relative to the job that calls it?
 
 - A. Inside the calling job, on the same runner
-- B. As its own job or jobs, on their own runners
-- C. On the caller's runner but in a separate container
-- D. On a GitHub-hosted runner only
+- B. On the caller's runner but in a separate container
+- C. As its own job or jobs, on their own runners
+- D. On a GitHub-hosted runner only, never self-hosted
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: B
+### Answer: C
 
 **In `challenge-23.md`:** the reusable workflow defines **six jobs** (lines **90–219**), and the
 caller invokes it with one `uses:` at **job** level (lines **234–236**).
@@ -123,7 +123,7 @@ each on its own runner.
 **Why the others fail**
 
 - **A** — that describes a **composite action** (line 283)
-- **C** — container jobs are a separate feature
+- **B** — container jobs are a separate feature
 - **D** — a reusable workflow's jobs can specify `runs-on: [self-hosted, ...]` like any other
 
 **The consequence that gets tested:** because each job gets a fresh runner, files do not carry over.
@@ -138,15 +138,15 @@ can see `dist/`.
 
 Which trigger makes a workflow callable by another workflow?
 
-- A. `on: workflow_run`
-- B. `on: workflow_call`
+- A. `on: workflow_call`
+- B. `on: workflow_run`
 - C. `on: workflow_dispatch`
 - D. `on: repository_dispatch`
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: B
+### Answer: A
 
 **In `challenge-23.md`:** line **43**.
 
@@ -161,7 +161,7 @@ on:
 
 **Why the others fail**
 
-- **A** — `workflow_run` fires **after another workflow finishes**. The relationship is reversed:
+- **B** — `workflow_run` fires **after another workflow finishes**. The relationship is reversed:
   the upstream does not know you exist
 - **C** — `workflow_dispatch` is the manual button
 - **D** — `repository_dispatch` is an external API trigger
@@ -178,14 +178,14 @@ after*. That pair is a reliable exam question.
 A composite action's `run` step fails validation. What is missing?
 
 - A. `id`
-- B. `shell`
-- C. `working-directory`
+- B. `working-directory`
+- C. `shell`
 - D. `continue-on-error`
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: B
+### Answer: C
 
 **In `challenge-23.md`:** lines **291**, **295**, **304**, **315** — every `run` step declares it.
 
@@ -200,7 +200,7 @@ Mandatory in composite actions, optional in workflows.
 **Why the others fail**
 
 - **A** — `id` is only needed when another step reads this one's output, as at line 302
-- **C** — optional
+- **B** — optional
 - **D** — failure handling, not validation
 
 </details>
@@ -211,15 +211,15 @@ Mandatory in composite actions, optional in workflows.
 
 How does a composite action expose a value to the calling workflow?
 
-- A. By writing to `$GITHUB_ENV`
-- B. Through an `outputs` block mapping to a step output
-- C. Through an `env` block at action level
-- D. By uploading an artifact
+- A. By writing the value to `$GITHUB_ENV` in a step
+- B. Through an `env` block at the action level
+- C. By uploading an artifact the caller downloads
+- D. Through an `outputs` block mapping to a step output
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: B
+### Answer: D
 
 **In `challenge-23.md`:** lines **274–280**, produced at **322**, consumed at **343**.
 
@@ -249,8 +249,8 @@ reads `steps.<id>.outputs.<name>`. **Same three-part shape as job outputs in Cha
 **Why the others fail**
 
 - **A** — `$GITHUB_ENV` sets env vars for later steps. It does not populate action outputs
-- **C** — `env` is input configuration, not output
-- **D** — artifacts move files between jobs, not values to a caller
+- **B** — `env` is input configuration, not output
+- **C** — artifacts move files between jobs, not values to a caller
 
 </details>
 
@@ -260,15 +260,15 @@ reads `steps.<id>.outputs.<name>`. **Same three-part shape as job outputs in Cha
 
 A reusable workflow declares an output. Where does its `value` come from?
 
-- A. A step in the calling workflow
-- B. A job output inside the reusable workflow
-- C. An environment variable
-- D. A repository variable
+- A. A job output inside the reusable workflow
+- B. A step output in the calling workflow
+- C. An environment variable on the runner
+- D. A repository variable read with `vars`
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: B
+### Answer: A
 
 **In `challenge-23.md`:** lines **79–85**.
 
@@ -296,15 +296,15 @@ caller.
 
 Which Azure Pipelines template type can contribute **stages**?
 
-- A. A template whose root key is `steps:`
-- B. A template whose root key is `jobs:`
-- C. A template whose root key is `stages:`
+- A. A template whose root key is `jobs:`
+- B. A template whose root key is `stages:`
+- C. A template whose root key is `steps:`
 - D. Any template, depending on where it is referenced
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: C
+### Answer: B
 
 **In `challenge-23.md`:** step template at **353**, job template at **427**, stage template at
 **469**, and all three used at **574**, **602**, **612**.
@@ -335,14 +335,14 @@ A template parameter is declared `type: object` and the caller passes `"staging,
 What happens?
 
 - A. The string is split on commas automatically
-- B. The pipeline fails with an unexpected-value error
-- C. The parameter falls back to its default
+- B. The parameter falls back to its default value
+- C. The pipeline fails with an unexpected-value error
 - D. The string is treated as a single-item list
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: B
+### Answer: C
 
 **In `challenge-23.md`:** Break & fix Exercise 2, lines **859–884**.
 
@@ -366,7 +366,7 @@ Template parameters are **type-checked at compile time**, before any agent is al
 **Why the others fail**
 
 - **A** — no automatic splitting. YAML does not guess
-- **C** — a default only applies when the parameter is **omitted**, not when it is wrong
+- **B** — a default only applies when the parameter is **omitted**, not when it is wrong
 - **D** — nothing coerces a string into a list
 
 **Why `type: object` exists** — it is what makes `each` iteration possible (line 447):
@@ -387,15 +387,15 @@ A pipeline fails to resolve `steps/build.yml@templates`. The resource declares `
 
 What is wrong?
 
-- A. The alias must match the repository name
-- B. `ref` must be a full ref path such as `refs/heads/main`
-- C. `type` must be `github`
-- D. The template path must be absolute
+- A. The alias must match the repository's real name
+- B. `type` must be `github` for a template repository
+- C. The template path must be absolute from the repo root
+- D. `ref` must be a full ref path such as `refs/heads/main`
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: B
+### Answer: D
 
 **In `challenge-23.md`:** Break & fix Exercise 3, lines **890–915**.
 
@@ -410,8 +410,8 @@ Also seen at line **558** (`refs/heads/main`) and line **790** (`refs/tags/v2.1.
 
 - **A** — the alias is arbitrary. Line 555 uses `templates` for a repo actually named
   `ContosoPlatform/pipeline-templates`
-- **C** — `type: git` means Azure Repos and is correct here. `github` would need an `endpoint`
-- **D** — template paths are relative to the referenced repository's root
+- **B** — `type: git` means Azure Repos and is correct here. `github` would need an `endpoint`
+- **C** — template paths are relative to the referenced repository's root
 
 **Ref forms to know:** `refs/heads/<branch>`, `refs/tags/<tag>`. Line 790 pins a **tag**, which is
 the production-safe choice.
@@ -424,15 +424,15 @@ the production-safe choice.
 
 Which reference style makes a shared template safe against upstream changes?
 
-- A. `@main`
-- B. `@v2.1.0` or `refs/tags/v2.1.0`
-- C. `@HEAD`
-- D. `@latest`
+- A. `@v2.1.0` or `refs/tags/v2.1.0`
+- B. `@main` or `refs/heads/main`
+- C. `@HEAD` on the template repository
+- D. `@latest` on the template repository
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: B
+### Answer: A
 
 **In `challenge-23.md`:** line **777** with a comment saying exactly this, and line **790**.
 
@@ -447,7 +447,7 @@ Which reference style makes a shared template safe against upstream changes?
 
 **Why the others fail**
 
-- **A** — `@main` is a **moving target**. A change to the shared template instantly alters every
+- **B** — `@main` is a **moving target**. A change to the shared template instantly alters every
   consuming pipeline. That is fine while iterating and dangerous in production
 - **C** — `HEAD` is not a valid pin
 - **D** — there is no `latest` concept; that is container registry vocabulary
@@ -463,15 +463,15 @@ Pin production, float development.
 
 What does `${{ each tag in parameters.tags }}` do?
 
-- A. Runs the step once per tag at runtime
-- B. Expands the YAML at compile time, one entry per list item
-- C. Creates a matrix of parallel jobs
-- D. Concatenates the tags into a string
+- A. Runs the step once per tag at runtime on the agent
+- B. Creates a matrix of parallel jobs, one per tag
+- C. Expands the YAML at compile time, one entry per list item
+- D. Concatenates the tags into a single comma-separated string
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: B
+### Answer: C
 
 **In `challenge-23.md`:** lines **446–448** and **456–458**.
 
@@ -487,7 +487,7 @@ the pipeline starts**. It is YAML generation, not a loop.
 **Why the others fail**
 
 - **A** — nothing runs at runtime. By the time an agent exists, the expansion has already happened
-- **C** — a matrix creates parallel jobs. `each` creates YAML in place
+- **B** — a matrix creates parallel jobs. `each` creates YAML in place
 - **D** — no concatenation
 
 **The pairing:** `${{ if }}` includes or excludes YAML; `${{ each }}` repeats YAML. Both compile-time,
@@ -501,15 +501,15 @@ both from Challenge 20's expression rules.
 
 In classic Azure DevOps, what is the equivalent of a YAML step template?
 
-- A. A task group
-- B. A variable group
+- A. A variable group
+- B. A task group
 - C. A deployment group
 - D. A service connection
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: B
 
 **In `challenge-23.md`:** the comparison table, lines **697–705**.
 
@@ -521,7 +521,7 @@ In classic Azure DevOps, what is the equivalent of a YAML step template?
 
 **Why the others fail**
 
-- **B** — variable groups hold values, and they exist in YAML too (line 677)
+- **A** — variable groups hold values, and they exist in YAML too (line 677)
 - **C** — deployment groups are sets of target machines in classic release pipelines. They map to
   **environments** in YAML
 - **D** — a service connection stores credentials
@@ -539,14 +539,14 @@ exactly that.
 Which construct shares six setup **steps** inside an existing job without adding a runner?
 
 - A. A reusable workflow
-- B. A composite action
-- C. A starter workflow
-- D. A job template
+- B. A starter workflow
+- C. A job template
+- D. A composite action
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: B
+### Answer: D
 
 **In `challenge-23.md`:** the composite action at lines **253–323**, used at lines **333–338**.
 
@@ -563,9 +563,9 @@ Which construct shares six setup **steps** inside an existing job without adding
 **Why the others fail**
 
 - **A** — always its own job on its own runner (Q2)
-- **C** — a starter workflow is copied once when creating a new workflow. Later edits do not
+- **B** — a starter workflow is copied once when creating a new workflow. Later edits do not
   propagate
-- **D** — job templates are Azure Pipelines, and they contribute jobs, not steps
+- **C** — job templates are Azure Pipelines, and they contribute jobs, not steps
 
 </details>
 
@@ -576,15 +576,15 @@ Which construct shares six setup **steps** inside an existing job without adding
 Where must an organization-wide reusable workflow live to be referenced as
 `contoso/.github/.github/workflows/x.yml@main`?
 
-- A. In `.github/workflows/` of a repository named `.github`
-- B. In `workflows/` at the root of any repository
-- C. In `.github/actions/` of the consuming repository
-- D. In a repository named `workflows`
+- A. In `workflows/` at the root of any repository in the org
+- B. In `.github/actions/` of the consuming repository
+- C. In `.github/workflows/` of a repository named `.github`
+- D. In `.github/workflows/` of a repository named `workflows`
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: C
 
 **In `challenge-23.md`:** lines **754–769**.
 
@@ -614,15 +614,15 @@ only one `.github`.
 
 A variable group is declared at stage level. Which stage can read it?
 
-- A. Every stage in the pipeline
-- B. Only the stage where it is declared
+- A. Only the stage where it is declared
+- B. Every stage in the pipeline run
 - C. Only stages that declare `dependsOn`
-- D. Only deployment jobs
+- D. Only deployment jobs in any stage
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: B
+### Answer: A
 
 **In `challenge-23.md`:** lines **676–691**.
 
@@ -656,15 +656,15 @@ Same `$(ResourceGroup)` expression, different result per stage.
 
 Which input type lets a template parameter restrict the caller to a fixed set of values?
 
-- A. `type: string` with a `values` list
-- B. `type: choice` with `options`
-- C. `type: enum`
-- D. `type: object` with `allowed`
+- A. `type: choice` with an `options` list
+- B. `type: string` with a `values` list
+- C. `type: enum` with a `values` list
+- D. `type: object` with an `allowed` list
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: B
 
 **In `challenge-23.md`:** lines **712–718**.
 
@@ -682,7 +682,7 @@ Passing anything else fails at compile time.
 
 **Why the others fail**
 
-- **B** — `type: choice` with `options` is **GitHub Actions** `workflow_dispatch` syntax (line 692 of
+- **A** — `type: choice` with `options` is **GitHub Actions** `workflow_dispatch` syntax (line 692 of
   challenge-22). The exam offers it here on purpose
 - **C** — no `enum` type exists
 - **D** — no `allowed` key exists
@@ -699,36 +699,36 @@ Passing anything else fails at compile time.
 
 Which **three** describe a composite action? (Choose three.)
 
-- A. Every `run` step requires a `shell` value
-- B. It runs inside the calling job on the same runner
-- C. Its outputs map to step outputs with `value:`
-- D. It is invoked with `uses:` at job level
-- E. It can define its own `jobs`
-- F. It requires an `on:` trigger
+- A. It is invoked with `uses:` at job level
+- B. Every `run` step requires a `shell` value
+- C. It can define its own `jobs`
+- D. It runs inside the calling job on the same runner
+- E. It requires an `on:` trigger
+- F. Its outputs map to step outputs with `value:`
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A, B, C
+### Answer: B, D, F
 
-**In `challenge-23.md`:** lines **291** (A), **283** (B), **274–280** (C).
+**In `challenge-23.md`:** lines **291** (B), **283** (D), **274–280** (F).
 
 ```yaml
 outputs:
   artifact-path:
-    value: ${{ steps.publish.outputs.path }}    # C
+    value: ${{ steps.publish.outputs.path }}    # F
 runs:
-  using: "composite"                            # B
+  using: "composite"                            # D
   steps:
-    - shell: bash                               # A
+    - shell: bash                               # B
       run: dotnet restore ...
 ```
 
 **Why the others fail**
 
-- **D** — that is a **reusable workflow** (line 235). A composite action is used under `steps:`
-- **E** — an action file has `name`, `description`, `inputs`, `outputs`, `runs`. There is no `jobs`
-- **F** — `on:` belongs to workflows
+- **A** — that is a **reusable workflow** (line 235). A composite action is used under `steps:`
+- **C** — an action file has `name`, `description`, `inputs`, `outputs`, `runs`. There is no `jobs`
+- **E** — `on:` belongs to workflows
 
 </details>
 
@@ -739,16 +739,16 @@ runs:
 Which **two** are required when calling a reusable workflow that declares required inputs and
 secrets? (Choose two.)
 
-- A. A `with:` block supplying every required input
-- B. A `secrets:` block or `secrets: inherit`
-- C. A `needs:` declaration
-- D. A `runs-on:` value on the calling job
-- E. A `permissions:` block on the calling job
+- A. A `needs:` declaration on the calling job
+- B. A `runs-on:` value on the calling job
+- C. A `with:` block supplying every required input
+- D. A `permissions:` block on the calling job
+- E. A `secrets:` block or `secrets: inherit`
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A, B
+### Answer: C, E
 
 **In `challenge-23.md`:** lines **234–245**.
 
@@ -757,18 +757,18 @@ jobs:
   ci-cd:
     uses: contoso/.github/.github/workflows/reusable-node-ci-cd.yml@main
     with:
-      image-name: order-service          # A - required (line 57)
-      azure-app-name: contoso-orders     # A - required (line 61)
-    secrets:                             # B - required (lines 68-74)
+      image-name: order-service          # C - required (line 57)
+      azure-app-name: contoso-orders     # C - required (line 61)
+    secrets:                             # E - required (lines 68-74)
       AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
 ```
 
 **Why the others fail**
 
-- **C** — only if you need ordering against another job
-- **D** — **notice what is missing from the caller.** A job that calls a reusable workflow has **no**
+- **A** — only if you need ordering against another job
+- **B** — **notice what is missing from the caller.** A job that calls a reusable workflow has **no**
   `runs-on`, because it does not run steps itself. Adding one is an error
-- **E** — permissions are declared inside the reusable workflow's own jobs (lines 142–144, 184–186)
+- **D** — permissions are declared inside the reusable workflow's own jobs (lines 142–144, 184–186)
 
 </details>
 
@@ -779,23 +779,23 @@ jobs:
 Which **two** correctly pin a shared template to a stable version? (Choose two.)
 
 - A. `uses: contoso/.github/.github/workflows/ci.yml@v2`
-- B. `ref: refs/tags/v2.1.0`
+- B. `ref: main` on the repository resource
 - C. `uses: contoso/.github/.github/workflows/ci.yml@main`
-- D. `ref: main`
-- E. `ref: latest`
+- D. `ref: refs/tags/v2.1.0` on the repository resource
+- E. `ref: latest` on the repository resource
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A, B
+### Answer: A, D
 
 **In `challenge-23.md`:** lines **777** and **790**.
 
 **Why the others fail**
 
+- **B** — a branch moves, and it is also **invalid syntax** in Azure Pipelines (Break & fix Exercise 3,
+  line 896). It needs the full ref path
 - **C** — a branch moves. Every consumer changes the moment someone pushes
-- **D** — additionally **invalid syntax** in Azure Pipelines (Break & fix Exercise 3, line 896). It
-  needs the full ref path
 - **E** — not a thing
 
 </details>
@@ -807,16 +807,16 @@ Which **two** correctly pin a shared template to a stable version? (Choose two.)
 Which **two** Azure Pipelines template levels can a stage template control that a step template
 cannot? (Choose two.)
 
-- A. `dependsOn` between stages
-- B. `condition` on a stage
-- C. Which tasks run in a job
-- D. The agent pool for a job
-- E. Task inputs
+- A. Which tasks run in a job
+- B. `dependsOn` between stages
+- C. The agent pool for a job
+- D. Task inputs on a step
+- E. `condition` on a stage
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A, B
+### Answer: B, E
 
 **In `challenge-23.md`:** lines **612–631**.
 
@@ -824,8 +824,8 @@ cannot? (Choose two.)
   - template: templates/stages/deploy-container-app.yml@templates
     parameters:
       environment: "production"
-      dependsOn: [Deploy_staging]                                          # A
-      condition: "and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))"  # B
+      dependsOn: [Deploy_staging]                                          # B
+      condition: "and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/main'))"  # E
 ```
 
 **This is a pattern worth noticing:** `dependsOn` and `condition` are passed as **parameters** so the
@@ -834,7 +834,7 @@ same stage template can be reused for staging and production with different plac
 
 **Why the others fail**
 
-- **C**, **D**, **E** — all within reach of a step or job template. They do not require stage level
+- **A**, **C**, **D** — all within reach of a step or job template. They do not require stage level
 
 </details>
 
@@ -844,16 +844,16 @@ same stage template can be reused for staging and production with different plac
 
 Which **two** statements about task groups are correct? (Choose two.)
 
-- A. They are a classic pipeline feature
-- B. They can only encapsulate steps
-- C. They can encapsulate whole stages
-- D. They are version-controlled in Git
-- E. They work in YAML pipelines
+- A. They can encapsulate whole stages
+- B. They work in YAML pipelines
+- C. They are a classic pipeline feature
+- D. They can only encapsulate steps
+- E. They are version-controlled in Git
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A, B
+### Answer: C, D
 
 **In `challenge-23.md`:** lines **697–705**.
 
@@ -865,10 +865,10 @@ Which **two** statements about task groups are correct? (Choose two.)
 
 **Why the others fail**
 
-- **C** — step level only, which is the main limitation
-- **D** — task groups have their own versioning **inside Azure DevOps**, not in Git. Templates are
+- **A** — step level only, which is the main limitation
+- **B** — task groups do not work in YAML. This is why Challenge 37 migrates them to templates
+- **E** — task groups have their own versioning **inside Azure DevOps**, not in Git. Templates are
   files, so they get code review, history and pinning for free
-- **E** — task groups do not work in YAML. This is why Challenge 37 migrates them to templates
 
 </details>
 
@@ -878,32 +878,32 @@ Which **two** statements about task groups are correct? (Choose two.)
 
 Which **two** are valid ways for a caller to supply secrets to a reusable workflow? (Choose two.)
 
-- A. `secrets: inherit`
-- B. An explicit `secrets:` mapping listing each secret
-- C. `env:` with the secret values
-- D. `with:` containing the secret values
-- E. Repository variables
+- A. `env:` with the secret values on the job
+- B. `secrets: inherit`
+- C. `with:` containing the secret values
+- D. Repository variables holding the values
+- E. An explicit `secrets:` mapping listing each secret
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A, B
+### Answer: B, E
 
 **In `challenge-23.md`:** lines **846–850**.
 
 ```yaml
-    secrets: inherit                                    # A
+    secrets: inherit                                    # B
     # or
-    secrets:                                            # B
+    secrets:                                            # E
       AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
 ```
 
 **Why the others fail**
 
-- **C** — `env` does not cross the boundary, and it would not be masked
-- **D** — **the dangerous one.** `with:` inputs appear in logs and in the run's input display. Putting
+- **A** — `env` does not cross the boundary, and it would not be masked
+- **C** — **the dangerous one.** `with:` inputs appear in logs and in the run's input display. Putting
   a secret there leaks it. Inputs and secrets are separate blocks precisely for this reason
-- **E** — variables are for non-sensitive values
+- **D** — variables are for non-sensitive values
 
 </details>
 
@@ -915,15 +915,15 @@ Which **two** are needed to consume an Azure Pipelines template from another rep
 two.)
 
 - A. A `resources: repositories:` entry with an alias
-- B. An `@alias` suffix on the template path
-- C. A `checkout` step for the template repository
+- B. A `checkout` step for the template repository
+- C. An `@alias` suffix on the template path
 - D. A service connection for Azure Repos
 - E. A variable group naming the repository
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A, B
+### Answer: A, C
 
 **In `challenge-23.md`:** lines **785–793**.
 
@@ -936,12 +936,12 @@ resources:
       ref: refs/tags/v2.1.0
 
 stages:
-  - template: stages/standard-deploy.yml@shared-templates    # B
+  - template: stages/standard-deploy.yml@shared-templates    # C
 ```
 
 **Why the others fail**
 
-- **C** — templates resolve at **compile time**, before any agent exists. A checkout happens at
+- **B** — templates resolve at **compile time**, before any agent exists. A checkout happens at
   runtime, far too late
 - **D** — a service connection is required for **GitHub** (`type: github`), but `type: git` means
   Azure Repos in the same organization, which uses the pipeline's own identity
@@ -1214,7 +1214,7 @@ Match each reuse mechanism to what it contributes.
 | Azure Pipelines stages template |  |
 | Task group (classic) |  |
 
-**Options:** **Jobs**, each on its own runner · **Jobs**, inside a stage · **Stages**, inside the pipeline · **Steps**, inside a job · **Steps**, inside the caller's job · **Steps** only
+**Options:** Jobs, each on its own runner · Jobs, inside a stage · Stages, inside the pipeline · Steps, inside a job · Steps, inside the caller's job · Steps only
 
 <details>
 <summary>Show answer</summary>
@@ -1413,9 +1413,9 @@ on:
         value: ${{ [BLANK 3].docker.outputs['image-tag'] }}
 ```
 
-- **BLANK 1:** `workflow_call` / `workflow_run` / `workflow_dispatch` / `repository_dispatch`
-- **BLANK 2:** `secrets` / `env` / `with` / `vars`
-- **BLANK 3:** `jobs` / `steps` / `needs` / `inputs`
+- **BLANK 1:** `workflow_run` / `workflow_dispatch` / `workflow_call` / `repository_dispatch`
+- **BLANK 2:** `env` / `with` / `secrets` / `vars`
+- **BLANK 3:** `steps` / `needs` / `inputs` / `jobs`
 
 <details>
 <summary>Show answer</summary>
@@ -1442,9 +1442,9 @@ jobs:
     [BLANK 3]: inherit
 ```
 
-- **BLANK 1:** `uses` / `runs-on` / `template` / `extends`
-- **BLANK 2:** `with` / `inputs` / `parameters` / `env`
-- **BLANK 3:** `secrets` / `env` / `permissions` / `vars`
+- **BLANK 1:** `runs-on` / `uses` / `template` / `extends`
+- **BLANK 2:** `inputs` / `parameters` / `with` / `env`
+- **BLANK 3:** `env` / `permissions` / `vars` / `secrets`
 
 <details>
 <summary>Show answer</summary>
@@ -1476,9 +1476,9 @@ name: ".NET build and test"
     value: ${{ steps.publish.outputs.path }}
 ```
 
-- **BLANK 1:** `runs` / `jobs` / `on` / `steps`
-- **BLANK 2:** `shell` / `run-with` / `interpreter` / `env`
-- **BLANK 3:** `outputs` / `returns` / `exports` / `results`
+- **BLANK 1:** `jobs` / `on` / `steps` / `runs`
+- **BLANK 2:** `run-with` / `shell` / `interpreter` / `env`
+- **BLANK 3:** `returns` / `exports` / `outputs` / `results`
 
 <details>
 <summary>Show answer</summary>
@@ -1508,9 +1508,9 @@ stages:
   - template: stages/standard-deploy.yml[BLANK 3]
 ```
 
-- **BLANK 1:** `git` / `github` / `azure` / `repo`
-- **BLANK 2:** `refs/tags/v2.1.0` / `v2.1.0` / `main` / `HEAD`
-- **BLANK 3:** `@shared-templates` / `@ContosoOrg` / `#shared-templates` / `/shared-templates`
+- **BLANK 1:** `github` / `azure` / `git` / `repo`
+- **BLANK 2:** `v2.1.0` / `main` / `refs/tags/v2.1.0` / `HEAD`
+- **BLANK 3:** `@ContosoOrg` / `#shared-templates` / `/shared-templates` / `@shared-templates`
 
 <details>
 <summary>Show answer</summary>
@@ -1549,8 +1549,8 @@ steps:
           ${{ tag }}
 ```
 
-- **BLANK 1:** `object` / `string` / `array` / `list`
-- **BLANK 2:** `each` / `for` / `foreach` / `loop`
+- **BLANK 1:** `string` / `array` / `object` / `list`
+- **BLANK 2:** `for` / `each` / `foreach` / `loop`
 
 <details>
 <summary>Show answer</summary>
@@ -1584,8 +1584,8 @@ steps:
       - task: ComponentGovernanceComponentDetection@0
 ```
 
-- **BLANK 1:** `values` / `options` / `allowed` / `enum`
-- **BLANK 2:** `if` / `when` / `condition` / `case`
+- **BLANK 1:** `options` / `allowed` / `values` / `enum`
+- **BLANK 2:** `when` / `condition` / `case` / `if`
 
 <details>
 <summary>Show answer</summary>
@@ -1636,15 +1636,15 @@ team has copied and modified the same pipeline, so fixes must be applied thirtee
 
 Which mechanism meets the standardisation requirement for the ten Node services?
 
-- A. A reusable workflow in `contoso/.github`
-- B. A composite action in `contoso/.github`
-- C. A starter workflow
-- D. A shared branch merged into each repository
+- A. A composite action in `contoso/.github`
+- B. A starter workflow in `contoso/.github`
+- C. A shared branch merged into each repository
+- D. A reusable workflow in `contoso/.github`
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: D
 
 **In `challenge-23.md`:** lines **42–85** and **234–245**.
 
@@ -1653,10 +1653,10 @@ only reusable workflows can contribute jobs.
 
 **Why the others fail**
 
-- **B** — steps only. Each team would still write the graph (Q25)
-- **C** — copied once at creation. Later fixes do not propagate, which is the exact problem being
+- **A** — steps only. Each team would still write the graph (Q25)
+- **B** — copied once at creation. Later fixes do not propagate, which is the exact problem being
   solved
-- **D** — merging a branch into thirteen repos is copying with extra steps
+- **C** — merging a branch into thirteen repos is copying with extra steps
 
 </details>
 
@@ -1666,15 +1666,15 @@ only reusable workflows can contribute jobs.
 
 Which mechanism meets the .NET requirement?
 
-- A. A reusable workflow
-- B. A composite action
+- A. A composite action
+- B. A reusable workflow
 - C. A stage template
 - D. A task group
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: B
+### Answer: A
 
 **In `challenge-23.md`:** lines **253–323**, used at lines **333–338**.
 
@@ -1683,7 +1683,7 @@ structure."* Shared steps, own jobs → composite action.
 
 **Why the others fail**
 
-- **A** — would impose a job structure, which the requirement explicitly rules out
+- **B** — would impose a job structure, which the requirement explicitly rules out
 - **C** and **D** — Azure Pipelines and classic constructs. These are GitHub repositories
 
 **Q42 and Q43 together are the whole challenge.** Same organisation, same shared repository,
@@ -1697,21 +1697,21 @@ different mechanism — because one shares a graph and the other shares a sequen
 
 Which configuration meets the governance requirement about opting in to changes?
 
-- A. Reference the shared workflow with `@v2`
-- B. Reference the shared workflow with `@main`
-- C. Require a pull request review on the shared repository
-- D. Copy the workflow into each repository
+- A. Reference the shared workflow with `@main`
+- B. Reference the shared workflow with `@v2`
+- C. Require pull request review on the shared repo
+- D. Copy the workflow into each service repository
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: B
 
 **In `challenge-23.md`:** lines **777–778**.
 
 **Why the others fail**
 
-- **B** — every push to the shared repo reaches all thirteen services immediately (Q26)
+- **A** — every push to the shared repo reaches all thirteen services immediately (Q26)
 - **C** — review improves quality but changes nothing about propagation. A reviewed change on `main`
   still lands everywhere at once
 - **D** — back to thirteen copies
@@ -1727,15 +1727,15 @@ their own repository, reviewable and revertible.
 
 Which parameter definition meets the security-scan requirement?
 
-- A. `type: string` with `values: [quick, full]`
-- B. `type: choice` with `options: [quick, full]`
-- C. `type: string` with `default: "full"` only
+- A. `type: choice` with `options: [quick, full]`
+- B. `type: string` with `default: "full"` only
+- C. `type: string` with `values: [quick, full]`
 - D. `type: object` with a list of allowed values
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: C
 
 **In `challenge-23.md`:** lines **712–718**.
 
@@ -1753,8 +1753,8 @@ Anything else fails at **compile time**, before an agent is allocated.
 
 **Why the others fail**
 
-- **B** — GitHub Actions syntax
-- **C** — a default applies when the parameter is omitted. It does not reject a wrong value
+- **A** — GitHub Actions syntax
+- **B** — a default applies when the parameter is omitted. It does not reject a wrong value
 - **D** — `object` accepts a list but validates nothing
 
 </details>
@@ -1766,15 +1766,15 @@ Anything else fails at **compile time**, before an agent is allocated.
 The Azure DevOps enterprise team needs the same deploy stage for staging and production, with
 different resource groups. What should they build?
 
-- A. Two stage templates, one per environment
-- B. One stage template with parameters, referenced twice
-- C. One stage template plus two variable groups only
-- D. A step template called from both stages
+- A. Two stage templates, one for each environment
+- B. One stage template plus two variable groups only
+- C. A step template called from both deploy stages
+- D. One stage template with parameters, referenced twice
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: B
+### Answer: D
 
 **In `challenge-23.md`:** lines **612–631** — the same template referenced twice.
 
@@ -1796,8 +1796,8 @@ different resource groups. What should they build?
 **Why the others fail**
 
 - **A** — two templates is duplication, the problem being solved
-- **C** — variable groups supply values but cannot contribute a stage
-- **D** — a step template cannot create a stage or attach an environment
+- **B** — variable groups supply values but cannot contribute a stage
+- **C** — a step template cannot create a stage or attach an environment
 
 **Notice `dependsOn` and `condition` passed as parameters.** That is what lets one template occupy
 two different positions in the graph — and it is why production waits for staging, satisfying the
@@ -1814,19 +1814,19 @@ A service's pipeline fails with "template file not found" for
 
 Which **two** causes are most likely? (Choose two.)
 
-- A. The `resources: repositories:` entry uses `ref: main` instead of `refs/heads/main`
-- B. The alias in the `@` suffix does not match the declared `repository` value
-- C. The template repository was not checked out at runtime
-- D. The pipeline lacks a service connection for Azure Repos
+- A. The template repository was not checked out at runtime
+- B. The `resources: repositories:` entry uses `ref: main` instead of `refs/heads/main`
+- C. The pipeline lacks a service connection for Azure Repos
+- D. The alias in the `@` suffix does not match the declared `repository` value
 - E. The template uses `type: object` parameters
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A, B
+### Answer: B, D
 
-**In `challenge-23.md`:** Break & fix Exercise 3, lines **890–915** (A); lines **555** and **574**
-(B).
+**In `challenge-23.md`:** Break & fix Exercise 3, lines **890–915** (B); lines **555** and **574**
+(D).
 
 ```yaml
     - repository: templates          # the alias...
@@ -1837,9 +1837,9 @@ Which **two** causes are most likely? (Choose two.)
 
 **Why the others fail**
 
-- **C** — templates resolve at **compile time**, before an agent exists. A checkout cannot help, and
+- **A** — templates resolve at **compile time**, before an agent exists. A checkout cannot help, and
   no checkout is needed
-- **D** — `type: git` (line 556) means Azure Repos in the same organization, authenticated by the
+- **C** — `type: git` (line 556) means Azure Repos in the same organization, authenticated by the
   pipeline's own identity. A service connection is only needed for `type: github`
 - **E** — a type mismatch produces "unexpected value" (Exercise 2), not "file not found"
 
@@ -1856,17 +1856,17 @@ Six months later, the shared reusable workflow adds a mandatory `security-scan` 
 still on `@v2` and unaffected. One team bumps to `@v3` and their pipeline fails because the new job
 requires a secret they have not configured.
 
-What is the correct fix, and what does this illustrate?
+What is the correct fix?
 
-- A. Add the secret to that repository and pass it in the caller's `secrets:` block
-- B. Switch that team back to `@main`
-- C. Make the secret optional in the reusable workflow
-- D. Use `secrets: inherit` in every consuming repository
+- A. Switch that team back to `@main` until the secret requirement is documented
+- B. Add the secret to that repository and pass it in the caller's `secrets:` block
+- C. Make the secret optional in the reusable workflow so the scan job no longer needs it
+- D. Use `secrets: inherit` in every consuming repository so the new job is satisfied
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: B
 
 **In `challenge-23.md`:** lines **68–78** show the secrets contract, lines **242–245** show a caller
 satisfying it.
@@ -1882,7 +1882,7 @@ are a contract**, and bumping the ref means accepting the new version of that co
 
 **Why the others fail**
 
-- **B** — `@main` is less stable, not more. It would also pull in every other unreleased change
+- **A** — `@main` is less stable, not more. It would also pull in every other unreleased change
 - **C** — weakens the security control for everyone to avoid one team's configuration task. If a scan
   needs credentials, making them optional means it silently does not scan
 - **D** — `secrets: inherit` only passes secrets the caller **has**. If the repository does not have
