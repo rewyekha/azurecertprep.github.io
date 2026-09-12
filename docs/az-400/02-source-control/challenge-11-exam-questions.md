@@ -47,15 +47,15 @@ original visible.** It is the right answer for a bad *change* and the wrong answ
 A database password was committed 50 commits ago and exists across three branches. Which tool removes it
 from **all** history?
 
-- A. `git rm` plus a commit
-- B. `git filter-repo --replace-text`
-- C. `git reset --hard HEAD~50`
-- D. `git revert` on the offending commit
+- A. `git filter-repo --replace-text` with rules
+- B. `git reset --hard HEAD~50` to drop the commits
+- C. `git rm` on the file followed by a commit
+- D. `git revert` applied to the offending commit
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: B
+### Answer: A
 
 **In `challenge-11.md`:** lines **213** and **436**.
 
@@ -79,15 +79,15 @@ password stays perfectly visible in the original.
 
 After `git filter-repo`, what must every other team member do?
 
-- A. `git pull --rebase`
-- B. `git fetch --all` then `git reset --hard origin/main`
-- C. Delete the local clone and re-clone
-- D. Run `git filter-repo` locally with the same parameters
+- A. Delete the local clone and re-clone from the remote
+- B. `git pull --rebase` onto the rewritten history
+- C. `git fetch --all` then `git reset --hard origin/main`
+- D. Run `git filter-repo` locally with the same flags
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: C
+### Answer: A
 
 **In `challenge-11.md`:** lines **291–299**.
 
@@ -98,11 +98,11 @@ After `git filter-repo`, what must every other team member do?
 DO NOT run `git pull` on your existing clone - it will create duplicate history.
 ```
 
-**Why A is explicitly called out as harmful.** Pulling merges the old history into the new one, producing
+**Why B is explicitly called out as harmful.** Pulling merges the old history into the new one, producing
 duplicate commits — **and reintroducing the very blobs you removed** into that developer's clone, from
 which they can be pushed back.
 
-**Why B is closer and still risky.** It fixes `main` and leaves every other local branch, stash and
+**Why C is closer and still risky.** It fixes `main` and leaves every other local branch, stash and
 reflog entry pointing at old objects. **A re-clone is a guarantee; a reset is a hope.**
 
 **Note step 1** (line 294): save uncommitted work first. The procedure is destructive by design.
@@ -116,10 +116,10 @@ reflog entry pointing at old objects. **A re-clone is a guarantee; a reset is a 
 A branch was deleted from local and remote two days ago and nobody has a clone with it. How can the
 commits be recovered?
 
-- A. They are permanently lost
+- A. They are permanently lost after the deletion
 - B. `git reflog` on any machine that had it checked out
-- C. `git fsck --lost-found` on the server
-- D. Contact GitHub support — deleted branch commits are retained for a limited time
+- C. `git fsck --lost-found` run directly on the server
+- D. GitHub support — deleted commits are kept for a time
 
 <details>
 <summary>Show answer</summary>
@@ -149,16 +149,15 @@ restored **through the UI** within its retention period, with no support ticket.
 
 What is the difference between `git cherry-pick` and `git rebase`?
 
-- A. Cherry-pick copies individual commits with new SHAs; rebase replays a series onto a new base, giving
-  all of them new SHAs
-- B. Cherry-pick preserves the original SHA; rebase changes it
-- C. Cherry-pick is for merge commits only
+- A. Cherry-pick preserves the original SHA; rebase changes it
+- B. Cherry-pick copies single commits; rebase replays a series
+- C. Cherry-pick applies only to merge commits, not others
 - D. Cherry-pick moves the commit; rebase copies it
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: B
 
 **In `challenge-11.md`:** line **469**.
 
@@ -169,7 +168,7 @@ intent**: cherry-pick is surgical and one-at-a-time; rebase moves a whole series
 — you now have the change in two branches, as two commits. Rebase moves the branch pointer away from the
 originals, so the old commits become unreferenced.
 
-**Why B is the most common misconception**, and it matters: if cherry-pick preserved SHAs, Git could tell
+**Why A is the most common misconception**, and it matters: if cherry-pick preserved SHAs, Git could tell
 that a commit had already been applied. It cannot, which is why cherry-picking the same fix twice
 produces a conflict rather than a no-op.
 
@@ -181,15 +180,15 @@ produces a conflict rather than a no-op.
 
 Which command finds commits from a deleted branch when the reflog entry is gone?
 
-- A. `git fsck --no-reflogs` looking for dangling commits
-- B. `git log --all`
-- C. `git branch -a`
-- D. `git stash list`
+- A. `git log --all` across every reachable ref
+- B. `git branch -a` listing local and remote branches
+- C. `git fsck --no-reflogs` to find dangling commits
+- D. `git stash list` showing saved working trees
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: C
 
 **In `challenge-11.md`:** lines **40–42**.
 
@@ -214,15 +213,15 @@ so commits you could already find are not reported as dangling.
 
 A developer made commits in detached HEAD, then checked out `main`. How are the commits recovered?
 
-- A. `git reflog` to find the SHA, then `git branch <name> <sha>` or `git cherry-pick`
-- B. `git stash pop`
-- C. `git reset --hard`
-- D. They are lost
+- A. `git stash pop` to restore the detached work
+- B. `git reset --hard` back to the last commit
+- C. The commits are lost once HEAD moves
+- D. `git reflog` for the SHA, then `git branch`
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: D
 
 **In `challenge-11.md`:** lines **82–93**.
 
@@ -251,15 +250,15 @@ wherever you are now.
 
 Which command removes an entire file from all history?
 
-- A. `git filter-repo --invert-paths --path config/aws-credentials.json`
-- B. `git rm config/aws-credentials.json`
-- C. `git filter-repo --path config/aws-credentials.json`
-- D. `git clean -fd`
+- A. `git filter-repo --path <file>`
+- B. `git filter-repo --invert-paths --path <file>`
+- C. `git rm --cached <file>` followed by a commit
+- D. `git clean -fdx` across the working tree
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: B
 
 **In `challenge-11.md`:** line **204**.
 
@@ -267,8 +266,8 @@ Which command removes an entire file from all history?
 git filter-repo --invert-paths --path config/aws-credentials.json
 ```
 
-**`--invert-paths` is the critical flag, and C is the trap.** Without it, `--path` means **keep only**
-that path — so option C would delete the entire repository apart from the credentials file.
+**`--invert-paths` is the critical flag, and A is the trap.** Without it, `--path` means **keep only**
+that path — so option A would delete the entire repository apart from the credentials file.
 
 **That inversion catches people who type the command from memory**, and the consequence is spectacular:
 a repository containing one file, and it is the one you were trying to remove.
@@ -281,15 +280,15 @@ a repository containing one file, and it is the one you were trying to remove.
 
 What does `git filter-repo --replace-text` do?
 
-- A. Replaces matching text in every file across all history, using a rules file
-- B. Renames files
-- C. Replaces text in the working tree only
-- D. Rewrites commit messages
+- A. It renames files matching a pattern across history
+- B. It replaces text in the working tree only
+- C. It replaces matching text in every file in history
+- D. It rewrites commit messages matching the rules
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: C
 
 **In `challenge-11.md`:** lines **208–221**.
 
@@ -317,15 +316,15 @@ ID in the history — including ones nobody knew about — while a literal only 
 
 Why must BFG run against a `--mirror` clone?
 
-- A. BFG operates on bare repositories containing all refs
-- B. It is faster
-- C. It needs a backup
-- D. It cannot read working trees
+- A. It runs faster against a bare repository
+- B. It needs a backup copy of the repo to work from
+- C. It cannot read a checked-out working tree
+- D. BFG works on bare repos containing every ref
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: D
 
 **In `challenge-11.md`:** lines **240–242**.
 
@@ -351,8 +350,8 @@ Which BFG option removes every file over 100 MB from history?
 
 - A. `--strip-blobs-bigger-than 100M`
 - B. `--delete-files "*.psd"`
-- C. `--delete-folders`
-- D. `--replace-text`
+- C. `--delete-folders assets`
+- D. `--replace-text passwords.txt`
 
 <details>
 <summary>Show answer</summary>
@@ -382,10 +381,10 @@ that the present state is the one you want — so the file must already be delet
 
 What must follow a BFG run?
 
-- A. `git reflog expire --expire=now --all` and `git gc --prune=now --aggressive`
-- B. `git fsck`
-- C. `git stash`
-- D. Nothing
+- A. `reflog expire` then `gc --prune=now`
+- B. `git fsck --full` to verify the object database
+- C. `git stash` to save the working tree
+- D. Nothing further; BFG completes the cleanup
 
 <details>
 <summary>Show answer</summary>
@@ -415,15 +414,15 @@ completes — the same trap as Challenge 10's migration, with much higher stakes
 
 How do you verify a secret is gone from history?
 
-- A. `git log --all -S "AKIAIOSFODNN7EXAMPLE" --oneline` returns nothing, and a blob scan finds nothing
-- B. `git status` is clean
-- C. The file is absent from the working tree
-- D. `git diff` shows no changes
+- A. `git status` reports a clean working tree with no changes
+- B. The file is absent from the current working tree
+- C. `git log -S` finds nothing and a blob scan finds nothing
+- D. `git diff` shows no pending changes in the tree
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: C
 
 **In `challenge-11.md`:** lines **275–283**.
 
@@ -444,7 +443,7 @@ no diff introduced.
 **`-S` is the "pickaxe"**, and it is worth knowing by name: it finds commits where the *count* of a
 string changed.
 
-**Why C is the mistake that ends investigations early.** A clean working tree tells you about one commit;
+**Why B is the mistake that ends investigations early.** A clean working tree tells you about one commit;
 the history is what leaks.
 
 </details>
@@ -455,15 +454,15 @@ the history is what leaks.
 
 `git filter-repo` refuses to run: "does not look like a fresh clone". What are the options?
 
-- A. Use `--force`, or work from a fresh clone made with `git clone --no-local`
-- B. Delete `.git` and reinitialise
-- C. Run `git gc` first
-- D. Upgrade filter-repo
+- A. Delete `.git` and reinitialise the repository
+- B. Run `git gc` before attempting the rewrite
+- C. Upgrade `git-filter-repo` to the latest version
+- D. Use `--force`, or a `--no-local` fresh clone
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: D
 
 **In `challenge-11.md`:** lines **408–415**.
 
@@ -491,15 +490,15 @@ original.
 
 What is the **final** and most critical step after removing the credentials?
 
-- A. Rotate the exposed credentials and check the audit log for unauthorised use
-- B. Force-push the cleaned history
-- C. Notify the team to re-clone
-- D. Add the file to `.gitignore`
+- A. Force-push the cleaned history to every remote
+- B. Rotate the credentials and check the audit log
+- C. Notify every developer that they must re-clone
+- D. Add the credentials file to `.gitignore`
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: B
 
 **In `challenge-11.md`:** lines **307–321**.
 
@@ -519,7 +518,7 @@ first means every service using it breaks immediately; creating first gives you 
 **And the CloudTrail lookup at lines 318–321 is the question nobody wants to ask** — was the key used
 during the three-week exposure? — and the only way to know whether this is a cleanup or an incident.
 
-**Why B, C and D are all real steps that resolve nothing.** The keys were public for three weeks; a
+**Why A, C and D are all real steps that resolve nothing.** The keys were public for three weeks; a
 history rewrite does not reach forks, existing clones or anyone who copied them.
 
 </details>
@@ -530,10 +529,10 @@ history rewrite does not reach forks, existing clones or anyone who copied them.
 
 What does the pre-commit hook at Task 8 detect?
 
-- A. Staged content matching AWS key IDs, private key headers, or assigned passwords
-- B. Large files
-- C. Missing tests
-- D. Commit message format
+- A. Staged content matching key or password patterns
+- B. Files larger than a configured size threshold
+- C. Commits that add code without matching tests
+- D. Commit messages that break the format convention
 
 <details>
 <summary>Show answer</summary>
@@ -564,15 +563,15 @@ should not block the commit that removes it.
 
 Which server-side control does Task 8 enable?
 
-- A. GitHub secret scanning with push protection
-- B. Branch protection
-- C. CODEOWNERS
-- D. Required status checks
+- A. Branch protection requiring a review
+- B. CODEOWNERS routing for the config path
+- C. Secret scanning with push protection
+- D. Required status checks on the branch
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: C
 
 **In `challenge-11.md`:** lines **345–346**.
 
@@ -599,27 +598,27 @@ push protection runs on the server and cannot be. **Together they are fast feedb
 
 Which **three** recover lost commits? (Choose three.)
 
-- A. `git reflog` to find the SHA
-- B. `git fsck --no-reflogs` to find dangling commits
-- C. `git branch <name> <sha>` to put a ref back
-- D. `git reset --hard`
-- E. `git clean -fd`
-- F. `git revert`
+- A. `git reset --hard` to the previous commit
+- B. `git reflog` to find the SHA of the lost tip
+- C. `git clean -fd` to clear untracked files
+- D. `git fsck --no-reflogs` to find dangling commits
+- E. `git revert` on the deleting commit
+- F. `git branch <name> <sha>` to put a ref back
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A, B, C
+### Answer: B, D, F
 
 **In `challenge-11.md`:** lines **30**, **40**, **45**.
 
-**Find, then label.** A and B are two ways of finding an unreferenced commit; C is what makes it reachable
+**Find, then label.** B and D are two ways of finding an unreferenced commit; F is what makes it reachable
 again.
 
-**Why D and E are the opposite operation.** `reset --hard` discards work and `clean -fd` deletes untracked
+**Why A and C are the opposite operation.** `reset --hard` discards work and `clean -fd` deletes untracked
 files — both are how commits get lost, not how they are found.
 
-**Why F belongs to a different problem.** `revert` undoes a *change* in a commit that is still perfectly
+**Why E belongs to a different problem.** `revert` undoes a *change* in a commit that is still perfectly
 present.
 
 </details>
@@ -631,23 +630,23 @@ present.
 Which **three** are true of history rewriting? (Choose three.)
 
 - A. Every commit SHA from the rewrite point changes
-- B. It requires a force push
-- C. Other clones must be deleted and re-cloned
-- D. Existing tags are unaffected
-- E. `git pull` safely reconciles the new history
+- B. Existing tags are unaffected by the rewrite
+- C. It requires a force push to the remote
+- D. `git pull` safely reconciles the new history
+- E. Other clones must be deleted and re-cloned
 - F. The old objects are removed immediately
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A, B, C
+### Answer: A, C, E
 
 **In `challenge-11.md`:** lines **447**, **286–287**, **294–296**.
 
-**Why E is called out in capitals at line 299** — pulling creates duplicate history **and** restores the
+**Why D is called out in capitals at line 299** — pulling creates duplicate history **and** restores the
 removed blobs into that clone.
 
-**Why D is false and consequential.** Tags point at specific commits; after a rewrite those commits are
+**Why B is false and consequential.** Tags point at specific commits; after a rewrite those commits are
 orphaned, so the tags reference history no longer on any branch. **That is why line 287 force-pushes
 `--tags` as well.**
 
@@ -662,23 +661,23 @@ orphaned, so the tags reference history no longer on any branch. **That is why l
 
 Which **three** does the challenge use to remove secrets from history? (Choose three.)
 
-- A. `git filter-repo --invert-paths --path <file>`
-- B. `git filter-repo --replace-text <rules file>`
-- C. BFG `--replace-text <passwords file>`
-- D. `git rm --cached`
-- E. `git revert`
-- F. `.gitignore`
+- A. `git rm --cached` on the credentials file
+- B. `git filter-repo --invert-paths --path <file>`
+- C. `git revert` on the commit that added it
+- D. `git filter-repo --replace-text <rules file>`
+- E. A `.gitignore` entry for the credentials file
+- F. BFG `--replace-text <passwords file>`
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A, B, C
+### Answer: B, D, F
 
 **In `challenge-11.md`:** lines **204**, **213**, **247**.
 
 **Two tools, three approaches: delete the file, replace the text, or replace with BFG.**
 
-**Why D, E and F are all in this challenge and none of them removes history.** `.gitignore` (line 324)
+**Why A, C and E are all in this challenge and none of them removes history.** `.gitignore` (line 324)
 prevents the *next* commit; `git rm --cached` untracks going forward; `revert` adds an undo commit. **All
 three are legitimate follow-ups and none is the fix.**
 
@@ -690,16 +689,16 @@ three are legitimate follow-ups and none is the fix.**
 
 Which **two** are true of interactive rebase? (Choose two.)
 
-- A. `squash` combines a commit into the previous one, keeping both messages for editing
-- B. `fixup` combines but discards the fixup commit's message
-- C. It preserves the original SHAs
-- D. It is safe on shared branches
-- E. It cannot reorder commits
+- A. It preserves the original commit SHAs
+- B. It is safe to run on shared branches
+- C. `squash` combines into the previous, keeping messages
+- D. It cannot reorder commits in the sequence
+- E. `fixup` combines but discards the fixup's message
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A, B
+### Answer: C, E
 
 **In `challenge-11.md`:** lines **168–184**.
 
@@ -711,7 +710,7 @@ Which **two** are true of interactive rebase? (Choose two.)
 **Use `fixup` when the message is "wip" or "fix typo" — nobody wants it in the final history.** Use
 `squash` when both messages contain something worth keeping.
 
-**Why C and D are the rules from Challenge 07.** Rebase rewrites, so SHAs change and shared branches must
+**Why A and B are the rules from Challenge 07.** Rebase rewrites, so SHAs change and shared branches must
 not be rebased — which is why line 179 force-pushes with lease **"only for feature branches, never
 main"**.
 
@@ -726,16 +725,16 @@ marked commit, and the rebase moves it next to its target automatically.
 
 Which **two** cherry-pick behaviours does the challenge demonstrate? (Choose two.)
 
-- A. `git cherry-pick abc1234..def5678` applies a range
-- B. `git cherry-pick -m 1 <sha>` picks a merge commit by parent
-- C. Cherry-pick preserves the original SHA
-- D. Cherry-pick moves the commit off the source branch
-- E. Cherry-pick cannot conflict
+- A. Cherry-pick preserves the original commit SHA
+- B. `git cherry-pick abc1234..def5678` applies a range
+- C. Cherry-pick moves the commit off the source branch
+- D. `git cherry-pick -m 1 <sha>` picks a merge by parent
+- E. Cherry-pick can never produce a conflict
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A, B
+### Answer: B, D
 
 **In `challenge-11.md`:** lines **123** and **132**.
 
@@ -759,16 +758,16 @@ with `git add` then `--continue`, and `--abort` at line 129 if you change your m
 
 Which **two** verify that a secret has been removed? (Choose two.)
 
-- A. `git log --all -S "<secret>" --oneline` returns nothing
-- B. A loop over `git rev-list --objects --all` finding no blob containing the pattern
-- C. `git status` is clean
-- D. The file is absent from the working directory
-- E. `git diff HEAD` is empty
+- A. `git status` reporting a clean working tree
+- B. The file being absent from the working directory
+- C. `git log --all -S "<secret>"` returning nothing
+- D. `git diff HEAD` showing no changes at all
+- E. A loop over `rev-list --objects --all` finding no blob
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A, B
+### Answer: C, E
 
 **In `challenge-11.md`:** lines **275–283**.
 
@@ -787,25 +786,25 @@ challenge suggests contacting support for repository maintenance.
 
 Which **two** prevent a recurrence? (Choose two.)
 
-- A. A pre-commit hook scanning staged content for secret patterns
-- B. GitHub secret scanning with push protection
-- C. Adding the file to `.gitignore`
-- D. Rotating the credentials
-- E. Training the team
+- A. A pre-commit hook scanning for secret patterns
+- B. Adding the credentials file to `.gitignore`
+- C. Rotating the credentials that were exposed
+- D. GitHub secret scanning with push protection
+- E. Training the team on credential hygiene
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A, B
+### Answer: A, D
 
 **In `challenge-11.md`:** lines **332–341** and **345–346**.
 
 **Client-side speed plus server-side guarantee** (Q16) — the layered pattern from Challenge 43.
 
-**Why C is genuinely useful and narrower than it looks.** `.gitignore` prevents committing **that named
+**Why B is genuinely useful and narrower than it looks.** `.gitignore` prevents committing **that named
 file**; it does nothing about the same key pasted into `config.ts`.
 
-**Why D is the *response*, not the prevention** — essential, and it fixes the incident rather than the
+**Why C is the *response*, not the prevention** — essential, and it fixes the incident rather than the
 class.
 
 </details>
@@ -1242,8 +1241,8 @@ git [BLANK 2] feature/payment-gateway-v2 abc1234
 git push origin feature/payment-gateway-v2
 ```
 
-- **BLANK 1:** `no-reflogs` / `lost-found` / `full` / `unreachable`
-- **BLANK 2:** `branch` / `checkout` / `reset` / `restore`
+- **BLANK 1:** `lost-found` / `full` / `no-reflogs` / `unreachable`
+- **BLANK 2:** `checkout` / `branch` / `reset` / `restore`
 
 <details>
 <summary>Show answer</summary>
@@ -1275,9 +1274,9 @@ EOF
 git filter-repo --replace-text expressions.txt
 ```
 
-- **BLANK 1:** `invert-paths` / `remove-paths` / `delete-path` / `exclude`
-- **BLANK 2:** `regex` / `pattern` / `match` / `re`
-- **BLANK 3:** `==>` / `=>` / `->` / `:`
+- **BLANK 1:** `remove-paths` / `delete-path` / `exclude` / `invert-paths`
+- **BLANK 2:** `pattern` / `regex` / `match` / `re`
+- **BLANK 3:** `=>` / `->` / `==>` / `:`
 
 <details>
 <summary>Show answer</summary>
@@ -1310,9 +1309,9 @@ git reflog expire --expire=now --all
 git gc --[BLANK 3]
 ```
 
-- **BLANK 1:** `mirror` / `bare` / `depth 1` / `no-local`
-- **BLANK 2:** `replace-text` / `delete-files` / `strip-blobs-bigger-than` / `clean`
-- **BLANK 3:** `prune=now --aggressive` / `auto` / `force` / `all`
+- **BLANK 1:** `bare` / `mirror` / `depth 1` / `no-local`
+- **BLANK 2:** `delete-files` / `strip-blobs-bigger-than` / `replace-text` / `clean`
+- **BLANK 3:** `auto` / `force` / `all` / `prune=now --aggressive`
 
 <details>
 <summary>Show answer</summary>
@@ -1344,8 +1343,8 @@ git rev-list --objects --all | while read hash path; do
 done
 ```
 
-- **BLANK 1:** `S` / `G` / `p` / `n`
-- **BLANK 2:** `cat-file` / `show` / `blame` / `describe`
+- **BLANK 1:** `G` / `p` / `S` / `n`
+- **BLANK 2:** `show` / `cat-file` / `blame` / `describe`
 
 <details>
 <summary>Show answer</summary>
@@ -1376,9 +1375,9 @@ aws cloudtrail lookup-events \
   --lookup-attributes AttributeKey=[BLANK 3],AttributeValue=AKIAIOSFODNN7EXAMPLE
 ```
 
-- **BLANK 1:** `create-access-key` / `delete-access-key` / `update-access-key` / `list-access-keys`
-- **BLANK 2:** `delete-access-key` / `create-access-key` / `deactivate-key` / `rotate-key`
-- **BLANK 3:** `AccessKeyId` / `Username` / `EventName` / `ResourceName`
+- **BLANK 1:** `delete-access-key` / `update-access-key` / `create-access-key` / `list-access-keys`
+- **BLANK 2:** `create-access-key` / `delete-access-key` / `deactivate-key` / `rotate-key`
+- **BLANK 3:** `Username` / `EventName` / `ResourceName` / `AccessKeyId`
 
 <details>
 <summary>Show answer</summary>
@@ -1411,9 +1410,9 @@ git rebase -i --autosquash HEAD~5
 
 Requirement: fold `h3` in keeping both messages; fold `h5` discarding its message.
 
-- **BLANK 1:** `squash` / `fixup` / `drop` / `edit`
-- **BLANK 2:** `fixup` / `squash` / `reword` / `pick`
-- **BLANK 3:** `fixup` / `squash` / `amend` / `autosquash`
+- **BLANK 1:** `fixup` / `squash` / `drop` / `edit`
+- **BLANK 2:** `squash` / `reword` / `fixup` / `pick`
+- **BLANK 3:** `squash` / `fixup` / `amend` / `autosquash`
 
 <details>
 <summary>Show answer</summary>
@@ -1469,15 +1468,15 @@ senior developer deleted `feature/payment-gateway-v2`, containing **three weeks 
 
 What is the **first** action, and why?
 
-- A. Rotate the AWS keys and check CloudTrail — the rewrite does not revoke anything
-- B. Run `filter-repo` to clean the history
-- C. Force-push the cleaned branches
-- D. Notify the team to stop pushing
+- A. Run `filter-repo` to clean the history first
+- B. Force-push the cleaned branches to the remote
+- C. Notify the team to stop pushing to the repo
+- D. Rotate the AWS keys and check CloudTrail first
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: D
 
 **In `challenge-11.md`:** lines **307–321**.
 
@@ -1490,7 +1489,7 @@ history rewrite first is a minute they remain usable.
 
 **And it is cheap.** Two `aws iam` commands versus a multi-hour coordinated rewrite.
 
-**Why D is sensible operationally and not the priority.** Freezing pushes helps the rewrite go smoothly;
+**Why C is sensible operationally and not the priority.** Freezing pushes helps the rewrite go smoothly;
 it does nothing about a key someone may already be using.
 
 </details>
@@ -1501,15 +1500,15 @@ it does nothing about a key someone may already be using.
 
 How should the branch be recovered?
 
-- A. `git reflog` or `git fsck --no-reflogs` to find the tip, then `git branch` and push
-- B. Ask the developer to redo the work
-- C. `git revert` the deletion
-- D. Restore from a backup
+- A. Ask the developer to redo the three weeks of work
+- B. `reflog` or `fsck` for the tip, then branch it
+- C. `git revert` the commit that deleted the branch
+- D. Restore the repository from a nightly backup
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: B
 
 **In `challenge-11.md`:** lines **30–51**.
 
@@ -1530,10 +1529,10 @@ days (Q3).
 
 Which removal approach covers "every commit on every branch and tag"?
 
-- A. `filter-repo --replace-text` on a fresh mirror clone, then force-push `--all` and `--tags`
-- B. `filter-repo` on the working clone of `main`
-- C. `git rm --cached` and a commit
-- D. `git revert` on the 47 commits
+- A. `filter-repo` on a mirror; push `--all`, `--tags`
+- B. `git rm --cached` on the file, then a commit
+- C. `filter-repo` on the working clone of `main` only
+- D. `git revert` applied to each of the 47 commits
 
 <details>
 <summary>Show answer</summary>
@@ -1547,7 +1546,7 @@ Which removal approach covers "every commit on every branch and tag"?
 **And the two force pushes are both required** — `--all` for branches and `--tags` separately, because
 tags are refs that a branch push does not touch.
 
-**Why B leaves the keys reachable** on every other branch, which the scenario explicitly says exist.
+**Why C leaves the keys reachable** on every other branch, which the scenario explicitly says exist.
 
 **Why D would create 47 more commits** and leave all 47 originals intact and readable.
 
@@ -1559,16 +1558,16 @@ tags are refs that a branch push does not touch.
 
 Which **two** make removal verifiable? (Choose two.)
 
-- A. `git log --all -S "<key>" --oneline` returning nothing
-- B. Scanning every object with `git rev-list --objects --all` and `git cat-file`
-- C. Checking the working tree
-- D. `git status` clean
-- E. The file missing from `main`
+- A. Checking the file is absent from the working tree
+- B. `git log --all -S "<key>" --oneline` returning nothing
+- C. `git status` reporting a clean working tree
+- D. The file missing from the `main` branch tip
+- E. Scanning every object with `rev-list` and `cat-file`
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A, B
+### Answer: B, E
 
 **In `challenge-11.md`:** lines **275–283**.
 
@@ -1587,22 +1586,22 @@ inspects the current state rather than the history.
 Which **two** ensure the 15 developers have no path back to the secret? (Choose two.)
 
 - A. Every developer deletes their clone and re-clones
-- B. An explicit instruction not to `git pull` on the old clone
-- C. `git pull --rebase` on existing clones
-- D. `git fetch` then `git reset --hard origin/main`
-- E. Emailing the new history's SHA
+- B. `git pull --rebase` on each existing clone
+- C. `git fetch` then `git reset --hard origin/main`
+- D. An instruction not to `git pull` on the old clone
+- E. Emailing the new history's tip SHA to the team
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A, B
+### Answer: A, D
 
 **In `challenge-11.md`:** lines **291–299**.
 
-**A removes the old objects; B stops the one action that would put them back.** Both appear in the
+**A removes the old objects; D stops the one action that would put them back.** Both appear in the
 announcement, and the second is in capitals for a reason.
 
-**Why D leaves every other local branch, stash and reflog entry** pointing at old objects — a push from
+**Why C leaves every other local branch, stash and reflog entry** pointing at old objects — a push from
 any of them restores the secret (Q26).
 
 **And note the announcement's step 1**: stash or copy uncommitted work first. **The procedure is
@@ -1619,18 +1618,17 @@ history was cleaned and verified at the time, push protection is enabled, and th
 the repository's documentation. The finding is on a long-lived feature branch created five months ago
 and pushed for the first time last week.
 
-What happened, and what is the fix?
+What is the most likely cause?
 
-- A. The branch predates the rewrite — its author kept a pre-rewrite clone and pushed old commits
-  containing the secret; delete the branch, re-clean if needed, and confirm every clone was replaced
-- B. `filter-repo` missed a branch
-- C. Push protection was disabled
-- D. The pre-commit hook was not installed
+- A. `filter-repo` missed a branch during the original rewrite
+- B. The branch predates the rewrite; old commits were pushed
+- C. Push protection was disabled on the repository
+- D. The pre-commit hook was never installed by the author
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: B
 
 **In `challenge-11.md`:** lines **291–299** and **346**.
 
@@ -1646,7 +1644,7 @@ never deleted their clone.
 plausibly *how* the scanner found it. **What it cannot do is undo the rewrite's assumption** that no old
 clones remain.
 
-**Why B is refutable from the evidence.** The rewrite ran on a `--mirror` (Q9) and was verified with a
+**Why A is refutable from the evidence.** The rewrite ran on a `--mirror` (Q9) and was verified with a
 full object scan (Q45); a missed branch would have shown up then, not five months later on a branch that
 did not exist on the server.
 
@@ -1663,20 +1661,17 @@ worth more than the rewrite itself.
 A year on, the branch was recovered without losing a day's work, the keys were rotated within an hour,
 and no secret has reached the repository since.
 
-Explain what each step contributed, and what actually changed.
+Which explanation best accounts for the change?
 
-- A. Rotation ended the exposure immediately while the cleanup ran; CloudTrail answered whether it
-  mattered; `filter-repo` on a mirror removed the keys from every ref; two independent verifications
-  proved it; a coordinated re-clone kept old objects from returning; and a pre-commit hook plus push
-  protection made the next attempt fail before it reached the server
-- B. The team learned not to commit secrets
-- C. The repository was made private
-- D. Access to the repository was restricted
+- A. The team learned not to commit secrets again
+- B. The repository was made private to the organisation
+- C. Rotation ended exposure; tooling blocks the next attempt
+- D. Access to the repository was restricted to fewer people
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: C
 
 **In `challenge-11.md`:** lines **312–321**, **240–247**, **275–283**, **291–299**, **332–346**.
 

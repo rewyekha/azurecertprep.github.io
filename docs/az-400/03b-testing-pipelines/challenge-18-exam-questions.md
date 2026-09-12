@@ -54,16 +54,15 @@ follows.
 
 The log reads "42 tests passed" and every coverage metric reads 0%. What class of problem is this?
 
-- A. The tests are not asserting anything
-- B. A plumbing problem — coverage instrumentation or its output file is missing, misconfigured, or written
-  where nothing reads it
+- A. A plumbing problem — output missing or written elsewhere
+- B. The tests are not asserting anything meaningful
 - C. The runner does not support coverage instrumentation
-- D. Passing tests always report 0% until a baseline exists
+- D. Passing tests report 0% until a baseline exists
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: B
+### Answer: A
 
 **In `challenge-18.md`:** lines **666–673**, and the knowledge check at line **818**.
 
@@ -75,7 +74,7 @@ the second never happens.
 written to the wrong path, a collector package that was never referenced, and instrumentation applied to
 transpiled output instead of source.
 
-**Why A produces the opposite symptom.** Assertion-free tests report *high* coverage — the lines all ran.
+**Why B produces the opposite symptom.** Assertion-free tests report *high* coverage — the lines all ran.
 That is Q45, and it is the reason coverage cannot be trusted as a measure of test quality.
 
 **Why C is the answer the exam offers to make you doubt the environment.** Coverage is instrumentation
@@ -94,14 +93,14 @@ Which Jest setting determines that a source file with **no tests at all** still 
 report?
 
 - A. `testMatch`
-- B. `collectCoverageFrom`
-- C. `coverageDirectory`
-- D. `coverageReporters`
+- B. `coverageDirectory`
+- C. `coverageReporters`
+- D. `collectCoverageFrom`
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: B
+### Answer: D
 
 **In `challenge-18.md`:** lines **53–58**.
 
@@ -127,7 +126,7 @@ counter-intuitive: adding this setting makes coverage **drop**, and the drop is 
 **Why A selects which files are *tests***, not which are *measured* — and note that `!src/**/__tests__/**`
 excludes the tests themselves from the denominator, because measuring your tests' coverage is circular.
 
-**Why C is where output goes and D is what formats it is written in** — both about the report, neither
+**Why B is where output goes and C is what formats it is written in** — both about the report, neither
 about the population being measured.
 
 </details>
@@ -138,15 +137,15 @@ about the population being measured.
 
 Which coverage format does `PublishCodeCoverageResults@2` accept?
 
-- A. LCOV
-- B. Cobertura or JaCoCo
-- C. HTML
-- D. `json-summary`
+- A. LCOV trace files
+- B. HTML browsable reports
+- C. Cobertura or JaCoCo XML
+- D. `json-summary` totals
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: B
+### Answer: C
 
 **In `challenge-18.md`:** lines **589–592**, and the knowledge check at line **796**.
 
@@ -163,7 +162,7 @@ the `cobertura` reporter (line 60), pytest via `--cov-report=xml` (line 150), an
 **Why A is the format GitHub tooling prefers** and Azure DevOps will not read. `lcov.info` is what the
 Node diff-coverage script parses at line 527 — right file, wrong consumer.
 
-**Why C is for humans.** The HTML report at line 283 is a browsable artifact, not machine input.
+**Why B is for humans.** The HTML report at line 283 is a browsable artifact, not machine input.
 
 **Why D is Jest-specific and read by `jq`** (lines 323, 377), not by any Azure DevOps task.
 
@@ -180,15 +179,15 @@ Azure Pipelines, lcov for GitHub tooling and the diff parser, `json-summary` for
 Every metric in `coverageThreshold` is set to 80. Which one can sit at 100% while an untested `else`
 path ships to production?
 
-- A. `branches`
-- B. `lines`
+- A. `lines`
+- B. `branches`
 - C. `functions`
 - D. `statements`
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: B
+### Answer: A
 
 **In `challenge-18.md`:** lines **61–68**.
 
@@ -227,14 +226,14 @@ is statement-level, close to lines** and equally blind to untaken paths.
 The Python job's test step is just `pytest`, with no flags. Where do the coverage options come from?
 
 - A. Environment variables set by `setup-python`
-- B. `addopts` under `[tool.pytest.ini_options]` in `pyproject.toml`
-- C. A `.coveragerc` file
-- D. `requirements-dev.txt`
+- B. A `.coveragerc` file in the repository root
+- C. `requirements-dev.txt` listing `pytest-cov`
+- D. `addopts` under `[tool.pytest.ini_options]`
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: B
+### Answer: D
 
 **In `challenge-18.md`:** lines **148–150** and **200**.
 
@@ -252,11 +251,11 @@ configuration lives with the code rather than in the pipeline.
 command line (line 107), and with Azure Pipelines at line 604, where the flags are typed into the pipeline
 again — and can therefore drift from what developers run locally.
 
-**Why C is the older, still-valid alternative.** `.coveragerc`, `setup.cfg` and `pyproject.toml` are three
+**Why B is the older, still-valid alternative.** `.coveragerc`, `setup.cfg` and `pyproject.toml` are three
 places coverage settings may live; this challenge uses `pyproject.toml` for both pytest and
 `[tool.coverage.*]`.
 
-**Why A and D are the plausible neighbours.** `setup-python` installs an interpreter and restores a cache;
+**Why A and C are the plausible neighbours.** `setup-python` installs an interpreter and restores a cache;
 `requirements-dev.txt` provides `pytest-cov` so `--cov` exists at all — necessary, not sufficient.
 
 </details>
@@ -268,14 +267,14 @@ places coverage settings may live; this challenge uses `pyproject.toml` for both
 What does `--cov-fail-under=80` do?
 
 - A. Skips tests when coverage is below 80%
-- B. Makes pytest exit non-zero when total coverage is below 80%
-- C. Excludes files below 80% coverage from the report
+- B. Excludes files below 80% coverage from the report
+- C. Makes pytest exit non-zero below 80% total coverage
 - D. Warns in the log without changing the exit code
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: B
+### Answer: C
 
 **In `challenge-18.md`:** line **150**, with `fail_under = 80` repeated at line **168**.
 
@@ -302,16 +301,15 @@ the report-versus-gate split again.
 `[tool.coverage.report]` lists `exclude_lines` including `pragma: no cover` and `pass`. What is the effect
 on the reported percentage?
 
-- A. Those lines are counted as covered
-- B. Those lines are removed from measurement entirely, so the percentage rises without any test being
-  added
-- C. Those lines fail the build
+- A. The lines leave the denominator; the percentage rises
+- B. Those lines are counted as covered lines
+- C. Those lines fail the build when executed
 - D. Nothing — `exclude_lines` only affects the HTML report
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: B
+### Answer: A
 
 **In `challenge-18.md`:** lines **160–167**.
 
@@ -336,7 +334,7 @@ fixes a coverage failure by adding pragmas has moved the number without changing
 `collectCoverageFrom` negations for Jest (lines 55–57), `omit` and `exclude_lines` for coverage.py (lines
 154–167), `ExcludeByFile` for coverlet (line 273).
 
-**Why A is materially different.** Counting as covered inflates the numerator *and* the denominator;
+**Why B is materially different.** Counting as covered inflates the numerator *and* the denominator;
 excluding removes both. Both raise the percentage, and only exclusion is what these settings do.
 
 </details>
@@ -347,16 +345,15 @@ excluding removes both. Both raise the percentage, and only exclusion is what th
 
 `dotnet test --collect:"XPlat Code Coverage"` runs, tests pass, and no coverage file is produced. Why?
 
-- A. The results directory does not exist
-- B. `coverlet.collector` is not referenced by the test project, so the data collector silently produces
-  nothing
-- C. `--no-restore` prevented collection
-- D. Cobertura is not supported on Linux
+- A. The results directory does not exist on the agent
+- B. `--no-restore` prevented the collector loading
+- C. Cobertura output is not supported on Linux agents
+- D. `coverlet.collector` is not referenced by the project
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: B
+### Answer: D
 
 **In `challenge-18.md`:** lines **691–693**, with the package reference at line **233**.
 
@@ -376,7 +373,7 @@ reference.
 fuller form with `PrivateAssets` and `IncludeAssets`, which keeps the collector out of the published
 output while still available at test time.
 
-**Why A would produce an error rather than silence**, and **why C affects package restore only** — a
+**Why A would produce an error rather than silence**, and **why B affects package restore only** — a
 missing restore fails the build, loudly.
 
 </details>
@@ -388,15 +385,15 @@ missing restore fails the build, loudly.
 ReportGenerator is run with `-reporttypes:"Html;Cobertura;JsonSummary"`. Which output does the coverage
 gate job actually read?
 
-- A. The HTML report
-- B. The Cobertura XML
-- C. `Summary.json` from `JsonSummary`
-- D. `lcov.info`
+- A. The HTML report for browsing
+- B. `Summary.json` from `JsonSummary`
+- C. The merged Cobertura XML
+- D. `lcov.info` from the Node service
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: C
+### Answer: B
 
 **In `challenge-18.md`:** lines **278–283** and **347–348**.
 
@@ -415,7 +412,7 @@ normalises the output. Without it the gate would have to find and combine severa
 **Note the key name: `.summary.linecoverage`** — line coverage again (Q4), and expressed as a percentage
 here rather than a fraction, which is why there is no multiplication by 100 on this branch of the script.
 
-**Why B and A are produced and not consumed by this job**, and **why D belongs to the Node service**.
+**Why C and A are produced and not consumed by this job**, and **why D belongs to the Node service**.
 
 </details>
 
@@ -426,15 +423,15 @@ here rather than a fraction, which is why there is no multiplication by 100 on t
 The Python branch of the gate parses `coverage.xml` and computes
 `float(root.attrib['line-rate']) * 100`. Why the multiplication?
 
-- A. To convert a count into a percentage
-- B. Because Cobertura's `line-rate` is a fraction between 0 and 1
-- C. To normalise across the three services
-- D. Because `bc` cannot compare decimals
+- A. To convert a raw count into a percentage figure
+- B. To normalise across the three services
+- C. Because Cobertura's `line-rate` is a 0–1 fraction
+- D. Because `bc` cannot compare decimal values
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: B
+### Answer: C
 
 **In `challenge-18.md`:** lines **333–338**, and the same conversion in PowerShell at line **648**.
 
@@ -466,15 +463,15 @@ $lineRate = [math]::Round([double]$xml.coverage.'line-rate' * 100, 2)
 
 Why does the gate use `bc -l` for its comparisons instead of a plain shell test?
 
-- A. `bc` is faster
-- B. The shell's `[ ]` and `(( ))` arithmetic are integer-only, and coverage values are decimal
-- C. `bc` is required to read JSON
-- D. To avoid a subshell
+- A. Shell arithmetic is integer-only, not decimal
+- B. `bc` is faster than the shell's own built-ins
+- C. `bc` is required to parse the JSON output
+- D. To avoid spawning a subshell for each check
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: B
+### Answer: A
 
 **In `challenge-18.md`:** lines **325**, **340**, **350**, **458**.
 
@@ -494,7 +491,7 @@ checking as soon as the number is not a whole number.
 passing than at failing.
 
 **Why C is a category error** — `jq` and Python read the JSON and XML; `bc` only does arithmetic — and
-**why A is irrelevant** at this scale.
+**why B is irrelevant** at this scale.
 
 </details>
 
@@ -506,14 +503,14 @@ Each service's check in the gate job is wrapped in `if [ -f "<artifact path>" ];
 happens if the Node artifact is missing?
 
 - A. The gate fails with a clear error
-- B. The check is skipped, `FAILED` stays `false`, and the gate passes
-- C. The job errors on the missing file
-- D. The download step retries
+- B. The job errors on the missing file
+- C. The download step retries automatically
+- D. The check is skipped and the gate passes
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: B
+### Answer: D
 
 **In `challenge-18.md`:** lines **319–361**.
 
@@ -539,8 +536,8 @@ correctly for as long as nothing goes wrong.
 **The fix in one line:** require the file. `if [ ! -f "$FILE" ]; then echo "::error::missing coverage
 data"; exit 1; fi` before the comparison, so absent evidence is a failure rather than a silence.
 
-**Why C describes `-f` incorrectly** — testing for a file that is not there is the normal, non-error case —
-and **why D invents behaviour** `download-artifact` does not have here.
+**Why B describes `-f` incorrectly** — testing for a file that is not there is the normal, non-error case —
+and **why C invents behaviour** `download-artifact` does not have here.
 
 </details>
 
@@ -553,14 +550,14 @@ and **why D invents behaviour** `download-artifact` does not have here.
 result?
 
 - A. The gate waits for the other workflow to finish
-- B. `needs:` can only reference jobs in the **same** workflow file, so the reference is invalid
-- C. GitHub matches jobs by name across workflows
-- D. The gate runs first and the others wait
+- B. GitHub matches jobs by name across workflows
+- C. `needs:` is scoped to one file, so it is invalid
+- D. The gate runs first and the other jobs wait
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: B
+### Answer: C
 
 **In `challenge-18.md`:** lines **294–306**, against the job definitions at lines **84**, **175** and
 **246**.
@@ -576,7 +573,7 @@ download needs the other run's ID and a token — or the jobs need to be in one 
 artifacts resolve naturally, or trigger the gate with `workflow_run` and fetch artifacts from the
 triggering run explicitly.
 
-**Why A is what everyone assumes and GitHub does not do**, and **why C would be a very different product**
+**Why A is what everyone assumes and GitHub does not do**, and **why B would be a very different product**
 — job names are not global identifiers.
 
 </details>
@@ -588,8 +585,8 @@ triggering run explicitly.
 What does Contoso's "ratchet" policy require?
 
 - A. Coverage must rise by at least 5% per pull request
-- B. Coverage must never fall below the last baseline recorded on `main`
-- C. Coverage must reach 100% eventually
+- B. Coverage must never fall below the last `main` baseline
+- C. Coverage must reach 100% by an agreed date
 - D. Only new repositories must meet the threshold
 
 <details>
@@ -629,15 +626,15 @@ requirement 4, the trend, possible.
 
 What is diff coverage, and which requirement does it satisfy?
 
-- A. Coverage of the whole codebase, measured on the base branch
-- B. Coverage of only the lines added or modified in the pull request — requirement 3, 90% on new code
+- A. Coverage of the PR's changed lines — requirement 3
+- B. Coverage of the whole codebase on the base branch
 - C. The difference between branch and line coverage
-- D. Coverage excluding test files
+- D. Coverage excluding the test files themselves
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: B
+### Answer: A
 
 **In `challenge-18.md`:** line **28**, implemented at lines **485–489** and **512–556**, and the knowledge
 check at line **785**.
@@ -669,16 +666,15 @@ declaratively as `thresholdNew: 0.90` (line 215).
 
 Every coverage job checks out with `fetch-depth: 0`. Why?
 
-- A. To speed up the checkout
-- B. Because the ratchet and diff-coverage comparisons need real history and the base branch, which a
-  shallow clone does not have
-- C. To include submodules
-- D. Because coverage tools read Git history
+- A. To speed up the checkout on a large repository
+- B. To include submodules alongside the checkout
+- C. Because coverage tools read the Git history
+- D. The ratchet and diff need history and a base
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: B
+### Answer: D
 
 **In `challenge-18.md`:** lines **93–94**, **185**, **255**, with the comparisons at lines **484**,
 **486** and **517**.
@@ -700,7 +696,7 @@ has measured nothing.**
 and 516 is still required, because a pull-request checkout gives you the merge commit and not necessarily
 a remote-tracking ref for the base branch.
 
-**Why A inverts the cost** — full history is slower — and **why D is true of no coverage tool here**; it is
+**Why A inverts the cost** — full history is slower — and **why C is true of no coverage tool here**; it is
 the *comparison* that needs history, not the measurement.
 
 </details>
@@ -716,17 +712,17 @@ the *comparison* that needs history, not the measurement.
 Contoso's policy has four clauses. Which **three** are enforced by a mechanism that can fail a pull
 request? (Choose three.)
 
-- A. Overall line coverage at or above 80%
-- B. Coverage must not decrease against the recorded baseline
-- C. New code in the pull request must reach 90% coverage
-- D. Coverage trends must be visible across sprints
-- E. Coverage reports must be uploaded as artifacts
-- F. Every service must publish an HTML report
+- A. Coverage trends must be visible across sprints
+- B. Overall line coverage at or above 80%
+- C. Coverage reports must be uploaded as artifacts
+- D. Coverage must not decrease against the baseline
+- E. Every service must publish an HTML report
+- F. New code in the pull request must reach 90%
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A, B, C
+### Answer: B, D, F
 
 **In `challenge-18.md`:** lines **26–29**, enforced at lines **358**, **461** and **487**.
 
@@ -736,7 +732,7 @@ request? (Choose three.)
 **Which is fine, and worth stating clearly**: not every policy clause needs teeth. The mistake the exam
 tests is the reverse — assuming that because something is *visible*, it is *enforced*.
 
-**Why E and F are the mechanics of requirement 4**, doing the same job. An artifact preserves the data; an
+**Why C and E are the mechanics of requirement 4**, doing the same job. An artifact preserves the data; an
 HTML report makes it readable. Neither has an exit code.
 
 **The three that do bite** each fail in a different job: the threshold inside the test run and again in the
@@ -752,16 +748,16 @@ Which **three** settings in this challenge raise the reported coverage percentag
 being written**? (Choose three.)
 
 - A. `!src/migrations/**` in `collectCoverageFrom`
-- B. `omit` under `[tool.coverage.run]`
-- C. `exclude_lines` under `[tool.coverage.report]`
-- D. `coverageThreshold` set to 80
-- E. `fetch-depth: 0`
-- F. `--cov-report=term-missing`
+- B. `coverageThreshold` set to 80 on all metrics
+- C. `omit` under `[tool.coverage.run]`
+- D. `fetch-depth: 0` on the checkout step
+- E. `exclude_lines` under `[tool.coverage.report]`
+- F. `--cov-report=term-missing` in `addopts`
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A, B, C
+### Answer: A, C, E
 
 **In `challenge-18.md`:** lines **57**, **154–158**, **160–167**.
 
@@ -776,11 +772,11 @@ cheat.
 Generated migrations, `__repr__`, `__main__` guards — reasonable. A module that is hard to test is
 exactly the module the number should be complaining about.
 
-**Why D is enforcement, not measurement.** A threshold decides what to do with the number; it never
+**Why B is enforcement, not measurement.** A threshold decides what to do with the number; it never
 changes it.
 
 **Why F adds the uncovered line numbers to the terminal output** — more information, same percentage — and
-**why E is about Git history** (Q16).
+**why D is about Git history** (Q16).
 
 </details>
 
@@ -791,16 +787,16 @@ changes it.
 The `orgoro/coverage` action is configured with two thresholds. Which **two** statements are correct?
 (Choose two.)
 
-- A. `thresholdAll: 0.80` is the overall coverage requirement
-- B. `thresholdNew: 0.90` is the diff-coverage requirement for lines the PR added
-- C. Both values are percentages, so 0.80 means 0.8%
-- D. `thresholdNew` applies to newly added files only
-- E. The action replaces `--cov-fail-under`
+- A. Both values are percentages, so 0.80 means 0.8%
+- B. `thresholdAll: 0.80` is the overall coverage requirement
+- C. `thresholdNew` applies to newly added files only
+- D. `thresholdNew: 0.90` is the diff-coverage requirement
+- E. The action replaces `--cov-fail-under` entirely
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A, B
+### Answer: B, D
 
 **In `challenge-18.md`:** lines **208–215**.
 
@@ -813,11 +809,11 @@ The `orgoro/coverage` action is configured with two thresholds. Which **two** st
           thresholdNew: 0.90
 ```
 
-**One action, both policies, expressed as fractions.** `0.80` is 80% — which is why C is the trap: this
+**One action, both policies, expressed as fractions.** `0.80` is 80% — which is why A is the trap: this
 action takes fractions, while `--cov-fail-under=80` takes a percentage and Cobertura's `line-rate`
 attribute is a fraction again (Q10). **Units change between neighbouring lines in this challenge.**
 
-**Why D narrows "new" incorrectly.** Diff coverage measures **new and modified lines**, wherever they are —
+**Why C narrows "new" incorrectly.** Diff coverage measures **new and modified lines**, wherever they are —
 a two-line change in a five-year-old file is measured.
 
 **Why E is the layering point from Q6.** `--cov-fail-under` fails the *test run*; this action comments on
@@ -833,17 +829,17 @@ API access because its output is a comment.
 Jest is configured with five reporters. Which **three** are consumed by something automated in this
 challenge? (Choose three.)
 
-- A. `lcov`
-- B. `cobertura`
-- C. `json-summary`
-- D. `text`
-- E. `text-summary`
-- F. `html`
+- A. `lcov` for the diff parser
+- B. `text` for the log
+- C. `cobertura` for Azure
+- D. `text-summary` for the log
+- E. `json-summary` for `jq`
+- F. `html` for browsing
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A, B, C
+### Answer: A, C, E
 
 **In `challenge-18.md`:** line **60**, consumed at lines **527**, **592** and **323**.
 
@@ -873,28 +869,28 @@ parser needs `lcov`.
 Which **three** parts of this workflow will report success when the underlying data is missing? (Choose
 three.)
 
-- A. The `if [ -f ... ]` guards around each service's threshold check
-- B. The ratchet check when `trend.jsonl` does not exist
-- C. The Node diff-coverage script when the changed-file list is empty
-- D. `--cov-fail-under=80`
-- E. Jest's `coverageThreshold`
-- F. The `exit 1` in the gate job
+- A. `--cov-fail-under=80` inside the test run
+- B. The `if [ -f ... ]` guards around each threshold check
+- C. Jest's `coverageThreshold` inside the test run
+- D. The ratchet check when `trend.jsonl` does not exist
+- E. The `exit 1` at the end of the gate job
+- F. The Node diff-coverage script on an empty file list
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A, B, C
+### Answer: B, D, F
 
 **In `challenge-18.md`:** lines **322–354**, **465–467**, **519–522** and **547**.
 
 **Three different mechanisms, one shape: no evidence, no failure.**
 
-**A** skips the comparison entirely (Q12). **B** prints "No baseline found. Using current as initial
+**B** skips the comparison entirely (Q12). **D** prints "No baseline found. Using current as initial
 measurement." and continues — reasonable on the very first run, and indistinguishable from a cache that
-silently stopped restoring. **C** exits 0 on an empty file list at line 521, and even when it proceeds, a
+silently stopped restoring. **F** exits 0 on an empty file list at line 521, and even when it proceeds, a
 `totalLines` of zero yields `pct = 100` at line 547.
 
-**Why D, E and F fail closed.** A threshold inside the test run has the data by definition, and the gate's
+**Why A, C and E fail closed.** A threshold inside the test run has the data by definition, and the gate's
 `exit 1` is the one place a decision is actually enforced.
 
 **Carry the question into every gate you review: what does this do when it has nothing to measure?** A
@@ -909,17 +905,17 @@ gate that answers "passes" is decoration with an exit code.
 Coverage reports 0% on all three services. Which **three** root causes does the solution identify?
 (Choose three.)
 
-- A. A reporter that produces console output only, with no XML file
-- B. Coverage written to a path the publish task does not look in
-- C. `coverlet.collector` missing, so the data collector emits nothing
-- D. The tests are not asserting anything
-- E. Branch coverage measured instead of line coverage
+- A. A reporter that produces console output only, no XML
+- B. The tests are not asserting anything at all
+- C. Coverage written to a path the publish task ignores
+- D. Branch coverage measured instead of line coverage
+- E. `coverlet.collector` missing, so nothing is collected
 - F. The runner lacking instrumentation support
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A, B, C
+### Answer: A, C, E
 
 **In `challenge-18.md`:** lines **683–693**, with a fourth cause at lines **695–697**.
 
@@ -931,7 +927,7 @@ wrote (line 697).
 mismatch between two files that never see each other, Issue 3 is a missing NuGet package, and Issue 4 is a
 build-tooling interaction. **The only thing they share is the symptom.**
 
-**Why D produces high coverage, not zero** (Q45), and **why E changes which number you read**, not whether
+**Why B produces high coverage, not zero** (Q45), and **why D changes which number you read**, not whether
 one exists.
 
 **Fix 4 at lines 750–757 is the one to remember**, because it names the modern escape hatch:
@@ -951,16 +947,16 @@ of problem.
 
 Which **two** components make up the Azure Pipelines implementation of the coverage policy? (Choose two.)
 
-- A. `PublishCodeCoverageResults@2` with a Cobertura summary file per job
-- B. A `PowerShell@2` inline script that parses `line-rate` and exits non-zero below 80
-- C. `PublishTestResults@2` with JUnit format
-- D. `PublishPipelineArtifact@1` with the lcov file
+- A. `PublishCodeCoverageResults@2` with a Cobertura file
+- B. `PublishTestResults@2` with JUnit format
+- C. `PublishPipelineArtifact@1` with the lcov file
+- D. A `PowerShell@2` script parsing `line-rate`, exit 1
 - E. A branch policy that measures coverage directly
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A, B
+### Answer: A, D
 
 **In `challenge-18.md`:** lines **589–592**, **607–610**, **626–629**, and **638–657**.
 
@@ -979,7 +975,7 @@ if ($lineRate -lt $threshold) {
 644) — which means it inherits the same weakness as its bash counterpart: **find nothing, check nothing,
 pass**.
 
-**Why C handles test results, not coverage** — the distinction the knowledge check at line 796 makes
+**Why B handles test results, not coverage** — the distinction the knowledge check at line 796 makes
 explicitly — and **why E does not exist**: Azure DevOps branch policies require a *build* to succeed; the
 coverage judgement has to happen inside it.
 
@@ -1672,10 +1668,10 @@ teams still on Azure DevOps.
 A service reports 96% line coverage. A reviewer notices its test file asserts nothing — it calls each
 function and discards the result. Which policy clause would have caught this?
 
-- A. The 80% overall threshold
-- B. The ratchet
-- C. The 90% diff-coverage floor
-- D. None of them — coverage measures execution, not verification
+- A. The 80% overall line-coverage threshold
+- B. The ratchet against the recorded baseline
+- C. The 90% diff-coverage floor on new lines
+- D. None — coverage measures execution only
 
 <details>
 <summary>Show answer</summary>
@@ -1707,14 +1703,14 @@ The Python service sits at 61% overall and cannot realistically reach 80% this q
 wants every new change well tested. What do you configure?
 
 - A. Lower the overall threshold to 60% for this service
-- B. A ratchet plus a diff-coverage floor of 90% on changed lines
-- C. Exclude the untested modules with `omit`
-- D. Require 100% coverage on new files only
+- B. Exclude the untested modules with `omit` for now
+- C. A ratchet plus a 90% diff floor on changed lines
+- D. Require 100% coverage on newly added files only
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: B
+### Answer: C
 
 **In `challenge-18.md`:** lines **27–28**, **449–464**, **485–489**.
 
@@ -1724,7 +1720,7 @@ they raise the figure as a by-product of ordinary work, with no cliff and no wai
 **Why A is a waiver with a number on it.** It unblocks the team and removes the pressure entirely, and the
 threshold ratchets *downward* the next time someone finds it inconvenient.
 
-**Why C is the same move disguised as configuration** (Q18). The untested modules are exactly the ones the
+**Why B is the same move disguised as configuration** (Q18). The untested modules are exactly the ones the
 metric exists to point at, and omitting them makes 61% become 85% with no change to the risk at line 24.
 
 **Why D sounds strict and covers almost nothing.** Most changes modify existing files. Diff coverage
@@ -1739,11 +1735,10 @@ measures **new and modified lines wherever they are**, which is the version that
 A developer reports that the Node diff-coverage step always passes, even on a pull request that adds a
 hundred untested lines. Looking at Task 6, what is wrong?
 
-- A. The 90% threshold is set too low
-- B. `CHANGED_FILES` is set from a step output that does not exist, so the parser sees no changed files
-  and reports 100%
-- C. `lcov.info` is not generated
-- D. `--fail-under` is missing
+- A. The 90% threshold is set far too low
+- B. `CHANGED_FILES` refers to a nonexistent step output
+- C. `lcov.info` is not being generated by Jest
+- D. `--fail-under` is missing from the diff-cover call
 
 <details>
 <summary>Show answer</summary>
@@ -1785,16 +1780,15 @@ missing-artifact case in Q12: **the absence of data being scored as success.**
 The .NET team adds `ExcludeByFile="**/Migrations/**"` and coverage jumps from 74% to 83%, passing the
 gate. Is this acceptable?
 
-- A. Yes, unconditionally — exclusions are a supported feature
-- B. It depends: excluding generated migrations is defensible, but the exclusion must be reviewed like
-  code, because it raised the number without changing any risk
-- C. No — exclusions are never legitimate
+- A. It depends — defensible, but reviewed like a code change
+- B. Yes, unconditionally — exclusions are a supported feature
+- C. No — exclusions are never legitimate in a gated pipeline
 - D. Yes, because line coverage is the wrong metric anyway
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: B
+### Answer: A
 
 **In `challenge-18.md`:** line **273**, alongside the equivalents at lines **57** and **154–158**.
 
@@ -1805,7 +1799,7 @@ database, and unit tests of them assert that the generator generated what the ge
 defect prevented. If that is the difference between blocked and merged, the gate has been satisfied by a
 configuration change — which is a decision, and decisions belong in review.
 
-**Why A and C are both absolutes the exam offers to skip the judgement.** Every stack here ships an
+**Why B and C are both absolutes the exam offers to skip the judgement.** Every stack here ships an
 exclusion mechanism precisely because some code cannot be usefully tested; every one of them is also the
 easiest way to make a red gate green.
 
@@ -1821,16 +1815,15 @@ a flag added to a pipeline to unblock a release.
 A pull request touching only the Python service is blocked because the Node coverage artifact is
 missing — its job did not run. Which change fixes this **without** weakening the gate?
 
-- A. Wrap the Node check in a file-existence test so it is skipped
-- B. Run each service's coverage job when its directory changes, and have the gate require a result from
-  every job that ran
-- C. Remove the Node check from the gate
-- D. Set the Node threshold to 0
+- A. Wrap the Node check in a file-existence test
+- B. Remove the Node check from the gate entirely
+- C. Path-filter each job; the gate needs each that ran
+- D. Set the Node threshold to 0 until it is fixed
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: B
+### Answer: C
 
 **In `challenge-18.md`:** lines **306–354**, and the design discussed at Q26.
 
@@ -1841,7 +1834,7 @@ absent", which is what a file-existence test observes.
 **Why A is exactly what Q26 rejects.** It fixes this symptom and silently accepts every other cause of a
 missing artifact, including a failed upload on a service the PR *did* change.
 
-**Why C and D delete the requirement rather than scope it.** Both leave the Node service permanently
+**Why B and D delete the requirement rather than scope it.** Both leave the Node service permanently
 ungated, which is the outcome the policy at line 24 exists to prevent.
 
 **The general shape, worth carrying past this exam: scope a gate by *what changed*, never by *what data
@@ -1856,15 +1849,15 @@ happens to be present*.** The first is a decision; the second is an accident.
 The Azure DevOps team publishes coverage with `PublishCodeCoverageResults@2` and reports that the Code
 Coverage tab is empty for the Node service, though the job succeeds. What do you check first?
 
-- A. Whether `cobertura` is in `coverageReporters` and the file exists at `summaryFileLocation`
-- B. Whether the tests passed
-- C. Whether the agent supports coverage
-- D. Whether branch coverage is enabled
+- A. Whether the tests passed on the build agent
+- B. Whether `cobertura` is listed and the file exists
+- C. Whether the agent supports coverage collection
+- D. Whether branch coverage is enabled in the config
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: B
 
 **In `challenge-18.md`:** lines **60**, **589–592**, **683–689**, **709–713**.
 
@@ -1881,7 +1874,7 @@ ls -la coverage/cobertura-coverage.xml
 **File missing, it is Issue 1. File present, it is Issue 2** — and the fix is either the path in the task
 or the output path in the config (lines 716–730).
 
-**Why B is already answered by "the job succeeds"**, and why it is the wrong instinct anyway: passing tests
+**Why A is already answered by "the job succeeds"**, and why it is the wrong instinct anyway: passing tests
 say nothing about coverage collection (Q1).
 
 **Why D changes which numbers are shown, not whether any are** — and note that the publish task and the
@@ -1896,9 +1889,8 @@ either.
 
 Which single sentence best states why coverage gates are worth building, given everything above?
 
-- A. High coverage guarantees fewer defects
-- B. Coverage identifies code that no test executes at all, and a gate keeps that population from growing
-  while the number stays visible to the people changing the code
+- A. High coverage guarantees fewer production defects
+- B. It finds code no test runs and stops that set growing
 - C. Coverage replaces code review for well-tested services
 - D. Coverage is a management metric with no engineering value
 

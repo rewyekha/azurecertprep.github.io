@@ -45,15 +45,15 @@ operational complexity.
 
 Which strategy should they choose?
 
-- A. Canary deployment with Azure Traffic Manager
-- B. Blue-green deployment with App Service deployment slots
-- C. Rolling deployment across multiple VM instances
-- D. Ring-based deployment with progressive exposure
+- A. Canary deployment with Azure Traffic Manager weighting
+- B. Rolling deployment across multiple VM instances in a set
+- C. Ring-based deployment with progressive exposure by audience
+- D. Blue-green deployment with App Service deployment slots
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: B
+### Answer: D
 
 **In `challenge-25.md`:** the decision table at lines **510–516**, and lines **77–88** for the swap.
 
@@ -71,8 +71,8 @@ The swap is **atomic and built into App Service** — and the rollback is the id
 
 - **A** — zero downtime, but rollback is "fast", not instant: DNS TTL means clients keep hitting the
   old answer for a while. It also adds traffic-splitting complexity
-- **C** — **near-zero** downtime, not zero, and it leaves you managing a partially deployed state
-- **D** — highest complexity of the five. Rings are for progressive confidence, not for simplicity
+- **B** — **near-zero** downtime, not zero, and it leaves you managing a partially deployed state
+- **C** — highest complexity of the five. Rings are for progressive confidence, not for simplicity
 
 **Read the qualifier.** All four give roughly zero downtime; only "least operational complexity" and
 "instant rollback" separate them.
@@ -87,15 +87,15 @@ After a slot swap, the production app connects to the **staging** database.
 
 What is the cause?
 
-- A. The connection string was not marked as a slot setting
-- B. The staging slot was swapped in the wrong direction
-- C. Managed identity was not configured on the production slot
-- D. The connection string was stored in Key Vault
+- A. The staging slot was swapped in the wrong direction
+- B. Managed identity was not configured on the production slot
+- C. The connection string was not marked as a slot setting
+- D. The connection string was stored as a Key Vault reference
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: C
 
 **In `challenge-25.md`:** Break & fix Exercise 1, lines **530–565**.
 
@@ -120,8 +120,8 @@ Note `--slot-settings`, not `--settings`. One flag is the entire difference.
 
 **Why the others fail**
 
-- **B** — a swap exchanges the two slots. There is no wrong direction
-- **C** — managed identity changes *how* you authenticate, not *which* server you point at
+- **A** — a swap exchanges the two slots. There is no wrong direction
+- **B** — managed identity changes *how* you authenticate, not *which* server you point at
 - **D** — Key Vault stores the value; it does not decide whether the reference is sticky
 
 </details>
@@ -134,15 +134,15 @@ A canary endpoint weighted at 10 receives roughly 50% of requests.
 
 What is the most likely cause?
 
-- A. Traffic Manager does not support weighted routing for App Service
-- B. The canary endpoint has a higher priority than production
-- C. Client DNS caching, made worse by low request volume
-- D. The production endpoint health probe is failing
+- A. Client DNS caching, made worse by low request volume
+- B. Traffic Manager cannot weight App Service endpoints
+- C. The canary endpoint has a higher priority than production
+- D. The production endpoint's health probe is failing
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: C
+### Answer: A
 
 **In `challenge-25.md`:** Break & fix Exercise 2, lines **569–604**.
 
@@ -160,8 +160,8 @@ Lower TTL means faster convergence. Line 234 sets `--ttl 30` for exactly this re
 
 **Why the others fail**
 
-- **A** — weighted routing works fine with App Service; lines 240–257 configure it
-- **B** — priority is a **different routing method**. A weighted profile does not use priority
+- **B** — weighted routing works fine with App Service; lines 240–257 configure it
+- **C** — priority is a **different routing method**. A weighted profile does not use priority
 - **D** — a failing production probe would send **all** traffic to canary, not half
 
 **The exam point:** if a question mentions per-request accuracy or immediate switching, Traffic
@@ -206,15 +206,15 @@ question constrains you to F1 or B1, slot swap is not an available answer.
 Which setting makes App Service wait for a warm-up path to return a specific status before completing
 a swap?
 
-- A. `WEBSITE_SWAP_WARMUP_PING_PATH`
-- B. `WEBSITE_WARMUP_TIMEOUT`
-- C. `WEBSITE_HEALTHCHECK_PATH`
-- D. `WEBSITE_SLOT_READY_PATH`
+- A. `WEBSITE_WARMUP_TIMEOUT`
+- B. `WEBSITE_HEALTHCHECK_PATH`
+- C. `WEBSITE_SLOT_READY_PATH`
+- D. `WEBSITE_SWAP_WARMUP_PING_PATH`
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: D
 
 **In `challenge-25.md`:** Break & fix Exercise 3, lines **620–627**.
 
@@ -233,8 +233,8 @@ and time out, because JIT compilation and cache loading had not finished. Warm-u
 
 **Why the others fail**
 
-- **B** and **D** — do not exist
-- **C** — plausible and wrong. `WEBSITE_HEALTHCHECK_PATH` drives App Service's **ongoing instance
+- **A** and **C** — do not exist
+- **B** — plausible and wrong. `WEBSITE_HEALTHCHECK_PATH` drives App Service's **ongoing instance
   health** monitoring, which removes unhealthy instances from rotation. It is not consulted during a
   swap
 
@@ -246,15 +246,15 @@ and time out, because JIT compilation and cache loading had not finished. Warm-u
 
 How do you roll back a completed slot swap?
 
-- A. Redeploy the previous artifact to production
-- B. Run the same swap command again
+- A. Run the identical swap command a second time
+- B. Redeploy the previous build to production
 - C. Restore the App Service from a backup
-- D. Delete the staging slot
+- D. Delete the staging slot and recreate it
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: B
+### Answer: A
 
 **In `challenge-25.md`:** lines **83–88**.
 
@@ -274,7 +274,7 @@ step.
 
 **Why the others fail**
 
-- **A** — a redeploy takes minutes and needs a build. Rollback should take seconds
+- **B** — a redeploy takes minutes and needs a build. Rollback should take seconds
 - **C** — backups restore content and configuration, slowly, and are for disaster recovery
 - **D** — deleting the staging slot destroys the very copy you need
 
@@ -322,15 +322,15 @@ There is also **Subnet** (by client IP range) and **MultiValue** (returns severa
 In the canary workflow, which condition ensures the traffic-adjustment job runs only when the user is
 *not* promoting?
 
-- A. `if: inputs.promote == 'false'`
-- B. `if: ${{ !inputs.promote }}`
+- A. `if: ${{ !inputs.promote }}`
+- B. `if: inputs.promote == 'false'`
 - C. `if: ${{ inputs.promote != true }}`
 - D. `if: needs.promote.result == 'skipped'`
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: B
+### Answer: A
 
 **In `challenge-25.md`:** lines **287** and **317**.
 
@@ -346,7 +346,7 @@ with `!`.
 
 **Why the others fail**
 
-- **A** — comparing a boolean to the string `'false'` never matches. This is the same class of bug as
+- **B** — comparing a boolean to the string `'false'` never matches. This is the same class of bug as
   Challenge 20's `eq(parameters.runTests, 'true')`
 - **C** — technically evaluates, but the idiomatic and expected form is `!`
 - **D** — the two jobs are independent. Neither declares `needs` on the other
@@ -391,15 +391,15 @@ Learn the **shape**, not just the numbers: each ring adds exposure *and* raises 
 
 At Ring 1 (5% traffic), the error rate rises to 2%. What should happen?
 
-- A. Promote to Ring 2 to gather more data
-- B. Roll back Ring 1 and block promotion while investigating
-- C. Increase Ring 1 to 15% to see whether the error is transient
-- D. Skip to Ring 3, since 2% is acceptable for beta users
+- A. Promote to Ring 2 to gather more data at higher volume
+- B. Increase Ring 1 to 15% to see whether the error is transient
+- C. Skip to Ring 3, since 2% is acceptable for beta users
+- D. Roll back Ring 1 and block promotion while investigating
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: B
+### Answer: D
 
 **In `challenge-25.md`:** the criterion at line **354** is *error rate below 0.1%*. Observed is 2% —
 **twenty times** the threshold.
@@ -409,9 +409,9 @@ the process, not a reason to widen the blast radius.
 
 **Why the others fail**
 
-- **A** and **C** — both respond to a failed gate by exposing more users. If 5% shows a 2% error rate,
+- **A** and **B** — both respond to a failed gate by exposing more users. If 5% shows a 2% error rate,
   more traffic means more failures, not better information
-- **D** — nobody agreed that beta users get a broken service. Rings are progressive confidence, not
+- **C** — nobody agreed that beta users get a broken service. Rings are progressive confidence, not
   progressive tolerance
 
 **The exam pattern:** whenever an option "gathers more data" by increasing exposure after a gate has
@@ -426,14 +426,14 @@ failed, it is wrong.
 Which condition makes the workflow roll back automatically when the production health check fails?
 
 - A. `if: always()`
-- B. `if: failure()`
-- C. `continue-on-error: true`
+- B. `continue-on-error: true`
+- C. `if: failure()`
 - D. `if: cancelled()`
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: B
+### Answer: C
 
 **In `challenge-25.md`:** lines **208–216**.
 
@@ -452,7 +452,7 @@ rollback is wanted.
 
 - **A** — `always()` would roll back **even after a successful deployment**, undoing every good
   release
-- **C** — `continue-on-error: true` marks the failing health check as a pass. The bad build stays in
+- **B** — `continue-on-error: true` marks the failing health check as a pass. The bad build stays in
   production and the run goes green
 - **D** — only on cancellation
 
@@ -467,15 +467,15 @@ rollback is wanted.
 The post-deployment monitor loops for 300 seconds checking every 30 seconds. What does it do on
 failure?
 
-- A. Sends an alert to the action group
-- B. Swaps the slots back and exits non-zero
-- C. Retries indefinitely until healthy
-- D. Scales out the App Service
+- A. Swaps the slots back and exits non-zero
+- B. Sends an alert to the rollback action group
+- C. Retries indefinitely until the app is healthy
+- D. Scales out the App Service Plan by one
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: B
+### Answer: A
 
 **In `challenge-25.md`:** lines **487–498**.
 
@@ -507,15 +507,15 @@ auto-recovered deployment for a successful one.
 
 Which alert condition does Contoso use to trigger automated rollback?
 
-- A. `avg Http5xx > 10` over a 5-minute window
-- B. `avg CpuPercentage > 80` over a 15-minute window
+- A. `avg CpuPercentage > 80` over a 15-minute window
+- B. `avg Http5xx > 10` over a 5-minute evaluation window
 - C. `count Requests < 100` over a 1-minute window
 - D. `avg ResponseTime > 2000` over a 10-minute window
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: B
 
 **In `challenge-25.md`:** lines **455–463**.
 
@@ -536,7 +536,7 @@ The action group (lines 448–452) posts to a rollback webhook.
 
 **Why the others fail**
 
-- **B** — CPU can spike for many reasons unrelated to a bad deploy
+- **A** — CPU can spike for many reasons unrelated to a bad deploy
 - **C** — low request count is more likely a traffic pattern than a failure
 - **D** — response time matters, but 5xx errors are the clearer failure signal
 
@@ -550,15 +550,15 @@ The canary promotion job sets the canary endpoint to weight 100 and production t
 
 What has effectively happened?
 
-- A. The canary has been deleted
-- B. The canary is now serving all traffic and has become production
-- C. Traffic Manager has switched to priority routing
-- D. Both endpoints are disabled
+- A. The canary has been deleted from the Traffic Manager profile
+- B. Traffic Manager has switched from weighted to priority routing
+- C. Both endpoints are disabled until the weights are changed again
+- D. The canary is now serving all traffic and has become production
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: B
+### Answer: D
 
 **In `challenge-25.md`:** lines **326–340**.
 
@@ -573,8 +573,8 @@ matters: it stays available as a rollback target — flip the weights back and t
 **Why the others fail**
 
 - **A** — nothing is deleted; only weights changed
-- **C** — the routing method is a profile-level setting and remains Weighted
-- **D** — disabling is `--endpoint-status disabled` (line 247), a different operation
+- **B** — the routing method is a profile-level setting and remains Weighted
+- **C** — disabling is `--endpoint-status disabled` (line 247), a different operation
 
 </details>
 
@@ -618,15 +618,15 @@ the roll you are running two versions at once and must roll forward or back inst
 
 A slot setting differs from a normal app setting because it:
 
-- A. Is encrypted at rest
-- B. Stays with the slot during a swap
-- C. Is only readable by managed identity
+- A. Stays with the slot during a swap
+- B. Is encrypted at rest by the platform
+- C. Is only readable by a managed identity
 - D. Applies to all slots simultaneously
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: B
+### Answer: A
 
 **In `challenge-25.md`:** lines **66–70** and **559–564**.
 
@@ -643,7 +643,7 @@ flag endpoints.
 
 **Why the others fail**
 
-- **A** — both kinds are encrypted at rest. Stickiness is unrelated to encryption
+- **B** — both kinds are encrypted at rest. Stickiness is unrelated to encryption
 - **C** — an access-control concept, not a swap behaviour
 - **D** — the exact opposite of what "slot setting" means
 
@@ -659,17 +659,17 @@ flag endpoints.
 
 Which **three** characteristics does the decision table give blue-green deployment? (Choose three.)
 
-- A. Zero downtime
-- B. Instant rollback
-- C. 2x infrastructure cost
-- D. 1x infrastructure cost
-- E. High complexity
-- F. Best for stateless services with many instances
+- A. 1x infrastructure cost
+- B. Zero downtime
+- C. High complexity
+- D. Instant rollback
+- E. Best for stateless services with many instances
+- F. 2x infrastructure cost
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A, B, C
+### Answer: B, D, F
 
 **In `challenge-25.md`:** line **512**.
 
@@ -679,9 +679,9 @@ Which **three** characteristics does the decision table give blue-green deployme
 
 **Why the others fail**
 
-- **D** — 1x is rolling and feature flags
-- **E** — blue-green is **low** complexity; ring-based is high
-- **F** — that describes **rolling** (line 514)
+- **A** — 1x is rolling and feature flags
+- **C** — blue-green is **low** complexity; ring-based is high
+- **E** — that describes **rolling** (line 514)
 
 **The cost is the honest trade-off.** You pay for two full environments so that rollback is one
 atomic command. For Contoso, where a minute of downtime costs $10,000 (line 16), that is trivially
@@ -695,16 +695,16 @@ worth it.
 
 Which **two** conditions in Contoso's scenario justify blue-green over rolling? (Choose two.)
 
-- A. A 99.95% SLA with $10,000-per-minute downtime cost
-- B. The need to reverse a bad release in seconds
-- C. A requirement to minimise infrastructure spend
-- D. A need to validate with a small subset of real users
-- E. Multiple identical stateless instances
+- A. A requirement to minimise infrastructure spend
+- B. A need to validate with a small subset of real users
+- C. A 99.95% SLA with $10,000-per-minute downtime cost
+- D. Multiple identical stateless instances
+- E. The need to reverse a bad release in seconds
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A, B
+### Answer: C, E
 
 **In `challenge-25.md`:** the scenario at line **16**, and line **520**.
 
@@ -712,9 +712,9 @@ Which **two** conditions in Contoso's scenario justify blue-green over rolling? 
 
 **Why the others fail**
 
-- **C** — blue-green is the **most** expensive at 2x. If cost were the constraint, rolling wins
-- **D** — that is the canary use case (line 521)
-- **E** — that is the rolling use case (line 522)
+- **A** — blue-green is the **most** expensive at 2x. If cost were the constraint, rolling wins
+- **B** — that is the canary use case (line 521)
+- **D** — that is the rolling use case (line 522)
 
 **The method:** each strategy in the table has one sentence at lines 520–524 naming its trigger
 condition. Match the scenario's phrasing to that sentence.
@@ -727,16 +727,16 @@ condition. Match the scenario's phrasing to that sentence.
 
 Which **two** settings should be marked as slot settings on the staging slot? (Choose two.)
 
-- A. The database connection string
-- B. `ASPNETCORE_ENVIRONMENT`
-- C. The application build artifact
-- D. The .NET runtime version
+- A. The application build artifact
+- B. The database connection string
+- C. The .NET runtime version
+- D. `ASPNETCORE_ENVIRONMENT`
 - E. The application version number
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A, B
+### Answer: B, D
 
 **In `challenge-25.md`:** lines **66–70** and **559–564**.
 
@@ -749,8 +749,8 @@ Both identify **where the code is running**, so they must stay behind when the c
 
 **Why the others fail**
 
-- **C** — the artifact **is** the content. Making it sticky would defeat the entire mechanism
-- **D** — a plan-level runtime configuration, not a per-slot value in this design
+- **A** — the artifact **is** the content. Making it sticky would defeat the entire mechanism
+- **C** — a plan-level runtime configuration, not a per-slot value in this design
 - **E** — the version belongs to the build and **should** travel with it into production
 
 **The test to apply:** *"Should this value follow the code, or stay where it is?"* Follow → normal
@@ -764,19 +764,19 @@ setting. Stay → slot setting.
 
 Which **two** are true about Traffic Manager weighted routing? (Choose two.)
 
-- A. Weighting is applied at DNS resolution, not per request
-- B. Client DNS caching delays weight changes taking effect
-- C. Each individual HTTP request is routed according to the weights
-- D. Weight 0 disables the endpoint permanently
-- E. Lower TTL makes weight changes converge faster
+- A. Lower TTL makes weight changes converge faster
+- B. Each individual HTTP request is routed according to the weights
+- C. Weighting is applied at DNS resolution, not per request
+- D. Client DNS caching delays weight changes taking effect
+- E. Weight 0 disables the endpoint permanently
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A, B
+### Answer: C, D
 
-**E is also true** (line 603 lowers the TTL for exactly that reason), so treat A and B as the
-intended pair — they are the two *properties*, while E is the remedy.
+**A is also true** (line 603 lowers the TTL for exactly that reason), so treat C and D as the
+intended pair — they are the two *properties*, while A is the remedy.
 
 **In `challenge-25.md`:** lines **594** and **599–603**.
 
@@ -784,8 +784,8 @@ intended pair — they are the two *properties*, while E is the remedy.
 
 **Why the others fail**
 
-- **C** — the direct contradiction of A, and the source of the 50% surprise
-- **D** — weight 0 stops the endpoint being returned but leaves it configured and probed (Q14).
+- **B** — the direct contradiction of C, and the source of the 50% surprise
+- **E** — weight 0 stops the endpoint being returned but leaves it configured and probed (Q14).
   Disabling is `--endpoint-status disabled`
 
 **The consequence for the exam:** if a question needs an accurate percentage split or an instant
@@ -801,16 +801,16 @@ per-request answers.
 Which **two** are required for the blue-green workflow to gate production behind an approval? (Choose
 two.)
 
-- A. `environment: production` on the swap job
-- B. A required reviewer configured on the `production` environment
-- C. `needs: deploy-staging` on the swap job
-- D. A branch protection rule on `main`
-- E. `if: failure()` on the rollback step
+- A. `needs: deploy-staging` on the swap job
+- B. `environment: production` on the swap job
+- C. A branch protection rule on `main`
+- D. `if: failure()` on the rollback step
+- E. A required reviewer configured on the `production` environment
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A, B
+### Answer: B, E
 
 **In `challenge-25.md`:** line **178**.
 
@@ -825,10 +825,10 @@ the reviewer is configured on the environment, not in YAML.
 
 **Why the others fail**
 
-- **C** — `needs` creates **ordering**, not approval. Necessary but not sufficient, and not what the
+- **A** — `needs` creates **ordering**, not approval. Necessary but not sufficient, and not what the
   question asks
-- **D** — branch protection gates merges, not deployments
-- **E** — rollback behaviour, unrelated to approval
+- **C** — branch protection gates merges, not deployments
+- **D** — rollback behaviour, unrelated to approval
 
 </details>
 
@@ -839,17 +839,17 @@ the reviewer is configured on the environment, not in YAML.
 Which **two** signals does Contoso use to detect a bad production deployment? (Choose two.)
 
 - A. A `/health` endpoint returning non-200
-- B. An Azure Monitor metric alert on `Http5xx`
-- C. Traffic Manager endpoint weight changes
-- D. App Service Plan CPU percentage
+- B. Traffic Manager endpoint weight changes
+- C. App Service Plan CPU percentage
+- D. An Azure Monitor metric alert on `Http5xx`
 - E. A drop in deployment frequency
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A, B
+### Answer: A, D
 
-**In `challenge-25.md`:** lines **193–206** and **488–490** (A), lines **455–463** (B).
+**In `challenge-25.md`:** lines **193–206** and **488–490** (A), lines **455–463** (D).
 
 Two layers, deliberately:
 
@@ -860,8 +860,8 @@ Two layers, deliberately:
 
 **Why the others fail**
 
-- **C** — weights are a control you set, not a signal you observe
-- **D** — a symptom of many things; too noisy to trigger a rollback
+- **B** — weights are a control you set, not a signal you observe
+- **C** — a symptom of many things; too noisy to trigger a rollback
 - **E** — a DORA metric measured over weeks, not a deployment signal
 
 </details>
@@ -872,18 +872,18 @@ Two layers, deliberately:
 
 Which **two** strategies decouple *deploying* code from *releasing* a feature? (Choose two.)
 
-- A. Feature flags
-- B. Ring-based deployment
-- C. Blue-green deployment
-- D. Rolling deployment
-- E. Canary deployment
+- A. Blue-green deployment
+- B. Rolling deployment
+- C. Feature flags
+- D. Canary deployment
+- E. Ring-based deployment
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A, B
+### Answer: C, E
 
-**In `challenge-25.md`:** lines **516** and **524** (A), lines **351–356** (B).
+**In `challenge-25.md`:** lines **516** and **524** (C), lines **351–356** (E).
 
 > *"Feature flags: When you want to deploy code without activating features."*
 
@@ -892,7 +892,7 @@ Feature flags are the pure case, and Challenge 27 is entirely about them.
 
 **Why the others fail**
 
-- **C**, **D**, **E** — all three release the moment they deploy. Traffic reaches the new code as
+- **A**, **B**, **D** — all three release the moment they deploy. Traffic reaches the new code as
   soon as it is live; there is no separate activation step
 
 **Why the distinction matters:** with flags, rollback is a toggle with **no deployment at all** —
@@ -1312,8 +1312,8 @@ az webapp deployment slot [BLANK 2] \
 
 Requirement: the **minimum** tier that supports deployment slots.
 
-- **BLANK 1:** `S1` / `F1` / `B1` / `P1V3`
-- **BLANK 2:** `create` / `add` / `new` / `provision`
+- **BLANK 1:** `F1` / `B1` / `S1` / `P1V3`
+- **BLANK 2:** `add` / `new` / `create` / `provision`
 
 <details>
 <summary>Show answer</summary>
@@ -1340,7 +1340,7 @@ az webapp config appsettings set \
 
 Requirement: the staging connection string must **not** move to production during a swap.
 
-- **BLANK 1:** `slot-settings` / `settings` / `sticky-settings` / `slot-config`
+- **BLANK 1:** `settings` / `sticky-settings` / `slot-settings` / `slot-config`
 
 <details>
 <summary>Show answer</summary>
@@ -1369,8 +1369,8 @@ az network traffic-manager profile create \
 
 Requirement: split traffic by percentage, and let weight changes take effect quickly.
 
-- **BLANK 1:** `Weighted` / `Priority` / `Performance` / `Geographic`
-- **BLANK 2:** `30` / `300` / `3600` / `86400`
+- **BLANK 1:** `Priority` / `Performance` / `Weighted` / `Geographic`
+- **BLANK 2:** `300` / `30` / `3600` / `86400`
 
 <details>
 <summary>Show answer</summary>
@@ -1396,8 +1396,8 @@ surprise; 30 seconds converges ten times faster.
             --slot staging --target-slot [BLANK 2]
 ```
 
-- **BLANK 1:** `failure()` / `always()` / `success()` / `cancelled()`
-- **BLANK 2:** `production` / `staging` / `canary` / `internal`
+- **BLANK 1:** `always()` / `success()` / `failure()` / `cancelled()`
+- **BLANK 2:** `staging` / `production` / `canary` / `internal`
 
 <details>
 <summary>Show answer</summary>
@@ -1424,9 +1424,9 @@ az monitor metrics alert create \
   --action ag-deployment-rollback
 ```
 
-- **BLANK 1:** `Http5xx` / `CpuPercentage` / `Requests` / `ResponseTime`
-- **BLANK 2:** `5m` / `1m` / `15m` / `1h`
-- **BLANK 3:** `1m` / `5m` / `15m` / `1h`
+- **BLANK 1:** `CpuPercentage` / `Requests` / `Http5xx` / `ResponseTime`
+- **BLANK 2:** `1m` / `5m` / `15m` / `1h`
+- **BLANK 3:** `5m` / `15m` / `1m` / `1h`
 
 <details>
 <summary>Show answer</summary>
@@ -1454,10 +1454,10 @@ az webapp config appsettings set \
 
 Requirement: the swap must not complete until the app responds correctly.
 
-- **BLANK 1:** `WEBSITE_SWAP_WARMUP_PING_PATH` / `WEBSITE_HEALTHCHECK_PATH` /
-  `WEBSITE_WARMUP_PATH` / `WEBSITE_READY_PATH`
-- **BLANK 2:** `WEBSITE_SWAP_WARMUP_PING_STATUSES` / `WEBSITE_WARMUP_STATUS` /
-  `WEBSITE_HEALTHCHECK_STATUS` / `WEBSITE_PING_RESULT`
+- **BLANK 1:** `WEBSITE_HEALTHCHECK_PATH` / `WEBSITE_WARMUP_PATH` /
+  `WEBSITE_SWAP_WARMUP_PING_PATH` / `WEBSITE_READY_PATH`
+- **BLANK 2:** `WEBSITE_WARMUP_STATUS` / `WEBSITE_HEALTHCHECK_STATUS` /
+  `WEBSITE_SWAP_WARMUP_PING_STATUSES` / `WEBSITE_PING_RESULT`
 
 <details>
 <summary>Show answer</summary>
@@ -1518,15 +1518,15 @@ SLA. Deployment downtime costs approximately **$10,000 per minute**. The CTO has
 
 Which strategy meets the **core deployment** requirements?
 
-- A. Blue-green with deployment slots
-- B. Canary with Traffic Manager
-- C. Rolling deployment
+- A. Canary with Traffic Manager weighting
+- B. Blue-green with deployment slots
+- C. Rolling deployment across instances
 - D. Recreate with a maintenance window
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: B
 
 **In `challenge-25.md`:** lines **512** and **520**.
 
@@ -1535,7 +1535,7 @@ atomic swap, and P1v3 supports slots comfortably.
 
 **Why the others fail**
 
-- **B** — "fast", not instant. DNS caching delays it (Break & fix Exercise 2)
+- **A** — "fast", not instant. DNS caching delays it (Break & fix Exercise 2)
 - **C** — **near-zero** downtime and moderate rollback. At $10,000 per minute, near-zero is not zero
 - **D** — the maintenance window the CTO has already abolished
 
@@ -1548,14 +1548,14 @@ atomic swap, and P1v3 supports slots comfortably.
 Which strategy meets the **fraud-detection validation** requirement?
 
 - A. Blue-green with deployment slots
-- B. Canary deployment with weighted routing
-- C. Recreate deployment
-- D. A larger staging environment
+- B. Recreate deployment with a window
+- C. A larger staging environment with more data
+- D. Canary deployment with weighted routing
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: B
+### Answer: D
 
 **In `challenge-25.md`:** line **521**.
 
@@ -1567,8 +1567,8 @@ traffic will not reveal how it behaves against genuine fraud patterns.
 **Why the others fail**
 
 - **A** — blue-green sends **all** traffic at once the instant you swap. There is no partial exposure
-- **C** — downtime, and still all-or-nothing
-- **D** — a bigger staging environment is still not real traffic
+- **B** — downtime, and still all-or-nothing
+- **C** — a bigger staging environment is still not real traffic
 
 **Q42 and Q43 together are the whole point.** One platform, one release, **two different strategies**
 for two different requirements. That is why "which is better, blue-green or canary?" has no answer
@@ -1582,15 +1582,15 @@ without the requirement.
 
 Which addition satisfies "internal staff must see it before any customer does"?
 
-- A. Add Ring 0 with an internal slot at 0% external traffic
-- B. Increase the canary weight to 50%
-- C. Deploy to staging and email the internal team a link
-- D. Use a feature flag enabled for everyone
+- A. Increase the canary weight to 50% for a day
+- B. Deploy to staging and email the internal team a link
+- C. Add Ring 0 with an internal slot at 0% external traffic
+- D. Use a feature flag enabled for everyone from day one
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: C
 
 **In `challenge-25.md`:** line **353** and the script at lines **373–381**.
 
@@ -1603,8 +1603,8 @@ Ring 0 receives **0% external traffic** and soaks for **2 hours**, gated on no P
 
 **Why the others fail**
 
-- **B** — exposes half of all customers, the opposite of "before any customer"
-- **C** — closer than it looks, and still wrong: staging is not part of the promotion path, so
+- **A** — exposes half of all customers, the opposite of "before any customer"
+- **B** — closer than it looks, and still wrong: staging is not part of the promotion path, so
   validating there proves nothing about the artifact that will be promoted. Ring 0 is a real ring
   with a gate and a soak time
 - **D** — enabled for everyone means customers see it immediately
@@ -1617,16 +1617,16 @@ Ring 0 receives **0% external traffic** and soaks for **2 hours**, gated on no P
 
 Which **two** configurations prevent configuration leaking between slots? (Choose two.)
 
-- A. Mark the connection string as a slot setting
-- B. Mark `ASPNETCORE_ENVIRONMENT` as a slot setting
-- C. Store both connection strings in one Key Vault
-- D. Use identical values in both slots
+- A. Store both connection strings in one Key Vault
+- B. Mark the connection string as a slot setting
+- C. Use identical values in both slots
+- D. Mark `ASPNETCORE_ENVIRONMENT` as a slot setting
 - E. Disable the staging slot between deployments
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A, B
+### Answer: B, D
 
 **In `challenge-25.md`:** lines **66–70** and **559–564**.
 
@@ -1635,9 +1635,9 @@ moves.
 
 **Why the others fail**
 
-- **C** — Key Vault stores values safely, but the app still needs to know *which* secret to read.
+- **A** — Key Vault stores values safely, but the app still needs to know *which* secret to read.
   Without stickiness, the production app reads the staging reference
-- **D** — identical values would mean staging writes to the production database. That is worse than
+- **C** — identical values would mean staging writes to the production database. That is worse than
   the original bug
 - **E** — a disabled slot cannot be deployed to or warmed up
 
@@ -1650,27 +1650,27 @@ moves.
 Which **two** configurations meet the automatic-rollback requirements? (Choose two.)
 
 - A. An Azure Monitor metric alert on `Http5xx` wired to a rollback action group
-- B. A post-deployment monitoring job that swaps back on failure
-- C. `continue-on-error: true` on the health check step
-- D. Traffic Manager health probes on `/health`
-- E. `if: always()` on the rollback step
+- B. `continue-on-error: true` on the health check step
+- C. Traffic Manager health probes on `/health`
+- D. `if: always()` on the rollback step in the workflow
+- E. A post-deployment monitoring job that swaps back on failure
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A, B
+### Answer: A, E
 
-**In `challenge-25.md`:** lines **448–463** (A) and **478–503** (B).
+**In `challenge-25.md`:** lines **448–463** (A) and **478–503** (E).
 
 Two layers covering two windows: the alert watches production continuously; the monitoring job covers
 the **five minutes immediately after the swap**, when regressions are most likely.
 
 **Why the others fail**
 
-- **C** — turns a failing health check into a pass. The bad build stays live and the run goes green
-- **D** — probes remove an unhealthy **endpoint** from Traffic Manager rotation. That is failover, not
+- **B** — turns a failing health check into a pass. The bad build stays live and the run goes green
+- **C** — probes remove an unhealthy **endpoint** from Traffic Manager rotation. That is failover, not
   rollback, and it does nothing about a bad slot swap
-- **E** — would roll back successful deployments too
+- **D** — would roll back successful deployments too
 
 </details>
 
@@ -1683,15 +1683,15 @@ deploying**, and disable it instantly if fraud reports rise.
 
 Which strategy meets this?
 
-- A. Canary deployment
-- B. Feature flags
+- A. Feature flag toggles
+- B. Canary deployment
 - C. Blue-green deployment
 - D. Ring-based deployment
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: B
+### Answer: A
 
 **In `challenge-25.md`:** lines **516** and **524**.
 
@@ -1704,7 +1704,7 @@ to change what users get. A flag is a configuration change with no build, no art
 
 **Why the others fail**
 
-- **A** — canary routes traffic to a **differently deployed** version. There must be something new to
+- **B** — canary routes traffic to a **differently deployed** version. There must be something new to
   deploy
 - **C** — requires a deployment and switches everyone at once
 - **D** — requires a deployment per ring
@@ -1723,15 +1723,15 @@ minutes. At minute eight, 5xx errors spike as a connection pool exhausts under p
 
 What should Contoso change?
 
-- A. Extend post-deployment monitoring beyond 300 seconds and keep the metric alert
-- B. Increase the warm-up sleep from 30 seconds to 120 seconds
-- C. Switch from blue-green to rolling deployment
-- D. Remove the health check, since it did not catch the problem
+- A. Increase the warm-up sleep from 30 seconds to 120 seconds before the swap
+- B. Extend post-deployment monitoring beyond 300 seconds and keep the metric alert
+- C. Switch from blue-green to rolling deployment so failures surface gradually
+- D. Remove the health check, since it did not catch the connection pool problem
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: B
 
 **In `challenge-25.md`:** the monitor window at line **483** (`MONITOR_DURATION=300`) and the alert at
 lines **455–463**.
@@ -1742,7 +1742,7 @@ layers exist.
 
 **Why the others fail**
 
-- **B** — warm-up addresses **cold start**, a first-request problem. This failure appeared under
+- **A** — warm-up addresses **cold start**, a first-request problem. This failure appeared under
   sustained load, minutes in
 - **C** — rolling would have exposed the same defect more slowly and rolled back more slowly. The
   strategy is not the problem

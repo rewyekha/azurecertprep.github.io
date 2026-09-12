@@ -49,15 +49,15 @@ shipped because nobody looked at the query changes.
 Branch protection requires two approving reviews and the `ci/test` check. A developer pushes a new commit
 after receiving both approvals. What happens?
 
-- A. The PR can still merge — it already has two approvals
-- B. The approvals are dismissed and two new reviews are needed
-- C. Only one new approval is needed
-- D. The PR is closed automatically
+- A. All approvals are dismissed and two new ones are needed
+- B. Only one fresh approval is needed after the push
+- C. The PR is closed automatically by the protection rule
+- D. The PR can still merge on its existing two approvals
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: B
+### Answer: A
 
 **In `challenge-08.md`:** line **47**.
 
@@ -68,7 +68,7 @@ after receiving both approvals. What happens?
 **An approval is a statement about specific code.** New commits mean the code the reviewers approved no
 longer exists, so the approval no longer applies to anything.
 
-**Why C is the answer that feels reasonable and is not offered by the platform.** GitHub dismisses **all**
+**Why B is the answer that feels reasonable and is not offered by the platform.** GitHub dismisses **all**
 approvals; there is no partial credit for "they saw most of it".
 
 **And that is the correct behaviour for the scenario at line 20.** The SQL injection reached production
@@ -83,15 +83,15 @@ happen after an initial clean review.
 
 In Azure Repos, what does "Reset code reviewer votes when there are new changes" do?
 
-- A. Removes all reviewers from the PR
-- B. Resets every vote to "No vote", requiring re-approval
+- A. Resets every vote to "No vote", requiring re-approval
+- B. Removes all reviewers from the pull request entirely
 - C. Resets only the votes of reviewers whose files changed
-- D. Moves the PR back to draft
+- D. Moves the pull request back into draft state
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: B
+### Answer: A
 
 **In `challenge-08.md`:** lines **290** and **605**.
 
@@ -122,10 +122,10 @@ Given these CODEOWNERS entries in order, who must review `/src/api/billing/invoi
 /src/api/billing/    @contoso/billing-team @sarah-lead
 ```
 
-- A. `@contoso/platform-team` only — first match wins
-- B. `@contoso/backend-team` only
-- C. `@contoso/billing-team` and `@sarah-lead` — last match wins
-- D. All three
+- A. `@contoso/platform-team` only, as the first match wins
+- B. `@contoso/backend-team` only, as the closest parent
+- C. `@contoso/billing-team` and `@sarah-lead`, last match wins
+- D. All three sets of owners, since the patterns accumulate
 
 <details>
 <summary>Show answer</summary>
@@ -156,16 +156,15 @@ team and an individual.
 
 What is the primary purpose of a merge queue?
 
-- A. To limit how many PRs can be open
-- B. To merge PRs in creation order
-- C. To batch-test approved PRs together against `main` before merging, preventing concurrent merges from
-  breaking the build
-- D. To resolve merge conflicts automatically
+- A. To limit how many pull requests can be open at once
+- B. To batch-test approved PRs against `main` before merging
+- C. To merge pull requests strictly in creation order
+- D. To resolve merge conflicts automatically on the queue
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: C
+### Answer: B
 
 **In `challenge-08.md`:** line **627**.
 
@@ -192,15 +191,15 @@ bad change does not block everything behind it.
 
 A required `ci/build` check sits pending forever. What is the cause?
 
-- A. The check context does not match the job's `name:`
-- B. The runner is offline
-- C. The PR is from a fork
-- D. The workflow has no `permissions` block
+- A. The self-hosted runner for the job is offline
+- B. The pull request originates from a forked repository
+- C. The check context does not match the job's `name:`
+- D. The workflow is missing a `permissions:` block
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: C
 
 **In `challenge-08.md`:** lines **510–511** and **518**.
 
@@ -233,15 +232,15 @@ the jobs.
 
 CODEOWNERS is not requesting reviews from `@contoso/billing-team`. What must be checked?
 
-- A. The team has at least write access, and `require_code_owner_reviews` is enabled
-- B. The file is at the repository root
-- C. The team has more than one member
-- D. Every owner has approved once before
+- A. The CODEOWNERS file sits at the repository root
+- B. The named team has more than one member in it
+- C. Every listed owner has approved at least once before
+- D. The team has write access and owner reviews are on
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: D
 
 **In `challenge-08.md`:** lines **552–557** and **564**.
 
@@ -253,7 +252,7 @@ enabled
 **Two independent causes producing one symptom.** No access means the entry is **silently ignored**; no
 requirement means the review is requested but not enforced.
 
-**Why B is a real rule stated wrongly** (line 549): `.github/CODEOWNERS`, `CODEOWNERS` or
+**Why A is a real rule stated wrongly** (line 549): `.github/CODEOWNERS`, `CODEOWNERS` or
 `docs/CODEOWNERS` are all valid.
 
 **Check access first.** A silently ignored entry looks identical to no entry at all, so it is the harder
@@ -267,15 +266,15 @@ of the two to spot.
 
 Which ruleset rule requires signed commits?
 
-- A. `required_signatures`
-- B. `non_fast_forward`
-- C. `deletion`
-- D. `pull_request`
+- A. `non_fast_forward`, which blocks force pushes
+- B. `required_signatures`, which requires signing
+- C. `deletion`, which blocks branch deletion
+- D. `pull_request`, which requires a review
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: B
 
 **In `challenge-08.md`:** lines **64–72**.
 
@@ -300,10 +299,10 @@ incident.
 
 What does `require_last_push_approval: true` enforce?
 
-- A. Someone other than the last person to push must approve
-- B. The last reviewer must approve again
-- C. Approvals expire after the last push
-- D. Only the author may push last
+- A. Someone other than the last pusher must approve
+- B. The last reviewer must approve the PR again
+- C. Approvals expire a set time after the last push
+- D. Only the pull request author may push last
 
 <details>
 <summary>Show answer</summary>
@@ -327,10 +326,10 @@ make that push. **Together they are much stronger than either alone.**
 
 What does `required_review_thread_resolution` require?
 
-- A. All review conversations must be resolved before merging
-- B. All reviewers must respond
-- C. Threads are deleted on merge
-- D. Comments must be replied to within 24 hours
+- A. All review conversations must be resolved first
+- B. Review threads are deleted when the PR merges
+- C. Comments must be replied to within 24 hours
+- D. All reviewers must respond before the merge
 
 <details>
 <summary>Show answer</summary>
@@ -364,15 +363,15 @@ recognisably the incident at line 20.
 
 In the Azure Repos approver-count policy, what does `--creator-vote-counts false` mean?
 
-- A. The PR author's own approval does not count toward the minimum
-- B. The author cannot vote at all
-- C. The author's vote counts double
-- D. Votes are anonymous
+- A. The author is not permitted to vote on it at all
+- B. The author's own approval does not count
+- C. The author's vote is counted twice toward the total
+- D. All votes cast on the pull request become anonymous
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: B
 
 **In `challenge-08.md`:** line **288**.
 
@@ -398,15 +397,15 @@ the policy counts approvals rather than treating any rejection as a veto.
 
 What does `--queue-on-source-update-only true` do on a build validation policy?
 
-- A. The validation build runs only when the source branch changes, not when the target moves
-- B. The build queues only once per PR
-- C. Builds are queued nightly
-- D. The build runs only on merge
+- A. The build queues only once per pull request
+- B. Validation builds are queued nightly on a schedule
+- C. The build runs on source changes, not target
+- D. The build runs only at the moment of merging
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: C
 
 **In `challenge-08.md`:** line **309**.
 
@@ -425,15 +424,15 @@ line — the passing build **expires after 720 minutes**, so a stale result cann
 
 What does the Azure Repos merge-strategy policy at Task 5 enforce?
 
-- A. Squash only — no fast-forward, no rebase
-- B. Merge commits only
-- C. Rebase only
-- D. Any strategy the author chooses
+- A. Merge commits only, no squash or rebase
+- B. Rebase only, with no merge commit created
+- C. Any strategy the pull request author chooses
+- D. Squash only — no fast-forward, no rebase
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: D
 
 **In `challenge-08.md`:** lines **327–330**.
 
@@ -460,15 +459,15 @@ What does the Azure Repos merge-strategy policy at Task 5 enforce?
 
 Which Azure Repos policy has no direct GitHub branch protection equivalent?
 
-- A. Work item linking
-- B. Minimum approver count
-- C. Build validation
-- D. Comment resolution
+- A. Minimum approver count on the pull request
+- B. Required work item linking before merge
+- C. Build validation against the source branch
+- D. Comment resolution before the merge button
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: B
 
 **In `challenge-08.md`:** lines **295–300**.
 
@@ -493,15 +492,15 @@ before merge, the answer differs by platform: a **policy** in Azure Repos, a **c
 
 What does `grouping_strategy: "ALLGREEN"` mean in the merge queue configuration?
 
-- A. A batch merges only if every PR in the group passes
-- B. Only green-labelled PRs are queued
-- C. PRs are grouped by author
+- A. Only PRs carrying a green label are queued
+- B. Pull requests are grouped by their author
+- C. A batch merges only if every PR in it passes
 - D. The queue merges the first passing PR only
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: C
 
 **In `challenge-08.md`:** line **243**.
 
@@ -526,9 +525,9 @@ to accumulate entries rather than testing every PR alone, which is where the eff
 Which trigger does the merge queue workflow use?
 
 - A. `merge_group` with `types: [checks_requested]`
-- B. `pull_request`
-- C. `push`
-- D. `workflow_dispatch`
+- B. `push`, on the temporary queue branch
+- C. `workflow_dispatch`, triggered by the queue
+- D. `pull_request`, on opened and synchronize
 
 <details>
 <summary>Show answer</summary>
@@ -558,15 +557,15 @@ second and the queue has nothing to wait for.**
 
 What does the PR size labeller do for a PR with 600 changed lines?
 
-- A. Applies `size/XL` and comments asking for it to be split
-- B. Blocks the PR
-- C. Applies `size/L`
-- D. Closes the PR
+- A. Blocks the PR until it is split into smaller ones
+- B. Applies `size/XL` and comments asking for a split
+- C. Applies `size/L` without any further comment
+- D. Closes the PR and asks the author to re-open it
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: B
 
 **In `challenge-08.md`:** lines **376–379**.
 
@@ -600,17 +599,17 @@ rather than accumulating both.
 
 Which **three** review protections does the ruleset's `pull_request` rule configure? (Choose three.)
 
-- A. Two required approving reviews
-- B. Stale reviews dismissed on push
-- C. Code owner review required
-- D. Signed commits required
-- E. Force pushes blocked
-- F. Branch deletion blocked
+- A. Two required approving reviews on the PR
+- B. Signed commits required on the branch
+- C. Stale reviews dismissed on a new push
+- D. Force pushes blocked on the branch
+- E. Code owner review required for owned paths
+- F. Branch deletion blocked on the branch
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A, B, C
+### Answer: A, C, E
 
 **In `challenge-08.md`:** lines **46–50**.
 
@@ -622,7 +621,7 @@ Which **three** review protections does the ruleset's `pull_request` rule config
         "required_review_thread_resolution": true
 ```
 
-**Five parameters in that block, and D, E and F are separate rule *types*** (lines 65–72) rather than
+**Five parameters in that block, and B, D and F are separate rule *types*** (lines 65–72) rather than
 parameters of this one.
 
 **That structural difference is the ruleset model.** Some protections are parameters on a rule; others
@@ -636,17 +635,17 @@ are rules with no parameters at all. The exam tests whether you know which is wh
 
 Which **three** required status checks does the branch protection reference? (Choose three.)
 
-- A. `ci/build`
-- B. `ci/test`
-- C. `security/scan`
-- D. `ci/lint`
-- E. `ci/deploy`
-- F. `merge_group`
+- A. `ci/lint`
+- B. `ci/build`
+- C. `ci/deploy`
+- D. `ci/test`
+- E. `merge_group`
+- F. `security/scan`
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A, B, C
+### Answer: B, D, F
 
 **In `challenge-08.md`:** lines **57–61** and **174**, **186**, **206**.
 
@@ -670,17 +669,17 @@ names, spelled identically — including the slash, which is part of the name an
 
 Which **three** does the `security/scan` job run? (Choose three.)
 
-- A. CodeQL initialisation
-- B. CodeQL analysis
-- C. TruffleHog secret scanning with `--only-verified`
-- D. Dependabot
-- E. A coverage check
-- F. Integration tests
+- A. A Dependabot dependency update run
+- B. CodeQL initialisation for the languages
+- C. A code coverage threshold check
+- D. CodeQL analysis of the built database
+- E. Integration tests against a live service
+- F. TruffleHog scanning with `--only-verified`
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A, B, C
+### Answer: B, D, F
 
 **In `challenge-08.md`:** lines **210–218**.
 
@@ -699,7 +698,7 @@ line 20), TruffleHog finds credentials.
 live** by testing them against the provider, which removes most false positives — the difference between
 a scanner people act on and one they mute.
 
-**Why E is in the `ci/test` job** (lines 197–203) and F is in the merge-queue workflow (line 274).
+**Why C is in the `ci/test` job** (lines 197–203) and E is in the merge-queue workflow (line 274).
 
 </details>
 
@@ -710,22 +709,22 @@ a scanner people act on and one they mute.
 Which **two** Azure Repos policies correspond to GitHub required status checks and stale-review
 dismissal? (Choose two.)
 
-- A. `az repos policy build create`
-- B. `az repos policy approver-count create --reset-on-source-push true`
-- C. `az repos policy work-item-linking create`
-- D. `az repos policy comment-required create`
-- E. `az repos policy merge-strategy create`
+- A. `az repos policy work-item-linking create`
+- B. `az repos policy build create`
+- C. `az repos policy merge-strategy create`
+- D. `az repos policy approver-count --reset-on-source-push`
+- E. `az repos policy comment-required create`
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A, B
+### Answer: B, D
 
 **In `challenge-08.md`:** lines **303–312** and **283–292**.
 
 **Build validation ↔ required status checks; reset-on-source-push ↔ dismiss stale reviews.**
 
-**Why C is the one with no GitHub equivalent** (Q13), and why D maps to
+**Why A is the one with no GitHub equivalent** (Q13), and why E maps to
 `required_conversation_resolution` (Q9) — a third pairing worth knowing, just not the one asked for.
 
 </details>
@@ -736,24 +735,24 @@ dismissal? (Choose two.)
 
 Which **two** are true of merge queues? (Choose two.)
 
-- A. They test batched PRs against `main` together before merging
-- B. They need a workflow triggered on `merge_group`
-- C. They replace required status checks
-- D. They merge PRs in creation order regardless of result
-- E. They resolve textual conflicts automatically
+- A. They replace the PR-level required status checks
+- B. They merge PRs in creation order regardless of result
+- C. They test batched PRs against `main` before merging
+- D. They resolve textual merge conflicts automatically
+- E. They need a workflow triggered on `merge_group`
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A, B
+### Answer: C, E
 
 **In `challenge-08.md`:** lines **238–250** and **261–263**.
 
-**Why C is the misconception worth killing.** The queue does not remove the PR-level checks — it **adds**
+**Why A is the misconception worth killing.** The queue does not remove the PR-level checks — it **adds**
 a second validation of the combined result. A repository with a merge queue runs CI twice: once on the
 PR, once on the group.
 
-**Why E confuses semantic conflicts with textual ones.** A merge queue catches changes that are
+**Why D confuses semantic conflicts with textual ones.** A merge queue catches changes that are
 individually valid and jointly broken; Git already reports textual conflicts, and nothing here resolves
 them.
 
@@ -765,16 +764,16 @@ them.
 
 Which **two** make the PR size labeller idempotent? (Choose two.)
 
-- A. Listing existing labels and removing any starting with `size/`
-- B. Adding the newly computed label afterwards
-- C. Running only on `opened`
-- D. Using `fetch-depth: 0`
-- E. Commenting on every run
+- A. Running the workflow only on the `opened` event
+- B. Listing labels and removing any starting with `size/`
+- C. Commenting on the pull request on every run
+- D. Adding the newly computed size label afterwards
+- E. Using `fetch-depth: 0` on the checkout step
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A, B
+### Answer: B, D
 
 **In `challenge-08.md`:** lines **382–403**.
 
@@ -793,7 +792,7 @@ Which **two** make the PR size labeller idempotent? (Choose two.)
 leaves `bug`, `enhancement` and the rest untouched. The same namespacing idea as Challenge 02's
 `priority/` labels.
 
-**Why C would break it.** The workflow runs on `synchronize` too (line 344), which is precisely when the
+**Why A would break it.** The workflow runs on `synchronize` too (line 344), which is precisely when the
 size changes.
 
 </details>
@@ -804,16 +803,16 @@ size changes.
 
 Which **two** does the hotfix PR template capture that the standard template does not? (Choose two.)
 
-- A. A severity level
-- B. An incident link and root cause
-- C. A type-of-change checklist
-- D. Testing notes
-- E. Screenshots
+- A. A type-of-change checklist for the author
+- B. A severity level from P1 through P3
+- C. Testing notes describing what was run
+- D. An incident link and a root cause section
+- E. Screenshots of the affected behaviour
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A, B
+### Answer: B, D
 
 **In `challenge-08.md`:** lines **469–475**.
 
@@ -1265,10 +1264,10 @@ unreviewed changes. **A label is information; a required check is a gate.**
 Requirement: two approvals, invalidated by new commits, from code owners, and the person who pushed last
 cannot be the approver.
 
-- **BLANK 1:** `pull_request` / `required_reviews` / `branch_protection` / `approval`
-- **BLANK 2:** `dismiss_stale_reviews_on_push` / `dismiss_stale_reviews` / `reset_on_push` /
+- **BLANK 1:** `required_reviews` / `branch_protection` / `pull_request` / `approval`
+- **BLANK 2:** `dismiss_stale_reviews` / `reset_on_push` / `dismiss_stale_reviews_on_push` /
   `stale_reviews`
-- **BLANK 3:** `require_last_push_approval` / `require_signed_commits` / `require_linear_history` /
+- **BLANK 3:** `require_signed_commits` / `require_linear_history` / `require_last_push_approval` /
   `block_self_merge`
 
 <details>
@@ -1299,8 +1298,8 @@ jobs:
 "required_status_checks": [ { "[BLANK 2]": "ci/build" } ]
 ```
 
-- **BLANK 1:** `name` / `id` / `label` / `context`
-- **BLANK 2:** `context` / `name` / `job` / `check`
+- **BLANK 1:** `id` / `name` / `label` / `context`
+- **BLANK 2:** `job` / `check` / `context` / `name`
 
 <details>
 <summary>Show answer</summary>
@@ -1332,9 +1331,9 @@ az repos policy approver-count create \
 
 Requirement: two independent approvals that do not survive new commits.
 
-- **BLANK 1:** `2` / `1` / `0` / `3`
-- **BLANK 2:** `false` / `true`
-- **BLANK 3:** `true` / `false`
+- **BLANK 1:** `1` / `0` / `2` / `3`
+- **BLANK 2:** `true` / `false`
+- **BLANK 3:** `false` / `true`
 
 <details>
 <summary>Show answer</summary>
@@ -1366,8 +1365,8 @@ az repos policy build create \
 Requirement: avoid rebuilding every open PR when `main` moves, but do not let a passing build be trusted
 for more than twelve hours.
 
-- **BLANK 1:** `true` / `false`
-- **BLANK 2:** `720` / `12` / `43200` / `1`
+- **BLANK 1:** `false` / `true`
+- **BLANK 2:** `12` / `43200` / `720` / `1`
 
 <details>
 <summary>Show answer</summary>
@@ -1399,8 +1398,8 @@ result may be. Set the first without the second and a build from last week can m
 }
 ```
 
-- **BLANK 1:** `ALLGREEN` / `HEADGREEN` / `SEQUENTIAL` / `ANY`
-- **BLANK 2:** `squash` / `merge` / `rebase` / `fast-forward`
+- **BLANK 1:** `HEADGREEN` / `ALLGREEN` / `SEQUENTIAL` / `ANY`
+- **BLANK 2:** `merge` / `rebase` / `fast-forward` / `squash`
 
 <details>
 <summary>Show answer</summary>
@@ -1434,7 +1433,7 @@ jobs:
       - run: npm run test:integration
 ```
 
-- **BLANK 1:** `merge_group` / `pull_request` / `push` / `workflow_run`
+- **BLANK 1:** `pull_request` / `push` / `merge_group` / `workflow_run`
 
 <details>
 <summary>Show answer</summary>
@@ -1489,15 +1488,15 @@ Repos**.
 
 How is "no change without independent approval" enforced on GitHub?
 
-- A. A `pull_request` rule with two required approvals, stale dismissal and `require_last_push_approval`
-- B. Two required approvals
-- C. A PR template with a review checklist
-- D. CODEOWNERS
+- A. Two required approving reviews on the branch itself
+- B. A PR template carrying a review checklist
+- C. CODEOWNERS entries covering every source path
+- D. Two approvals, stale dismissal, last-push approval
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: D
 
 **In `challenge-08.md`:** lines **46–49**.
 
@@ -1508,7 +1507,7 @@ independent of the final state.
 **And stale dismissal is what ties the approval to the code**, so "approved" always refers to what is
 about to merge (Q1).
 
-**Why C prompts and enforces nothing** (Q35).
+**Why B prompts and enforces nothing** (Q35).
 
 </details>
 
@@ -1518,16 +1517,15 @@ about to merge (Q1).
 
 How are security-sensitive paths guaranteed a security team review?
 
-- A. CODEOWNERS entries for `/src/auth/`, `/src/crypto/` and `**/security*.yml`, plus
-  `require_code_owner_review`, with the team granted write access
-- B. CODEOWNERS entries alone
-- C. A required status check
-- D. A label
+- A. CODEOWNERS entries for the sensitive paths, on their own
+- B. A required status check naming the security team
+- C. CODEOWNERS plus owner review, with the team granted access
+- D. A label applied to pull requests touching those paths
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: C
 
 **In `challenge-08.md`:** lines **139–142**, **48**, **564**.
 
@@ -1554,16 +1552,15 @@ code under an owned path cannot merge without the owning team looking at it.
 
 Why must the CI job names match the required check contexts exactly?
 
-- A. Branch protection waits for a context string; an unmatched name means the check never reports and the
-  PR blocks forever
-- B. It is a naming convention
-- C. GitHub derives the job from the context
-- D. It affects run ordering
+- A. It is a naming convention the platform recommends
+- B. GitHub derives which job to run from the context
+- C. It affects the order the checks run on the PR
+- D. An unmatched context never reports, so the PR blocks
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: D
 
 **In `challenge-08.md`:** lines **510–518**.
 
@@ -1582,23 +1579,23 @@ security scan stops being required** without anyone deciding it should.
 
 Which **two** stop concurrent merges breaking `main`? (Choose two.)
 
-- A. A merge queue with `ALLGREEN` grouping
-- B. A `merge_group`-triggered CI workflow
-- C. Required approving reviews
-- D. CODEOWNERS
-- E. PR size labels
+- A. Required approving reviews on the pull request
+- B. A merge queue configured with `ALLGREEN` grouping
+- C. CODEOWNERS routing for the changed paths
+- D. A `merge_group`-triggered CI workflow
+- E. Pull request size labels applied on push
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A, B
+### Answer: B, D
 
 **In `challenge-08.md`:** lines **238–250** and **261–263**.
 
-**The queue orchestrates; the workflow is what actually tests the combination.** Enable the rule without
+**B orchestrates; D is what actually tests the combination.** Enable the rule without
 the `merge_group` workflow and the queue waits for checks nobody runs.
 
-**Why C and D address a different failure.** Reviews and ownership catch *bad* changes; semantic conflicts
+**Why A and C address a different failure.** Reviews and ownership catch *bad* changes; semantic conflicts
 are two *good* changes that are incompatible (Q4).
 
 </details>
@@ -1609,11 +1606,10 @@ are two *good* changes that are incompatible (Q4).
 
 How is parity achieved in Azure Repos?
 
-- A. Approver-count with reset-on-source-push and creator-vote-counts false, build validation,
-  comment-required, and merge-strategy policies, all blocking
-- B. A single approver-count policy
-- C. A pipeline that checks the rules
-- D. Documentation telling the team to follow the same process
+- A. Four blocking policies covering all four controls
+- B. A single approver-count policy set to two reviewers
+- C. A pipeline that checks the rules were followed
+- D. Documentation telling the team to follow the process
 
 <details>
 <summary>Show answer</summary>
@@ -1639,18 +1635,17 @@ Four months in, the security team notices that PRs touching `/src/auth/` have me
 review for several weeks. CODEOWNERS still lists them, `require_code_owner_review` is still enabled, and
 other paths are still routing correctly. The organisation recently restructured its teams.
 
-What happened, and what is the fix?
+What is the most likely cause?
 
-- A. The security team was renamed or lost repository access, so its CODEOWNERS entry resolves to nothing
-  and is silently skipped — restore access, or update the entry to the new team slug
-- B. The ruleset was deleted
-- C. `require_code_owner_review` was disabled
-- D. The PRs were merged by administrators
+- A. The whole ruleset was deleted during the restructure
+- B. `require_code_owner_review` was quietly disabled
+- C. The pull requests were merged by administrators
+- D. The team was renamed, so its entry resolves to nothing
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: D
 
 **In `challenge-08.md`:** lines **552–557** and **564**.
 
@@ -1681,21 +1676,17 @@ lookup at line 553 catches resolution.
 A year on, no change reaches `main` unreviewed, the security team sees every auth change, and `main` has
 not been broken by a merge collision.
 
-Explain what each control contributed, and what actually changed.
+Which explanation best accounts for the change?
 
-- A. The `pull_request` rule made review structurally unavoidable; stale dismissal and last-push approval
-  made the approval mean the final code; CODEOWNERS with code-owner review put the right eyes on the
-  right paths; three required checks named to match their jobs made build, test and security scanning
-  conditions of merge rather than suggestions; and the merge queue tested combinations no single PR could
-  test — every one enforced by the platform rather than by discipline
-- B. The developers became more careful after the incidents
-- C. More senior reviewers were added to the team
-- D. Deployment frequency was reduced
+- A. The developers became more careful after the incidents
+- B. Each control is enforced by the platform, not people
+- C. More senior reviewers were added to the review rota
+- D. Deployment frequency was reduced to lower the risk
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: B
 
 **In `challenge-08.md`:** lines **44–72**, **139–142**, **57–61**, **238–263**.
 

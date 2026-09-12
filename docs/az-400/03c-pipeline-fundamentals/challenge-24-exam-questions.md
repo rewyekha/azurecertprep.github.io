@@ -46,15 +46,15 @@ required reviewer.
 
 What is the most likely cause?
 
-- A. The job does not declare an `environment`
-- B. The reviewer approved automatically
-- C. The workflow used `workflow_dispatch`
+- A. The reviewer approved the run automatically
+- B. The workflow was run via `workflow_dispatch`
+- C. The job does not declare an `environment`
 - D. Branch protection was not enabled on `main`
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: C
 
 **In `challenge-24.md`:** Break & fix Exercise 1, lines **570–596**.
 
@@ -80,8 +80,8 @@ without `environment:` is an ordinary job with no gate — and nothing warns you
 
 **Why the others fail**
 
-- **B** — auto-approval does not exist. `prevent_self_review` (line 61) tightens it further
-- **C** — the trigger is irrelevant. The gate is a property of the environment
+- **A** — auto-approval does not exist. `prevent_self_review` (line 61) tightens it further
+- **B** — the trigger is irrelevant. The gate is a property of the environment
 - **D** — branch protection governs merging, not deploying. **This is the boundary the exam tests
   most**
 
@@ -97,14 +97,14 @@ declares `environment: Production`.
 What is wrong?
 
 - A. Wait timers only apply to `workflow_dispatch` runs
-- B. Environment names are case-sensitive and must match exactly
-- C. Wait timers require at least one reviewer
-- D. Wait timers are ignored on the default branch
+- B. Wait timers require at least one required reviewer
+- C. Wait timers are ignored on the repository's default branch
+- D. Environment names are case-sensitive and must match exactly
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: B
+### Answer: D
 
 **In `challenge-24.md`:** Break & fix Exercise 3, lines **648–670**.
 
@@ -118,7 +118,7 @@ why there is no error: you got exactly what you asked for, just not what you mea
 
 **Why the others fail**
 
-- **A**, **C**, **D** — all invented restrictions. A wait timer applies to every run of a job
+- **A**, **B**, **C** — all invented restrictions. A wait timer applies to every run of a job
   referencing that environment, with or without reviewers
 
 **How to spot it in real life:** the repository's Environments page will show two entries, one of
@@ -132,15 +132,15 @@ them empty. That extra environment is the tell.
 
 Which setting stops the person who triggered a workflow from approving their own deployment?
 
-- A. `prevent_self_review`
-- B. `blockedApprovers`
+- A. `blockedApprovers`
+- B. `prevent_self_review`
 - C. `minRequiredApprovers`
 - D. `wait_timer`
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: B
 
 **In `challenge-24.md`:** line **61**.
 
@@ -160,7 +160,7 @@ who approves shipping it.
 
 **Why the others fail**
 
-- **B** — `blockedApprovers` (line 331) is the **Azure DevOps** equivalent concept, and it is a list
+- **A** — `blockedApprovers` (line 331) is the **Azure DevOps** equivalent concept, and it is a list
   of specific people rather than a rule about the requester
 - **C** — `minRequiredApprovers` (line 328) sets how many, not who
 - **D** — a wait timer delays; it does not restrict
@@ -173,15 +173,15 @@ who approves shipping it.
 
 Which GitHub environment setting restricts deployments to specific branches or tags?
 
-- A. `deployment_branch_policy` with branch policies
-- B. Branch protection rules on the repository
-- C. A `CODEOWNERS` file
-- D. `concurrency` groups
+- A. Branch protection rules on the repository's `main`
+- B. A `CODEOWNERS` file covering the deploy workflow
+- C. `concurrency` groups keyed on the branch name
+- D. `deployment_branch_policy` with branch policies
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: D
 
 **In `challenge-24.md`:** lines **41–44** and **49–54**, plus the tag policy at lines **183–185**.
 
@@ -206,9 +206,9 @@ Note the two mutually exclusive modes: `protected_branches: true` means "any pro
 
 **Why the others fail**
 
-- **B** — the merge boundary again
-- **C** — CODEOWNERS assigns reviewers to code paths
-- **D** — concurrency controls overlapping runs
+- **A** — the merge boundary again
+- **B** — CODEOWNERS assigns reviewers to code paths
+- **C** — concurrency controls overlapping runs
 
 </details>
 
@@ -218,15 +218,15 @@ Note the two mutually exclusive modes: `protected_branches: true` means "any pro
 
 Which Azure Pipelines check prevents two runs deploying to the same environment simultaneously?
 
-- A. Business hours
-- B. Exclusive lock
-- C. Approval
+- A. Exclusive lock
+- B. Business hours
+- C. Approval check
 - D. Invoke REST API
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: B
+### Answer: A
 
 **In `challenge-24.md`:** lines **422–431**.
 
@@ -248,7 +248,7 @@ stages:
 
 **Why the others fail**
 
-- **A** — time-window gate
+- **B** — time-window gate
 - **C** — human gate, and two approved runs could still overlap
 - **D** — calls an external system for a verdict
 
@@ -263,15 +263,15 @@ stages:
 
 Which GitHub Actions feature is equivalent to an Azure Pipelines exclusive lock?
 
-- A. `concurrency` with a group
-- B. `needs`
-- C. `environment`
-- D. `permissions`
+- A. `needs` between the deploy jobs
+- B. `environment` on the deploy job
+- C. `concurrency` with a group
+- D. `permissions` on the deploy job
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: C
 
 **In `challenge-24.md`:** lines **452–454** and **460–462**.
 
@@ -290,8 +290,8 @@ The mapping is direct:
 
 **Why the others fail**
 
-- **B** — orders jobs inside one run
-- **C** — provides gates and secrets, not mutual exclusion
+- **A** — orders jobs inside one run
+- **B** — provides gates and secrets, not mutual exclusion
 - **D** — token scope
 
 </details>
@@ -303,14 +303,14 @@ The mapping is direct:
 For a production deployment, which `cancel-in-progress` value is correct?
 
 - A. `true`, so the newest deployment always wins
-- B. `false`, so an in-progress deployment finishes
-- C. It makes no difference for production
-- D. It must be omitted for production
+- B. It makes no practical difference for production
+- C. It must be omitted entirely for production
+- D. `false`, so an in-progress deployment finishes
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: B
+### Answer: D
 
 **In `challenge-24.md`:** line **454** for production, contrasted with line **462** for staging.
 
@@ -344,15 +344,15 @@ cancel each other.
 
 What is the fix?
 
-- A. Set `cancel-in-progress: false`
-- B. Scope the group name to each service
-- C. Use different environments
-- D. Add `needs` between the workflows
+- A. Scope the group name to each service
+- B. Set `cancel-in-progress: false` on both
+- C. Use different environments per service
+- D. Add `needs` between the two workflows
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: B
+### Answer: A
 
 **In `challenge-24.md`:** Break & fix Exercise 2, lines **604–640**.
 
@@ -378,7 +378,7 @@ collide accidentally.
 
 **Why the others fail**
 
-- **A** — they would queue instead of cancelling, which is still wrong. Independent services should
+- **B** — they would queue instead of cancelling, which is still wrong. Independent services should
   not wait for each other at all
 - **C** — different environments give different gates but do **not** separate concurrency groups
 - **D** — `needs` cannot cross workflows, and serialising them is the opposite of the goal
@@ -391,15 +391,15 @@ collide accidentally.
 
 What does a custom deployment protection rule use to communicate its verdict to GitHub?
 
-- A. A workflow output
-- B. A callback URL supplied in the webhook payload
-- C. A status check on the commit
-- D. A repository dispatch event
+- A. A workflow output written to `$GITHUB_OUTPUT`
+- B. A commit status check on the deployed SHA
+- C. A callback URL supplied in the webhook payload
+- D. A `repository_dispatch` event sent to the repo
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: B
+### Answer: C
 
 **In `challenge-24.md`:** lines **265** and **277–287**.
 
@@ -422,7 +422,7 @@ The flow is: deployment requested → GitHub calls your App's webhook → your s
 **Why the others fail**
 
 - **A** — the job has not started. There is no output
-- **C** — commit status checks gate **merges**, not deployments
+- **B** — commit status checks gate **merges**, not deployments
 - **D** — that is an inbound trigger, not a verdict channel
 
 **Two details worth keeping:** the handler verifies the webhook signature first (lines 238–244), and
@@ -436,10 +436,10 @@ it only acts when `action === 'requested'` (line 267).
 
 How is a custom deployment protection rule registered on an environment?
 
-- A. By adding a `protection` key to the workflow
+- A. By adding a `protection` key to the workflow's `environment` block
 - B. By enabling the GitHub App with its integration ID on the environment
-- C. By adding the App to `CODEOWNERS`
-- D. By creating a branch policy
+- C. By adding the GitHub App to `CODEOWNERS` for the workflow file
+- D. By creating a deployment branch policy naming the GitHub App
 
 <details>
 <summary>Show answer</summary>
@@ -515,15 +515,15 @@ approval request.
 
 A workflow job declares `environment: production`. Which secrets can it read?
 
-- A. Only repository secrets
-- B. Repository secrets plus secrets scoped to `production`
-- C. Secrets from every environment
-- D. Only secrets scoped to `production`
+- A. Repository secrets plus secrets scoped to `production`
+- B. Only secrets scoped to the `production` environment
+- C. Secrets from every environment in the repository
+- D. Only repository secrets, never environment secrets
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: B
+### Answer: A
 
 **In `challenge-24.md`:** lines **486–492** and **507–520**.
 
@@ -546,9 +546,9 @@ collision.
 
 **Why the others fail**
 
-- **A** — the environment layer would be pointless
+- **B** — too restrictive; shared repository secrets still work
 - **C** — the isolation would be pointless. A staging job can never read production secrets
-- **D** — too restrictive; shared repository secrets still work
+- **D** — the environment layer would be pointless
 
 </details>
 
@@ -558,15 +558,15 @@ collision.
 
 Which check blocks a deployment while the target application has an active incident?
 
-- A. Business hours
-- B. Azure Monitor alerts
+- A. Azure Monitor alerts
+- B. Business hours
 - C. Exclusive lock
-- D. Approval
+- D. Approval check
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: B
+### Answer: A
 
 **In `challenge-24.md`:** lines **366–377**.
 
@@ -577,7 +577,7 @@ Which check blocks a deployment while the target application has an active incid
 
 **Why the others fail**
 
-- **A** — time-based. An incident at 11am on a Tuesday passes a business-hours check happily
+- **B** — time-based. An incident at 11am on a Tuesday passes a business-hours check happily
 - **C** — prevents overlapping deployments, not deployment during an incident
 - **D** — a human *could* catch it, but the requirement is automatic
 
@@ -596,14 +596,14 @@ A workflow must deploy to production only from version tags such as `v1.2.3`.
 Which **trigger** achieves this?
 
 - A. `on: push: branches: [main]`
-- B. `on: push: tags: ["v[0-9]+.[0-9]+.[0-9]+"]`
-- C. `on: release: types: [published]`
-- D. `on: workflow_dispatch` with a version input
+- B. `on: release: types: [published]`
+- C. `on: workflow_dispatch` with a version input
+- D. `on: push: tags: ["v[0-9]+.[0-9]+.[0-9]+"]`
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: B
+### Answer: D
 
 **In `challenge-24.md`:** lines **199–202**.
 
@@ -625,9 +625,9 @@ That `#v` strips the leading `v`, turning `v1.2.3` into `1.2.3`.
 **Why the others fail**
 
 - **A** — fires on every push to main, tagged or not
-- **C** — plausible and different: it fires when a **GitHub Release** is published, which may or may
+- **B** — plausible and different: it fires when a **GitHub Release** is published, which may or may
   not be how this team tags. The question says tags
-- **D** — manual, not automatic
+- **C** — manual, not automatic
 
 **Pair it with the environment (lines 183–185):** a `type="tag"` deployment branch policy of `v*`
 enforces the same rule at the environment level, so it holds even if the workflow is edited. Trigger
@@ -642,14 +642,14 @@ plus policy is defence in depth.
 In Azure DevOps, where are approvals and checks configured?
 
 - A. In the pipeline YAML under the `deployment` job
-- B. On the environment, in project settings
-- C. In the branch policies of the repository
-- D. In the service connection
+- B. In the branch policies of the repository
+- C. On the environment, in project settings
+- D. In the service connection's security settings
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: B
+### Answer: C
 
 **In `challenge-24.md`:** lines **312–313** and **343**.
 
@@ -672,7 +672,7 @@ environment permissions, not just repository write access.
 **Why the others fail**
 
 - **A** — the YAML names the environment and nothing more
-- **C** — merge-time policy
+- **B** — merge-time policy
 - **D** — a service connection holds credentials. It does have its own approvals and checks, which is
   a related but separate control
 
@@ -684,15 +684,15 @@ environment permissions, not just repository write access.
 
 Which GitHub environment setting delays a deployment for a fixed period before it starts?
 
-- A. `wait_timer`
-- B. `timeout`
+- A. `timeout`
+- B. `wait_timer`
 - C. `cancel-in-progress`
 - D. `lockBehavior`
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: B
 
 **In `challenge-24.md`:** line **60**.
 
@@ -710,7 +710,7 @@ requiring anyone to be online to approve it. Useful for automated releases outsi
 
 **Why the others fail**
 
-- **B** — the Azure DevOps approval expiry (line 332)
+- **A** — the Azure DevOps approval expiry (line 332)
 - **C** — concurrency behaviour
 - **D** — Azure Pipelines lock behaviour
 
@@ -727,28 +727,28 @@ requiring anyone to be online to approve it. Useful for automated releases outsi
 Which **three** protection rules can a GitHub environment enforce? (Choose three.)
 
 - A. Required reviewers
-- B. Wait timer
-- C. Deployment branch and tag policy
-- D. Required status checks
-- E. Linear history
-- F. Signed commits
+- B. Required status checks
+- C. Wait timer
+- D. Linear history on merges
+- E. Deployment branch and tag policy
+- F. Signed commits on pushes
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A, B, C
+### Answer: A, C, E
 
 **In `challenge-24.md`:** lines **57–75**.
 
 ```json
 {
-  "wait_timer": 15,                          // B
+  "wait_timer": 15,                          // C
   "prevent_self_review": true,
   "reviewers": [                             // A
     {"type": "User", "id": 12345},
     {"type": "Team", "id": 67890}
   ],
-  "deployment_branch_policy": {              // C
+  "deployment_branch_policy": {              // E
     "custom_branch_policies": true
   }
 }
@@ -756,8 +756,8 @@ Which **three** protection rules can a GitHub environment enforce? (Choose three
 
 **Why the others fail — all three are branch protection rules, not environment rules**
 
-- **D** — required status checks gate **merging a pull request**
-- **E** — linear history is a merge-strategy rule
+- **B** — required status checks gate **merging a pull request**
+- **D** — linear history is a merge-strategy rule
 - **F** — signed commits are a push-time rule
 
 **That grouping is the exam's favourite trap in this challenge.** Environment rules answer *may this
@@ -771,16 +771,16 @@ deploy?* Branch rules answer *may this merge?*
 
 Which **two** are valid reviewer types on a GitHub environment? (Choose two.)
 
-- A. `User`
-- B. `Team`
-- C. `Organization`
-- D. `App`
+- A. `Organization`
+- B. `User`
+- C. `App`
+- D. `Team`
 - E. `Role`
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A, B
+### Answer: B, D
 
 **In `challenge-24.md`:** lines **62–65**.
 
@@ -796,8 +796,8 @@ rotations — naming individuals creates a bottleneck when someone is on holiday
 
 **Why the others fail**
 
-- **C** — too broad to be a meaningful gate
-- **D** — an App **can** gate a deployment, but as a **custom protection rule** (line 302), not as a
+- **A** — too broad to be a meaningful gate
+- **C** — an App **can** gate a deployment, but as a **custom protection rule** (line 302), not as a
   reviewer. Different mechanism
 - **E** — roles are a repository permission concept
 
@@ -809,16 +809,16 @@ rotations — naming individuals creates a bottleneck when someone is on holiday
 
 Which **two** Azure Pipelines approval settings control *who* and *how many*? (Choose two.)
 
-- A. `approvers`
-- B. `minRequiredApprovers`
-- C. `executionOrder`
-- D. `timeout`
-- E. `instructions`
+- A. `executionOrder`
+- B. `timeout` in seconds
+- C. `approvers`
+- D. `instructions`
+- E. `minRequiredApprovers`
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A, B
+### Answer: C, E
 
 **In `challenge-24.md`:** lines **325–328**.
 
@@ -833,9 +833,9 @@ Which **two** Azure Pipelines approval settings control *who* and *how many*? (C
 
 **Why the others fail**
 
-- **C** — `executionOrder` decides sequence (`anyOrder` or in turn), not who or how many
-- **D** — how long the request stays open
-- **E** — text shown to the approver. Worth writing well in real life, but it controls nothing
+- **A** — `executionOrder` decides sequence (`anyOrder` or in turn), not who or how many
+- **B** — how long the request stays open
+- **D** — text shown to the approver. Worth writing well in real life, but it controls nothing
 
 </details>
 
@@ -846,15 +846,15 @@ Which **two** Azure Pipelines approval settings control *who* and *how many*? (C
 Which **two** describe `lockBehavior` in Azure Pipelines? (Choose two.)
 
 - A. `sequential` queues runs so each one deploys in turn
-- B. `runLatest` cancels older queued runs and deploys only the newest
-- C. `sequential` cancels the in-progress run
-- D. `runLatest` runs all queued runs in parallel
+- B. `sequential` cancels the in-progress run when a new one queues
+- C. `runLatest` runs all queued runs in parallel
+- D. `runLatest` cancels older queued runs and deploys only the newest
 - E. `lockBehavior` replaces the need for `dependsOn`
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A, B
+### Answer: A, D
 
 **In `challenge-24.md`:** line **431**.
 
@@ -865,8 +865,8 @@ Which **two** describe `lockBehavior` in Azure Pipelines? (Choose two.)
 
 **Why the others fail**
 
-- **C** — sequential never interrupts. It queues
-- **D** — the whole point of the lock is that runs do **not** overlap
+- **B** — sequential never interrupts. It queues
+- **C** — the whole point of the lock is that runs do **not** overlap
 - **E** — different concerns. `dependsOn` orders stages **within one run**; the lock coordinates
   **between runs**. Confusing the two is your recurring error
 
@@ -878,16 +878,16 @@ Which **two** describe `lockBehavior` in Azure Pipelines? (Choose two.)
 
 Which **two** are true about GitHub concurrency groups? (Choose two.)
 
-- A. A group can be defined at workflow level or job level
-- B. Any run sharing the group name shares the lock
-- C. Groups are scoped automatically to the workflow
-- D. `cancel-in-progress: true` queues the newer run
-- E. Concurrency replaces environment protection rules
+- A. Groups are scoped automatically to the workflow
+- B. A group can be defined at workflow level or job level
+- C. `cancel-in-progress: true` queues the newer run
+- D. Concurrency replaces environment protection rules
+- E. Any run sharing the group name shares the lock
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A, B
+### Answer: B, E
 
 **In `challenge-24.md`:** lines **452–454** (workflow level), **460–462** (job level), **604–614**
 (the shared-name failure).
@@ -903,11 +903,11 @@ jobs:
 
 **Why the others fail**
 
-- **C** — **the exact bug in Break & fix Exercise 2.** Nothing is scoped automatically. Two unrelated
+- **A** — **the exact bug in Break & fix Exercise 2.** Nothing is scoped automatically. Two unrelated
   workflows both using `group: production` fight over one lock. That is why line 638 recommends
   `${{ github.workflow }}-${{ github.ref }}`
-- **D** — inverted. `true` cancels the in-progress run; `false` queues
-- **E** — concurrency controls overlap; environments control permission
+- **C** — inverted. `true` cancels the in-progress run; `false` queues
+- **D** — concurrency controls overlap; environments control permission
 
 </details>
 
@@ -918,16 +918,16 @@ jobs:
 Which **two** Azure Pipelines checks are appropriate for a production environment that must not
 deploy during an incident or outside working hours? (Choose two.)
 
-- A. Business hours
-- B. Azure Monitor alerts
-- C. Exclusive lock
-- D. Approval
+- A. Exclusive lock
+- B. Approval check
+- C. Business hours
+- D. Azure Monitor alerts
 - E. Invoke REST API
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A, B
+### Answer: C, D
 
 **In `challenge-24.md`:** lines **341–348** and **366–377**.
 
@@ -946,8 +946,8 @@ is debugging a production release over a weekend.
 
 **Why the others fail**
 
-- **C** — prevents overlap, not bad timing
-- **D** — a human could enforce both, but the requirement is automatic
+- **A** — prevents overlap, not bad timing
+- **B** — a human could enforce both, but the requirement is automatic
 - **E** — could call an external system that checks either, but the built-in checks exist for exactly
   these two conditions. Reach for a custom call only when nothing built in fits
 
@@ -959,18 +959,18 @@ is debugging a production release over a weekend.
 
 Which **two** must be true for environment secrets to isolate staging from production? (Choose two.)
 
-- A. Each secret is created with `--env <environment>`
-- B. Each job declares the matching `environment`
-- C. The secrets have different names per environment
-- D. The workflow uses `secrets: inherit`
+- A. The secrets have different names per environment
+- B. Each secret is created with `--env <environment>`
+- C. The workflow uses `secrets: inherit`
+- D. Each job declares the matching `environment`
 - E. The environments have required reviewers
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A, B
+### Answer: B, D
 
-**In `challenge-24.md`:** lines **486–489** (A) and **511** (B).
+**In `challenge-24.md`:** lines **486–489** (B) and **511** (D).
 
 ```bash
 gh secret set DATABASE_URL --env staging    --body "...staging-db..."
@@ -984,9 +984,9 @@ gh secret set DATABASE_URL --env production --body "...prod-db..."
 
 **Why the others fail**
 
-- **C** — **the opposite is the point.** The same name with different values is what lets one
+- **A** — **the opposite is the point.** The same name with different values is what lets one
   workflow line serve both environments
-- **D** — `secrets: inherit` is for reusable workflows (Challenge 23), unrelated
+- **C** — `secrets: inherit` is for reusable workflows (Challenge 23), unrelated
 - **E** — reviewers gate deployment; they do not scope secrets
 
 </details>
@@ -1246,7 +1246,7 @@ Match each Azure Pipelines check to the condition it enforces.
 | Evaluate artifact |  |
 | Required template |  |
 
-**Options:** A **human** must authorise · An **external system's** verdict · Deployment only inside a **time window** · No **active incident** on the target · **One run at a time** to the environment · Only an approved **source branch** · The **container image** satisfies a policy · The pipeline **extends an approved template**
+**Options:** A human must authorise · An external system's verdict · Deployment only inside a time window · No active incident on the target · One run at a time to the environment · Only an approved source branch · The container image satisfies a policy · The pipeline extends an approved template
 
 <details>
 <summary>Show answer</summary>
@@ -1451,9 +1451,9 @@ the one exception and lives in the workflow.
 Requirement: delay 15 minutes, stop the requester self-approving, and let any member of a group
 approve.
 
-- **BLANK 1:** `wait_timer` / `timeout` / `delay` / `hold`
-- **BLANK 2:** `prevent_self_review` / `block_author` / `require_other` / `separate_duties`
-- **BLANK 3:** `Team` / `Group` / `Role` / `Organization`
+- **BLANK 1:** `timeout` / `delay` / `wait_timer` / `hold`
+- **BLANK 2:** `block_author` / `prevent_self_review` / `require_other` / `separate_duties`
+- **BLANK 3:** `Group` / `Role` / `Organization` / `Team`
 
 <details>
 <summary>Show answer</summary>
@@ -1478,8 +1478,8 @@ gh api --method POST \
   --field type="[BLANK 2]"
 ```
 
-- **BLANK 1:** `deployment-branch-policies` / `branch-protection` / `rulesets` / `checks`
-- **BLANK 2:** `tag` / `branch` / `ref` / `release`
+- **BLANK 1:** `branch-protection` / `rulesets` / `deployment-branch-policies` / `checks`
+- **BLANK 2:** `branch` / `ref` / `tag` / `release`
 
 <details>
 <summary>Show answer</summary>
@@ -1510,8 +1510,8 @@ jobs:
 
 The environment was created as lowercase `production`.
 
-- **BLANK 1:** `environment` / `environments` / `deployment` / `target`
-- **BLANK 2:** `production` / `Production` / `PRODUCTION` / `prod`
+- **BLANK 1:** `environments` / `deployment` / `environment` / `target`
+- **BLANK 2:** `Production` / `PRODUCTION` / `production` / `prod`
 
 <details>
 <summary>Show answer</summary>
@@ -1544,8 +1544,8 @@ jobs:
 
 Requirement: production deployments queue; staging deployments cancel older runs.
 
-- **BLANK 1:** `cancel-in-progress` / `cancel` / `queue` / `lock`
-- **BLANK 2:** `true` / `false`
+- **BLANK 1:** `cancel` / `queue` / `lock` / `cancel-in-progress`
+- **BLANK 2:** `false` / `true`
 
 <details>
 <summary>Show answer</summary>
@@ -1573,9 +1573,9 @@ stages:
         [BLANK 3]: "contoso-production"
 ```
 
-- **BLANK 1:** `lockBehavior` / `concurrency` / `exclusive` / `serialize`
-- **BLANK 2:** `deployment` / `job` / `stage` / `task`
-- **BLANK 3:** `environment` / `pool` / `resource` / `target`
+- **BLANK 1:** `concurrency` / `exclusive` / `lockBehavior` / `serialize`
+- **BLANK 2:** `job` / `deployment` / `stage` / `task`
+- **BLANK 3:** `pool` / `resource` / `target` / `environment`
 
 <details>
 <summary>Show answer</summary>
@@ -1606,9 +1606,9 @@ fetch([BLANK 1], {
 });
 ```
 
-- **BLANK 1:** `deployment_callback_url` / `webhook_url` / `response_url` / `callback`
-- **BLANK 2:** `requested` / `created` / `pending` / `queued`
-- **BLANK 3:** `rejected` / `denied` / `failed` / `blocked`
+- **BLANK 1:** `webhook_url` / `deployment_callback_url` / `response_url` / `callback`
+- **BLANK 2:** `created` / `pending` / `queued` / `requested`
+- **BLANK 3:** `denied` / `rejected` / `failed` / `blocked`
 
 <details>
 <summary>Show answer</summary>
@@ -1662,16 +1662,16 @@ overlapping.
 
 Which **two** settings meet the approval requirements? (Choose two.)
 
-- A. A Team reviewer on the `production` environment
-- B. `prevent_self_review: true`
-- C. A branch protection rule requiring one approving review
-- D. `minRequiredApprovers: 1` in a GitHub environment
-- E. A CODEOWNERS entry for the deploy workflow
+- A. A branch protection rule requiring one approving review
+- B. `minRequiredApprovers: 1` in a GitHub environment
+- C. A Team reviewer on the `production` environment
+- D. A CODEOWNERS entry for the deploy workflow
+- E. `prevent_self_review: true` on the environment
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A, B
+### Answer: C, E
 
 **In `challenge-24.md`:** lines **61–65**.
 
@@ -1680,10 +1680,10 @@ holidays do not block releases.
 
 **Why the others fail**
 
-- **C** — gates merging, not deploying
-- **D** — `minRequiredApprovers` is **Azure DevOps** syntax (line 328). GitHub environments do not use
+- **A** — gates merging, not deploying
+- **B** — `minRequiredApprovers` is **Azure DevOps** syntax (line 328). GitHub environments do not use
   that field
-- **E** — CODEOWNERS requires review of a **file change**. Once the workflow is merged, it deploys
+- **D** — CODEOWNERS requires review of a **file change**. Once the workflow is merged, it deploys
   without further review
 
 </details>
@@ -1694,15 +1694,15 @@ holidays do not block releases.
 
 Which configuration meets the 15-minute cancellation window?
 
-- A. `wait_timer: 15` on the `production` environment
-- B. `timeout: 15` on the approval check
+- A. `timeout: 15` on the approval check in Azure DevOps
+- B. `wait_timer: 15` on the `production` environment
 - C. `sleep 900` as the first step of the deploy job
-- D. A scheduled trigger delayed by 15 minutes
+- D. A scheduled trigger that fires 15 minutes later
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: B
 
 **In `challenge-24.md`:** line **60**.
 
@@ -1711,7 +1711,7 @@ waiting so anyone can cancel it.
 
 **Why the others fail**
 
-- **B** — `timeout` is how long an **approval request** stays open before expiring. Opposite meaning
+- **A** — `timeout` is how long an **approval request** stays open before expiring. Opposite meaning
 - **C** — the job has already started. A runner is allocated and billed for fifteen idle minutes, and
   cancelling mid-job is messier than never starting
 - **D** — a schedule cannot be attached to a push-triggered release
@@ -1725,15 +1725,15 @@ waiting so anyone can cancel it.
 Which **two** configurations restrict production deployments to `main` and `v*` tags? (Choose two.)
 
 - A. A deployment branch policy with `name="main"`
-- B. A deployment branch policy with `name="v*"` and `type="tag"`
-- C. `on: push: branches: [main]` in the workflow
-- D. A branch protection rule on `main`
-- E. `concurrency: group: main`
+- B. `on: push: branches: [main]` in the workflow
+- C. A branch protection rule on `main`
+- D. A deployment branch policy with `name="v*"` and `type="tag"`
+- E. `concurrency: group: main` on the deploy job
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A, B
+### Answer: A, D
 
 **In `challenge-24.md`:** lines **74–75** and **183–185**.
 
@@ -1745,9 +1745,9 @@ gh api --method POST .../environments/production/deployment-branch-policies \
 
 **Why the others fail**
 
-- **C** — a trigger controls what **starts** the workflow. Someone could still add another trigger, or
+- **B** — a trigger controls what **starts** the workflow. Someone could still add another trigger, or
   run it manually. The environment policy holds regardless of what the YAML says
-- **D** — merge-time
+- **C** — merge-time
 - **E** — concurrency controls overlap
 
 **Both together is the ideal answer in practice:** the trigger for everyday behaviour, the
@@ -1761,15 +1761,15 @@ environment policy as the enforcement that survives a YAML edit.
 
 Which configuration meets the overlap requirement?
 
-- A. `concurrency` with `cancel-in-progress: false`
-- B. `concurrency` with `cancel-in-progress: true`
-- C. `dependsOn` between deployment jobs
-- D. An exclusive lock with `lockBehavior: runLatest`
+- A. `concurrency` with `cancel-in-progress: true`
+- B. `dependsOn` between the two deployment jobs
+- C. An exclusive lock with `lockBehavior: runLatest`
+- D. `concurrency` with `cancel-in-progress: false`
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: D
 
 **In `challenge-24.md`:** lines **452–454**.
 
@@ -1777,10 +1777,10 @@ The requirement has two halves: never overlap, **and** never interrupt.
 
 **Why the others fail**
 
-- **B** — prevents overlap by **cancelling** the in-flight deployment. Violates the second half
-- **C** — orders jobs **within one run**. Two separate runs are unaffected. **This is your recurring
+- **A** — prevents overlap by **cancelling** the in-flight deployment. Violates the second half
+- **B** — orders jobs **within one run**. Two separate runs are unaffected. **This is your recurring
   error**
-- **D** — `runLatest` also cancels older queued runs. It prevents overlap but is the Azure Pipelines
+- **C** — `runLatest` also cancels older queued runs. It prevents overlap but is the Azure Pipelines
   analogue of `cancel-in-progress: true`
 
 **The Azure Pipelines answer to the same requirement is `lockBehavior: sequential`** (line 431).
@@ -1794,9 +1794,9 @@ The requirement has two halves: never overlap, **and** never interrupt.
 Which check meets the incident requirement?
 
 - A. Azure Monitor alerts check on the `contoso-production` environment
-- B. Business hours check
-- C. A `curl` health check as the first deploy step
-- D. Approval check with instructions to check for alerts
+- B. Business hours check on the `contoso-production` environment
+- C. A `curl` health check as the first step of the deploy job
+- D. Approval check with instructions to look for active alerts
 
 <details>
 <summary>Show answer</summary>
@@ -1826,15 +1826,15 @@ Which check meets the incident requirement?
 
 Which check meets the "no Friday or weekend deployments" requirement?
 
-- A. Business hours check, Monday to Thursday
-- B. A `condition` on the stage testing the day of week
-- C. A scheduled pipeline that only runs on weekdays
-- D. Exclusive lock
+- A. A `condition` on the stage testing the day of week
+- B. A scheduled pipeline that only runs on weekdays
+- C. Business hours check, Monday to Thursday
+- D. Exclusive lock with `lockBehavior: sequential`
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: C
 
 **In `challenge-24.md`:** lines **343–348**.
 
@@ -1850,9 +1850,9 @@ The check **holds** the deployment until the next allowed window rather than fai
 
 **Why the others fail**
 
-- **B** — a stage condition **skips** the stage. The deployment is silently not done, and the run goes
+- **A** — a stage condition **skips** the stage. The deployment is silently not done, and the run goes
   green. A hold and a skip are very different outcomes
-- **C** — schedules start pipelines; they do not gate a push-triggered release
+- **B** — schedules start pipelines; they do not gate a push-triggered release
 - **D** — overlap, not timing
 
 **Why "hold" beats "fail":** a Friday afternoon release simply waits until Monday morning. Nobody has
@@ -1866,15 +1866,15 @@ to remember to re-run it, and nothing is silently dropped.
 
 Which configuration meets the database and log-level requirements?
 
-- A. Environment secrets for the connection string and environment variables for the log level
-- B. Repository secrets with `_STAGING` and `_PROD` name suffixes
-- C. Workflow-level `env` blocks per job
-- D. A single variable group used by both stages
+- A. Repository secrets with `_STAGING` and `_PROD` name suffixes for both values
+- B. Environment secrets for the connection string, environment variables for the log level
+- C. Workflow-level `env` blocks per job holding both the connection string and the log level
+- D. A single variable group used by both stages holding both connection strings and log levels
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: B
 
 **In `challenge-24.md`:** lines **486–502** and **507–520**.
 
@@ -1897,7 +1897,7 @@ gh variable set LOG_LEVEL    --env production --body "warning"
 
 **Why the others fail**
 
-- **B** — **works, and is worse.** Suffixed repository secrets are visible to **every** job, including
+- **A** — **works, and is worse.** Suffixed repository secrets are visible to **every** job, including
   ones with no environment at all. A staging job could read the production connection string. The
   environment scope is the isolation
 - **C** — `env` blocks are plaintext in the workflow file. Never for secrets

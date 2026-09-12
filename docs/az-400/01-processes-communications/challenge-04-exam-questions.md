@@ -50,15 +50,15 @@ how often do we break production, and how quickly do we recover.
 
 Which DORA metric measures the time between committing code and that code running in production?
 
-- A. Deployment frequency
-- B. Lead time for changes
-- C. Mean time to recovery
-- D. Change failure rate
+- A. Deployment frequency, the rate at which changes reach production
+- B. Change failure rate, the share of deployments needing remediation
+- C. Mean time to recovery, measured from the start of an incident
+- D. Lead time for changes, from commit to running in production
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: B
+### Answer: D
 
 **In `challenge-04.md`:** line **52**.
 
@@ -84,15 +84,15 @@ is why the metric drives process changes and not just pipeline tuning.
 
 A team deploys three times per week with an average lead time of four days. What DORA level is that?
 
-- A. Elite for both
-- B. High for deployment frequency, Medium for lead time
-- C. High for both
-- D. Medium for deployment frequency, High for lead time
+- A. High for deployment frequency and High for lead time
+- B. Medium for deployment frequency and High for lead time
+- C. High for deployment frequency and Medium for lead time
+- D. Elite for deployment frequency and Elite for lead time
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: C
+### Answer: A
 
 **In `challenge-04.md`:** lines **46** and **57**.
 
@@ -122,15 +122,15 @@ read off the row.
 
 What is the primary purpose of the Azure DevOps Analytics OData endpoint?
 
-- A. To store build artifacts
-- B. To provide a queryable reporting layer over operational data, with aggregation support
-- C. To replace Azure Boards queries
-- D. To sync data between Azure DevOps and GitHub
+- A. To store build artifacts produced by pipeline runs
+- B. To synchronise data between Azure DevOps and GitHub
+- C. To provide a queryable reporting layer with aggregation
+- D. To replace Azure Boards WIQL queries for work lists
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: B
+### Answer: C
 
 **In `challenge-04.md`:** lines **249** and **263**.
 
@@ -145,7 +145,7 @@ client-side.
 **"Read-optimised" is the phrase to remember** (line 601). Analytics is a reporting store shaped for
 aggregation; the operational API is shaped for individual records.
 
-**Why C overstates it.** Boards queries (WIQL) are still how you build a *work list*. Analytics is how
+**Why D overstates it.** Boards queries (WIQL) are still how you build a *work list*. Analytics is how
 you build a *trend*.
 
 </details>
@@ -156,15 +156,15 @@ you build a *trend*.
 
 Which practice most directly reduces change failure rate?
 
-- A. Deploying more frequently
-- B. Comprehensive automated testing, progressive rollouts and feature flags
-- C. Reducing the number of developers
-- D. Adding more manual approvals
+- A. Deploying more frequently so each change is smaller
+- B. Reducing the number of developers touching the codebase
+- C. Adding more manual approval gates before production
+- D. Automated testing, progressive rollouts and feature flags
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: B
+### Answer: D
 
 **In `challenge-04.md`:** line **612**.
 
@@ -174,9 +174,9 @@ without redeploying.
 
 **Why A is the answer that feels wrong and is defensible — but not the *most direct*.** Smaller, more
 frequent deployments genuinely reduce failure rate, because each change is smaller and easier to
-diagnose. It is an indirect effect; B names the mechanisms.
+diagnose. It is an indirect effect; D names the mechanisms.
 
-**Why D usually makes things worse.** More approvals lengthen lead time, which encourages batching, and
+**Why C usually makes things worse.** More approvals lengthen lead time, which encourages batching, and
 bigger batches fail more often. **A control that damages throughput often damages stability too** —
 which is the whole reason DORA measures the four together.
 
@@ -188,15 +188,15 @@ which is the whole reason DORA measures the four together.
 
 Analytics OData queries return 401 Unauthorized. What are the two causes to check?
 
-- A. The Analytics extension is not installed, or the PAT lacks Analytics (read) scope
-- B. The organisation is on the free tier
-- C. The query syntax is wrong
-- D. The project is private
+- A. The organisation is on the free tier of Azure DevOps
+- B. Analytics extension missing, or the PAT lacks its scope
+- C. The OData query syntax contains an invalid property
+- D. The project is private rather than publicly visible
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: B
 
 **In `challenge-04.md`:** lines **502–512** and **519**.
 
@@ -227,10 +227,10 @@ status code before you start rewriting the query.
 
 Deployment frequency reports zero despite active deployments. What is the most likely cause?
 
-- A. The environment name in the query does not match the deployments, including case
-- B. The deployments API is paginated
-- C. Deployments older than 30 days are purged
-- D. The workflow lacks permissions
+- A. The environment name in the query mismatches on case
+- B. Deployments older than thirty days are purged by GitHub
+- C. The deployments API response is paginated beyond one page
+- D. The workflow lacks the permission to read deployments
 
 <details>
 <summary>Show answer</summary>
@@ -255,7 +255,7 @@ the dashboard says the team has not deployed.
 **The diagnostic at line 536 is the right first move: list the distinct environment names actually
 present.** Never assume what the deployments call themselves.
 
-**Why B is a real concern handled elsewhere.** The queries use `--paginate` (lines 92, 99, 138) for
+**Why C is a real concern handled elsewhere.** The queries use `--paginate` (lines 92, 99, 138) for
 exactly that reason — but pagination would under-count, not zero-count.
 
 </details>
@@ -266,15 +266,15 @@ exactly that reason — but pagination would under-count, not zero-count.
 
 Lead time averages are inflated by a few PRs that sat open for weeks. What is the recommended fix?
 
-- A. Use the median instead of the mean, or filter to PRs created inside the window
-- B. Exclude all PRs over one week old
-- C. Stop measuring lead time
-- D. Increase the sample size
+- A. Exclude every PR that stayed open longer than one week
+- B. Stop measuring lead time until the backlog is cleared
+- C. Increase the sample size so outliers matter less overall
+- D. Use the median, or filter to PRs created inside the window
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: D
 
 **In `challenge-04.md`:** lines **557–562**.
 
@@ -285,10 +285,10 @@ Lead time averages are inflated by a few PRs that sat open for weeks. What is th
 **Sort, then take the middle element — that is a median in one line.** A single 900-hour PR moves a mean
 enormously and a median barely at all.
 
-**Why B is the tempting version that biases the result.** Deleting the slow PRs makes the number look
+**Why A is the tempting version that biases the result.** Deleting the slow PRs makes the number look
 better without the process improving; the median keeps them in the dataset and stops them dominating.
 
-**Why D makes it worse, not better.** More samples from the same skewed distribution gives you a more
+**Why C makes it worse, not better.** More samples from the same skewed distribution gives you a more
 precise wrong number.
 
 </details>
@@ -299,15 +299,15 @@ precise wrong number.
 
 What Elite deployment frequency does DORA define?
 
-- A. On demand — multiple deploys per day
-- B. Once per day
-- C. Once per week
-- D. Once per month
+- A. Once per day, on a predictable daily schedule
+- B. On demand, meaning multiple deploys per day
+- C. Once per week, at the end of each sprint
+- D. Once per month, in a scheduled release window
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: B
 
 **In `challenge-04.md`:** line **45**.
 
@@ -318,7 +318,7 @@ What Elite deployment frequency does DORA define?
 **"On demand" is the operative phrase.** Elite is not a schedule — it is the absence of one. Deployment
 happens when the change is ready, not when the window opens.
 
-**Which is why B is High rather than Elite** (line 46): once per day is still a cadence.
+**Which is why A is High rather than Elite** (line 46): once per day is still a cadence.
 
 </details>
 
@@ -328,15 +328,15 @@ happens when the change is ready, not when the window opens.
 
 What Elite lead time does DORA define?
 
-- A. Less than one hour
-- B. Less than one day
-- C. Less than one week
-- D. Less than one month
+- A. Less than one day from commit to production
+- B. Less than one week from commit to production
+- C. Less than one hour from commit to production
+- D. Less than one month from commit to production
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: C
 
 **In `challenge-04.md`:** line **56**.
 
@@ -355,15 +355,15 @@ to the listed values, so read them literally.
 
 Which two thresholds are both "less than one hour" at Elite level?
 
-- A. Lead time and MTTR
-- B. Lead time and deployment frequency
-- C. MTTR and change failure rate
-- D. Deployment frequency and change failure rate
+- A. Mean time to recovery and change failure rate
+- B. Deployment frequency and change failure rate
+- C. Lead time for changes and deployment frequency
+- D. Lead time for changes and time to restore service
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: D
 
 **In `challenge-04.md`:** lines **56** and **67**.
 
@@ -387,10 +387,10 @@ throughput metric **and** a stability metric at once.
 
 What change failure rate range does DORA classify as Elite?
 
-- A. 0–15%
-- B. 16–30%
-- C. 31–45%
-- D. 46–60%
+- A. 0–15% of deployments requiring remediation
+- B. 16–30% of deployments requiring remediation
+- C. 31–45% of deployments requiring remediation
+- D. 46–60% of deployments requiring remediation
 
 <details>
 <summary>Show answer</summary>
@@ -418,15 +418,15 @@ failure; it is the pipeline working.
 
 How does the challenge approximate deployment frequency when deployment records are unavailable?
 
-- A. Count merged PRs to `main` as a proxy
-- B. Count commits
-- C. Count workflow runs
-- D. Count releases
+- A. Count commits landing on the default branch
+- B. Count merged pull requests to `main` as a proxy
+- C. Count workflow runs that completed successfully
+- D. Count published releases tagged in the repository
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: B
 
 **In `challenge-04.md`:** lines **105–108**.
 
@@ -440,7 +440,7 @@ gh pr list --state merged --base main --limit 100 \
 **It is a *proxy*, and the word matters.** It is accurate only when every merge to `main` deploys —
 which is true under GitHub Flow (Challenge 01) and false the moment a release branch exists.
 
-**Why B is a worse proxy.** A PR with fourteen commits is one deployment, so counting commits inflates
+**Why A is a worse proxy.** A PR with fourteen commits is one deployment, so counting commits inflates
 the figure by however much people commit.
 
 **Prefer the real deployments API** (line 91). The proxy is what you use while deployment tracking is
@@ -454,10 +454,10 @@ being set up.
 
 In the lead time query, what does dividing by 3600 accomplish?
 
-- A. It converts seconds to hours
-- B. It converts milliseconds to seconds
-- C. It converts hours to days
-- D. It normalises to a percentage
+- A. It converts a value in seconds into hours
+- B. It normalises the duration to a percentage
+- C. It converts milliseconds into whole seconds
+- D. It converts a value in hours into whole days
 
 <details>
 <summary>Show answer</summary>
@@ -485,15 +485,15 @@ the exam will show you one and ask about the other.
 
 What does the workflow at Task 5 use to detect possible instability?
 
-- A. More than three production deployments in the last 24 hours
-- B. A failed build
-- C. An open incident issue
-- D. A rollback branch
+- A. A failed build reported on the default branch
+- B. An open issue carrying the `incident` label
+- C. A rollback branch created from a release tag
+- D. More than three production deploys in 24 hours
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: D
 
 **In `challenge-04.md`:** lines **359–363**.
 
@@ -520,15 +520,15 @@ good from bad on its own should prompt a look, not block a pipeline.
 
 Which trigger does the deployment-tracking workflow use?
 
-- A. `deployment_status`, plus `workflow_run` on the production deploy workflow
-- B. `push` to `main`
-- C. `schedule`
-- D. `release`
+- A. `push` to `main`, running after each merge completes
+- B. `deployment_status`, plus `workflow_run` on completion
+- C. `schedule`, running nightly against the deployments API
+- D. `release`, when a release is published from a tag
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: B
 
 **In `challenge-04.md`:** lines **289–292**.
 
@@ -561,10 +561,10 @@ Production" (which fires `workflow_run`).
 
 What does the weekly report workflow produce?
 
-- A. A GitHub issue containing a metrics table, labelled `metrics` and `automated`
-- B. A Slack message
-- C. A dashboard widget
-- D. A CSV artifact
+- A. A GitHub issue with a metrics table and labels
+- B. A dashboard widget refreshed on the Azure board
+- C. A Slack message posted to the engineering channel
+- D. A CSV artifact uploaded to the workflow run
 
 <details>
 <summary>Show answer</summary>
@@ -600,24 +600,24 @@ monthly reviews.
 
 Which **three** are DORA metrics? (Choose three.)
 
-- A. Deployment frequency
-- B. Lead time for changes
-- C. Change failure rate
-- D. Story points completed
-- E. Lines of code
-- F. Number of open pull requests
+- A. Deployment frequency, as deploys per period
+- B. Story points completed in each sprint
+- C. Lead time for changes, commit to production
+- D. Lines of code written per developer
+- E. Change failure rate across deployments
+- F. Number of pull requests left open
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A, B, C
+### Answer: A, C, E
 
 **In `challenge-04.md`:** lines **39–81**.
 
 **Mean time to recovery is the fourth** (line 61). Four metrics, no more — and the discipline of the
 framework is that it refuses to add a fifth.
 
-**Why D, E and F are the metrics organisations reach for instead**, and all three measure activity
+**Why B, D and F are the metrics organisations reach for instead**, and all three measure activity
 rather than outcome. Story points are team-relative and not comparable across teams; lines of code
 reward verbosity; open PRs is a queue depth, not a delivery measure.
 
@@ -629,16 +629,16 @@ reward verbosity; open PRs is a queue depth, not a delivery measure.
 
 Which **two** DORA metrics measure **throughput**? (Choose two.)
 
-- A. Deployment frequency
-- B. Lead time for changes
-- C. Change failure rate
-- D. Mean time to recovery
-- E. Cycle time
+- A. Change failure rate across production deployments
+- B. Mean time to recovery after an incident starts
+- C. Deployment frequency, as deploys per time period
+- D. Cycle time, from work started to work finished
+- E. Lead time for changes, from commit to production
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A, B
+### Answer: C, E
 
 **In `challenge-04.md`:** lines **39–59** against **61–81**.
 
@@ -649,7 +649,7 @@ it.** Change failure rate and MTTR are the stability pair.
 ships breakage quickly; optimising stability alone produces a team that ships nothing. **Elite means
 both**, and that is why the exam gives you four numbers.
 
-**Why E is a real metric from a different framework.** Cycle time is a flow metric with a widget in this
+**Why D is a real metric from a different framework.** Cycle time is a flow metric with a widget in this
 challenge (line 236) and it is not one of the four.
 
 </details>
@@ -660,17 +660,17 @@ challenge (line 236) and it is not one of the four.
 
 Which **three** does the challenge use to calculate DORA metrics from GitHub data? (Choose three.)
 
-- A. The deployments API filtered by environment
-- B. Merged PR timestamps for lead time
-- C. Issues labelled `incident` for MTTR
-- D. Commit counts
-- E. Repository traffic
-- F. Actions billing minutes
+- A. Repository traffic and clone statistics
+- B. The deployments API filtered by environment
+- C. Actions billing minutes consumed per workflow
+- D. Merged pull request timestamps for lead time
+- E. Raw commit counts on the default branch
+- F. Issues labelled `incident` for recovery time
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A, B, C
+### Answer: B, D, F
 
 **In `challenge-04.md`:** lines **91–93**, **115–121**, **155–159**.
 
@@ -695,17 +695,17 @@ deployments, using PRs, labelling incidents.
 
 Which **three** widgets does the challenge add to the Azure DevOps dashboard? (Choose three.)
 
-- A. Sprint Burndown
-- B. Velocity
-- C. Cycle Time
-- D. Deployment frequency
-- E. MTTR
-- F. Change failure rate
+- A. Sprint Burndown, over the current iteration
+- B. Deployment frequency, over the last 30 days
+- C. Velocity, across the last six sprints
+- D. Mean time to recovery, over the last quarter
+- E. Cycle Time, for User Stories over 30 days
+- F. Change failure rate, across all environments
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A, B, C
+### Answer: A, C, E
 
 **In `challenge-04.md`:** lines **201–241**.
 
@@ -730,16 +730,16 @@ Boards widget?" has an uncomfortable answer: none of them directly.
 
 Which **two** OData features make Analytics suited to reporting? (Choose two.)
 
-- A. `$apply` with `groupby` and `aggregate`
-- B. `$filter` on dates and entity properties
-- C. Write access to work items
-- D. Artifact storage
-- E. Real-time streaming
+- A. Write access to update work items in place
+- B. `$apply` with `groupby` and `aggregate` clauses
+- C. Artifact storage for pipeline build outputs
+- D. `$filter` on dates and on entity properties
+- E. Real-time streaming of work item changes
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A, B
+### Answer: B, D
 
 **In `challenge-04.md`:** lines **258** and **263**.
 
@@ -751,7 +751,7 @@ $apply=groupby((Area/AreaPath),aggregate(LeadTimeDays with average as AvgLeadTim
 **`$apply` is what makes it a reporting layer rather than a list API.** Grouping and aggregation happen
 server-side, so you receive a summary instead of ten thousand records.
 
-**Why C is definitionally wrong.** Analytics is **read-optimised** (line 601) — a reporting store. You
+**Why A is definitionally wrong.** Analytics is **read-optimised** (line 601) — a reporting store. You
 do not write work items through it.
 
 **Note `StateCategory eq 'Completed'` rather than a state name.** State categories are stable across
@@ -766,23 +766,23 @@ what makes the query portable.
 
 Which **two** are true about the deployment-frequency query? (Choose two.)
 
-- A. It filters on `environment == "production"`
-- B. Environment names are case-sensitive
-- C. It counts all deployments regardless of environment
-- D. It uses the Analytics endpoint
-- E. It requires the Analytics extension
+- A. It counts all deployments regardless of environment
+- B. It queries the Azure DevOps Analytics endpoint
+- C. It filters on `environment == "production"` exactly
+- D. It requires the Analytics extension to be installed
+- E. Environment names are matched case-sensitively
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A, B
+### Answer: C, E
 
 **In `challenge-04.md`:** lines **93** and **545**.
 
 **The filter is what makes it *production* frequency**, and the case-sensitivity is what makes the whole
 thing silently return zero (Q6).
 
-**Why D and E belong to the Azure DevOps half of the challenge** (lines 249–279). The GitHub
+**Why B and D belong to the Azure DevOps half of the challenge** (lines 249–279). The GitHub
 calculations use `gh api` and `gh pr list`; Analytics is the Azure DevOps route to the same numbers.
 
 </details>
@@ -793,26 +793,26 @@ calculations use `gh api` and `gh pr list`; Analytics is the Azure DevOps route 
 
 Which **two** improve the quality of a lead time figure? (Choose two.)
 
-- A. Reporting the median rather than the mean
-- B. Restricting the sample to PRs created inside the measurement window
-- C. Removing all PRs longer than a week
-- D. Rounding to whole days
-- E. Averaging across all repositories
+- A. Removing every PR that stayed open longer than a week
+- B. Reporting the median rather than the arithmetic mean
+- C. Rounding each duration to the nearest whole day
+- D. Averaging the figure across all repositories at once
+- E. Restricting the sample to PRs created in the window
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A, B
+### Answer: B, E
 
 **In `challenge-04.md`:** lines **557–562**.
 
-**A resists outliers; B ensures the window is the window** — a PR opened four months ago and merged
+**B resists outliers; E ensures the window is the window** — a PR opened four months ago and merged
 yesterday is not evidence about this month's process.
 
-**Why C is the version that lies.** Excluding the slow tail makes the number improve while the process
+**Why A is the version that lies.** Excluding the slow tail makes the number improve while the process
 does not, and the slow tail is usually where the interesting problem is.
 
-**Why E destroys the signal.** Averaging a fast service with a slow monolith produces a number that
+**Why D destroys the signal.** Averaging a fast service with a slow monolith produces a number that
 describes neither, and hides the team that needs help — which is precisely what the CTO wanted the data
 for (line 21: distinguish high-performing teams from those struggling).
 
@@ -1234,8 +1234,8 @@ gh pr list --state merged --base main --limit 50 \
 
 Requirement: average lead time in hours.
 
-- **BLANK 1:** `fromdateiso8601` / `todate` / `tonumber` / `strptime`
-- **BLANK 2:** `3600` / `1000` / `86400` / `60`
+- **BLANK 1:** `todate` / `tonumber` / `fromdateiso8601` / `strptime`
+- **BLANK 2:** `1000` / `3600` / `86400` / `60`
 
 <details>
 <summary>Show answer</summary>
@@ -1265,8 +1265,8 @@ gh api repos/OWNER/REPO/deployments \
   --jq '[.[] | select(.[BLANK 2] == "production")] | length'
 ```
 
-- **BLANK 1:** `paginate` / `limit 30` / `slurp` / `raw-field`
-- **BLANK 2:** `environment` / `ref` / `task` / `description`
+- **BLANK 1:** `limit 30` / `slurp` / `raw-field` / `paginate`
+- **BLANK 2:** `ref` / `environment` / `task` / `description`
 
 <details>
 <summary>Show answer</summary>
@@ -1293,9 +1293,9 @@ $filter=WorkItemType eq 'User Story' and [BLANK 1] eq 'Completed'
 &$apply=groupby((Area/AreaPath),aggregate(LeadTimeDays with [BLANK 3] as AvgLeadTime))
 ```
 
-- **BLANK 1:** `StateCategory` / `State` / `Status` / `Reason`
-- **BLANK 2:** `gt` / `>` / `after` / `since`
-- **BLANK 3:** `average` / `avg` / `mean` / `sum`
+- **BLANK 1:** `State` / `Status` / `StateCategory` / `Reason`
+- **BLANK 2:** `>` / `gt` / `after` / `since`
+- **BLANK 3:** `avg` / `mean` / `sum` / `average`
 
 <details>
 <summary>Show answer</summary>
@@ -1331,9 +1331,9 @@ jobs:
         || github.event.workflow_run.[BLANK 3] == 'success'
 ```
 
-- **BLANK 1:** `deployment_status` / `deployment` / `release` / `push`
-- **BLANK 2:** `state` / `conclusion` / `status` / `result`
-- **BLANK 3:** `conclusion` / `state` / `status` / `outcome`
+- **BLANK 1:** `deployment` / `deployment_status` / `release` / `push`
+- **BLANK 2:** `conclusion` / `status` / `state` / `result`
+- **BLANK 3:** `state` / `conclusion` / `status` / `outcome`
 
 <details>
 <summary>Show answer</summary>
@@ -1364,8 +1364,8 @@ core.setOutput('frequency', thisWeek.length >= [BLANK 1] ? 'Elite' :
 
 Requirement: classify weekly deployment count against DORA levels.
 
-- **BLANK 1:** `7` / `1` / `30` / `100`
-- **BLANK 2:** `1` / `7` / `0` / `5`
+- **BLANK 1:** `1` / `30` / `7` / `100`
+- **BLANK 2:** `7` / `1` / `0` / `5`
 
 <details>
 <summary>Show answer</summary>
@@ -1401,8 +1401,8 @@ core.setOutput('level', avg < [BLANK 1] ? 'Elite' : avg < [BLANK 2] ? 'High' : '
 
 Requirement: classify average lead time in **hours** against DORA levels.
 
-- **BLANK 1:** `1` / `24` / `60` / `0.5`
-- **BLANK 2:** `168` / `24` / `720` / `48`
+- **BLANK 1:** `24` / `60` / `0.5` / `1`
+- **BLANK 2:** `24` / `720` / `168` / `48`
 
 <details>
 <summary>Show answer</summary>
@@ -1458,26 +1458,26 @@ reviews**.
 
 How should lead time be measured so that it is robust to outliers?
 
-- A. Median of PR `createdAt` to `mergedAt`, restricted to PRs merged in the window
-- B. Mean across all merged PRs ever
-- C. The longest PR in the window
-- D. The fastest PR in the window
+- A. Mean across every merged pull request ever recorded
+- B. The longest pull request within the measurement window
+- C. Median of `createdAt` to `mergedAt` for PRs in the window
+- D. The fastest pull request within the measurement window
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: C
 
 **In `challenge-04.md`:** lines **115–121** and **557–562**.
 
 **Both halves of the requirement are addressed: the median resists the outlier, and the window keeps the
 sample relevant.**
 
-**Why B is what the shipped workflow actually does** (line 447) — and Break scenario 3 at line 549 is the
+**Why A is what the shipped workflow actually does** (line 447) — and Break scenario 3 at line 549 is the
 challenge telling you it has a known weakness. That is worth noticing: the lab's own code has the flaw
 the lab then teaches you to fix.
 
-**Why C and D are not summaries.** A single extreme value describes one PR, not the process.
+**Why B and D are not summaries.** A single extreme value describes one PR, not the process.
 
 </details>
 
@@ -1487,22 +1487,22 @@ the lab then teaches you to fix.
 
 Which figures classify a team deploying three times weekly with a four-day lead time?
 
-- A. High for both
-- B. Elite for both
-- C. Medium for deployment frequency, High for lead time
-- D. High for deployment frequency, Elite for lead time
+- A. Elite for deployment frequency and Elite for lead time
+- B. High for deployment frequency and High for lead time
+- C. Medium for deployment frequency and High for lead time
+- D. High for deployment frequency and Elite for lead time
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: B
 
 **In `challenge-04.md`:** lines **46** and **57**.
 
 **Convert first, then read the table.** Three per week is between daily and weekly → High. Four days is
 between one day and one week → High.
 
-**Why B is the impression rather than the arithmetic** (Q2). Elite needs multiple deploys **per day** and
+**Why A is the impression rather than the arithmetic** (Q2). Elite needs multiple deploys **per day** and
 a lead time under **one hour** — the gap is an order of magnitude, and the labels obscure that.
 
 </details>
@@ -1513,10 +1513,10 @@ a lead time under **one hour** — the gap is an order of magnitude, and the lab
 
 How should per-team distinguishability be preserved?
 
-- A. Group by area path with Analytics `$apply`, keeping per-team aggregates
-- B. Average across all repositories
-- C. Report only the organisation total
-- D. Report the best team's figures
+- A. Group by area path with `$apply`, per-team aggregates
+- B. Report only the organisation-wide total each month
+- C. Report the best-performing team's figures as the target
+- D. Average the figures across all repositories together
 
 <details>
 <summary>Show answer</summary>
@@ -1532,7 +1532,7 @@ $apply=groupby((Area/AreaPath),aggregate(LeadTimeDays with average as AvgLeadTim
 **`groupby((Area/AreaPath))` is the requirement expressed as a query.** One call returns an average, a
 maximum and a count **per team**.
 
-**Why B and C defeat the CTO's stated purpose.** Line 21 asks for data that distinguishes high performers
+**Why B and D defeat the CTO's stated purpose.** Line 21 asks for data that distinguishes high performers
 from teams struggling; an organisation-wide average is precisely the number that cannot.
 
 **And note `MaxLeadTime` alongside the average.** Reporting a maximum next to a mean is a cheap way to
@@ -1546,16 +1546,16 @@ see whether the mean is being distorted, without switching to a median.
 
 Which **two** make the weekly report drive improvement rather than just publish numbers? (Choose two.)
 
-- A. Classifying each metric against DORA levels
-- B. An action checklist in the issue body
-- C. Posting the raw numbers to a channel
-- D. Emailing the CTO
-- E. Storing the figures in a database
+- A. Posting the raw numbers to an engineering channel
+- B. Emailing the figures to the CTO each Monday
+- C. Classifying each metric against its DORA level
+- D. Storing the figures in a reporting database
+- E. An action checklist included in the issue body
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A, B
+### Answer: C, E
 
 **In `challenge-04.md`:** lines **413–414**, **449**, **475–478**.
 
@@ -1566,10 +1566,10 @@ Which **two** make the weekly report drive improvement rather than just publish 
 - [ ] Update team OKRs if needed
 ```
 
-**A gives the number meaning; B gives it an owner and a next step.** Without the level, "41 hours" is
+**C gives the number meaning; E gives it an owner and a next step.** Without the level, "41 hours" is
 arguable; without the checklist, nothing happens after the report is read.
 
-**Why C and D deliver without prompting.** A message is read and scrolled past — which is why the report
+**Why A and B deliver without prompting.** A message is read and scrolled past — which is why the report
 is an **issue** (Q16): assignable, commentable, closable.
 
 </details>
@@ -1580,15 +1580,15 @@ is an **issue** (Q16): assignable, commentable, closable.
 
 Which metric would a built-in Azure DevOps dashboard widget **not** give Contoso directly?
 
-- A. Change failure rate
-- B. Sprint burndown
-- C. Velocity
-- D. Cycle time
+- A. Sprint burndown for the current iteration
+- B. Velocity across the last several sprints
+- C. Cycle time for user stories over 30 days
+- D. Change failure rate across deployments
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: D
 
 **In `challenge-04.md`:** lines **201–241**.
 
@@ -1611,18 +1611,17 @@ while deployment frequency and change failure rate are unchanged and no process 
 platform team recently changed the report to exclude pull requests open longer than seven days, calling
 them stale.
 
-What happened, and what should be done?
+What is the most likely explanation?
 
-- A. Excluding the slow tail moved the number without improving the process — restore the full sample and
-  report the median, which resists outliers without discarding data
-- B. The team genuinely got faster
-- C. The Analytics extension was reconfigured
-- D. Deployment environments were renamed
+- A. The team genuinely got faster over the whole quarter
+- B. Excluding the slow tail moved the number, not the work
+- C. The Analytics extension was reconfigured recently
+- D. Deployment environments were renamed in the workflow
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: B
 
 **In `challenge-04.md`:** lines **549** and **557**.
 
@@ -1634,7 +1633,7 @@ throughput metrics are coupled, because shipping faster means shipping more ofte
 that make lead time long, so the figure falls without a single delivery improving. **The slow tail is
 not noise — it is the problem the metric exists to reveal.**
 
-**This is Q23's option C shipped to production**, and it is the most common way a metrics programme
+**This is Q23's option A shipped to production**, and it is the most common way a metrics programme
 quietly stops being useful: the number becomes the goal, and the easiest way to move a number is to
 change what it counts.
 
@@ -1653,20 +1652,17 @@ you celebrate the delivery.**
 A year on, the monthly review opens with four numbers, a level against each, and an argument about which
 one to work on next.
 
-Explain what each metric contributed, and what actually changed.
+Which explanation best accounts for the change?
 
-- A. Deployment frequency and lead time gave a throughput picture; change failure rate and MTTR gave a
-  stability picture; the DORA levels turned each figure into a shared judgement; per-team grouping showed
-  where to help; and the weekly issue turned all of it into an owned action — the numbers now come from
-  systems rather than from people's estimates
-- B. The teams worked harder once they were measured
-- C. The dashboard made everyone more aware
-- D. The CTO asked better questions
+- A. The teams worked harder once they knew they were measured
+- B. The dashboard made everyone across engineering more aware
+- C. The numbers now come from systems, not people's estimates
+- D. The CTO began asking sharper questions at each review
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: C
 
 **In `challenge-04.md`:** lines **39–81**, **263**, **413–414**, **475–487**, **21**.
 

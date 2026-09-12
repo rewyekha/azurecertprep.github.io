@@ -44,15 +44,15 @@ that is **guesswork because nobody has velocity data**.
 
 In GitHub Projects v2, what is the difference between a view and a field?
 
-- A. Views are for admins only; fields are visible to everyone
-- B. Fields define the data stored on each item; views define how items are displayed and filtered
-- C. Views are permanent; fields can be changed
-- D. Fields only apply to issues; views apply to pull requests
+- A. Views are restricted to administrators; fields are visible to everyone
+- B. Views are fixed once created; fields can be edited at any time
+- C. Fields apply only to issues, while views apply only to pull requests
+- D. Fields store the data on each item; views filter and present it
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: B
+### Answer: D
 
 **In `challenge-02.md`:** lines **58–81** and **88–103**.
 
@@ -74,7 +74,7 @@ developers, a table for project managers, a roadmap for leadership — **the sam
 presentations**. That is the answer to the scenario's "every stakeholder has real-time visibility":
 one dataset, not three spreadsheets.
 
-**Why D is worth ruling out explicitly.** Both fields and views apply to issues, pull requests and
+**Why C is worth ruling out explicitly.** Both fields and views apply to issues, pull requests and
 draft items alike.
 
 </details>
@@ -86,15 +86,15 @@ draft items alike.
 Which syntax in a PR description automatically transitions an Azure Boards work item to the
 resolved state when the PR merges?
 
-- A. `AB#1234`
-- B. `Linked AB#1234`
-- C. `Fixes AB#1234`
-- D. `Closes AB#1234`
+- A. `Closes AB#1234` in the pull request description
+- B. `Fixes AB#1234` in the pull request description
+- C. `AB#1234` on its own in the pull request description
+- D. `Related to AB#1234` in the pull request description
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: C
+### Answer: B
 
 **In `challenge-02.md`:** lines **438** and **442**.
 
@@ -107,11 +107,11 @@ Related to AB#1200
 The `Fixes AB#1234` syntax will transition the work item to the "Done" state when the PR merges.
 ```
 
-**Why A is the trap and it is the single most-tested fact in this challenge.** `AB#1234` alone creates
+**Why C is the trap and it is the single most-tested fact in this challenge.** `AB#1234` alone creates
 a **link** — the work item shows the PR, and its state does not move. Break scenario 2 at line 660 says
 it plainly: use the keyword `Fixes`, **not just `AB#`**.
 
-**Why D is the near-miss that catches people who know GitHub.** `Closes #42` is the **GitHub Issues**
+**Why A is the near-miss that catches people who know GitHub.** `Closes #42` is the **GitHub Issues**
 keyword (line 415) and it works there. Azure Boards uses `Fixes`.
 
 **Keep the two vocabularies apart:** GitHub Issues take `Fixes`, `Closes`, `Resolves` with a plain `#`;
@@ -125,15 +125,15 @@ Azure Boards takes `Fixes` with `AB#`.
 
 What is the purpose of the CODEOWNERS file?
 
-- A. It restricts who can clone the repository
-- B. It automatically assigns reviewers to PRs based on which files are modified
-- C. It defines who can merge pull requests
-- D. It configures repository access permissions
+- A. It requests reviewers on a PR according to which paths are modified
+- B. It defines which accounts are permitted to merge pull requests
+- C. It configures the repository's collaborator access permissions
+- D. It restricts which accounts are able to clone the repository
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: B
+### Answer: A
 
 **In `challenge-02.md`:** lines **459–477**.
 
@@ -148,7 +148,7 @@ What is the purpose of the CODEOWNERS file?
 **Path in, reviewer out.** Touch `/src/auth/` and the security team is requested automatically — the
 routing does not depend on the author knowing who owns what.
 
-**Why C is the subtle wrong answer.** CODEOWNERS **requests** a review. It becomes a *merge*
+**Why B is the subtle wrong answer.** CODEOWNERS **requests** a review. It becomes a *merge*
 requirement only when branch protection has "require review from Code Owners" enabled (line 687) —
 which is Break scenario 3 exactly. **The file assigns; the protection rule enforces.**
 
@@ -163,15 +163,15 @@ automatically is how you stop the review being skipped by whoever happened to be
 
 In an Azure Boards query, what does `@CurrentIteration` do?
 
-- A. Returns work items from all past and current iterations
-- B. Resolves dynamically to whichever iteration contains today's date, for the team's schedule
-- C. Shows only the next upcoming iteration
-- D. Returns the iteration with the most work items
+- A. Returns work items from all past and current iterations combined
+- B. Returns whichever iteration currently holds the most work items
+- C. Resolves to the iteration containing today's date for that team
+- D. Shows only the next upcoming iteration on the team's schedule
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: B
+### Answer: C
 
 **In `challenge-02.md`:** line **226**.
 
@@ -198,15 +198,15 @@ context the query runs in.
 New issues are created but never appear on the GitHub Project board. The automation workflow runs.
 What is the most likely cause?
 
-- A. The token in `PROJECT_TOKEN` lacks the `project` scope
-- B. The project has no views
-- C. Issues cannot be added to organisation projects
-- D. The repository is private
+- A. The project has no views configured to display the new items
+- B. The token in `PROJECT_TOKEN` lacks the required `project` scope
+- C. Issues cannot be added to organisation-level projects at all
+- D. The repository is private and the project is publicly visible
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: B
 
 **In `challenge-02.md`:** lines **629–637**.
 
@@ -235,15 +235,15 @@ exactly that reason. The `org:read` requirement in the fix is the giveaway.
 
 `Fixes AB#1234` in a merged PR is not moving the work item. What are the two things to check?
 
-- A. The Azure Boards GitHub App is installed, and the keyword `Fixes` is used
-- B. The work item is assigned
-- C. The PR was squash-merged
-- D. The branch was protected
+- A. The work item is assigned to the developer who opened the PR
+- B. The pull request was squash-merged rather than merge-committed
+- C. The target branch was protected and required a status check
+- D. The Azure Boards GitHub App is installed and `Fixes` is used
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: D
 
 **In `challenge-02.md`:** lines **648–660**.
 
@@ -262,7 +262,7 @@ Project Settings > GitHub connections.
 **Azure DevOps side**, under Project Settings > GitHub connections. Installing the app on GitHub alone
 is half a handshake.
 
-**Why C is worth rejecting explicitly.** Squash merging does not break the link — the keyword is read
+**Why B is worth rejecting explicitly.** Squash merging does not break the link — the keyword is read
 from the **PR description**, not from individual commit messages.
 
 </details>
@@ -274,15 +274,15 @@ from the **PR description**, not from individual commit messages.
 PRs touching `/src/api/` do not request a backend review. CODEOWNERS exists at `.github/CODEOWNERS`.
 What should you check?
 
-- A. That branch protection has `require_code_owner_reviews` enabled and the team has repository access
-- B. That the file is at the repository root
-- C. That the author is on the backend team
-- D. That the PR is not a draft
+- A. That the CODEOWNERS file sits at the repository root directory
+- B. That the pull request author belongs to the backend team
+- C. That `require_code_owner_reviews` is on and the team has access
+- D. That the pull request has been marked ready rather than draft
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: C
 
 **In `challenge-02.md`:** lines **671–687**.
 
@@ -299,7 +299,7 @@ in CODEOWNERS must have at least read access to the repository.
 **The team-access half is the one that fails silently.** A CODEOWNERS entry naming a team with no
 access to the repository is simply ignored — no error, no warning, no review request.
 
-**Why B is a real rule and not the problem here.** Valid locations are `.github/CODEOWNERS`,
+**Why A is a real rule and not the problem here.** Valid locations are `.github/CODEOWNERS`,
 `CODEOWNERS` or `docs/CODEOWNERS` (line 676) — and the file is already in the first of those.
 
 </details>
@@ -310,15 +310,15 @@ access to the repository is simply ignored — no error, no warning, no review r
 
 Which field data type suits a sprint in GitHub Projects v2?
 
-- A. `ITERATION`
-- B. `SINGLE_SELECT`
-- C. `NUMBER`
-- D. `TEXT`
+- A. `SINGLE_SELECT`, with one option added for each sprint
+- B. `ITERATION`, which is aware of sprint dates and length
+- C. `NUMBER`, holding the sprint's sequence number value
+- D. `TEXT`, holding the sprint name entered as free text
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: B
 
 **In `challenge-02.md`:** lines **65–68**.
 
@@ -331,7 +331,7 @@ gh project field-create $PROJECT_NUMBER \
 **`ITERATION` is date-aware — it understands sprint boundaries and durations**, which a single-select
 list of sprint names does not.
 
-**Why B is what people build first, and what goes wrong.** A single-select "Sprint" field needs a new
+**Why A is what people build first, and what goes wrong.** A single-select "Sprint" field needs a new
 option added by hand every fortnight, has no notion of which sprint is current, and cannot drive a
 roadmap view.
 
@@ -346,15 +346,15 @@ roadmap view.
 
 Why is Story Points created as a `NUMBER` field rather than a single-select?
 
-- A. So values can be summed and averaged for velocity
-- B. Because single-select has an option limit
-- C. Because numbers sort correctly
-- D. Because it is required by the roadmap view
+- A. Because a single-select field has a hard limit on options
+- B. Because the roadmap view requires a numeric field to render
+- C. Because numeric values sort correctly in a table view
+- D. So the values can be summed and averaged to give velocity
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: D
 
 **In `challenge-02.md`:** lines **78–81**.
 
@@ -374,10 +374,10 @@ concept, and it is a real numeric field on the User Story type.
 
 Which Azure Boards structure separates work by team?
 
-- A. Area paths
-- B. Iteration paths
-- C. Work item types
-- D. Shared queries
+- A. Area paths, which partition work by the team that owns it
+- B. Iteration paths, which partition work by the sprint it lands in
+- C. Work item types, which separate epics from features and stories
+- D. Shared queries, which are saved per team in the project settings
 
 <details>
 <summary>Show answer</summary>
@@ -413,15 +413,15 @@ WHERE [System.AreaPath] UNDER 'Contoso Web Platform\Backend'
 
 What is the correct work item hierarchy created in Task 2?
 
-- A. Epic → Feature → User Story, linked with the `Parent` relation
-- B. Feature → Epic → User Story
-- C. User Story → Task → Bug
-- D. Epic → User Story only
+- A. Feature → Epic → User Story, linked with the `Parent` relation
+- B. User Story → Task → Bug, linked with the `Parent` relation
+- C. Epic → Feature → User Story, linked with the `Parent` relation
+- D. Epic → User Story only, linked with the `Parent` relation
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: C
 
 **In `challenge-02.md`:** lines **178–217**.
 
@@ -448,15 +448,15 @@ and the prerequisite at line 28 names Agile explicitly.
 
 What does `blank_issues_enabled: false` accomplish?
 
-- A. It forces contributors to choose a template instead of opening an empty issue
-- B. It disables issues entirely
-- C. It hides the issue tab
-- D. It requires a label
+- A. It disables issues entirely across the whole repository
+- B. It makes contributors pick a template, not an empty issue
+- C. It hides the Issues tab from the repository navigation
+- D. It requires every new issue to carry at least one label
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: B
 
 **In `challenge-02.md`:** lines **351–352**.
 
@@ -482,15 +482,15 @@ before it is fixed.
 
 In the bug report template, what does `validations: required: true` do?
 
-- A. It prevents the issue being submitted with that field empty
-- B. It validates the format of the input
-- C. It assigns a reviewer
-- D. It adds a label
+- A. It checks the format of the input against the field's type
+- B. It assigns a reviewer automatically when the field is filled
+- C. It stops the issue being submitted while that field is empty
+- D. It adds a label derived from the field's value on submission
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: C
 
 **In `challenge-02.md`:** lines **267–268**.
 
@@ -514,15 +514,15 @@ what the QA team at line 21 currently receives none of.
 
 Which label scheme does the challenge use, and why?
 
-- A. Prefixed namespaces — `priority/`, `team/`, `status/`
-- B. Plain single words
-- C. Numeric codes
-- D. One label per milestone
+- A. Plain single words such as `critical`, `backend`, `blocked`
+- B. Prefixed namespaces such as `priority/`, `team/`, `status/`
+- C. Numeric codes mapped to a legend held in the repository
+- D. One label per milestone, created as each milestone opens
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: B
 
 **In `challenge-02.md`:** lines **367–375**.
 
@@ -546,15 +546,15 @@ project's Critical field value — a mapping only possible because the labels fo
 
 What triggers the `add-to-project` job?
 
-- A. An issue being opened
-- B. Any issue event
-- C. A pull request opening
-- D. A push to `main`
+- A. Any issue event the workflow subscribes to
+- B. A pull request being opened against `main`
+- C. A push landing on the `main` branch
+- D. An issue being opened in the repository
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: D
 
 **In `challenge-02.md`:** lines **539–547**.
 
@@ -573,7 +573,7 @@ on:
 wants.** That is the pattern worth learning — a single workflow with several `if:`-gated jobs rather
 than four workflow files.
 
-**Why B is the careless read.** `labeled` and `closed` also fire the workflow; they are handled by
+**Why A is the careless read.** `labeled` and `closed` also fire the workflow; they are handled by
 `set-priority-on-label` (line 557) and by the project's own built-in automation.
 
 </details>
@@ -584,15 +584,15 @@ than four workflow files.
 
 Which built-in project automation moves an item to Done?
 
-- A. Pull request merged
-- B. Item added to project
-- C. Item reopened
-- D. Label applied
+- A. Item added to the project from an issue
+- B. Item reopened after having been closed
+- C. Pull request linked to the item merged
+- D. Label applied to the item on the board
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: C
 
 **In `challenge-02.md`:** lines **128–131**.
 
@@ -622,24 +622,24 @@ from a label.
 
 Which **three** custom fields does the challenge add to the GitHub project? (Choose three.)
 
-- A. Priority, as a single select
-- B. Sprint, as an iteration
-- C. Story Points, as a number
-- D. Area path
-- E. Milestone
-- F. Assignee
+- A. Area path, inherited from the Azure Boards project
+- B. Priority, as a single select with fixed options
+- C. Milestone, as a built-in scheduling property
+- D. Sprint, as an iteration field with date ranges
+- E. Assignee, as a built-in person property on the issue
+- F. Story Points, as a number field that can be summed
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A, B, C
+### Answer: B, D, F
 
 **In `challenge-02.md`:** lines **58–81**.
 
 **Team is the fourth** (line 71), also a single select. Four fields, three data types, each matched to
 what the data does: a fixed list, a date range, a summable number.
 
-**Why D is the Azure Boards vocabulary** (line 152) — GitHub Projects has no area path. **Why E and F
+**Why A is the Azure Boards vocabulary** (line 152) — GitHub Projects has no area path. **Why C and E
 already exist**: milestones and assignees are built-in issue properties, not custom project fields.
 
 </details>
@@ -650,17 +650,17 @@ already exist**: milestones and assignees are built-in issue properties, not cus
 
 Which **three** views does the challenge create, and who is each for? (Choose three.)
 
-- A. Board — for developers
-- B. Table — for project managers
-- C. Roadmap — for leadership
-- D. Gantt — for finance
-- E. Calendar — for QA
-- F. Burndown — for scrum masters
+- A. Board — for developers working the sprint
+- B. Gantt — for finance tracking spend
+- C. Table — for project managers tracking detail
+- D. Calendar — for QA scheduling test windows
+- E. Roadmap — for leadership viewing timelines
+- F. Burndown — for scrum masters tracking velocity
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A, B, C
+### Answer: A, C, E
 
 **In `challenge-02.md`:** lines **87–103**.
 
@@ -674,7 +674,7 @@ Which **three** views does the challenge create, and who is each for? (Choose th
 spreadsheet (line 21) exists because the PM view and the developer view were different *systems*. Here
 they are different *lenses* on the same items, so neither can go stale relative to the other.
 
-**Why D, E and F are plausible and not present.** Board, table and roadmap are the layouts this
+**Why B, D and F are plausible and not present.** Board, table and roadmap are the layouts this
 challenge uses.
 
 </details>
@@ -685,17 +685,17 @@ challenge uses.
 
 Which **three** are true about linking work? (Choose three.)
 
-- A. `Fixes #42` closes a GitHub issue when the PR merges
-- B. `AB#1234` creates a link to an Azure Boards work item without transitioning it
-- C. `Fixes AB#1234` transitions the work item to Done when the PR merges
-- D. `Relates to #38` closes issue 38
-- E. `AB#1234` requires no integration to be installed
-- F. Commit messages cannot reference work items
+- A. `Relates to #38` closes issue 38 when the PR merges
+- B. `Fixes #42` closes a GitHub issue when the PR merges
+- C. `AB#1234` links an Azure Boards item without transitioning it
+- D. `AB#1234` needs no integration installed to create the link
+- E. `Fixes AB#1234` transitions the work item to Done on merge
+- F. Commit messages cannot reference work items at all
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A, B, C
+### Answer: B, C, E
 
 **In `challenge-02.md`:** lines **407**, **431**, **442**.
 
@@ -712,10 +712,10 @@ AB#1234
 The `Fixes AB#1234` syntax will transition the work item to the "Done" state when the PR merges.
 ```
 
-**Why D is the deliberate contrast sitting two lines from A in the source.** `Relates to` links without
+**Why A is the deliberate contrast sitting two lines from B in the source.** `Relates to` links without
 closing — it is how you reference context that this PR does *not* resolve.
 
-**Why E is false and is Break scenario 2** (line 660): the Azure Boards GitHub App must be installed
+**Why D is false and is Break scenario 2** (line 660): the Azure Boards GitHub App must be installed
 and the connection configured in Azure DevOps.
 
 **Why F is refuted by line 401** — the commit at that line carries `Fixes #42` in its message.
@@ -728,26 +728,26 @@ and the connection configured in Azure DevOps.
 
 Which **two** must be true for CODEOWNERS to produce a required review? (Choose two.)
 
-- A. Branch protection has `require_code_owner_reviews` enabled
-- B. The team named has at least read access to the repository
-- C. The file is at the repository root only
-- D. Every contributor is on a team
-- E. The PR is not a draft
+- A. The CODEOWNERS file is at the repository root only
+- B. Branch protection has `require_code_owner_reviews` enabled
+- C. Every contributor to the repository belongs to a team
+- D. The pull request has been marked ready, not draft
+- E. The team named has at least read access to the repository
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A, B
+### Answer: B, E
 
 **In `challenge-02.md`:** lines **672–687**.
 
-**A makes it *required*; B makes it *work at all*.** Without A you get a requested review nobody has to
-give; without B the entry is ignored entirely.
+**B makes it *required*; E makes it *work at all*.** Without B you get a requested review nobody has to
+give; without E the entry is ignored entirely.
 
-**Why C is a real rule stated wrongly.** Three locations are valid (line 676): `.github/CODEOWNERS`,
+**Why A is a real rule stated wrongly.** Three locations are valid (line 676): `.github/CODEOWNERS`,
 `CODEOWNERS`, or `docs/CODEOWNERS`. "Root only" is false.
 
-**The order to check them in a real incident** is B then A — a silently ignored entry looks identical
+**The order to check them in a real incident** is E then B — a silently ignored entry looks identical
 to no entry.
 
 </details>
@@ -758,16 +758,16 @@ to no entry.
 
 Which **two** does the Azure DevOps notification subscription filter on? (Choose two.)
 
-- A. Work item type equals Bug
-- B. Priority less than or equal to 2
-- C. Assigned user
-- D. Iteration path
-- E. Story points
+- A. The user the work item is assigned to
+- B. Work item type equal to `Bug`
+- C. Story points recorded on the item
+- D. Priority less than or equal to 2
+- E. Iteration path of the sprint
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A, B
+### Answer: B, D
 
 **In `challenge-02.md`:** lines **499–515**.
 
@@ -792,16 +792,16 @@ filter rule.
 
 Which **two** jobs in the automation workflow act on pull requests? (Choose two.)
 
-- A. `move-pr-to-review`
-- B. `close-linked-issues`
-- C. `add-to-project`
-- D. `set-priority-on-label`
-- E. All four
+- A. `move-pr-to-review`, gated on `ready_for_review`
+- B. `add-to-project`, gated on the issue being opened
+- C. `set-priority-on-label`, gated on a label being added
+- D. `close-linked-issues`, gated on a merged pull request
+- E. `sync-milestone`, gated on a milestone being closed
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A, B
+### Answer: A, D
 
 **In `challenge-02.md`:** lines **580** and **597**.
 
@@ -828,26 +828,26 @@ think about the abandoned case.
 
 Which **two** problems from the scenario does a unified project with views solve? (Choose two.)
 
-- A. PM spreadsheets outdated within hours
-- B. QA learning about features only at staging
-- C. Merge conflicts
-- D. Broken builds
-- E. Slow clone times
+- A. Merge conflicts taking days to resolve
+- B. PM spreadsheets outdated within hours
+- C. Builds broken at least once per sprint
+- D. QA learning about features only at staging
+- E. Clone times slowed by large binaries
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A, B
+### Answer: B, D
 
 **In `challenge-02.md`:** line **21**, with views at lines **87–103** and automation at **539–547**.
 
-**A is solved by removing the second source of truth.** A table view *is* the PM's spreadsheet, backed
+**B is solved by removing the second source of truth.** A table view *is* the PM's spreadsheet, backed
 by the same items developers move on the board.
 
-**B is solved by items appearing on the board when the issue opens** (line 547), not when the code
+**D is solved by items appearing on the board when the issue opens** (line 547), not when the code
 ships. QA sees the work in Backlog, weeks before staging.
 
-**Why C, D and E belong to other challenges** — 01, 08 and 10 respectively. The exam mixes symptoms
+**Why A, C and E belong to other challenges** — 01, 08 and 10 respectively. The exam mixes symptoms
 across domains and expects you to attribute each to its own mechanism.
 
 </details>
@@ -1291,8 +1291,8 @@ gh project field-create $PROJECT_NUMBER \
   --data-type "[BLANK 2]"
 ```
 
-- **BLANK 1:** `ITERATION` / `SINGLE_SELECT` / `DATE` / `TEXT`
-- **BLANK 2:** `NUMBER` / `SINGLE_SELECT` / `TEXT` / `ITERATION`
+- **BLANK 1:** `SINGLE_SELECT` / `DATE` / `ITERATION` / `TEXT`
+- **BLANK 2:** `SINGLE_SELECT` / `TEXT` / `ITERATION` / `NUMBER`
 
 <details>
 <summary>Show answer</summary>
@@ -1320,8 +1320,8 @@ WHERE [System.AreaPath] [BLANK 1] 'Contoso Web Platform\Backend'
   AND [System.State] <> 'Closed'
 ```
 
-- **BLANK 1:** `UNDER` / `=` / `CONTAINS` / `IN`
-- **BLANK 2:** `@CurrentIteration` / `'Sprint 1'` / `@Today` / `@Me`
+- **BLANK 1:** `=` / `CONTAINS` / `UNDER` / `IN`
+- **BLANK 2:** `'Sprint 1'` / `@Today` / `@CurrentIteration` / `@Me`
 
 <details>
 <summary>Show answer</summary>
@@ -1354,8 +1354,8 @@ node exactly and silently miss every sub-team.
       [BLANK 2]: true
 ```
 
-- **BLANK 1:** `validations` / `rules` / `constraints` / `checks`
-- **BLANK 2:** `required` / `enforced` / `mandatory` / `strict`
+- **BLANK 1:** `rules` / `constraints` / `validations` / `checks`
+- **BLANK 2:** `enforced` / `required` / `mandatory` / `strict`
 
 <details>
 <summary>Show answer</summary>
@@ -1387,8 +1387,8 @@ why the exam asks. The field name suggests format validation; the behaviour is "
 
 Requirement: every change under `/src/auth/` must be reviewed by the security team.
 
-- **BLANK 1:** `@contoso-org/security-team` / `security-team` / `@security-team` /
-  `contoso-org/security-team`
+- **BLANK 1:** `security-team` / `@security-team` / `contoso-org/security-team` /
+  `@contoso-org/security-team`
 
 <details>
 <summary>Show answer</summary>
@@ -1421,8 +1421,8 @@ resolve — and it fails **silently**, which is half of Break scenario 3.
         && github.event.pull_request.[BLANK 2] == true
 ```
 
-- **BLANK 1:** `closed` / `merged` / `completed` / `done`
-- **BLANK 2:** `merged` / `closed` / `success` / `state`
+- **BLANK 1:** `completed` / `closed` / `done` / `merged`
+- **BLANK 2:** `closed` / `success` / `merged` / `state`
 
 <details>
 <summary>Show answer</summary>
@@ -1453,8 +1453,8 @@ clause and abandoned PRs mark their issues Done.
 
 Requirement: add issues to an **organisation** project.
 
-- **BLANK 1:** the `secrets.PROJECT_TOKEN` expression / the `secrets.GITHUB_TOKEN` expression /
-  the `github.token` expression / `none`
+- **BLANK 1:** the `secrets.GITHUB_TOKEN` expression / the `github.token` expression /
+  the `secrets.PROJECT_TOKEN` expression / `none`
 
 <details>
 <summary>Show answer</summary>
@@ -1513,25 +1513,25 @@ tracking system with proper feedback loops so every stakeholder has real-time vi
 
 How should the three audiences be served?
 
-- A. One project with board, table and roadmap views over the same items
-- B. Three projects, one per audience
-- C. A project for developers and a spreadsheet for PMs
-- D. A weekly exported report
+- A. Three projects, one for each stakeholder audience
+- B. A project for developers and a spreadsheet for PMs
+- C. One project with board, table and roadmap views
+- D. A weekly report exported from the project to email
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: C
 
 **In `challenge-02.md`:** lines **87–103**.
 
 **"One system of record" and "each needs a suitable presentation" are two requirements that only a
 views model satisfies together.**
 
-**Why B fails on the first requirement.** Three projects is three systems of record with three sets of
+**Why A fails on the first requirement.** Three projects is three systems of record with three sets of
 stale data — the spreadsheet problem with a nicer interface.
 
-**Why C is what Contoso has today** (line 21), and **why D re-creates the staleness the scenario opens
+**Why B is what Contoso has today** (line 21), and **why D re-creates the staleness the scenario opens
 with**: a report is accurate at the moment it is exported and decays from then on.
 
 </details>
@@ -1542,26 +1542,26 @@ with**: a report is accurate at the moment it is exported and decays from then o
 
 How is velocity made measurable?
 
-- A. A `NUMBER` Story Points field plus an `ITERATION` Sprint field
-- B. Counting issues closed per sprint
-- C. A `SINGLE_SELECT` Story Points field with values 1, 2, 3, 5, 8
-- D. Counting commits
+- A. Counting the number of issues closed in each sprint
+- B. A `SINGLE_SELECT` Story Points field with values 1, 2, 3, 5, 8
+- C. Counting commits landed on `main` during the sprint
+- D. A `NUMBER` Story Points field plus an `ITERATION` Sprint field
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: D
 
 **In `challenge-02.md`:** lines **65–81**, with the Azure Boards equivalent at **199**.
 
 **Velocity is points-per-sprint, so it needs a summable number *and* a sprint boundary to sum within.**
 One without the other gives you a total with no period, or a period with nothing to total.
 
-**Why C is the near-miss that breaks the arithmetic.** A single-select stores the *label* "5", not the
+**Why B is the near-miss that breaks the arithmetic.** A single-select stores the *label* "5", not the
 number 5 — so it groups and filters and cannot be summed. This is the same class of error as putting a
 measurement in a string field (Challenge 47).
 
-**Why B and D are proxies that mislead.** Issues closed counts small issues and large ones equally;
+**Why A and C are proxies that mislead.** Issues closed counts small issues and large ones equally;
 commits measure typing.
 
 </details>
@@ -1572,16 +1572,15 @@ commits measure typing.
 
 How should bug reports be made usable on arrival?
 
-- A. Issue forms with required severity, description, reproduction, expected behaviour and environment,
-  with blank issues disabled and a private route for security
-- B. A Markdown issue template
-- C. A note in CONTRIBUTING.md
-- D. Triage the reports manually and ask for details
+- A. A Markdown issue template pre-filled with the expected headings
+- B. Issue forms with required fields and blank issues disabled
+- C. A note in CONTRIBUTING.md describing what to include
+- D. Manual triage, asking each reporter for the missing details
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: B
 
 **In `challenge-02.md`:** lines **247–307** and **351–359**.
 
@@ -1589,7 +1588,7 @@ How should bug reports be made usable on arrival?
 content; `blank_issues_enabled: false` closes the bypass; the `contact_links` security advisory URL
 keeps vulnerabilities out of public issues.
 
-**Why B is the older, weaker form and the best distractor.** A Markdown template pre-fills text the
+**Why A is the older, weaker form and the best distractor.** A Markdown template pre-fills text the
 author can delete. **A form's `required: true` cannot be deleted** — the issue will not submit.
 
 **Why D is the current state.** Manual triage is what the team does now, and it is why QA hears about
@@ -1603,23 +1602,23 @@ things late.
 
 Which **two** ensure auth changes are always reviewed by the security team? (Choose two.)
 
-- A. A CODEOWNERS entry mapping `/src/auth/` to the security team
-- B. Branch protection with require-code-owner-reviews enabled
-- C. A label named `security`
-- D. A notification subscription for the security team
-- E. An issue template
+- A. A label named `security` applied to the pull request
+- B. A CODEOWNERS entry mapping `/src/auth/` to the security team
+- C. An issue template that asks about security impact
+- D. Branch protection with require-code-owner-reviews enabled
+- E. A notification subscription for the security team
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A, B
+### Answer: B, D
 
 **In `challenge-02.md`:** lines **475–476** and **687**.
 
-**A routes the request; B makes it mandatory.** The word in the requirement is "always", and A alone
+**B routes the request; D makes it mandatory.** The word in the requirement is "always", and B alone
 delivers "usually, if someone remembers not to merge without it".
 
-**Why D is the most tempting wrong answer.** A subscription tells the security team a PR exists — which
+**Why E is the most tempting wrong answer.** A subscription tells the security team a PR exists — which
 is genuinely useful and does not stop the merge. **Notification is not enforcement** (Q35).
 
 **And do not forget the quiet precondition** from Break scenario 3: the security team must have
@@ -1633,22 +1632,22 @@ repository access, or the CODEOWNERS line is ignored with no error.
 
 How should the backend team's notifications be scoped?
 
-- A. A subscription filtered on work item type Bug, priority ≤ 2, and area path under Backend
-- B. A subscription on all work item changes
-- C. Everyone watches the repository
-- D. A daily digest of the whole board
+- A. A subscription on all work item changes in the project
+- B. Everyone on the team watches the whole repository
+- C. A subscription on type Bug, priority ≤ 2, area under Backend
+- D. A daily digest summarising the whole board by team
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: C
 
 **In `challenge-02.md`:** lines **499–515**.
 
 **Three clauses, three narrowings: what kind of item, how urgent, and whose.** The requirement says
 "their high-priority bugs and nothing else", and each clause removes one category of noise.
 
-**Why B is how the requirement is actually violated in practice.** It technically delivers the
+**Why A is how the requirement is actually violated in practice.** It technically delivers the
 high-priority bugs — inside a stream so large the team mutes it, at which point the delivery rate is
 effectively zero.
 
@@ -1665,18 +1664,17 @@ Eight months after the rollout, the PM notices the "Current Sprint - Backend" qu
 an empty list for about three weeks, while the board itself looks healthy. The team recently created a
 new sub-area, `Backend\Payments`, and moved most stories into it.
 
-What happened, and what is the fix?
+What is the most likely cause?
 
-- A. Nothing is wrong with the query's iteration clause — but if the area clause had used `=` instead of
-  `UNDER`, the sub-area would be excluded; confirm the clause is `UNDER 'Contoso Web Platform\Backend'`
-- B. `@CurrentIteration` expired and must be refreshed
-- C. The shared query was deleted
-- D. Story points were removed
+- A. `@CurrentIteration` has expired and needs to be refreshed
+- B. The shared query was deleted and recreated incorrectly
+- C. Story points were removed from the moved user stories
+- D. The area clause uses `=` not `UNDER`, excluding the sub-area
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: D
 
 **In `challenge-02.md`:** line **226**.
 
@@ -1693,7 +1691,7 @@ changed is the area path.
 sub-area silently drops out of the sprint query, the dashboard built on it, and any notification
 subscription written the same way.
 
-**Why B is a plausible-sounding fiction.** `@CurrentIteration` is evaluated at query time and never
+**Why A is a plausible-sounding fiction.** `@CurrentIteration` is evaluated at query time and never
 expires — that is its entire purpose (Q4).
 
 **The durable lesson: reorganising area paths is a change to every query, dashboard and subscription
@@ -1708,21 +1706,17 @@ that references them.** Use `UNDER` by default, and treat an area-path change li
 A year on, the PM's spreadsheet is gone, QA joins sprint planning with the same board the developers
 use, and velocity is a number nobody argues about.
 
-Explain what each piece contributed, and what actually changed.
+Which explanation best accounts for the change?
 
-- A. One project with three views removed the second source of truth; `ITERATION` plus a `NUMBER` field
-  made velocity computable; `@CurrentIteration` kept queries valid across sprints; issue forms made
-  reports usable on arrival; `Fixes AB#`/`Fixes #` moved work without anyone updating a board; and
-  CODEOWNERS with required reviews put the right eyes on the right code — every one of them enforced by
-  the tool rather than by a person remembering
-- B. The team became more disciplined about updating the board
-- C. The PM started exporting the board to a spreadsheet weekly
-- D. More meetings were added to sprint planning
+- A. The team became more disciplined about updating the board
+- B. The PM began exporting the board to a spreadsheet weekly
+- C. Tool-enforced structure replaced the second source of truth
+- D. More meetings were added to sprint planning to reconcile
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: C
 
 **In `challenge-02.md`:** lines **87–103**, **65–81**, **226**, **247–307**, **407–442**, **475–487**.
 

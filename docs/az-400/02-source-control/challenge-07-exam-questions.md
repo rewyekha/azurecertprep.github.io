@@ -49,15 +49,15 @@ The scenario at line 19 is three teams, three cadences, and hotfixes that **neve
 A team releases daily, needs `main` always deployable, and uses feature flags to hide incomplete work.
 Which strategy fits?
 
-- A. Git Flow with `develop` and release branches
-- B. Trunk-based development with short-lived branches
-- C. Release branching with long-lived support branches
-- D. GitHub Flow with feature branches lasting one to two weeks
+- A. Git Flow with a `develop` and release branches
+- B. Release branching with long-lived support branches
+- C. GitHub Flow with branches lasting one to two weeks
+- D. Trunk-based development with short-lived branches
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: B
+### Answer: D
 
 **In `challenge-07.md`:** line **25**.
 
@@ -70,11 +70,11 @@ branches (less than 24 hours) and feature flags to hide incomplete work.
 feature flags. The third — `main` always deployable — is what feature flags make possible, because
 unfinished code can ship disabled.
 
-**Why D is the closest wrong answer and worth understanding.** GitHub Flow also keeps `main`
+**Why C is the closest wrong answer and worth understanding.** GitHub Flow also keeps `main`
 deployable, and it does **not** require feature flags — its branches live days, so incomplete work stays
 on the branch. At a daily cadence that becomes a bottleneck.
 
-**Why A and C both add branches this team has no use for.** Line 197 in the decision matrix: supporting
+**Why A and B both add branches this team has no use for.** Line 197 in the decision matrix: supporting
 old versions is **No** for trunk-based and GitHub Flow, **Yes** only for release branching.
 
 </details>
@@ -85,15 +85,15 @@ old versions is **No** for trunk-based and GitHub Flow, **Yes** only for release
 
 What is the primary risk of long-lived release branches?
 
-- A. Disk space
-- B. They drift from `main`, producing increasingly complex merge conflicts
-- C. They block other developers from branching
-- D. They slow down clones
+- A. They drift from `main`, making merges complex
+- B. They block other developers from branching
+- C. They consume disk space on every clone
+- D. They slow down clone and fetch operations
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: B
+### Answer: A
 
 **In `challenge-07.md`:** lines **200** and **382**.
 
@@ -107,7 +107,7 @@ Long-lived branches buy you version support and cost you integration risk.
 **And the mitigation is forward-integration, not avoidance** (lines 207–211): merge `main` into the
 release branch on a schedule, so the divergence never grows large enough to be frightening.
 
-**Why A and D describe branches as though they were copies.** A Git branch is a pointer to a commit; it
+**Why C and D describe branches as though they were copies.** A Git branch is a pointer to a commit; it
 costs almost nothing to store.
 
 </details>
@@ -118,15 +118,15 @@ costs almost nothing to store.
 
 When you rebase a feature branch instead of merging, what happens to its history?
 
-- A. The commits are replayed on top of the target branch, producing new SHAs
-- B. A merge commit combines both histories
-- C. The commits are replaced by a single squash commit
+- A. A merge commit combines the two histories
+- B. The commits are replayed on top, with new SHAs
+- C. The commits become a single squash commit
 - D. The target branch is rewritten chronologically
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: B
 
 **In `challenge-07.md`:** lines **269–275** and **393**.
 
@@ -146,7 +146,7 @@ downstream gets a new identity, even though the changes are identical.
 **Which is the reason for the rule "never rebase a shared branch".** Anyone who has pulled those commits
 now holds ones that no longer exist upstream, and their next pull produces duplicates.
 
-**Why B is what `merge` does** and **why C is what `--squash` does** — three distinct operations, and
+**Why A is what `merge` does** and **why C is what `--squash` does** — three distinct operations, and
 the exam offers all three.
 
 </details>
@@ -157,15 +157,15 @@ the exam offers all three.
 
 A team uses GitHub Flow. A critical production bug appears. What is the correct procedure?
 
-- A. Branch from the release tag, fix, merge to the release branch, cherry-pick to `main`
-- B. Branch from `main`, fix, open a PR, merge, deploy
-- C. Commit directly to `main` and deploy immediately
-- D. Revert `main` to the last known good state and re-apply features
+- A. Branch from `main`, fix, open a PR, merge, deploy
+- B. Commit directly to `main` and deploy immediately
+- C. Branch from the release tag, fix, merge to release
+- D. Revert `main` to the last good state, re-apply work
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: B
+### Answer: A
 
 **In `challenge-07.md`:** line **404**.
 
@@ -175,12 +175,12 @@ Hotfixes follow the same workflow but with expedited review. There are no separa
 in GitHub Flow.
 ```
 
-**Why A is the trap, and it is a very good one.** That procedure is *correct* — for **release
+**Why C is the trap, and it is a very good one.** That procedure is *correct* — for **release
 branching** (lines 162–173). The question specifies GitHub Flow, where the branch it tells you to fix
 does not exist.
 
 **"Expedited, not exempt" is the phrase to carry into the exam.** A hotfix compresses the review, it
-does not skip the pull request — which is why C is wrong even under pressure.
+does not skip the pull request — which is why B is wrong even under pressure.
 
 **Read the strategy named in the question before you pick a hotfix procedure.** The exam relies on
 candidates recognising the release-branch hotfix dance and choosing it regardless of context.
@@ -193,15 +193,15 @@ candidates recognising the release-branch hotfix dance and choosing it regardles
 
 Team Gamma fixes a bug on `release/v2.1`. What must happen next, and why?
 
-- A. Cherry-pick the fix to `main`, so the next release does not regress
-- B. Nothing — the fix ships with v2.1
-- C. Merge `release/v2.1` into `main`
-- D. Rebase `main` onto the release branch
+- A. Nothing further — the fix ships with v2.1 already
+- B. Merge `release/v2.1` wholesale back into `main`
+- C. Rebase `main` onto the release branch instead
+- D. Cherry-pick the fix to `main` so it does not regress
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: D
 
 **In `challenge-07.md`:** lines **170–173**.
 
@@ -216,7 +216,7 @@ git push origin main
 feature branches"*. The consequence is a bug fixed in v2.1 and **reintroduced** in v2.2, because `main`
 never received the fix.
 
-**Why C is the plausible alternative that causes a different problem.** Merging the whole release branch
+**Why B is the plausible alternative that causes a different problem.** Merging the whole release branch
 into `main` brings back everything on it, including version-specific changes that should not be in the
 next release.
 
@@ -230,16 +230,15 @@ next release.
 
 A developer pushed three commits directly to `main`. How does the challenge recover?
 
-- A. Branch from `main` to preserve the work, reset `main` back three commits, force-with-lease, then
-  open a PR from the branch
-- B. Revert each commit
-- C. Delete and recreate `main`
-- D. Leave them and add branch protection
+- A. Revert each of the three commits on `main`
+- B. Delete `main` and recreate it from a good commit
+- C. Branch to preserve, reset `main`, force-with-lease, PR
+- D. Leave them in place and add branch protection now
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: C
 
 **In `challenge-07.md`:** lines **345–356**.
 
@@ -256,7 +255,7 @@ git push origin main --force-with-lease
 someone else has updated `main` since you last fetched, so you cannot silently destroy a colleague's
 commits. **Plain `--force` has no such check.**
 
-**Why B is the safer choice on a busy shared branch**, and it is not what this challenge does. Reverting
+**Why A is the safer choice on a busy shared branch**, and it is not what this challenge does. Reverting
 adds three new commits and rewrites nothing — preferable when others have already pulled.
 
 </details>
@@ -267,15 +266,15 @@ adds three new commits and rewrites nothing — preferable when others have alre
 
 What does `--no-ff` do on a merge?
 
-- A. Forces a merge commit even when a fast-forward is possible
-- B. Prevents the merge if there are conflicts
-- C. Skips the commit message editor
-- D. Merges without fetching
+- A. It prevents the merge when there are conflicts present
+- B. It forces a merge commit even if it could fast-forward
+- C. It skips opening the commit message editor
+- D. It merges without fetching from the remote first
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: B
 
 **In `challenge-07.md`:** lines **256–258**.
 
@@ -300,15 +299,15 @@ line 275 — `--ff-only` after a rebase gives a clean linear history with no mer
 
 What does `--ff-only` guarantee?
 
-- A. The merge succeeds only if it can fast-forward, otherwise it fails
-- B. It always creates a merge commit
-- C. It squashes the branch
-- D. It rebases automatically
+- A. It always creates a merge commit for the branch
+- B. It squashes the branch into a single commit
+- C. It rebases the branch automatically first
+- D. The merge succeeds only if it can fast-forward
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: D
 
 **In `challenge-07.md`:** lines **274–275**.
 
@@ -327,15 +326,15 @@ need to fetch and rebase again.
 
 Which release cadence does the decision matrix associate with GitHub Flow?
 
-- A. Daily or weekly
-- B. Bi-weekly
-- C. Monthly or quarterly
-- D. Continuous
+- A. Bi-weekly releases
+- B. Daily or weekly releases
+- C. Monthly or quarterly releases
+- D. Continuous, on every merge
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: B
+### Answer: A
 
 **In `challenge-07.md`:** line **193**.
 
@@ -357,15 +356,15 @@ Beta bi-weekly → GitHub Flow, Gamma monthly → release branching.
 
 Which strategy **requires** deployment automation according to the matrix?
 
-- A. Trunk-based
-- B. GitHub Flow
-- C. Release branching
-- D. All three
+- A. GitHub Flow, where it is recommended
+- B. Release branching, where it is optional
+- C. Trunk-based, where CD is required
+- D. All three require it to the same degree
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: C
 
 **In `challenge-07.md`:** line **195**.
 
@@ -388,15 +387,15 @@ study.
 
 Which strategy needs feature flags?
 
-- A. Trunk-based
-- B. GitHub Flow
-- C. Release branching
-- D. None
+- A. GitHub Flow, with day-long branches
+- B. Trunk-based development with CD
+- C. Release branching for old versions
+- D. None of the three strategies
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: B
 
 **In `challenge-07.md`:** lines **196** and **56–62**.
 
@@ -427,15 +426,15 @@ gradually, which is Challenge 27's progressive delivery.
 
 What is trunk-based development's rollback strategy in the matrix?
 
-- A. Turn the feature flag off
-- B. Revert the commit
-- C. Deploy the prior release
-- D. Reset `main`
+- A. Revert the offending commit and redeploy
+- B. Deploy the prior release artifact again
+- C. Reset `main` back to the last good commit
+- D. Turn the feature flag off for the change
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: D
 
 **In `challenge-07.md`:** line **199**.
 
@@ -458,10 +457,10 @@ are the fastest rollback mechanism available, because the code is already deploy
 
 How does the drift-detection workflow decide a branch needs syncing?
 
-- A. When it is more than 50 commits **behind** `main`
-- B. When it is more than 50 commits ahead
-- C. When it is older than 30 days
-- D. When a conflict is detected
+- A. When it is more than 50 commits behind `main`
+- B. When it is more than 50 commits ahead of `main`
+- C. When the branch is older than 30 calendar days
+- D. When a merge conflict is detected on the branch
 
 <details>
 <summary>Show answer</summary>
@@ -493,15 +492,15 @@ conflict when you forward-integrate; being ahead simply means it has hotfixes to
 
 What does the drift workflow do when the threshold is exceeded?
 
-- A. Emits a warning and opens a maintenance issue
-- B. Fails the workflow
-- C. Merges `main` automatically
-- D. Deletes the branch
+- A. It fails the workflow run for that branch
+- B. It merges `main` into the branch automatically
+- C. It emits a warning and opens a maintenance issue
+- D. It deletes the branch that has drifted too far
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: C
 
 **In `challenge-07.md`:** lines **237–240**.
 
@@ -526,15 +525,15 @@ work rather than a log line (the same idea as Challenge 04's weekly metrics issu
 
 Why does the drift workflow use `fetch-depth: 0`?
 
-- A. `git rev-list --count` needs full history to count commits between refs
-- B. To fetch all tags
-- C. To speed up the checkout
-- D. To include submodules
+- A. To fetch every tag in the repository as well
+- B. To speed up the checkout on a large repo
+- C. To include submodules in the working tree
+- D. `git rev-list --count` needs the full history
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: D
 
 **In `challenge-07.md`:** lines **227–229**.
 
@@ -559,10 +558,10 @@ needs the history.**
 
 What does interactive rebase accomplish before opening a PR?
 
-- A. It squashes messy work-in-progress commits into a few meaningful ones
-- B. It merges the branch
-- C. It resolves conflicts automatically
-- D. It rewrites the target branch
+- A. It squashes work-in-progress commits into fewer ones
+- B. It merges the branch into its target automatically
+- C. It resolves any conflicts without intervention
+- D. It rewrites the history of the target branch
 
 <details>
 <summary>Show answer</summary>
@@ -600,21 +599,21 @@ result at merge time, without the developer running a rebase at all.
 
 Which **three** describe trunk-based development? (Choose three.)
 
-- A. Feature branches live less than 24 hours
-- B. Feature flags hide incomplete work
-- C. Continuous deployment is required
-- D. Long-lived release branches are maintained
-- E. Old versions are supported from branches
-- F. Code review is always a formal PR gate
+- A. Long-lived release branches are maintained
+- B. Feature branches live less than 24 hours
+- C. Old versions are supported from branches
+- D. Feature flags hide incomplete work in `main`
+- E. Code review is always a formal PR gate
+- F. Continuous deployment is required, not optional
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A, B, C
+### Answer: B, D, F
 
 **In `challenge-07.md`:** lines **25**, **195–196**.
 
-**Why F is the row people get wrong.** Line 198 says code review is **"Optional (pair)"** for
+**Why E is the row people get wrong.** Line 198 says code review is **"Optional (pair)"** for
 trunk-based — pairing is treated as review, so a formal PR is not mandatory. GitHub Flow and release
 branching both say **"Required (PR)"**.
 
@@ -630,25 +629,25 @@ written rather than after, which is what makes a sub-day branch achievable.
 Which **three** are true of release branching? (Choose three.)
 
 - A. Older versions can be supported from their branches
-- B. Integration risk is high
-- C. Hotfixes must be cherry-picked back to `main`
-- D. Feature flags are required
-- E. It suits daily releases
-- F. Deployment automation is required
+- B. Feature flags are required to hide incomplete work
+- C. Integration risk is high because branches are long-lived
+- D. It suits a daily release cadence particularly well
+- E. Hotfixes must be cherry-picked back to `main`
+- F. Deployment automation is required, not optional
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A, B, C
+### Answer: A, C, E
 
 **In `challenge-07.md`:** lines **197**, **200**, **170–173**.
 
-**A is the *only* reason to choose it**, and B is the price. If nobody is running v2.1 any more, the
+**A is the *only* reason to choose it**, and C is the price. If nobody is running v2.1 any more, the
 branch is cost with no benefit.
 
-**C is the discipline that makes it work**, and the one Contoso skips (line 19).
+**E is the discipline that makes it work**, and the one Contoso skips (line 19).
 
-**Why D, E and F are inverted rows** — feature flags "No" (line 196), cadence monthly/quarterly (line
+**Why B, D and F are inverted rows** — feature flags "No" (line 196), cadence monthly/quarterly (line
 193), automation "Optional" (line 195).
 
 </details>
@@ -659,20 +658,20 @@ branch is cost with no benefit.
 
 Which **two** distinguish merge from rebase? (Choose two.)
 
-- A. Merge creates a merge commit and preserves both histories
-- B. Rebase replays commits and produces new SHAs
-- C. Merge produces new SHAs
-- D. Rebase creates a merge commit
-- E. Both are safe on shared branches
+- A. Merge produces new SHAs for the replayed commits
+- B. Merge creates a merge commit, preserving both histories
+- C. Rebase creates a merge commit on the target
+- D. Rebase replays commits and produces new SHAs
+- E. Both operations are safe on shared branches
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A, B
+### Answer: B, D
 
 **In `challenge-07.md`:** lines **256–258**, **269–271**, **393**.
 
-**Why E is the practical rule that follows from B.** Rebasing rewrites history, so a branch others have
+**Why E is the practical rule that follows from D.** Rebasing rewrites history, so a branch others have
 pulled must not be rebased — their commits and yours are now different objects containing the same
 changes.
 
@@ -687,23 +686,23 @@ adds a commit; rebase replaces every commit it touches.
 
 Which **two** prevent release branch drift? (Choose two.)
 
-- A. Scheduled forward-integration merges of `main` into the release branch
-- B. An automated drift check that raises an issue past a threshold
-- C. Rebasing the release branch onto `main`
-- D. Deleting the release branch weekly
-- E. Squashing the release branch
+- A. Rebasing the release branch onto `main` regularly
+- B. Deleting and recreating the release branch weekly
+- C. Scheduled forward-integration merges of `main` in
+- D. Squashing the release branch into one commit
+- E. An automated drift check that raises an issue
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A, B
+### Answer: C, E
 
 **In `challenge-07.md`:** lines **207–211** and **216–243**.
 
-**A is the cure; B is the detection.** Merging on a schedule keeps the divergence small; the Monday check
+**C is the cure; E is the detection.** Merging on a schedule keeps the divergence small; the Monday check
 catches the branch nobody merged.
 
-**Why C is technically possible and wrong here.** `release/v2.1` is a **shared, published** branch —
+**Why A is technically possible and wrong here.** `release/v2.1` is a **shared, published** branch —
 rebasing it rewrites history everyone has pulled (Q19). Forward-integration uses `merge` at line 209 for
 exactly that reason.
 
@@ -715,22 +714,22 @@ exactly that reason.
 
 Which **two** are correct about the direct-push recovery? (Choose two.)
 
-- A. Create a branch at the current tip before resetting, to preserve the commits
-- B. Use `--force-with-lease` rather than `--force`
-- C. Use `git revert` to remove them from history
-- D. `--force` and `--force-with-lease` behave identically
+- A. Use `git revert` to remove them from history
+- B. Create a branch at the tip first, to preserve commits
+- C. `--force` and `--force-with-lease` behave identically
+- D. Use `--force-with-lease` rather than plain `--force`
 - E. Reset the branch, then recover from the reflog
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A, B
+### Answer: B, D
 
 **In `challenge-07.md`:** lines **346–351**.
 
-**A is ordering: `reset --hard` discards the commits, so the branch must exist first.**
+**B is ordering: `reset --hard` discards the commits, so the branch must exist first.**
 
-**B is the safety property.** `--force-with-lease` compares the remote to what you last fetched and
+**D is the safety property.** `--force-with-lease` compares the remote to what you last fetched and
 refuses if someone else has pushed — so you cannot destroy work you never saw. Plain `--force`
 overwrites unconditionally.
 
@@ -745,16 +744,16 @@ pressure is error-prone. Creating a branch first is deliberate rather than hopef
 
 Which **two** does the drift-detection job compute? (Choose two.)
 
-- A. Commits the branch is **behind** `main`, with `branch..origin/main`
-- B. Commits the branch is **ahead** of `main`, with `origin/main..branch`
-- C. The age of the branch in days
-- D. The number of conflicting files
-- E. The branch's author
+- A. The age of the branch in days since creation
+- B. Commits the branch is behind, via `branch..origin/main`
+- C. The number of files that would conflict on merge
+- D. Commits the branch is ahead, via `origin/main..branch`
+- E. The author who most recently pushed the branch
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A, B
+### Answer: B, D
 
 **In `challenge-07.md`:** lines **233–234**.
 
@@ -777,23 +776,23 @@ pain, **ahead** counts hotfixes that may still need cherry-picking back (Q13).
 
 Which **two** problems from the scenario does a per-team strategy solve? (Choose two.)
 
-- A. Broken builds when branches diverge for weeks
-- B. Hotfixes that never reach `main`
-- C. Slow clone times
-- D. Missing test coverage
-- E. Unreviewed code reaching production
+- A. Slow clone times on a large repository
+- B. Broken builds when branches diverge for weeks
+- C. Missing unit test coverage on new code
+- D. Hotfixes that never reach `main` afterwards
+- E. Unreviewed code reaching the production branch
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A, B
+### Answer: B, D
 
 **In `challenge-07.md`:** line **19**, with **207–243** and **170–173**.
 
-**A is solved by matching branch lifetime to cadence** — plus drift detection for the one strategy that
+**B is solved by matching branch lifetime to cadence** — plus drift detection for the one strategy that
 still has long-lived branches.
 
-**B is solved by making the cherry-pick a defined step** of the release-branch workflow rather than
+**D is solved by making the cherry-pick a defined step** of the release-branch workflow rather than
 something someone might remember.
 
 **Why E is Challenge 08's problem.** Branch protection and required reviews are the mechanism; a
@@ -1218,8 +1217,8 @@ gh pr merge --[BLANK 2] --delete-branch
 
 Requirement: trunk-based development with a linear history on `main`.
 
-- **BLANK 1:** `rebase` / `merge` / `cherry-pick` / `reset`
-- **BLANK 2:** `squash` / `merge` / `rebase` / `admin`
+- **BLANK 1:** `merge` / `cherry-pick` / `rebase` / `reset`
+- **BLANK 2:** `merge` / `squash` / `rebase` / `admin`
 
 <details>
 <summary>Show answer</summary>
@@ -1254,8 +1253,8 @@ git checkout main
 git [BLANK 2] <commit-sha>
 ```
 
-- **BLANK 1:** `release/v2.1` / `hotfix/v2.1` / `develop` / `main-v2.1`
-- **BLANK 2:** `cherry-pick` / `merge` / `rebase` / `revert`
+- **BLANK 1:** `hotfix/v2.1` / `develop` / `release/v2.1` / `main-v2.1`
+- **BLANK 2:** `merge` / `cherry-pick` / `rebase` / `revert`
 
 <details>
 <summary>Show answer</summary>
@@ -1285,8 +1284,8 @@ git merge feature/payment-gateway --[BLANK 2]
 # Fails if a fast-forward is not possible
 ```
 
-- **BLANK 1:** `no-ff` / `ff-only` / `squash` / `no-commit`
-- **BLANK 2:** `ff-only` / `no-ff` / `abort` / `strategy=ours`
+- **BLANK 1:** `squash` / `no-ff` / `no-commit` / `ff-only`
+- **BLANK 2:** `no-ff` / `abort` / `ff-only` / `strategy=ours`
 
 <details>
 <summary>Show answer</summary>
@@ -1317,10 +1316,10 @@ for branch in $(git branch -r | grep 'release/'); do
 done
 ```
 
-- **BLANK 1:** `origin/main..${branch}` / `${branch}..origin/main` / `origin/main...${branch}` /
+- **BLANK 1:** `origin/main...${branch}` / `${branch}..origin/main` / `origin/main..${branch}` /
   `${branch}`
-- **BLANK 2:** `${branch}..origin/main` / `origin/main..${branch}` / `HEAD..${branch}` / `main`
-- **BLANK 3:** `50` / `5` / `500` / `0`
+- **BLANK 2:** `HEAD..${branch}` / `${branch}..origin/main` / `origin/main..${branch}` / `main`
+- **BLANK 3:** `5` / `500` / `50` / `0`
 
 <details>
 <summary>Show answer</summary>
@@ -1350,9 +1349,9 @@ git reset --hard [BLANK 2]
 git push origin main --[BLANK 3]
 ```
 
-- **BLANK 1:** `branch` / `checkout -b` / `switch` / `tag`
-- **BLANK 2:** `HEAD~3` / `HEAD` / `origin/main` / `HEAD^^`
-- **BLANK 3:** `force-with-lease` / `force` / `no-verify` / `mirror`
+- **BLANK 1:** `checkout -b` / `switch` / `tag` / `branch`
+- **BLANK 2:** `HEAD` / `HEAD~3` / `origin/main` / `HEAD^^`
+- **BLANK 3:** `force` / `no-verify` / `force-with-lease` / `mirror`
 
 <details>
 <summary>Show answer</summary>
@@ -1388,8 +1387,8 @@ jobs:
           fetch-depth: [BLANK 2]
 ```
 
-- **BLANK 1:** `0 9 * * 1` / `9 0 * * 1` / `0 9 1 * *` / `* 9 * * 1`
-- **BLANK 2:** `0` / `1` / `50` / `100`
+- **BLANK 1:** `9 0 * * 1` / `0 9 * * 1` / `0 9 1 * *` / `* 9 * * 1`
+- **BLANK 2:** `1` / `50` / `0` / `100`
 
 <details>
 <summary>Show answer</summary>
@@ -1443,15 +1442,15 @@ needs a strategy suited to its cadence.
 
 Which strategy should Team Alpha use, and what are its prerequisites?
 
-- A. Trunk-based — requires feature flags and continuous deployment
-- B. GitHub Flow — requires a PR gate
-- C. Release branching — requires version tags
+- A. GitHub Flow — requires a pull request gate
+- B. Release branching — requires version tags
+- C. Trunk-based — requires feature flags and CD
 - D. Git Flow — requires a `develop` branch
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: C
 
 **In `challenge-07.md`:** lines **25**, **195–196**.
 
@@ -1461,7 +1460,7 @@ Which strategy should Team Alpha use, and what are its prerequisites?
 **And the CD requirement is what keeps `main` deployable *provably*.** Every merge deploys, so a broken
 `main` is discovered in minutes rather than at the next release.
 
-**Why B would work and slow them down.** GitHub Flow's day-long branches are fine at Beta's cadence and
+**Why A would work and slow them down.** GitHub Flow's day-long branches are fine at Beta's cadence and
 become a queue at Alpha's.
 
 </details>
@@ -1472,16 +1471,15 @@ become a queue at Alpha's.
 
 Which strategy should Team Gamma use, and why is Beta's not sufficient?
 
-- A. Release branching — GitHub Flow has no branch representing the shipped version, so it cannot be
-  patched while `main` moves on
-- B. GitHub Flow — it is simpler
+- A. GitHub Flow — it is the simpler of the two models
+- B. Release branching — only it has a branch for v2.1
 - C. Trunk-based — feature flags can hide the old version
-- D. Git Flow — it has a `develop` branch
+- D. Git Flow — it has a `develop` branch to work from
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: B
 
 **In `challenge-07.md`:** lines **148**, **197**.
 
@@ -1507,10 +1505,10 @@ to manage.
 
 How is "a fix on a shipped version must also reach `main`" satisfied?
 
-- A. Cherry-pick the fix commit from the release branch to `main`
-- B. Merge the release branch into `main`
-- C. Rebase `main` onto the release branch
-- D. Re-apply the fix by hand on `main`
+- A. Cherry-pick the fix commit onto `main`
+- B. Rebase `main` onto the release branch instead
+- C. Re-apply the fix by hand on `main` afterwards
+- D. Merge the whole release branch back into `main`
 
 <details>
 <summary>Show answer</summary>
@@ -1521,10 +1519,10 @@ How is "a fix on a shipped version must also reach `main`" satisfied?
 
 **Cherry-pick moves exactly the fix**, leaving version-specific changes behind (Q37).
 
-**Why B brings too much.** The release branch also carries version bumps, release configuration and
+**Why D brings too much.** The release branch also carries version bumps, release configuration and
 anything else specific to v2.1.
 
-**Why D is what happens when the process is undocumented**, and why it fails: a hand-applied fix drifts
+**Why C is what happens when the process is undocumented**, and why it fails: a hand-applied fix drifts
 from the original, so the two versions behave subtly differently and the divergence is invisible.
 
 </details>
@@ -1535,26 +1533,26 @@ from the original, so the two versions behave subtly differently and the diverge
 
 Which **two** stop long-lived branches drifting unnoticed? (Choose two.)
 
-- A. Scheduled `git merge main` into the release branch
-- B. A weekly job counting commits behind and opening an issue past a threshold
-- C. Rebasing the release branch weekly
-- D. Deleting release branches after 30 days
-- E. Requiring PR review on the release branch
+- A. Rebasing the release branch onto `main` weekly
+- B. Deleting release branches after thirty days
+- C. Scheduled `git merge main` into the release branch
+- D. Requiring PR review on the release branch itself
+- E. A weekly job counting commits behind, raising an issue
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A, B
+### Answer: C, E
 
 **In `challenge-07.md`:** lines **207–211** and **216–243**.
 
-**A keeps the gap small; B makes the gap visible when A does not happen.** Neither alone is sufficient —
+**C keeps the gap small; E makes the gap visible when C does not happen.** Neither alone is sufficient —
 a sync process nobody performs is exactly what needs detecting.
 
-**Why C is the trap this paper builds twice** (Q20, Q26). The release branch is shared and tagged;
+**Why A is the trap this paper builds twice** (Q20, Q26). The release branch is shared and tagged;
 rebasing it orphans the tags and duplicates commits for everyone.
 
-**Why D would destroy the ability to patch v2.1**, which is the only reason the branch exists.
+**Why B would destroy the ability to patch v2.1**, which is the only reason the branch exists.
 
 </details>
 
@@ -1564,23 +1562,22 @@ rebasing it orphans the tags and duplicates commits for everyone.
 
 How should a mistaken direct push to `main` be recovered?
 
-- A. Create a branch at the current tip, reset `main` back, push with `--force-with-lease`, then open a
-  PR from the branch
-- B. Revert the three commits on `main`
-- C. Force-push an older `main`
+- A. Revert the three mistaken commits on `main`
+- B. Branch at the tip, reset, force-with-lease, then PR
+- C. Force-push an older `main` over the new one
 - D. Leave the commits and enable branch protection
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: B
 
 **In `challenge-07.md`:** lines **345–356**.
 
 **"Without losing the work" is the clause that orders the steps.** The branch must exist before the
 reset, and the PR is what puts the work back through the process it skipped.
 
-**Why B is genuinely defensible and not what is asked.** Reverting is safer on a branch others have
+**Why A is genuinely defensible and not what is asked.** Reverting is safer on a branch others have
 already pulled, and it leaves the mistaken commits in history — which fails "recover the work into a
 PR" as a *process* correction.
 
@@ -1597,19 +1594,17 @@ Five months in, Team Gamma reports that a tax bug fixed in v2.1.1 has reappeared
 has been green every week, the cherry-pick step is in the runbook, and the fix commit is present on
 `release/v2.1`.
 
-What happened, and what should change?
+What is the most likely cause?
 
-- A. The cherry-pick to `main` was skipped for that fix — the drift job only measures *behind*, so a
-  release branch **ahead** of `main` with un-propagated hotfixes raises no warning; report and act on
-  the ahead count too
-- B. The drift job's threshold is too high
-- C. `main` was force-pushed
-- D. The v2.2 release branch was cut from the wrong commit
+- A. The drift job's commit threshold is set too high
+- B. `main` was force-pushed, dropping the cherry-pick commit
+- C. The cherry-pick was skipped, and drift only checks behind
+- D. The v2.2 branch was cut from the wrong commit
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: C
 
 **In `challenge-07.md`:** lines **233–236** and **170–173**.
 
@@ -1642,21 +1637,17 @@ origin/main..release/v2.1` names exactly which hotfixes have not reached `main`.
 A year on, all three teams ship on their own cadence, `main` has not been broken in months, and no fix
 has regressed between releases.
 
-Explain what each choice contributed, and what actually changed.
+Which explanation best accounts for the change?
 
-- A. Cadence chose each strategy, so branch lifetime matched release rhythm; feature flags let Alpha
-  merge unfinished work safely; the PR gate gave Beta review without slowing a fortnightly train; the
-  release branch let Gamma patch a shipped version; cherry-picking closed the regression path; and drift
-  detection made the one long-lived branch's divergence visible — the process is now enforced by tooling
-  rather than by coordination
-- B. The teams agreed to coordinate better
-- C. Everyone moved to one strategy
-- D. Releases were made less frequent
+- A. The three teams agreed to coordinate with each other better
+- B. Every team was moved onto one common branching strategy
+- C. Releases across all three teams were made less frequent
+- D. Branch lifetime now matches cadence, enforced by tooling
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: D
 
 **In `challenge-07.md`:** lines **19**, **193–200**, **170–173**, **216–243**.
 

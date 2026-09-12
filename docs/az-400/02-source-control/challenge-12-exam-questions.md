@@ -51,15 +51,15 @@ clone.
 A developer works only on `order-service` in the mono-repo and needs the fastest clone with minimal disk
 use. Which combination?
 
-- A. `git clone --depth=1`
-- B. `git clone --filter=blob:none --sparse`, then `git sparse-checkout set services/order-service`
-- C. `git clone`, then delete unwanted directories
+- A. `git clone --depth=1` to limit history
+- B. `git clone`, then delete the unwanted directories
+- C. `--filter=blob:none --sparse`, then sparse-checkout
 - D. `git clone --single-branch --branch=main`
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: B
+### Answer: C
 
 **In `challenge-12.md`:** lines **189–192** and **624**.
 
@@ -77,7 +77,7 @@ Together they address both the 8 GB transfer and the disk footprint.
 download every file in the tree at that depth, across all 15 services. And it breaks `git blame`, `git
 log` and anything else needing history.
 
-**Why C downloads everything first**, which is the 25 minutes you were trying to avoid, and **why D still
+**Why B downloads everything first**, which is the 25 minutes you were trying to avoid, and **why D still
 fetches all blobs** on that one branch.
 
 </details>
@@ -89,15 +89,14 @@ fetches all blobs** on that one branch.
 What does `scalar register` enable?
 
 - A. Uploads the repository to a Scalar server
-- B. A set of standard Git performance optimisations — FSMonitor, commit-graph, multi-pack index and
-  background maintenance
-- C. Converts the repository to a Scalar-specific format
-- D. Enables server-side partial clone for all clones
+- B. Converts the repository to a Scalar-specific format
+- C. Enables server-side partial clone for all clones
+- D. A bundle of standard Git performance optimisations
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: B
+### Answer: D
 
 **In `challenge-12.md`:** lines **103–108** and **635**.
 
@@ -113,10 +112,10 @@ What does `scalar register` enable?
 new format — which is why line 635 stresses that **the repository stays a normal Git repository any
 client can use**.
 
-**Why C is the misconception that makes people avoid it.** Nothing becomes incompatible; `scalar
+**Why B is the misconception that makes people avoid it.** Nothing becomes incompatible; `scalar
 unregister` (line 134) removes the settings and leaves the repository intact.
 
-**Why D confuses local with server.** Partial clone is requested by the client; Scalar configures **this
+**Why C confuses local with server.** Partial clone is requested by the client; Scalar configures **this
 clone**, not the server's policy.
 
 </details>
@@ -128,16 +127,15 @@ clone**, not the server's policy.
 In multi-repo, team A releases `shared-libs` v2.4.0 with a breaking change. What is the primary
 challenge?
 
-- A. All other repos update automatically and may break
-- B. Each consuming repo must independently update, test and release — coordination overhead and version
-  drift
-- C. Submodules prevent using the new version
-- D. `shared-libs` must be forked per team
+- A. Each consumer must independently update, test and release
+- B. All other repositories update automatically and may break
+- C. Submodules prevent adopting the new version at all
+- D. `shared-libs` must be forked for every consuming team
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: B
+### Answer: A
 
 **In `challenge-12.md`:** lines **66–67** and **646**.
 
@@ -150,7 +148,7 @@ challenge?
 in between hit the **diamond dependency** problem — two dependencies demanding incompatible versions of
 the same library.
 
-**Why A inverts the model.** Nothing updates automatically; a pinned dependency is pinned. That is the
+**Why B inverts the model.** Nothing updates automatically; a pinned dependency is pinned. That is the
 *advantage* of multi-repo (independent release cycles, line 58) and the source of the problem.
 
 **And the mono-repo contrast at line 646 is the whole argument**: the breaking change and every consumer
@@ -164,15 +162,15 @@ update land in **one atomic commit**.
 
 A developer changes `libs/shared-types/index.ts`. Which Azure Pipelines behaviour is correct?
 
-- A. All pipelines trigger
-- B. Only pipelines whose `paths.include` matches that path trigger
-- C. No pipelines trigger
-- D. The pipeline triggers but skips the build
+- A. Every pipeline in the project triggers on the push
+- B. No pipeline triggers because the path is a library
+- C. Only pipelines whose `paths.include` matches trigger
+- D. The pipeline triggers but skips the build stage
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: B
+### Answer: C
 
 **In `challenge-12.md`:** lines **501–504** and **657**.
 
@@ -201,15 +199,15 @@ filter too broadly and you rebuild everything.
 Sparse-checkout is set to `services/order-service` and the build fails with "Cannot find module
 `@contoso/shared-types`". What is the fix?
 
-- A. `git sparse-checkout add libs/shared-types libs/common-utils`
-- B. `git sparse-checkout disable`
-- C. Re-clone the repository
-- D. Install the package from npm
+- A. `git sparse-checkout disable` to restore the tree
+- B. `git sparse-checkout add libs/shared-types` and utils
+- C. Re-clone the repository without sparse-checkout
+- D. Install `@contoso/shared-types` from the npm registry
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: B
 
 **In `challenge-12.md`:** lines **546–547**.
 
@@ -220,7 +218,7 @@ git sparse-checkout add libs/shared-types libs/common-utils
 **`add` extends the current set; `set` replaces it** (line 182 shows `set` removing a path). Using `set`
 here would have to re-list `services/order-service` or lose it.
 
-**Why B works and gives up the benefit.** Disabling brings back all 8 GB of working tree — correct as a
+**Why A works and gives up the benefit.** Disabling brings back all 8 GB of working tree — correct as a
 last resort, wasteful as a fix.
 
 **And the durable answer is the sparse profile at lines 559–564**: record the service's full path
@@ -235,9 +233,9 @@ dependencies in a file so the next developer does not rediscover them.
 A submodule shows as modified after `git pull`, and its directory contains old code. What is the fix?
 
 - A. `git submodule update --init --recursive`
-- B. `git pull` inside the submodule
-- C. Delete and re-add the submodule
-- D. `git reset --hard`
+- B. `git pull` run inside the submodule directory
+- C. Delete the submodule and add it again from scratch
+- D. `git reset --hard HEAD` in the parent repository
 
 <details>
 <summary>Show answer</summary>
@@ -269,15 +267,15 @@ commit; `update --remote` moves to the **latest** and is followed by committing 
 
 What does `--filter=blob:none` do?
 
-- A. Skips downloading file contents until they are needed, while fetching all commits and trees
-- B. Skips all history
-- C. Excludes binary files
-- D. Filters by file size
+- A. It skips all history beyond the most recent commit
+- B. It defers blobs while fetching every commit and tree
+- C. It excludes binary files from the clone entirely
+- D. It filters out blobs larger than a size threshold
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: B
 
 **In `challenge-12.md`:** lines **189–192** and **624**.
 
@@ -298,15 +296,15 @@ when it tries to materialise a blob it never downloaded.
 
 What does `git sparse-checkout init --cone` provide over pattern mode?
 
-- A. Faster performance, using directory-level patterns rather than arbitrary globs
-- B. More flexible matching
-- C. Automatic dependency detection
-- D. Server-side filtering
+- A. More flexible matching with arbitrary glob patterns
+- B. Automatic detection of a service's path dependencies
+- C. Faster performance, using directory-level patterns
+- D. Server-side filtering of the objects that are sent
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: C
 
 **In `challenge-12.md`:** lines **161–162**.
 
@@ -321,7 +319,7 @@ tree rather than testing every path against every pattern.
 **On a repository with 50,000 commits and 15 services that difference is measurable** — pattern mode gets
 slower as the file count grows, cone mode does not.
 
-**Why C is the gap this challenge leaves to you.** Nothing detects that `order-service` needs
+**Why B is the gap this challenge leaves to you.** Nothing detects that `order-service` needs
 `shared-types`; that is Break scenario 1, and the answer is a documented profile (Q5).
 
 </details>
@@ -332,15 +330,15 @@ slower as the file count grows, cone mode does not.
 
 Which Scalar command generates a diagnostic bundle?
 
-- A. `scalar diagnose`
-- B. `scalar run`
-- C. `scalar list`
-- D. `scalar cache-server`
+- A. `scalar run`
+- B. `scalar list`
+- C. `scalar cache-server`
+- D. `scalar diagnose`
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: D
 
 **In `challenge-12.md`:** lines **132–134**.
 
@@ -365,15 +363,15 @@ developer than the origin, which matters when a clone is 8 GB.
 
 Which maintenance tasks does `scalar run` execute?
 
-- A. `prefetch`, `commit-graph`, `loose-objects`, `incremental-repack`
-- B. `gc`, `fsck`, `prune`
-- C. `fetch`, `pull`, `push`
-- D. `clone`, `checkout`
+- A. `gc`, `fsck`, `prune-packed`, `pack-refs`
+- B. `prefetch`, `commit-graph`, `loose-objects`, `incremental-repack`
+- C. `fetch --all`, `pull --rebase`, `push --mirror`, `remote prune`
+- D. `commit-graph`, `pack-refs`, `reflog expire`, `gc --auto`
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: B
 
 **In `challenge-12.md`:** lines **128–129**.
 
@@ -400,9 +398,9 @@ the scheduled tasks now handle it.
 What does `.gitmodules` record?
 
 - A. The submodule's path, URL and tracked branch
-- B. The submodule's current commit
-- C. The submodule's files
-- D. The parent's dependencies
+- B. The submodule's currently pinned commit SHA
+- C. The submodule's files and their contents
+- D. The parent repository's own dependencies
 
 <details>
 <summary>Show answer</summary>
@@ -432,15 +430,15 @@ tree entry says *which commit*, and only the tree entry moves when you pin a ver
 
 How do you pin a submodule to a specific version?
 
-- A. Check out the tag inside the submodule, then `git add` the submodule path in the parent and commit
-- B. Edit `.gitmodules`
-- C. `git submodule update --remote`
-- D. Use a branch name in `.gitmodules`
+- A. Edit the `branch` entry in `.gitmodules` to the tag
+- B. `git submodule update --remote` run in the parent
+- C. Use a tag name instead of a branch in `.gitmodules`
+- D. Check out the tag inside, then `git add` the path
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: D
 
 **In `challenge-12.md`:** lines **245–249**.
 
@@ -455,7 +453,7 @@ git commit -m "chore: pin shared-libs to v2.3.0"
 **Move the submodule's HEAD, then record it in the parent.** Both halves are required — checking out the
 tag alone leaves the parent still pointing at the old commit.
 
-**Why C does the opposite.** `--remote` moves to the **latest** on the tracked branch, which is the
+**Why B does the opposite.** `--remote` moves to the **latest** on the tracked branch, which is the
 un-pinning operation (Q6).
 
 **And why D is the trap.** `branch = main` in `.gitmodules` only tells `--remote` where to look; **the
@@ -469,19 +467,19 @@ pinned commit is what a clone actually gets.**
 
 What does `git clone --recurse-submodules` do?
 
-- A. Clones the parent and initialises and updates all submodules in one step
-- B. Clones only the submodules
-- C. Clones the parent and ignores submodules
-- D. Converts submodules to normal directories
+- A. Clones only the submodules, not the parent
+- B. Clones the parent and updates all submodules in one step
+- C. Clones the parent and leaves submodule directories empty
+- D. Converts each submodule into a normal directory
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: B
 
 **In `challenge-12.md`:** line **252**.
 
-**Without it, submodule directories are created **empty**** — and the build fails with missing files,
+**Without it, submodule directories are created empty** — and the build fails with missing files,
 which is the commonest first-day experience on a submodule repository.
 
 **The recovery is two commands** (lines 255–256): `git submodule init` then `git submodule update`, or
@@ -495,10 +493,10 @@ the combined `update --init --recursive` from Q6.
 
 In Azure Pipelines, how do you check out a second repository?
 
-- A. Declare it under `resources.repositories`, then add a `checkout:` step for it
-- B. A second `checkout: self`
-- C. A `git clone` script step
-- D. A submodule
+- A. Declare it under `resources.repositories`, then `checkout:`
+- B. A second `checkout: self` step pointing at the other repo
+- C. A `git clone` command run inside a script step
+- D. A submodule reference committed to the parent
 
 <details>
 <summary>Show answer</summary>
@@ -540,15 +538,15 @@ Pipelines — the endpoint names a service connection.
 
 In GitHub Actions, how do you check out a **private** second repository?
 
-- A. `actions/checkout` with `repository:`, `path:` and a `token:` from a PAT or App
-- B. `actions/checkout` with `repository:` alone
-- C. A submodule
+- A. `actions/checkout` with `repository:` alone, no token
+- B. A submodule reference pointing at the private repository
+- C. `actions/checkout` with `repository:`, `path:`, `token:`
 - D. `git clone` with the default `GITHUB_TOKEN`
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: C
 
 **In `challenge-12.md`:** lines **374–379**.
 
@@ -576,15 +574,15 @@ or a GitHub App token — is required.
 
 What does `dorny/paths-filter` provide in the path-triggered workflow?
 
-- A. Per-filter boolean outputs that downstream jobs gate on with `if:`
-- B. It skips the checkout
-- C. It caches dependencies
-- D. It merges branches
+- A. It skips the checkout step when no watched paths match
+- B. It caches dependencies between workflow runs
+- C. It merges the changed branches before building
+- D. Per-filter boolean outputs for downstream `if:` gates
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: D
 
 **In `challenge-12.md`:** lines **411–437**.
 
@@ -618,21 +616,21 @@ change touching two services builds exactly those two.
 
 Which **three** are mono-repo advantages? (Choose three.)
 
-- A. Atomic cross-service changes in one commit
-- B. Single source of truth for shared libraries, with no version drift
-- C. Unified CI/CD configuration
-- D. Fine-grained per-service access control
-- E. Independent release cycles
-- F. Small, fast clones
+- A. Fine-grained per-service access control
+- B. Atomic cross-service changes in one commit
+- C. Independent release cycles per service
+- D. Single source of truth for shared libraries
+- E. Small, fast clones for every developer
+- F. Unified CI/CD configuration across services
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A, B, C
+### Answer: B, D, F
 
 **In `challenge-12.md`:** lines **30–32**.
 
-**D, E and F are the multi-repo column** (lines 58–60), and each is listed as a mono-repo
+**A, C and E are the multi-repo column** (lines 58–60), and each is listed as a mono-repo
 **disadvantage** on the other side: permission granularity is limited (line 41), all teams share a
 branching strategy (line 45), and 8 GB takes 25 minutes (line 39).
 
@@ -648,21 +646,21 @@ most" is.**
 
 Which **three** are multi-repo disadvantages? (Choose three.)
 
-- A. Cross-service changes need coordinated PRs across repositories
-- B. Shared library versioning creates diamond dependency problems
-- C. Refactoring across service boundaries is painful
-- D. Repository size makes cloning slow
-- E. Merge conflicts on shared files
-- F. All teams must agree on a branching strategy
+- A. Cross-service changes need coordinated PRs across repos
+- B. Repository size makes every clone slow
+- C. Shared library versioning creates diamond dependencies
+- D. Merge conflicts on files many teams share
+- E. Refactoring across service boundaries is painful
+- F. All teams must agree on one branching strategy
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A, B, C
+### Answer: A, C, E
 
 **In `challenge-12.md`:** lines **66–72**.
 
-**D, E and F are the mono-repo disadvantages** (lines 39–45) — the same mirroring as Q17, offered in the
+**B, D and F are the mono-repo disadvantages** (lines 39–45) — the same mirroring as Q17, offered in the
 other direction.
 
 **And all three correct answers are the same underlying cost:** a change that spans services is cheap in
@@ -676,27 +674,27 @@ one repository and expensive in fifteen.
 
 Which **three** optimisations does Scalar enable? (Choose three.)
 
-- A. FSMonitor for faster `git status`
-- B. Commit-graph for faster history traversal
-- C. Multi-pack index for faster object lookup
-- D. Git LFS
-- E. Server-side filtering
-- F. Automatic sparse-checkout profiles
+- A. Git LFS for large binary asset files
+- B. FSMonitor for faster `git status`
+- C. Server-side filtering of the objects sent
+- D. Commit-graph for faster history traversal
+- E. Automatic sparse-checkout profiles
+- F. Multi-pack index for faster object lookup
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A, B, C
+### Answer: B, D, F
 
 **In `challenge-12.md`:** lines **104–108**.
 
 **Partial clone and background maintenance are the other two** — five optimisations in the bundle.
 
-**Why D is the boundary this challenge and Challenge 10 both defend.** LFS is a separate tool for large
+**Why A is the boundary this challenge and Challenge 10 both defend.** LFS is a separate tool for large
 **files**; Scalar is for large **history and breadth**. Enabling Scalar does nothing about a 500 MB `.fbx`
 and enabling LFS does nothing about 50,000 commits.
 
-**Why F is the gap you fill yourself** (Q8, Q26) — the team profiles at lines 198–224 are hand-written
+**Why E is the gap you fill yourself** (Q8, Q26) — the team profiles at lines 198–224 are hand-written
 scripts.
 
 </details>
@@ -707,23 +705,23 @@ scripts.
 
 Which **two** reduce what a clone **downloads**? (Choose two.)
 
-- A. `--filter=blob:none`
-- B. `--depth=1`
-- C. `git sparse-checkout set`
-- D. `scalar unregister`
-- E. `--recurse-submodules`
+- A. `git sparse-checkout set` on the clone
+- B. `scalar unregister` after cloning
+- C. `--filter=blob:none` on the clone
+- D. `--recurse-submodules` on the clone
+- E. `--depth=1` on the clone command
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A, B
+### Answer: C, E
 
 **In `challenge-12.md`:** lines **189** and **624**.
 
 **Both reduce transfer, on different axes.** `--filter=blob:none` skips **file contents**; `--depth=1`
 skips **history**.
 
-**Why C is the third axis and the reason the question says "download".** Sparse-checkout reduces what is
+**Why A is the third axis and the reason the question says "download".** Sparse-checkout reduces what is
 **written to disk**, not what is fetched — a full clone with sparse-checkout has still downloaded
 everything.
 
@@ -738,16 +736,16 @@ disk.
 
 Which **two** are true of `git submodule update --remote`? (Choose two.)
 
-- A. It moves the submodule to the latest commit on its tracked branch
-- B. The new pointer must be committed in the parent repository
-- C. It moves the submodule to the parent's pinned commit
-- D. It updates `.gitmodules`
-- E. It requires `--init` every time
+- A. It moves the submodule to the parent's pinned commit
+- B. It moves the submodule to the latest on its branch
+- C. It updates the `.gitmodules` file automatically
+- D. The new pointer must be committed in the parent
+- E. It requires `--init` to be passed on every invocation
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A, B
+### Answer: B, D
 
 **In `challenge-12.md`:** lines **259–261**.
 
@@ -760,7 +758,7 @@ git commit -m "chore: update shared-libs to latest"
 **Two steps, and forgetting the second leaves the submodule ahead of what the repository records** — so
 every colleague still gets the old commit.
 
-**Why C is `update` *without* `--remote`** (line 596), which is the recovery in Break scenario 2. **The
+**Why A is `update` *without* `--remote`** (line 596), which is the recovery in Break scenario 2. **The
 two flags move in opposite directions**, and that pairing is the most testable thing about submodules.
 
 </details>
@@ -772,19 +770,19 @@ two flags move in opposite directions**, and that pairing is the most testable t
 Which **two** are required to check out multiple repositories in Azure Pipelines? (Choose two.)
 
 - A. A `resources.repositories` entry per external repository
-- B. An explicit `checkout: self` alongside the others
-- C. A submodule for each
-- D. A separate pipeline per repository
-- E. `persistCredentials: true`
+- B. A submodule reference for each external repository
+- C. A separate pipeline definition per repository
+- D. An explicit `checkout: self` alongside the others
+- E. `persistCredentials: true` on every checkout
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A, B
+### Answer: A, D
 
 **In `challenge-12.md`:** lines **287–318**.
 
-**B is the one that catches people.** Azure Pipelines checks out `self` implicitly — **until you add any
+**D is the one that catches people.** Azure Pipelines checks out `self` implicitly — **until you add any
 `checkout:` step**, at which point nothing is implicit and `self` must be listed too.
 
 **The symptom is a build that cannot find its own source**, which reads as a path problem and is not.
@@ -800,16 +798,16 @@ so one can reference another (line 333).
 
 Which **two** does the path-filtered workflow do when `libs/**` changes? (Choose two.)
 
-- A. Sets the `shared-libs` output to true
-- B. Runs a matrix job rebuilding all dependent services
-- C. Builds nothing
-- D. Skips the detection job
-- E. Rebuilds only `order-service`
+- A. It builds nothing, since no service folder changed
+- B. It skips the change-detection job entirely
+- C. It sets the `shared-libs` output to `true`
+- D. It rebuilds only `order-service` and nothing else
+- E. It runs a matrix job rebuilding all dependent services
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A, B
+### Answer: C, E
 
 **In `challenge-12.md`:** lines **429–430** and **471–482**.
 
@@ -1077,7 +1075,7 @@ Match each problem to the tool that solves it.
 | A 500 MB binary asset in the repository |  |
 | Every push builds all 15 services |  |
 
-**Options:** **Git LFS** (Challenge 10) · Partial clone — `--filter=blob:none` · Path filters · Scalar — commit-graph · Scalar — FSMonitor · Sparse-checkout
+**Options:** Git LFS (Challenge 10) · Partial clone — `--filter=blob:none` · Path filters · Scalar — commit-graph · Scalar — FSMonitor · Sparse-checkout
 
 <details>
 <summary>Show answer</summary>
@@ -1254,9 +1252,9 @@ git sparse-checkout [BLANK 3] services/user-service libs/auth-middleware
 
 Requirement: minimal download **and** minimal disk, with full history preserved.
 
-- **BLANK 1:** `filter=blob:none` / `depth=1` / `single-branch` / `bare`
-- **BLANK 2:** `sparse` / `recurse-submodules` / `mirror` / `no-checkout`
-- **BLANK 3:** `set` / `add` / `init` / `list`
+- **BLANK 1:** `depth=1` / `single-branch` / `filter=blob:none` / `bare`
+- **BLANK 2:** `recurse-submodules` / `mirror` / `no-checkout` / `sparse`
+- **BLANK 3:** `add` / `set` / `init` / `list`
 
 <details>
 <summary>Show answer</summary>
@@ -1285,9 +1283,9 @@ scalar [BLANK 3]
 # Generate diagnostic zip for troubleshooting
 ```
 
-- **BLANK 1:** `register` / `install` / `enable` / `init`
-- **BLANK 2:** `run` / `maintain` / `gc` / `sync`
-- **BLANK 3:** `diagnose` / `debug` / `doctor` / `report`
+- **BLANK 1:** `install` / `enable` / `register` / `init`
+- **BLANK 2:** `maintain` / `run` / `gc` / `sync`
+- **BLANK 3:** `debug` / `doctor` / `report` / `diagnose`
 
 <details>
 <summary>Show answer</summary>
@@ -1318,9 +1316,9 @@ git sparse-checkout [BLANK 3]
 Requirement: fast directory-based mode, then temporarily include another service, then return to the full
 tree.
 
-- **BLANK 1:** `cone` / `pattern` / `full` / `strict`
-- **BLANK 2:** `add` / `set` / `include` / `append`
-- **BLANK 3:** `disable` / `reset` / `clear` / `off`
+- **BLANK 1:** `pattern` / `cone` / `full` / `strict`
+- **BLANK 2:** `set` / `include` / `add` / `append`
+- **BLANK 3:** `reset` / `disable` / `clear` / `off`
 
 <details>
 <summary>Show answer</summary>
@@ -1355,8 +1353,8 @@ git commit -m "chore: pin shared-libs to v2.3.0"
 git clone --[BLANK 2] https://github.com/contoso/order-service.git
 ```
 
-- **BLANK 1:** `add` / `submodule update` / `commit` / `push`
-- **BLANK 2:** `recurse-submodules` / `submodules` / `with-submodules` / `init-submodules`
+- **BLANK 1:** `submodule update` / `commit` / `add` / `push`
+- **BLANK 2:** `submodules` / `recurse-submodules` / `with-submodules` / `init-submodules`
 
 <details>
 <summary>Show answer</summary>
@@ -1392,9 +1390,9 @@ steps:
     path: s/shared-libs
 ```
 
-- **BLANK 1:** `repositories` / `repos` / `sources` / `containers`
-- **BLANK 2:** `ref` / `branch` / `version` / `tag`
-- **BLANK 3:** `self` / `primary` / `main` / `source`
+- **BLANK 1:** `repos` / `sources` / `containers` / `repositories`
+- **BLANK 2:** `branch` / `version` / `ref` / `tag`
+- **BLANK 3:** `primary` / `self` / `main` / `source`
 
 <details>
 <summary>Show answer</summary>
@@ -1432,8 +1430,8 @@ any explicit checkout** — at which point omitting it leaves the pipeline with 
 
 Requirement: rebuild `order-service` when its own code **or** the shared types change.
 
-- **BLANK 1:** `libs/shared-types/**` / `libs/**` / `services/**` / `**`
-- **BLANK 2:** `true` / `changed` / `yes` / `1`
+- **BLANK 1:** `libs/**` / `libs/shared-types/**` / `services/**` / `**`
+- **BLANK 2:** `changed` / `yes` / `true` / `1`
 
 <details>
 <summary>Show answer</summary>
@@ -1489,11 +1487,10 @@ implementation details.
 
 Which model should Contoso choose, and what is the deciding factor?
 
-- A. Mono-repo — the platform's 15 services share libraries and need atomic cross-service refactoring,
-  and every mono-repo cost except permission granularity has a mitigation
-- B. Multi-repo — clones are faster
-- C. Mono-repo — it is simpler
-- D. Multi-repo — teams prefer autonomy
+- A. Mono-repo — atomic refactoring, most costs mitigated
+- B. Multi-repo — clones are faster for every single developer
+- C. Mono-repo — it is simpler for the platform team
+- D. Multi-repo — teams prefer their own autonomy
 
 <details>
 <summary>Show answer</summary>
@@ -1522,25 +1519,25 @@ column, offered without weighing the diamond dependency problem (line 67) that 1
 
 How does a developer avoid downloading and materialising all 15 services?
 
-- A. `git clone --filter=blob:none --sparse`, then sparse-checkout their service and its libraries
-- B. `git clone --depth=1`
-- C. Clone and delete the other services
-- D. `scalar register`
+- A. `git clone --depth=1` to limit history to one commit
+- B. Clone everything and delete the other fourteen services
+- C. `scalar register` on a full clone of the repository
+- D. `--filter=blob:none --sparse`, then sparse-checkout
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: D
 
 **In `challenge-12.md`:** lines **189–192**.
 
 **Two verbs in the requirement — "download" and "materialise" — and two mechanisms answer them** (Q20).
 
-**Why D helps and does not answer this.** Scalar makes local operations fast (the *next* requirement) and
+**Why C helps and does not answer this.** Scalar makes local operations fast (the *next* requirement) and
 its `scalar clone` does include partial clone — but `register` on its own configures an existing clone
 rather than avoiding the 8 GB.
 
-**Why C is the 25 minutes you were avoiding**, and B loses history.
+**Why B is the 25 minutes you were avoiding**, and A loses history.
 
 </details>
 
@@ -1550,25 +1547,25 @@ rather than avoiding the 8 GB.
 
 How are local Git operations kept fast at 50,000 commits?
 
-- A. `scalar register` — FSMonitor, commit-graph, multi-pack index and background maintenance
-- B. `git gc --aggressive` weekly
-- C. Shallow clones
-- D. Deleting old branches
+- A. `git gc --aggressive` run weekly on each clone
+- B. Shallow clones for every developer machine
+- C. `scalar register` for FSMonitor and commit-graph
+- D. Deleting old branches to shrink the ref count
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: C
 
 **In `challenge-12.md`:** lines **101–108** and **124–129**.
 
 **Each optimisation targets a different slow command.** FSMonitor for `git status`, commit-graph for
 `git log` and traversal, multi-pack index for object lookup, prefetch for `git fetch`.
 
-**Why B is the manual, blocking version of what Scalar schedules.** `maintenance.strategy=incremental`
+**Why A is the manual, blocking version of what Scalar schedules.** `maintenance.strategy=incremental`
 (line 125) does the same work in small background pieces rather than one long pause.
 
-**Why C trades the history developers need** for a speed-up partial clone provides without it.
+**Why B trades the history developers need** for a speed-up partial clone provides without it.
 
 </details>
 
@@ -1579,16 +1576,16 @@ How are local Git operations kept fast at 50,000 commits?
 Which **two** satisfy "a new starter must not have to discover which paths their service needs"?
 (Choose two.)
 
-- A. Committed sparse profiles per team listing the service and its library paths
-- B. A documented `.sparse-profiles/<service>.txt` beside the code
-- C. Letting each developer add paths as build errors reveal them
-- D. Disabling sparse-checkout for new starters
-- E. A wiki page
+- A. Letting developers add paths as build errors reveal them
+- B. Committed sparse profiles per team listing the paths
+- C. Disabling sparse-checkout for all new starters
+- D. A `.sparse-profiles/<service>.txt` file beside the code
+- E. A wiki page listing each service's dependencies
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A, B
+### Answer: B, D
 
 **In `challenge-12.md`:** lines **198–224** and **559–564**.
 
@@ -1602,7 +1599,7 @@ infrastructure/kubernetes/order-service
 **Both are the same idea at two levels of formality** — an executable profile script and a plain path
 list — and both live **in the repository**, so they change with the dependencies they describe.
 
-**Why C is Break scenario 1 as a policy** (Q26), and its failure mode misleads: the error names a
+**Why A is Break scenario 1 as a policy** (Q26), and its failure mode misleads: the error names a
 **module**, not a path.
 
 **Why E decays.** A wiki page describing path dependencies is stale the first time a service gains a
@@ -1616,26 +1613,26 @@ library.
 
 Which **two** satisfy the CI requirements? (Choose two.)
 
-- A. `dorny/paths-filter` producing per-service booleans that gate each build job
-- B. A matrix job rebuilding all dependent services when `libs/**` changes
-- C. Building everything on every push
-- D. Building only the service whose folder changed, always
-- E. Nightly full builds
+- A. `dorny/paths-filter` producing per-service booleans for gating
+- B. Building every service on every push to the repository
+- C. Building only the service whose folder changed, always
+- D. A matrix job rebuilding all dependents when `libs/**` changes
+- E. Nightly full builds of every service in the repo
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A, B
+### Answer: A, D
 
 **In `challenge-12.md`:** lines **411–437** and **471–482**.
 
-**Two requirements, and D satisfies only the first while breaking the second.** A change to
+**Two requirements, and C satisfies only the first while breaking the second.** A change to
 `libs/shared-types` touches no service folder — so a strict per-folder rule builds **nothing**, and the
 breakage is discovered by whichever service deploys next.
 
 **That is why line 470's comment exists**: *"If shared libs change, rebuild ALL dependent services."*
 
-**Why C is the state at line 40** — 50 developers triggering every build — and why E finds the problem
+**Why B is the state at line 40** — 50 developers triggering every build — and why E finds the problem
 hours after the merge.
 
 </details>
@@ -1649,20 +1646,17 @@ The path filter ran, the shared-library matrix job ran and passed, and `catalog-
 matrix list. Two new services, `review-service` and `recommendation-service`, were added to the mono-repo
 four months ago.
 
-What happened, and what is the fix?
+What is the most likely cause?
 
-- A. The matrix list is hard-coded and was never updated when services were added — but that would break
-  the *new* services; here the real gap is that `catalog-service` passed its build while its **consumer
-  contract** changed, so the matrix must also run the dependents' integration tests, and the service list
-  must be generated rather than hand-maintained
-- B. The path filter did not match
-- C. `paths-filter` was misconfigured
-- D. Sparse-checkout hid the file
+- A. The path filter did not match the changed file
+- B. `paths-filter` was misconfigured for the library path
+- C. Dependents' unit tests passed but their contract changed
+- D. Sparse-checkout hid the changed file from the build
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: C
 
 **In `challenge-12.md`:** lines **475–490**.
 
@@ -1704,20 +1698,17 @@ mono-repo the whole point is that the repository already knows what the services
 A year on, a developer clones in under two minutes, `git status` is instant, a push builds two services
 rather than fifteen, and a shared-type rename still lands in one commit.
 
-Explain what each choice contributed, and what actually changed.
+Which explanation best accounts for the change?
 
-- A. Keeping the mono-repo preserved atomic cross-service change; partial clone cut the download and
-  sparse-checkout cut the working tree; Scalar made local Git fast at 50,000 commits; path filters cut CI
-  to the services a change can affect; and a shared-library fan-out kept that optimisation honest — the
-  repository's size stopped being a reason to split it
-- B. The repository was split into 15 repositories
+- A. The repository was split into fifteen separate repositories
+- B. Size stopped being a reason to split the mono-repo
 - C. History was rewritten to shrink the repository
-- D. Developers were given faster machines
+- D. Every developer was issued a faster machine
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: B
 
 **In `challenge-12.md`:** lines **19**, **30–45**, **189–192**, **101–108**, **411–482**.
 

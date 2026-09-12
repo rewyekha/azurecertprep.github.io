@@ -46,14 +46,14 @@ step that generates the value writes to `$GITHUB_OUTPUT` correctly.
 What is the most likely cause?
 
 - A. The `docker` job is missing a `needs: build` declaration
-- B. The `build` job does not declare the value under a job-level `outputs` key
-- C. The value must be written to `$GITHUB_ENV` instead of `$GITHUB_OUTPUT`
-- D. Job outputs cannot be passed between jobs that run on different runners
+- B. The value must be written to `$GITHUB_ENV` instead
+- C. Job outputs cannot cross jobs on different runners
+- D. The `build` job does not declare a job-level `outputs` key
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: B
+### Answer: D
 
 **In `challenge-19.md`:** lines **78–80** (`build` job `outputs`), line **98** (`id: version`),
 lines **102–103** (`$GITHUB_OUTPUT`), line **167** (`docker` needs).
@@ -87,9 +87,9 @@ jobs:
 - **A** — the question says the value is *read* as `needs.build.outputs.version`. If `needs` were
   missing, the `needs` context would not exist at all and the workflow would fail to parse, not
   return empty
-- **C** — `$GITHUB_ENV` sets an environment variable for **later steps in the same job**. It never
+- **B** — `$GITHUB_ENV` sets an environment variable for **later steps in the same job**. It never
   travels to another job
-- **D** — false. Outputs travel through GitHub's service, not the runner filesystem. Different
+- **C** — false. Outputs travel through GitHub's service, not the runner filesystem. Different
   runners are irrelevant
 
 **Term:** *step output* → *job output* → *needs context*.
@@ -105,15 +105,15 @@ environment from a fixed list of `staging` or `production`.
 
 Which trigger configuration should you use?
 
-- A. `on: repository_dispatch` with a `client_payload` object
-- B. `on: workflow_dispatch` with an input of `type: choice` and an `options` list
-- C. `on: workflow_call` with a required input of `type: string`
+- A. `on: workflow_dispatch` with `type: choice` and `options`
+- B. `on: repository_dispatch` with a `client_payload` object
+- C. `on: workflow_call` with a required `type: string` input
 - D. `on: schedule` combined with a job-level `if` condition
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: B
+### Answer: A
 
 **In `challenge-19.md`:** lines **53–62**.
 
@@ -135,7 +135,7 @@ Which trigger configuration should you use?
 
 **Why the others fail**
 
-- **A** — `repository_dispatch` is triggered by an external **API call**, not by a person clicking a
+- **B** — `repository_dispatch` is triggered by an external **API call**, not by a person clicking a
   button. There is no UI form
 - **C** — `workflow_call` makes this workflow callable *by another workflow*. It adds no button. Also
   `type: string` gives a free-text box, not a fixed list
@@ -156,14 +156,14 @@ job authenticates using `secrets.GITHUB_TOKEN`.
 What should you add to resolve the failure?
 
 - A. A personal access token stored as a repository secret
-- B. A `packages: write` entry under the `permissions` key
-- C. A `contents: write` entry under the `permissions` key
-- D. A classic PAT with the `write:packages` scope in the org
+- B. A `contents: write` entry under `permissions`
+- C. A `packages: write` entry under `permissions`
+- D. A classic PAT with `write:packages` scope in the org
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: B
+### Answer: C
 
 **In `challenge-19.md`:** lines **170–172** (the `docker` job), and Break & fix Exercise 2 at lines
 **430–448**.
@@ -183,7 +183,7 @@ packages.
 - **A** and **D** — both add a credential you do not need. A PAT is long-lived, must be rotated, and
   is a bigger blast radius than a token that expires with the run. On the exam, adding a PAT when the
   built-in token would work is almost always wrong
-- **C** — `contents` controls the **repository files** (code, releases). Packages are a separate
+- **B** — `contents` controls the **repository files** (code, releases). Packages are a separate
   permission scope
 
 **Term:** *least-privilege workflow permissions*. Built-in token failing → add a permission, not a
@@ -244,14 +244,14 @@ without adding an extra runner.
 What should you create?
 
 - A. A reusable workflow invoked with `workflow_call`
-- B. A composite action stored in `.github/actions`
-- C. A starter workflow in the organization `.github` repository
-- D. A job template referenced with the `extends` keyword
+- B. A starter workflow in the organization `.github` repo
+- C. A job template referenced with the `extends` keyword
+- D. A composite action stored in `.github/actions`
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: B
+### Answer: D
 
 **In `challenge-19.md`:** Task 4 begins at line **276**; the action file starts at line **281**; it is
 used at lines **330–333**.
@@ -270,9 +270,9 @@ same workspace.
 
 - **A** — a reusable workflow is called at **job** level and always runs as its own job on its own
   runner. That directly violates "no extra runner"
-- **C** — a starter workflow is a **template** shown in the "New workflow" UI. It is copied once when
+- **B** — a starter workflow is a **template** shown in the "New workflow" UI. It is copied once when
   someone creates a workflow. Edit it later and existing workflows do not change
-- **D** — `extends` is Azure Pipelines syntax. GitHub Actions has no such keyword
+- **C** — `extends` is Azure Pipelines syntax. GitHub Actions has no such keyword
 
 **Term:** *composite action = steps, same runner. Reusable workflow = jobs, own runner.*
 
@@ -286,15 +286,15 @@ A `docker` job must run only when a commit is pushed to `main`, and never on a p
 
 Which job-level condition meets the requirement?
 
-- A. `if: github.ref_name == 'main'`
-- B. `if: github.event_name == 'push' && github.ref == 'refs/heads/main'`
-- C. `if: github.base_ref == 'main' && github.event_name == 'push'`
+- A. `if: github.event_name == 'push' && github.ref == 'refs/heads/main'`
+- B. `if: github.ref_name == 'main' && github.event_name != 'schedule'`
+- C. `if: github.base_ref == 'main' && github.event_name == 'push' && !cancelled()`
 - D. `if: startsWith(github.ref, 'refs/pull/') == false`
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: B
+### Answer: A
 
 **In `challenge-19.md`:** line **169**.
 
@@ -307,7 +307,7 @@ You need **both** halves: the event excludes pull requests, the ref pins the bra
 
 **Why the others fail**
 
-- **A** — checks only the branch name. It does not exclude other event types, and `ref_name` behaves
+- **B** — checks only the branch name. It does not exclude other event types, and `ref_name` behaves
   awkwardly on PR refs
 - **C** — `github.base_ref` is **only populated on pull requests**. On a push it is empty, so this
   condition is always false and the job never runs
@@ -328,15 +328,15 @@ it as `${{ env.APP_NAME }}` and receives an empty value.
 
 How should the step reference the value?
 
-- A. `${{ vars.APP_NAME }}`
-- B. `${{ secrets.APP_NAME }}`
-- C. `${{ github.APP_NAME }}`
+- A. `${{ secrets.APP_NAME }}`
+- B. `${{ github.APP_NAME }}`
+- C. `${{ vars.APP_NAME }}`
 - D. `${{ inputs.APP_NAME }}`
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: C
 
 **In `challenge-19.md`:** created at line **349**; the broken form is ERROR 4 at line **390**; the
 fix is at line **426**.
@@ -363,8 +363,8 @@ env:
 
 **Why the others fail**
 
-- **B** — `secrets` reads secrets. `APP_NAME` was created as a variable, so it is not there
-- **C** — the `github` context holds event metadata (`github.repository`, `github.ref`,
+- **A** — `secrets` reads secrets. `APP_NAME` was created as a variable, so it is not there
+- **B** — the `github` context holds event metadata (`github.repository`, `github.ref`,
   `github.actor`). You cannot add your own keys to it
 - **D** — `inputs` holds `workflow_dispatch` or `workflow_call` inputs, not repository settings
 
@@ -381,14 +381,14 @@ A workflow defines `strategy: matrix: test-type: [unit, integration]` on its `te
 How many jobs does this produce, and how do they execute?
 
 - A. One job that loops through both values sequentially
-- B. Two jobs that run in parallel, one per matrix value
-- C. Two jobs that run sequentially in the declared order
-- D. One job per runner label available in the pool
+- B. Two jobs that run sequentially in the declared order
+- C. One job per runner label available in the pool
+- D. Two jobs that run in parallel, one per matrix value
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: B
+### Answer: D
 
 **In `challenge-19.md`:** lines **120–122**, used at line **147**.
 
@@ -408,9 +408,9 @@ graph this appeared as "Matrix: Run tests".
 
 **Why the others fail**
 
-- **A** and **C** — a matrix never runs sequentially by default. If you *want* that, you set
+- **A** and **B** — a matrix never runs sequentially by default. If you *want* that, you set
   `max-parallel: 1`
-- **D** — runner labels are unrelated. The count comes from the matrix values
+- **C** — runner labels are unrelated. The count comes from the matrix values
 
 **Defaults worth memorising:** parallel by default, `fail-fast: true` by default, `max-parallel` caps
 concurrency, and each leg gets its **own** workspace.
@@ -425,15 +425,15 @@ The `test` job declares a `services:` block containing a Redis container with he
 
 What is the purpose of the `--health-cmd` and `--health-retries` options?
 
-- A. They restart the container automatically if the application crashes
-- B. They delay the job's steps until the service reports it is ready
-- C. They publish container health metrics to the workflow run summary
-- D. They limit how long the service container is allowed to run
+- A. They delay the job's steps until the service reports ready
+- B. They restart the container automatically if it crashes
+- C. They publish container health metrics to the run summary
+- D. They limit how long the service container may run
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: B
+### Answer: A
 
 **In `challenge-19.md`:** lines **123–133**.
 
@@ -455,7 +455,7 @@ when it succeeds does step 1 of your job begin.
 
 **Why the others fail**
 
-- **A** — Docker health checks **report** status; they do not restart anything. Restart policies are
+- **B** — Docker health checks **report** status; they do not restart anything. Restart policies are
   a different setting
 - **C** — nothing is published to the run summary. The health result is internal to the runner
 - **D** — that would be a timeout on the job, not a health check
@@ -474,15 +474,15 @@ repository.
 
 Which permission must the job declare?
 
-- A. `id-token: write`
-- B. `contents: write`
-- C. `actions: write`
+- A. `contents: write`
+- B. `actions: write`
+- C. `id-token: write`
 - D. `deployments: write`
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: C
 
 **In `challenge-19.md`:** line **229** shows the *credential-storing* version you must move away
 from.
@@ -516,8 +516,8 @@ a federated credential. Nothing secret is stored.
 
 **Why the others fail**
 
-- **B** — `contents` controls repository files
-- **C** — `actions` controls workflow runs and artifacts via the API
+- **A** — `contents` controls repository files
+- **B** — `actions` controls workflow runs and artifacts via the API
 - **D** — `deployments` lets you create deployment records. Related to environments, unrelated to
   authenticating to Azure
 
@@ -536,8 +536,8 @@ environment.
 When does the approval gate take effect?
 
 - A. When the workflow file is committed to the default branch
-- B. When the job reaches the front of the queue, before its first step runs
-- C. After the job's first step completes and before the deploy step
+- B. When the job is queued, before its first step runs
+- C. After the job's first step completes, before the deploy step
 - D. Only when the workflow is triggered by `workflow_dispatch`
 
 <details>
@@ -578,15 +578,15 @@ scoped to the `production` environment. A job declares `environment: name: stagi
 
 Which value does `${{ secrets.DB_CONNECTION_STRING }}` resolve to in that job?
 
-- A. The staging value
-- B. The production value
-- C. An empty string, because environment secrets need a prefix
-- D. Whichever secret was created most recently
+- A. The production value, since it was defined last
+- B. An empty string — environment secrets need a prefix
+- C. Whichever secret was created most recently
+- D. The staging value, from the declared environment
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: D
 
 **In `challenge-19.md`:** lines **345–346** create them; lines **224–225** declare the environment.
 
@@ -603,10 +603,10 @@ gh secret set DB_CONNECTION_STRING --env production --body "Server=prod-db..."  
 
 **Why the others fail**
 
-- **B** — nothing about production applies. The job did not declare that environment
-- **C** — there is no prefix syntax. The same expression resolves differently per environment, which
+- **A** — nothing about production applies. The job did not declare that environment
+- **B** — there is no prefix syntax. The same expression resolves differently per environment, which
   is the whole point
-- **D** — creation order is irrelevant. Scope decides
+- **C** — creation order is irrelevant. Scope decides
 
 **The important corollary:** the `build` job has **no** `environment:` (line 75), so it cannot read
 either value — even though it is in the same workflow file.
@@ -621,15 +621,15 @@ The `docker` job uses `cache-from: type=gha` and `cache-to: type=gha,mode=max`.
 
 What does this configuration do?
 
-- A. Stores the built image in GitHub Packages for later jobs
-- B. Stores Docker layer cache in the GitHub Actions cache backend
+- A. Stores Docker layer cache in the GitHub Actions cache backend
+- B. Stores the built image in GitHub Packages for later jobs
 - C. Caches npm dependencies used inside the Dockerfile
 - D. Reuses the previous job's runner filesystem between runs
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: B
+### Answer: A
 
 **In `challenge-19.md`:** lines **208–209**.
 
@@ -649,7 +649,7 @@ the build-stage layers are the expensive ones.
 
 **Why the others fail**
 
-- **A** — pushing the image is `push: true` at line 205. Cache and image are separate things
+- **B** — pushing the image is `push: true` at line 205. Cache and image are separate things
 - **C** — npm caching is `actions/setup-node` with `cache: "npm"` (line 89). That runs on the runner,
   not inside the image build
 - **D** — runners are ephemeral. Nothing on their filesystem survives
@@ -667,14 +667,14 @@ In a step that uses `actions/setup-node@v4`, you add `cache: "npm"`.
 What does this setting cache?
 
 - A. The `node_modules` directory in the workspace
-- B. The global npm download cache, keyed on the lock file
-- C. The built output produced by `npm run build`
+- B. The built output produced by `npm run build`
+- C. The global npm download cache, keyed on the lockfile
 - D. The Node.js runtime binary for reuse across jobs
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: B
+### Answer: C
 
 **In `challenge-19.md`:** lines **86–89**, and the manual equivalent in the composite action at lines
 **312–319**.
@@ -700,7 +700,7 @@ Change a dependency → the lock file hash changes → the key changes → cache
 
 - **A** — `npm ci` **deletes and recreates** `node_modules` every time by design. Caching it would
   fight the tool. The download cache is what makes `npm ci` fast
-- **C** — build output goes to an artifact (line 109), not a cache
+- **B** — build output goes to an artifact (line 109), not a cache
 - **D** — `setup-node` downloads the runtime separately; that is tool caching, not this setting
 
 </details>
@@ -763,14 +763,14 @@ You must map a GitHub Actions workflow to its Azure Pipelines equivalent.
 Which Azure Pipelines keyword corresponds to `runs-on:`?
 
 - A. `trigger:`
-- B. `pool:`
-- C. `stage:`
-- D. `container:`
+- B. `stage:`
+- C. `container:`
+- D. `pool:`
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: B
+### Answer: D
 
 **In `challenge-19.md`:** line **77** (`runs-on: ubuntu-latest`).
 
@@ -790,8 +790,8 @@ Which Azure Pipelines keyword corresponds to `runs-on:`?
 **Why the others fail**
 
 - **A** — `trigger:` is the Azure Pipelines equivalent of `on:`, not `runs-on:`
-- **C** — `stage:` groups jobs. GitHub Actions has no stage concept at all
-- **D** — `container:` runs steps inside a container **on** an agent. It does not choose the agent
+- **B** — `stage:` groups jobs. GitHub Actions has no stage concept at all
+- **C** — `container:` runs steps inside a container **on** an agent. It does not choose the agent
 
 **Term:** memorise the full mapping table (see Q32). It generates questions in every domain.
 
@@ -810,39 +810,39 @@ A step writes a value to `$GITHUB_OUTPUT`, and a later job must read it.
 Which **three** items are required? (Choose three.)
 
 - A. The producing step must have an `id` property
-- B. The producing job must declare a job-level `outputs` mapping
-- C. The consuming job must declare `needs` on the producing job
-- D. The value must also be written to `$GITHUB_ENV`
-- E. The consuming job must run on the same runner label
+- B. The value must also be written to `$GITHUB_ENV`
+- C. The producing job must declare a job-level `outputs` map
+- D. The consuming job must run on the same runner label
+- E. The consuming job must declare `needs` on the producing job
 - F. The producing job must set `continue-on-error: false`
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A, B, C
+### Answer: A, C, E
 
-**In `challenge-19.md`:** line **98** (A), lines **78–80** (B), line **167** (C).
+**In `challenge-19.md`:** line **98** (A), lines **78–80** (C), line **167** (E).
 
 ```yaml
   build:
     outputs:
-      version: ${{ steps.version.outputs.version }}   # B - line 78
+      version: ${{ steps.version.outputs.version }}   # C - line 78
     steps:
       - name: Generate version info
         id: version                                   # A - line 98
         run: echo "version=1.2.3" >> $GITHUB_OUTPUT   # line 102
 
   docker:
-    needs: [build, test]                              # C - line 167
+    needs: [build, test]                              # E - line 167
     steps:
       - run: echo ${{ needs.build.outputs.version }}
 ```
 
 **Why the others fail**
 
-- **D** — `$GITHUB_ENV` sets an env var for later steps **in the same job**. It stops at the job
+- **B** — `$GITHUB_ENV` sets an env var for later steps **in the same job**. It stops at the job
   boundary. Writing to both changes nothing
-- **E** — outputs travel through GitHub's service, not the filesystem. Runner labels are irrelevant
+- **D** — outputs travel through GitHub's service, not the filesystem. Runner labels are irrelevant
 - **F** — `continue-on-error` controls what happens when a step fails. It has no role in data flow
 
 **Term:** *the three-part output chain*. Break any link and you get `""` with no error message.
@@ -855,16 +855,16 @@ Which **three** items are required? (Choose three.)
 
 Which **two** statements about composite actions are correct? (Choose two.)
 
-- A. Every `run` step must specify a `shell` value
-- B. They execute inside the calling job on the same runner
-- C. They are invoked with the `workflow_call` trigger
-- D. They appear as a separate job in the run graph
+- A. They are invoked with the `workflow_call` trigger
+- B. Every `run` step must specify a `shell` value
+- C. They appear as a separate job in the run graph
+- D. They execute inside the calling job on the same runner
 - E. They require an `on:` key at the top of the file
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A, B
+### Answer: B, D
 
 **In `challenge-19.md`:** lines **299–324** (the action), lines **330–333** (the call).
 
@@ -873,20 +873,20 @@ runs:
   using: "composite"        # line 300
   steps:
     - name: Install dependencies
-      shell: bash           # line 322 - A
+      shell: bash           # line 322 - B
       run: npm ci
 ```
 
 ```yaml
       - name: Setup project
-        uses: ./.github/actions/setup-node-project    # line 331 - B, called from steps:
+        uses: ./.github/actions/setup-node-project    # line 331 - D, called from steps:
 ```
 
 **Why the others fail**
 
-- **C** — `workflow_call` is the **reusable workflow** trigger. A composite action has no triggers at
+- **A** — `workflow_call` is the **reusable workflow** trigger. A composite action has no triggers at
   all; it is invoked by `uses:` inside `steps:`
-- **D** — it never appears as its own job. Its steps show inline within the calling job
+- **C** — it never appears as its own job. Its steps show inline within the calling job
 - **E** — `on:` belongs to workflows. An action file has `name`, `inputs`, `outputs`, `runs`
 
 </details>
@@ -901,15 +901,15 @@ build runs on the default branch.
 Which **two** `docker/metadata-action` tag entries meet the requirement? (Choose two.)
 
 - A. `type=sha,prefix=`
-- B. `type=raw,value=latest,enable={{is_default_branch}}`
-- C. `type=ref,event=pr`
-- D. `type=schedule,pattern=nightly`
-- E. `type=raw,value=latest`
+- B. `type=ref,event=pr,prefix=pr-`
+- C. `type=schedule,pattern=nightly`
+- D. `type=raw,value=latest,enable={{is_default_branch}}`
+- E. `type=raw,value=latest,enable=true`
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A, B
+### Answer: A, D
 
 **In `challenge-19.md`:** lines **195–198**.
 
@@ -917,13 +917,13 @@ Which **two** `docker/metadata-action` tag entries meet the requirement? (Choose
           tags: |
             type=sha,prefix=                                       # line 196 - A
             type=semver,pattern={{version}},value=${{ needs.build.outputs.version }}
-            type=raw,value=latest,enable={{is_default_branch}}      # line 198 - B
+            type=raw,value=latest,enable={{is_default_branch}}      # line 198 - D
 ```
 
 **Why the others fail**
 
-- **C** — `type=ref,event=pr` tags images built from pull requests, e.g. `pr-42`. Not asked for
-- **D** — `type=schedule` only applies to scheduled runs
+- **B** — `type=ref,event=pr` tags images built from pull requests, e.g. `pr-42`. Not asked for
+- **C** — `type=schedule` only applies to scheduled runs
 - **E** — **this is the trap.** Same tag, no `enable` condition. It would tag `latest` on **every**
   branch, so a push to `feature/x` overwrites the `latest` that production pulls
 
@@ -938,26 +938,26 @@ Which **two** `docker/metadata-action` tag entries meet the requirement? (Choose
 Which **two** actions are required for a job to push an image to GitHub Container Registry using the
 built-in token? (Choose two.)
 
-- A. Declare `packages: write` in the job `permissions`
-- B. Authenticate with `docker/login-action` using `secrets.GITHUB_TOKEN`
-- C. Create a fine-grained PAT with package write scope
-- D. Set `id-token: write` in the job `permissions`
-- E. Enable Dependabot on the repository
+- A. Create a fine-grained PAT with package write scope
+- B. Declare `packages: write` in the job `permissions`
+- C. Set `id-token: write` in the job `permissions`
+- D. Authenticate with `docker/login-action` and `GITHUB_TOKEN`
+- E. Enable Dependabot alerts on the repository
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A, B
+### Answer: B, D
 
 **In `challenge-19.md`:** lines **170–172** (A), lines **183–189** (B).
 
 ```yaml
     permissions:
       contents: read
-      packages: write                        # A - line 172
+      packages: write                        # B - line 172
     steps:
       - name: Log in to GitHub Container Registry
-        uses: docker/login-action@v3         # B - line 184
+        uses: docker/login-action@v3         # D - line 184
         with:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
@@ -968,8 +968,8 @@ Permission without login = not authenticated. Login without permission = 403. **
 
 **Why the others fail**
 
-- **C** — the question says "using the built-in token". A PAT is a different credential
-- **D** — `id-token: write` is for OIDC to a cloud provider. GHCR does not use it
+- **A** — the question says "using the built-in token". A PAT is a different credential
+- **C** — `id-token: write` is for OIDC to a cloud provider. GHCR does not use it
 - **E** — Dependabot scans dependencies. Nothing to do with registry auth
 
 </details>
@@ -981,16 +981,16 @@ Permission without login = not authenticated. Login without permission = 403. **
 Which **two** contexts can a workflow use to read values configured in repository settings? (Choose
 two.)
 
-- A. `secrets`
-- B. `vars`
-- C. `runner`
-- D. `strategy`
-- E. `matrix`
+- A. `runner`
+- B. `strategy`
+- C. `secrets`
+- D. `matrix`
+- E. `vars`
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A, B
+### Answer: C, E
 
 **In `challenge-19.md`:** Task 5, lines **340–354**.
 
@@ -1008,9 +1008,9 @@ ${{ vars.APP_NAME }}
 
 All three are **runtime** contexts supplied by the platform — you cannot configure them in settings.
 
-- **C** — `runner.os`, `runner.temp`, `runner.arch`. Facts about the machine
-- **D** — `strategy.job-index`, `strategy.fail-fast`. Facts about the matrix run
-- **E** — `matrix.test-type` (line 147). The current matrix leg's values
+- **A** — `runner.os`, `runner.temp`, `runner.arch`. Facts about the machine
+- **B** — `strategy.job-index`, `strategy.fail-fast`. Facts about the matrix run
+- **D** — `matrix.test-type` (line 147). The current matrix leg's values
 
 </details>
 
@@ -1024,16 +1024,16 @@ allow manual runs.
 Which **three** trigger keys are required? (Choose three.)
 
 - A. `push`
-- B. `pull_request`
-- C. `workflow_dispatch`
-- D. `workflow_call`
-- E. `repository_dispatch`
+- B. `workflow_call`
+- C. `pull_request`
+- D. `repository_dispatch`
+- E. `workflow_dispatch`
 - F. `schedule`
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A, B, C
+### Answer: A, C, E
 
 **In `challenge-19.md`:** lines **48–53** — exactly as written.
 
@@ -1042,15 +1042,15 @@ on:
   push:
     branches: [main]        # A - line 49
   pull_request:
-    branches: [main]        # B - line 51
-  workflow_dispatch:        # C - line 53
+    branches: [main]        # C - line 51
+  workflow_dispatch:        # E - line 53
 ```
 
 **Why the others fail**
 
-- **D** — `workflow_call` makes the workflow **callable by another workflow**. That is not an event
+- **B** — `workflow_call` makes the workflow **callable by another workflow**. That is not an event
   a person or a push produces
-- **E** — `repository_dispatch` fires from an **external API call**, not from a UI button
+- **D** — `repository_dispatch` fires from an **external API call**, not from a UI button
 - **F** — `schedule` is cron-based. Nothing in the requirement mentions time
 
 </details>
@@ -1062,16 +1062,16 @@ on:
 Which **two** are valid reasons to move lint and unit tests out of a `Dockerfile` and into separate
 pipeline jobs? (Choose two.)
 
-- A. Test results can be published and annotated in the run
-- B. The image build no longer requires test files in its context
-- C. The resulting image will always be smaller than a single-stage build
-- D. Docker layer caching becomes unavailable when tests are present
+- A. The resulting image will always be smaller than single-stage
+- B. Test results can be published and annotated in the run
+- C. Docker layer caching becomes unavailable with tests present
+- D. The image build no longer requires test files in its context
 - E. Multi-stage builds cannot run commands in the build stage
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A, B
+### Answer: B, D
 
 **In `challenge-19.md`:** line **167** shows why it is safe — `needs: [build, test]` means lint and
 tests already passed before the image is built.
@@ -1093,9 +1093,9 @@ RUN npm run build
 
 **Why the others fail**
 
-- **C** — image size comes from *stages and what you copy*, not from whether tests ran. Your runtime
+- **A** — image size comes from *stages and what you copy*, not from whether tests ran. Your runtime
   stage was already slim
-- **D** — false. Layer caching works with or without test steps
+- **C** — false. Layer caching works with or without test steps
 - **E** — false. Build stages run commands all the time — that is the point of `RUN npm run build`
 
 **Term:** *the Dockerfile produces the artifact; the pipeline decides whether it is allowed to exist.*
@@ -1643,7 +1643,7 @@ on:
           - production
 ```
 
-- **BLANK 1:** `workflow_call` / `workflow_dispatch` / `repository_dispatch` / `schedule`
+- **BLANK 1:** `workflow_call` / `repository_dispatch` / `workflow_dispatch` / `schedule`
 - **BLANK 2:** `string` / `choice` / `environment` / `boolean`
 
 <details>
@@ -1680,8 +1680,8 @@ docker:
     [BLANK 2]: write
 ```
 
-- **BLANK 1:** `permissions` / `defaults` / `concurrency` / `strategy`
-- **BLANK 2:** `packages` / `contents` / `id-token` / `deployments`
+- **BLANK 1:** `defaults` / `concurrency` / `permissions` / `strategy`
+- **BLANK 2:** `contents` / `id-token` / `deployments` / `packages`
 
 <details>
 <summary>Show answer</summary>
@@ -1710,9 +1710,9 @@ build:
       run: echo "version=1.2.3" >> [BLANK 3]
 ```
 
-- **BLANK 1:** `outputs` / `env` / `with` / `vars`
+- **BLANK 1:** `env` / `outputs` / `with` / `vars`
 - **BLANK 2:** `name` / `id` / `key` / `ref`
-- **BLANK 3:** `$GITHUB_ENV` / `$GITHUB_OUTPUT` / `$GITHUB_STATE` / `$GITHUB_PATH`
+- **BLANK 3:** `$GITHUB_ENV` / `$GITHUB_STATE` / `$GITHUB_PATH` / `$GITHUB_OUTPUT`
 
 <details>
 <summary>Show answer</summary>
@@ -1746,8 +1746,8 @@ runs:
       run: npm ci
 ```
 
-- **BLANK 1:** `using` / `type` / `mode` / `kind`
-- **BLANK 2:** `shell` / `run-with` / `interpreter` / `env`
+- **BLANK 1:** `type` / `mode` / `using` / `kind`
+- **BLANK 2:** `run-with` / `interpreter` / `env` / `shell`
 
 <details>
 <summary>Show answer</summary>
@@ -1774,8 +1774,8 @@ deploy-staging:
     [BLANK 2]: https://contoso-api-staging.azurewebsites.net
 ```
 
-- **BLANK 1:** `environment` / `concurrency` / `defaults` / `container`
-- **BLANK 2:** `url` / `link` / `endpoint` / `host`
+- **BLANK 1:** `concurrency` / `environment` / `defaults` / `container`
+- **BLANK 2:** `link` / `endpoint` / `url` / `host`
 
 <details>
 <summary>Show answer</summary>
@@ -1804,8 +1804,8 @@ steps:
       subscription-id: ${{ [BLANK 2].AZURE_SUBSCRIPTION_ID }}
 ```
 
-- **BLANK 1:** `id-token` / `contents` / `packages` / `actions`
-- **BLANK 2:** `secrets` / `env` / `inputs` / `needs`
+- **BLANK 1:** `contents` / `packages` / `actions` / `id-token`
+- **BLANK 2:** `env` / `secrets` / `inputs` / `needs`
 
 <details>
 <summary>Show answer</summary>
@@ -1867,14 +1867,14 @@ You must meet the requirement for unit and integration tests. What should you co
 job?
 
 - A. Two separate jobs, each with its own `needs` declaration
-- B. A `strategy` block with a `matrix` containing both test types
-- C. A single job with two sequential `run` steps
+- B. A single job with two sequential `run` steps
+- C. A `strategy` block with a `matrix` of both test types
 - D. A `services` block with two container definitions
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: B
+### Answer: C
 
 **In `challenge-19.md`:** lines **120–122**, consumed at line **147**.
 
@@ -1888,7 +1888,7 @@ job?
 
 - **A** — this *does* run them in parallel, but duplicates the entire job definition twice. When a
   matrix fits, the exam wants the matrix
-- **C** — sequential steps in one job is the opposite of the requirement
+- **B** — sequential steps in one job is the opposite of the requirement
 - **D** — `services` starts **support containers** (line 123, Redis). It does not run tests
 
 </details>
@@ -1899,15 +1899,15 @@ job?
 
 You must meet the approval requirement for production. What should you configure?
 
-- A. A required reviewer on the `production` environment
-- B. A branch protection rule requiring one approving review
+- A. A branch protection rule requiring one approving review
+- B. A required reviewer on the `production` environment
 - C. A `workflow_dispatch` trigger with a confirmation input
 - D. A `concurrency` group scoped to the production job
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: B
 
 **In `challenge-19.md`:** lines **258–259**.
 
@@ -1919,7 +1919,7 @@ You must meet the approval requirement for production. What should you configure
 
 **Why the others fail**
 
-- **B is the trap.** Branch protection requires review before **merging code**. It says nothing about
+- **A is the trap.** Branch protection requires review before **merging code**. It says nothing about
   deploying. Merge once, then deploy that same commit fifty times with zero approvals
 - **C** — an input is just a form field. Anyone triggering the run fills it in themselves. That is
   not an approval by another person
@@ -1937,21 +1937,21 @@ The exam swaps them on purpose.
 You must meet the requirement that production is never deployed from another branch. Which **two**
 options achieve this? (Choose two.)
 
-- A. A deployment branch rule on the `production` environment
-- B. A job-level `if` condition checking `github.ref`
-- C. A `concurrency` group named after the branch
-- D. A `paths-ignore` filter on the push trigger
+- A. A `concurrency` group named after the branch
+- B. A deployment branch rule on the `production` environment
+- C. A `paths-ignore` filter on the push trigger
+- D. A job-level `if` condition checking `github.ref`
 - E. A required status check on the `main` branch
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A, B
+### Answer: B, D
 
-**A** — Settings → Environments → production → deployment branches. Enforced by GitHub even if
+**B** — Settings → Environments → production → deployment branches. Enforced by GitHub even if
 someone edits the workflow file.
 
-**B** — in the workflow, the same pattern as line **169**:
+**D** — in the workflow, the same pattern as line **169**:
 
 ```yaml
   deploy-production:
@@ -1962,8 +1962,8 @@ Both are accepted, and using both is defence in depth: the environment rule surv
 
 **Why the others fail**
 
-- **C** — `concurrency` controls how many runs execute at once, not which branch may deploy
-- **D** — `paths-ignore` decides whether the workflow **triggers**, based on which files changed
+- **A** — `concurrency` controls how many runs execute at once, not which branch may deploy
+- **C** — `paths-ignore` decides whether the workflow **triggers**, based on which files changed
 - **E** — a status check governs merging into `main`, not deploying from it
 
 </details>
@@ -1974,7 +1974,7 @@ Both are accepted, and using both is defence in depth: the environment rule surv
 
 You must meet the security requirement for Azure credentials. What should you implement?
 
-- A. Workload identity federation with OIDC and `id-token: write`
+- A. Workload identity federation with `id-token: write`
 - B. A service principal secret stored as `AZURE_CREDENTIALS`
 - C. A system-assigned managed identity on the runner
 - D. A fine-grained PAT rotated every thirty days
@@ -2026,15 +2026,15 @@ The constraint is in the requirements: **"No long-lived Azure credential may be 
 
 You must meet the requirement for the six repeated setup steps. What should you create?
 
-- A. A composite action in `.github/actions`
-- B. A starter workflow in the `.github` repository
-- C. A YAML anchor at the top of each workflow
-- D. A `defaults` block applied to every job
+- A. A starter workflow in the `.github` repository
+- B. A YAML anchor at the top of each workflow
+- C. A `defaults` block applied to every job
+- D. A composite action in `.github/actions`
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: D
 
 **In `challenge-19.md`:** Task 4, lines **276–334**.
 
@@ -2046,11 +2046,11 @@ You must meet the requirement for the six repeated setup steps. What should you 
 
 **Why the others fail**
 
-- **B is the trap.** A starter workflow is a template in the "New workflow" UI. It is **copied once**
+- **A is the trap.** A starter workflow is a template in the "New workflow" UI. It is **copied once**
   when someone creates a workflow. Change the starter later and existing workflows do not update. A
   composite action is referenced live, so one edit updates every caller
-- **C** — GitHub Actions does **not** support YAML anchors. The parser rejects them
-- **D** — `defaults` sets `shell` and `working-directory`. It cannot contain steps
+- **B** — GitHub Actions does **not** support YAML anchors. The parser rejects them
+- **C** — `defaults` sets `shell` and `working-directory`. It cannot contain steps
 
 </details>
 
@@ -2061,15 +2061,15 @@ You must meet the requirement for the six repeated setup steps. What should you 
 You must verify staging automatically before production is deployed. Which configuration meets the
 requirement?
 
-- A. A smoke-test step in `deploy-staging`, with `deploy-production` declaring `needs: deploy-staging`
-- B. A smoke-test step in `deploy-production` running before the swap step
-- C. A scheduled workflow that checks staging every fifteen minutes
-- D. A branch protection rule requiring a passing status check on `main`
+- A. A smoke-test step in `deploy-production` before the swap step
+- B. A smoke test in `deploy-staging`, with production `needs` it
+- C. A scheduled workflow checking staging every fifteen minutes
+- D. A branch protection rule requiring a passing status check
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: B
 
 **In `challenge-19.md`:** lines **240–252** (the smoke test), line **256** (`needs`).
 
@@ -2092,7 +2092,7 @@ requirement?
 
 **Why the others fail**
 
-- **B** — by the time `deploy-production` starts, the production deployment has already begun and the
+- **A** — by the time `deploy-production` starts, the production deployment has already begun and the
   environment approval has already been consumed. Too late
 - **C** — a schedule is not tied to a deployment. It could pass fifteen minutes before a bad deploy
 - **D** — status checks gate merges, not deployments (same boundary as Q43)
@@ -2108,15 +2108,15 @@ to GHCR. The security team refuses to allow any personal access token.
 
 What should you do?
 
-- A. Add `packages: write` to the job's `permissions` block
-- B. Create a classic PAT with `write:packages` and store it as a secret
-- C. Change the registry to Azure Container Registry
+- A. Create a classic PAT with `write:packages` and store it
+- B. Change the registry to Azure Container Registry
+- C. Add `packages: write` to the job's `permissions` block
 - D. Grant the repository `admin` role to the workflow actor
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: C
 
 **In `challenge-19.md`:** lines **170–172**, and Break & fix Exercise 2 at lines **430–448**.
 
@@ -2128,14 +2128,14 @@ What should you do?
 
 **Why the others fail**
 
-- **B** — the last sentence explicitly forbids it. **This is your recorded failure pattern**: the
+- **A** — the last sentence explicitly forbids it. **This is your recorded failure pattern**: the
   technically-workable option that ignores the stated constraint
-- **C** — swapping registries to avoid fixing a one-line permission. The exam includes options like
+- **B** — swapping registries to avoid fixing a one-line permission. The exam includes options like
   this to test whether you solve the problem or route around it
 - **D** — repository roles govern people, not the workflow token's scope. Admin on the repo would not
   change what `GITHUB_TOKEN` is allowed to do
 
-**Name the constraint, then eliminate.** "No PAT" removes B before you evaluate anything else.
+**Name the constraint, then eliminate.** "No PAT" removes A before you evaluate anything else.
 
 </details>
 

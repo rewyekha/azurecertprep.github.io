@@ -47,15 +47,15 @@ The scenario at line 20 is 200 contributors on one access level, an intern who c
 
 What is the difference between GitHub's **Maintain** and **Write** roles?
 
-- A. Maintain can merge PRs; Write cannot
-- B. Maintain can manage repository settings; Write can push code and manage issues and PRs
-- C. Maintain can push to protected branches; Write cannot push at all
-- D. They are aliases
+- A. Maintain can merge pull requests; Write cannot merge at all
+- B. Maintain can push to protected branches; Write cannot push
+- C. They are aliases for the same underlying permission set
+- D. Maintain manages settings; Write pushes code and manages PRs
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: B
+### Answer: D
 
 **In `challenge-09.md`:** lines **40** and **49**, with the explanation at **555**.
 
@@ -67,7 +67,7 @@ What is the difference between GitHub's **Maintain** and **Write** roles?
 **Maintain is "manage the repository without owning it".** Description, topics, wiki, interaction limits
 — and **not** visibility, deletion or access management, which stay with Admin.
 
-**Why C is the misconception worth killing.** No role bypasses branch protection by default. That is what
+**Why B is the misconception worth killing.** No role bypasses branch protection by default. That is what
 `enforce_admins` and bypass lists control (Challenge 08), not the role.
 
 **Read the comment on line 49 carefully**: Write pushes to **non-protected** branches. On a repository
@@ -81,16 +81,15 @@ where `main` is protected, Write means "push a feature branch and open a PR".
 
 What is the key difference between an annotated and a lightweight tag?
 
-- A. Annotated tags can be pushed; lightweight cannot
-- B. Annotated tags are full objects with tagger, date and message; lightweight tags are pointers to a
-  commit
-- C. Annotated tags are encrypted
-- D. Annotated tags require a GPG key
+- A. Annotated tags are full objects; lightweight are pointers
+- B. Annotated tags can be pushed; lightweight tags cannot be
+- C. Annotated tags are encrypted; lightweight tags are plain
+- D. Annotated tags require a GPG key; lightweight tags do not
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: B
+### Answer: A
 
 **In `challenge-09.md`:** lines **231–232**.
 
@@ -117,15 +116,15 @@ why every release tag in this challenge uses `-a`.
 
 How do you restrict a group from modifying a specific **path** in an Azure Repos repository?
 
-- A. A `.gitignore` entry
-- B. Path-level security using the Git Repositories namespace with a path-scoped token
-- C. A separate repository for the protected files
+- A. A `.gitignore` entry excluding the protected path
+- B. A separate repository for the protected files
+- C. Path-level security with a path-scoped token
 - D. Branch policies with file-pattern exclusions
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: B
+### Answer: C
 
 **In `challenge-09.md`:** lines **163–167**.
 
@@ -155,15 +154,15 @@ with CODEOWNERS plus required code owner review — which is the fix in Break sc
 
 `git describe --tags` returns `v1.2.0-47-g2414721`. What does it mean?
 
-- A. v1.2.0 was released 47 days ago
-- B. HEAD is 47 commits after the `v1.2.0` tag, at short SHA `2414721`
-- C. 47 files changed since v1.2.0
-- D. Build 47 with hash prefix 2414721
+- A. HEAD is 47 commits past `v1.2.0`, SHA `2414721`
+- B. 47 files changed since the `v1.2.0` tag was cut
+- C. Build number 47 with hash prefix `2414721`
+- D. `v1.2.0` was released 47 days before the build
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: B
+### Answer: A
 
 **In `challenge-09.md`:** lines **235–236** and **588**.
 
@@ -187,15 +186,15 @@ commits past a release".**
 
 An intern's change to `/deploy/prod/kubernetes.yaml` merged without review. What is the fix?
 
-- A. Add the deploy path to CODEOWNERS and require code owner review
-- B. Remove the intern's write access entirely
-- C. Move deployment manifests to another repository
-- D. Add a `.gitignore` entry
+- A. Remove the intern's write access to the repository
+- B. Add the deploy path to CODEOWNERS with owner review
+- C. Move deployment manifests to a separate repository
+- D. Add a `.gitignore` entry for the deployment path
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: B
 
 **In `challenge-09.md`:** lines **465–472**.
 
@@ -209,7 +208,7 @@ existed; the path was outside it.
 **And the diagnosis at lines 453–458 is the pair to remember** — check whether the path is covered, then
 check whether code owner review is actually required. **Either alone is insufficient** (Challenge 08 Q6).
 
-**Why B over-corrects.** Interns need write access to do their work; the requirement is that *this path*
+**Why A over-corrects.** Interns need write access to do their work; the requirement is that *this path*
 needs senior eyes, not that this person needs no access.
 
 </details>
@@ -221,15 +220,15 @@ needs senior eyes, not that this person needs no access.
 `git describe --tags` returns `release-20231115-47-gabc1234` instead of a semver tag. Why, and what is
 the fix?
 
-- A. Mixed tag formats mean the nearest tag is not a semver one — filter with `--match "v[0-9]*"`
-- B. The repository has too many tags
-- C. `git describe` requires annotated tags only
-- D. The tag was deleted
+- A. The repository holds too many tags to search
+- B. `git describe` only ever considers annotated tags
+- C. Mixed formats; filter with `--match "v[0-9]*"`
+- D. The semver tag was deleted from the remote
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: C
 
 **In `challenge-09.md`:** lines **496–509**.
 
@@ -255,15 +254,15 @@ a two-component version. **All four break a parser that expects `v{MAJOR}.{MINOR
 
 Which GitHub permission value does the API use for **Read**?
 
-- A. `pull`
-- B. `read`
+- A. `read`
+- B. `pull`
 - C. `view`
 - D. `triage`
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: B
 
 **In `challenge-09.md`:** line **74**.
 
@@ -286,15 +285,15 @@ friendlier labels.
 
 Which role suits junior developers who manage issues but must not push code?
 
-- A. Triage
-- B. Read
-- C. Write
-- D. Maintain
+- A. Read
+- B. Write
+- C. Maintain
+- D. Triage
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: D
 
 **In `challenge-09.md`:** lines **58–65**.
 
@@ -305,7 +304,7 @@ Which role suits junior developers who manage issues but must not push code?
 **Triage is the "helpful but harmless" role**: label, assign, close and reopen issues and pull requests,
 with no write access to the code.
 
-**Why B is too narrow.** Read cannot manage issues at all, so a junior could not triage the backlog.
+**Why A is too narrow.** Read cannot manage issues at all, so a junior could not triage the backlog.
 
 **And note the scenario's outcome** (line 20): giving everyone the same level is what let an intern push
 to `/deploy/prod/`. **Triage is the level that would have prevented it** — combined with path
@@ -319,10 +318,10 @@ protection for the people who do need write access.
 
 What does `parent_team_id` accomplish when creating a team?
 
-- A. It nests the team under a parent, so the child inherits the parent's repository access
-- B. It copies the parent's members
-- C. It merges the two teams
-- D. It sets the team's maintainer
+- A. It nests the team so it inherits the parent's access
+- B. It merges the two teams into a single team
+- C. It copies the parent team's members into the child
+- D. It sets the parent team's lead as the maintainer
 
 <details>
 <summary>Show answer</summary>
@@ -356,15 +355,15 @@ eight independent permission sets.
 
 What is the difference between team roles `maintainer` and `member`?
 
-- A. `maintainer` can manage the team's membership and settings; `member` cannot
-- B. `maintainer` has admin access to repositories
-- C. `member` is read-only
-- D. They are the same
+- A. `maintainer` has admin access to the team's repositories
+- B. `maintainer` manages team membership; `member` cannot
+- C. `member` is read-only on every repository the team has
+- D. They are the same role under two different labels
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: B
 
 **In `challenge-09.md`:** lines **121–123**.
 
@@ -388,15 +387,15 @@ who else gets it.
 
 Which tag type does the convention require for production releases?
 
-- A. Annotated, with a descriptive message
-- B. Lightweight
-- C. Either
-- D. Signed only
+- A. Lightweight, so they can be created quickly
+- B. Either type, at the release manager's choice
+- C. Signed only, using the release GPG key
+- D. Annotated, with a descriptive message
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: D
 
 **In `challenge-09.md`:** line **277**.
 
@@ -422,10 +421,10 @@ in high volume, nobody reads their metadata, and creating full objects for thous
 
 Which tag format does the convention define for pre-releases?
 
-- A. `v{X}.{Y}.{Z}-{pre}.{N}`, for example `v2.2.0-beta.1`
-- B. `beta-{X}.{Y}.{Z}`
-- C. `v{X}.{Y}.{Z}b{N}`
-- D. `{X}.{Y}.{Z}-pre`
+- A. `v{X}.{Y}.{Z}-{pre}.{N}`, e.g. `v2.2.0-beta.1`
+- B. `beta-{X}.{Y}.{Z}`, for example `beta-2.2.0`
+- C. `v{X}.{Y}.{Z}b{N}`, for example `v2.2.0b1`
+- D. `{X}.{Y}.{Z}-pre`, for example `2.2.0-pre`
 
 <details>
 <summary>Show answer</summary>
@@ -454,15 +453,15 @@ is why the syntax matters to tooling rather than being cosmetic.
 
 In the auto-tag workflow, what determines the version bump?
 
-- A. Conventional commit messages since the last tag
-- B. The number of commits
-- C. The branch name
-- D. A manual input
+- A. The number of commits since the last tag
+- B. The name of the branch being tagged
+- C. A manual input supplied at dispatch time
+- D. Conventional commit messages since the tag
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: D
 
 **In `challenge-09.md`:** lines **315–329**.
 
@@ -494,15 +493,15 @@ no tag at all, which is correct (Challenge 03 Q17).
 
 Why does the auto-tag workflow need `fetch-depth: 0`?
 
-- A. `git describe` and `git log <tag>..HEAD` need the full history and all tags
-- B. To fetch all branches
-- C. To speed up checkout
-- D. To include submodules
+- A. To fetch every branch rather than only the default
+- B. To speed up the checkout on a large monorepo
+- C. `git describe` and `git log` need the full history
+- D. To include submodules in the checkout as well
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: C
 
 **In `challenge-09.md`:** lines **299–301**.
 
@@ -523,15 +522,15 @@ history-dependent trap as Challenges 03, 05 and 07.
 
 What does `persistCredentials: true` do in the Azure Pipelines equivalent?
 
-- A. It keeps the pipeline's credentials available to later git commands, so the tag can be pushed
-- B. It stores credentials in the repository
-- C. It caches the checkout
-- D. It enables shallow fetch
+- A. It stores the credentials inside the repository itself
+- B. It keeps the credential so later git commands can push
+- C. It caches the checkout between pipeline runs
+- D. It enables a shallow fetch for the checkout step
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: B
 
 **In `challenge-09.md`:** lines **376–378**.
 
@@ -558,10 +557,10 @@ requirement: a job that writes to the repository must be granted the ability to.
 
 What does the tag ruleset in Break scenario 2 enforce?
 
-- A. It blocks creating tags that do not match `refs/tags/v*`
-- B. It deletes non-compliant tags
-- C. It renames tags automatically
-- D. It requires annotated tags
+- A. It blocks creation of tags not matching `refs/tags/v*`
+- B. It deletes any non-compliant tags already present
+- C. It renames non-compliant tags to the convention
+- D. It requires every new tag to be annotated and signed
 
 <details>
 <summary>Show answer</summary>
@@ -603,27 +602,27 @@ once; the ruleset stops the problem returning.
 
 Which **three** are GitHub repository permission levels used in Task 1? (Choose three.)
 
-- A. Triage
-- B. Maintain
-- C. Admin
-- D. Owner
-- E. Contribute
-- F. Manage
+- A. Owner
+- B. Triage
+- C. Contribute
+- D. Maintain
+- E. Manage
+- F. Admin
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A, B, C
+### Answer: B, D, F
 
 **In `challenge-09.md`:** lines **38**, **47**, **65**.
 
 **Five levels exist — Read, Triage, Write, Maintain, Admin** — and the API values are `pull`, `triage`,
 `push`, `maintain`, `admin`.
 
-**Why D is organisation vocabulary, not repository.** **Owner** is an organisation role (Challenge 40);
+**Why A is organisation vocabulary, not repository.** **Owner** is an organisation role (Challenge 40);
 a repository's top level is **Admin**.
 
-**Why E is Azure Repos vocabulary.** Its equivalent of Write is **Contribute** (line 177) — which is
+**Why C is Azure Repos vocabulary.** Its equivalent of Write is **Contribute** (line 177) — which is
 exactly the kind of cross-platform swap the exam builds distractors from.
 
 </details>
@@ -635,23 +634,23 @@ exactly the kind of cross-platform swap the exam builds distractors from.
 Which **three** are true of annotated tags? (Choose three.)
 
 - A. They store tagger name, email, date and message
-- B. They can be GPG-signed
-- C. They are found by `git describe`
-- D. They cannot be pushed to a remote
-- E. They are created with `git tag` alone
-- F. They point directly at a commit with no object
+- B. They cannot be pushed to a remote repository
+- C. They can be signed with a GPG or SSH key
+- D. They are created with a bare `git tag` command
+- E. They are found and used by `git describe`
+- F. They point at a commit with no intermediate object
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A, B, C
+### Answer: A, C, E
 
 **In `challenge-09.md`:** lines **566**, **224**, **234**.
 
-**Why E and F describe *lightweight* tags** (line 232), and why D is false of both — line 204 pushes an
+**Why D and F describe *lightweight* tags** (line 232), and why B is false of both — line 204 pushes an
 annotated tag and line 208 pushes a lightweight one.
 
-**The `git describe` property at C is the operationally important one.** A release marked with a
+**The `git describe` property at E is the operationally important one.** A release marked with a
 lightweight tag is invisible to version derivation, so CI computes the wrong version and nobody notices
 until a build is published under it.
 
@@ -663,17 +662,17 @@ until a build is published under it.
 
 Which **three** appear in Contoso's tag naming convention table? (Choose three.)
 
-- A. `v{MAJOR}.{MINOR}.{PATCH}` — annotated
-- B. `release-{YYYY.MM.DD}` — annotated
-- C. `ci-build-{N}` — lightweight
-- D. `hotfix-{ticket}` — annotated
-- E. `snapshot-{sha}` — lightweight
-- F. `main-{N}` — annotated
+- A. `hotfix-{ticket}` — annotated
+- B. `v{MAJOR}.{MINOR}.{PATCH}` — annotated
+- C. `snapshot-{sha}` — lightweight
+- D. `release-{YYYY.MM.DD}` — annotated
+- E. `main-{N}` — annotated
+- F. `ci-build-{N}` — lightweight
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A, B, C
+### Answer: B, D, F
 
 **In `challenge-09.md`:** lines **270–274**.
 
@@ -697,16 +696,16 @@ is how you record what shipped where without polluting the version namespace.
 
 Which **two** does the auto-tag workflow produce? (Choose two.)
 
-- A. An annotated tag with a generated changelog in its message
-- B. A GitHub release with auto-generated notes
-- C. A CHANGELOG.md commit
-- D. A deployment
-- E. A pull request
+- A. A commit updating `CHANGELOG.md` on `main`
+- B. A deployment to the staging environment
+- C. An annotated tag with a changelog in its message
+- D. A pull request proposing the version bump
+- E. A GitHub release with auto-generated notes
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A, B
+### Answer: C, E
 
 **In `challenge-09.md`:** lines **342–351** and **356–358**.
 
@@ -734,16 +733,16 @@ would be "Merge pull request #123 from ...".
 
 Which **two** prevent a repeat of the `/deploy/prod/` incident? (Choose two.)
 
-- A. A CODEOWNERS entry for `/deploy/prod/` with code owner review required
-- B. Azure Repos path-level deny on that path for the intern group
-- C. A `.gitignore` entry
-- D. Removing all intern accounts
-- E. A larger PR template
+- A. A `.gitignore` entry for the production manifests
+- B. A CODEOWNERS entry for `/deploy/prod/` with owner review
+- C. Removing all intern accounts from the organisation
+- D. An Azure Repos path-level deny for the intern group
+- E. A longer pull request template with a checklist
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A, B
+### Answer: B, D
 
 **In `challenge-09.md`:** lines **465–469** and **163–167**.
 
@@ -763,15 +762,15 @@ second suits a path only one group should touch at all.
 Which **two** settings does Task 7 use to keep history clean? (Choose two.)
 
 - A. `allow_merge_commit: false`
-- B. `delete_branch_on_merge: true`
-- C. `has_wiki: false`
-- D. `has_discussions: true`
+- B. `has_wiki: false`
+- C. `has_discussions: true`
+- D. `delete_branch_on_merge: true`
 - E. `allow_auto_merge: true`
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A, B
+### Answer: A, D
 
 **In `challenge-09.md`:** lines **411** and **415**.
 
@@ -785,7 +784,7 @@ Which **two** settings does Task 7 use to keep history clean? (Choose two.)
 **Disabling merge commits is what actually produces linear history** (Challenge 01 Q13); deleting merged
 branches keeps the branch list meaningful on a 200-contributor repository.
 
-**Why E is convenience rather than hygiene**, and why C and D are feature toggles — including
+**Why E is convenience rather than hygiene**, and why B and C are feature toggles — including
 `web_commit_signoff_required: true` at line 436, which is a **compliance** control requiring a DCO
 sign-off on web edits.
 
@@ -797,16 +796,16 @@ sign-off on web edits.
 
 Which **two** does Task 7 enable for supply-chain security? (Choose two.)
 
-- A. `vulnerability-alerts`
-- B. `automated-security-fixes`
-- C. Repository topics
-- D. Discussions
-- E. Projects
+- A. Repository topics for discoverability
+- B. `vulnerability-alerts` on the repository
+- C. Discussions enabled for the community
+- D. Projects enabled for sprint planning
+- E. `automated-security-fixes` on the repository
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A, B
+### Answer: B, E
 
 **In `challenge-09.md`:** lines **422–423**.
 
@@ -1250,8 +1249,8 @@ gh api orgs/contoso/teams/tech-leads/repos/contoso/platform-monorepo \
 Requirement: tech leads manage repository settings such as topics and the wiki, but cannot change
 visibility or delete the repository.
 
-- **BLANK 1:** `PUT` / `POST` / `PATCH` / `GET`
-- **BLANK 2:** `maintain` / `admin` / `push` / `write`
+- **BLANK 1:** `POST` / `PATCH` / `PUT` / `GET`
+- **BLANK 2:** `admin` / `push` / `write` / `maintain`
 
 <details>
 <summary>Show answer</summary>
@@ -1283,8 +1282,8 @@ gh api orgs/contoso/teams/billing-team/memberships/sarah-billing \
   --method PUT -f [BLANK 2]="maintainer"
 ```
 
-- **BLANK 1:** `parent_team_id` / `parent` / `team_parent` / `nested_under`
-- **BLANK 2:** `role` / `permission` / `level` / `access`
+- **BLANK 1:** `parent` / `parent_team_id` / `team_parent` / `nested_under`
+- **BLANK 2:** `permission` / `level` / `role` / `access`
 
 <details>
 <summary>Show answer</summary>
@@ -1315,8 +1314,8 @@ az devops security permission update \
 
 Requirement: deny the intern group write access to `/deploy/prod/` on `main`.
 
-- **BLANK 1:** `refs/heads/main` / `main` / `branches/main` / `heads/main`
-- **BLANK 2:** `deny-bit` / `allow-bit` / `remove-bit` / `set-bit`
+- **BLANK 1:** `main` / `branches/main` / `heads/main` / `refs/heads/main`
+- **BLANK 2:** `allow-bit` / `deny-bit` / `remove-bit` / `set-bit`
 
 <details>
 <summary>Show answer</summary>
@@ -1349,9 +1348,9 @@ git tag [BLANK 2] ci-build-1847
 git tag -a v1.1.5 [BLANK 3] -m "Patch release v1.1.5"
 ```
 
-- **BLANK 1:** `-a` / `-s` / `-l` / *(nothing)*
-- **BLANK 2:** *(nothing)* / `-a` / `-f` / `-d`
-- **BLANK 3:** `abc1234` / `HEAD` / `main` / `-c abc1234`
+- **BLANK 1:** `-s` / `-l` / `-a` / *(nothing)*
+- **BLANK 2:** `-a` / `-f` / *(nothing)* / `-d`
+- **BLANK 3:** `HEAD` / `abc1234` / `main` / `-c abc1234`
 
 <details>
 <summary>Show answer</summary>
@@ -1380,9 +1379,9 @@ if echo "$COMMITS" | grep -q "^BREAKING CHANGE\|^.*!:"; then
   MAJOR=$((MAJOR + 1)); MINOR=[BLANK 3]; PATCH=0
 ```
 
-- **BLANK 1:** `abbrev=0` / `long` / `always` / `dirty`
-- **BLANK 2:** `..` / `...` / `^` / `~`
-- **BLANK 3:** `0` / `MINOR` / `1` / `$((MINOR + 1))`
+- **BLANK 1:** `long` / `always` / `abbrev=0` / `dirty`
+- **BLANK 2:** `...` / `..` / `^` / `~`
+- **BLANK 3:** `MINOR` / `1` / `$((MINOR + 1))` / `0`
 
 <details>
 <summary>Show answer</summary>
@@ -1418,9 +1417,9 @@ the value feeds a version parser rather than a human.
 
 Requirement: block creation of any tag that does not begin with `v`.
 
-- **BLANK 1:** `tag` / `branch` / `ref` / `push`
-- **BLANK 2:** `v*` / `*` / `release-*` / `~ALL`
-- **BLANK 3:** `creation` / `deletion` / `update` / `required_signatures`
+- **BLANK 1:** `branch` / `ref` / `tag` / `push`
+- **BLANK 2:** `*` / `release-*` / `v*` / `~ALL`
+- **BLANK 3:** `deletion` / `update` / `required_signatures` / `creation`
 
 <details>
 <summary>Show answer</summary>
@@ -1471,26 +1470,25 @@ DevOps team must implement access controls and a tagging strategy that **integra
 
 How should the 200 contributors be structured?
 
-- A. Five teams mapped to Read, Triage, Write, Maintain and Admin, nested under an `engineering` parent
-  for baseline access
-- B. One team with Write access
-- C. Individual collaborator grants per person
-- D. Everyone as Admin so nobody is blocked
+- A. One team holding Write access for every contributor
+- B. Individual collaborator grants for each person
+- C. Five role-mapped teams nested under `engineering`
+- D. Everyone as Admin so that nobody is ever blocked
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: C
 
 **In `challenge-09.md`:** lines **31–74** and **94–118**.
 
 **Both access requirements are met by that one structure.** The five teams match role to responsibility;
 the nesting grants the baseline once (Q9).
 
-**Why C is unmaintainable at 200 people** and unauditable — nobody can answer "who can push?" without
+**Why B is unmaintainable at 200 people** and unauditable — nobody can answer "who can push?" without
 enumerating collaborators.
 
-**Why B is the current state** (line 20), and **why D is the failure mode it would become**.
+**Why A is the current state** (line 20), and **why D is the failure mode it would become**.
 
 </details>
 
@@ -1500,11 +1498,10 @@ enumerating collaborators.
 
 How are production manifests protected on **each** platform?
 
-- A. GitHub: a CODEOWNERS entry plus required code owner review. Azure Repos: a path-scoped deny on the
-  Git Repositories namespace
-- B. Both: CODEOWNERS
-- C. Both: a separate repository
-- D. GitHub: branch protection. Azure Repos: branch policies
+- A. GitHub: CODEOWNERS with owner review; Azure: a path deny
+- B. Both platforms: a CODEOWNERS file covering the path
+- C. Both platforms: a separate repository for manifests
+- D. GitHub: branch protection; Azure Repos: branch policies
 
 <details>
 <summary>Show answer</summary>
@@ -1531,15 +1528,15 @@ Azure deny makes it **impossible** for that group.
 
 Which tag properties satisfy "must carry a tagger, a date and a message, and must be verifiable"?
 
-- A. Annotated tags, optionally GPG-signed and checked with `git tag -v`
-- B. Lightweight tags with descriptive names
-- C. Annotated tags only, without signing
-- D. GitHub releases without tags
+- A. Lightweight tags with descriptive, consistent names
+- B. Annotated tags only, with no signature applied
+- C. GitHub releases created without an underlying tag
+- D. Annotated tags, GPG-signed and checked with `-v`
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: D
 
 **In `challenge-09.md`:** lines **192–201** and **224**.
 
@@ -1547,10 +1544,10 @@ Which tag properties satisfy "must carry a tagger, a date and a message, and mus
 word that adds signing** — `git tag -v` verifies a signature, and only an annotated tag can carry one
 (Q2).
 
-**Why C satisfies three of the four clauses.** Without a signature there is nothing to verify; the tag's
+**Why B satisfies three of the four clauses.** Without a signature there is nothing to verify; the tag's
 metadata says who *claims* to have made it.
 
-**Why B fails on all of them.** A lightweight tag stores no metadata at all, however carefully it is
+**Why A fails on all of them.** A lightweight tag stores no metadata at all, however carefully it is
 named.
 
 </details>
@@ -1561,25 +1558,25 @@ named.
 
 Which **two** let CI derive the next version with no human input? (Choose two.)
 
-- A. `git describe --tags --abbrev=0` against annotated tags, with full history
-- B. Bump rules driven by conventional commit types since the last tag
-- C. A `VERSION` file maintained by developers
-- D. The build number
-- E. The branch name
+- A. A `VERSION` file maintained by hand by developers
+- B. `git describe --tags --abbrev=0` with full history
+- C. The pipeline's incrementing build number
+- D. Bump rules driven by commit types since the last tag
+- E. The name of the branch that was built
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A, B
+### Answer: B, D
 
 **In `challenge-09.md`:** lines **307** and **315–329**.
 
-**A finds where you are; B decides where to go next.** Neither alone completes the derivation.
+**B finds where you are; D decides where to go next.** Neither alone completes the derivation.
 
-**And both have preconditions this challenge is explicit about.** A needs `fetch-depth: 0` and annotated
-tags; B needs Challenge 03's commit convention to actually be enforced.
+**And both have preconditions this challenge is explicit about.** B needs `fetch-depth: 0` and annotated
+tags; D needs Challenge 03's commit convention to actually be enforced.
 
-**Why C reintroduces the human** the requirement excludes, and why D and E carry no compatibility
+**Why A reintroduces the human** the requirement excludes, and why C and E carry no compatibility
 meaning — a build number never tells a consumer whether an upgrade is safe.
 
 </details>
@@ -1590,25 +1587,25 @@ meaning — a build number never tells a consumer whether an upgrade is safe.
 
 How is "non-compliant tags must be impossible to create" satisfied?
 
-- A. A tag ruleset targeting all tags except `refs/tags/v*`, with a `creation` rule
-- B. Documenting the convention
-- C. A CI job that deletes bad tags
-- D. Renaming tags weekly
+- A. Documenting the convention in the contributing guide
+- B. A CI job that deletes tags not matching the pattern
+- C. A ruleset excluding `refs/tags/v*`, with `creation`
+- D. Renaming non-compliant tags on a weekly schedule
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: C
 
 **In `challenge-09.md`:** lines **524–539**.
 
 **"Impossible" is the word that selects a ruleset.** Anything else detects or corrects after the fact.
 
-**Why C is the design teams reach for and why it is worse than it sounds.** Deleting a tag someone has
+**Why B is the design teams reach for and why it is worse than it sounds.** Deleting a tag someone has
 already fetched leaves their clone holding a tag the server no longer has — and it violates the
 never-delete rule (line 280) as routine practice.
 
-**Why B is the state that produced four formats** (lines 488–494).
+**Why A is the state that produced four formats** (lines 488–494).
 
 </details>
 
@@ -1621,18 +1618,17 @@ Eight months later, the platform team finds that the auto-tag workflow has been 
 year. The workflow is green on every run, and the tags it creates are annotated and correctly formatted.
 CI checkout times were recently optimised across all workflows.
 
-What happened, and what is the fix?
+What is the most likely cause?
 
-- A. The workflow now runs on a shallow clone, so `git describe` finds no tags, the `|| echo "v0.0.0"`
-  fallback fires, and every run bumps from zero — restore `fetch-depth: 0`
-- B. The tag ruleset is rejecting the correct tags
-- C. Conventional commits stopped being used
-- D. `contents: write` was removed
+- A. The tag ruleset is rejecting the correctly formatted tags
+- B. Conventional commits stopped being used by the team
+- C. `contents: write` was removed from the workflow
+- D. A shallow clone makes the `v0.0.0` fallback fire every run
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: D
 
 **In `challenge-09.md`:** lines **299–307**.
 
@@ -1651,7 +1647,7 @@ a completely wrong number.
 `git describe` on a *full* clone may also pick a wrong tag depending on reachability — the mixed-tag
 problem from Break scenario 2, self-inflicted.
 
-**Why B and D would fail loudly** — a rejected tag push and a permissions error respectively — and why C
+**Why A and C would fail loudly** — a rejected tag push and a permissions error respectively — and why B
 would set `skip=true` and create no tag at all (Q13).
 
 **The durable lesson: a fallback that hides a missing precondition converts a loud failure into a silent
@@ -1666,20 +1662,17 @@ wrong answer.** If the fallback is worth having, log when it fires.
 A year on, permissions match responsibility, `/deploy/prod/` has not been changed without sign-off, and
 CI has produced every release version without anyone typing one.
 
-Explain what each control contributed, and what actually changed.
+Which explanation best accounts for the change?
 
-- A. Five roles matched access to responsibility and nesting made the baseline maintainable; CODEOWNERS
-  and a path-scoped deny protected the one path that caused the outage; annotated tags gave releases
-  metadata a human can read and a machine can find; and a tag ruleset plus conventional-commit bumping
-  made the version a **function of the history** rather than a decision someone makes
-- B. The team was trained to be more careful with permissions and tags
-- C. The intern was removed from the repository
+- A. The team was trained to be more careful with permissions
+- B. The version became a function of history, not a decision
+- C. The intern was removed from the repository entirely
 - D. Releases were made less frequent so tagging mattered less
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: B
 
 **In `challenge-09.md`:** lines **31–74**, **163–167**, **192–201**, **270–280**, **286–361**.
 

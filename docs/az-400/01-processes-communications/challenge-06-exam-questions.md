@@ -50,15 +50,15 @@ cross-links.
 
 What is the purpose of the `X-Hub-Signature-256` header?
 
-- A. It identifies which user triggered the event
-- B. It carries an HMAC-SHA256 signature of the payload so the receiver can verify authenticity
-- C. It encrypts the payload
-- D. It specifies the webhook API version
+- A. It identifies which user account triggered the event
+- B. It encrypts the payload so it cannot be read in transit
+- C. It carries an HMAC-SHA256 of the payload body
+- D. It specifies the webhook API version the sender used
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: B
+### Answer: C
 
 **In `challenge-06.md`:** lines **588–592** and **599**.
 
@@ -88,16 +88,15 @@ fake "deployment failed" event.
 
 What is the difference between a webhook and a `repository_dispatch` event?
 
-- A. Webhooks send data **to** external systems; `repository_dispatch` triggers workflows **from**
-  external systems
-- B. They are the same mechanism under two names
-- C. Webhooks are faster
-- D. Webhooks support all events; `repository_dispatch` supports only push
+- A. They are the same mechanism under two different names
+- B. Webhooks are faster than a dispatch round trip call
+- C. Webhooks support all events; dispatch supports only push
+- D. Webhooks send data out; dispatch triggers workflows in
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: D
 
 **In `challenge-06.md`:** lines **143–148** and **194**.
 
@@ -127,15 +126,15 @@ pass a ref, a version, a reason — data the workflow reads as
 
 In Azure DevOps service hooks, what determines which events fire the hook?
 
-- A. The repository branch configuration
-- B. Publisher inputs that filter the event — pipeline ID, area path, work item type
-- C. The consumer endpoint's capabilities
-- D. The Azure subscription tier
+- A. Publisher inputs that filter which events fire
+- B. The repository's branch configuration in Azure Repos
+- C. The consumer endpoint's declared capabilities
+- D. The Azure subscription tier the project sits on
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: B
+### Answer: A
 
 **In `challenge-06.md`:** lines **472–476** and **498–501**.
 
@@ -168,15 +167,15 @@ which is either exactly what you want or the reason a channel becomes unreadable
 
 A commit contains `AB#5678` but the work item shows no link. What is the most likely cause?
 
-- A. The commit message format is wrong
-- B. The Azure Boards GitHub App is not installed, or the repository is not linked in Azure DevOps
-- C. Azure Boards links only from PR descriptions
-- D. The work item must be Active
+- A. The commit message format is subtly wrong
+- B. The work item must be in the Active state
+- C. The Boards app or repo link is missing
+- D. Azure Boards links only from PR descriptions
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: B
+### Answer: C
 
 **In `challenge-06.md`:** lines **898–906**.
 
@@ -188,7 +187,7 @@ Azure DevOps Project Settings > GitHub connections.
 
 **Two halves of one handshake** — and the exam tests this in every challenge that touches Boards.
 
-**Why C is refuted at line 109**, where the commit message itself carries `AB#${WORK_ITEM_ID}`. Commits
+**Why D is refuted at line 109**, where the commit message itself carries `AB#${WORK_ITEM_ID}`. Commits
 and PR descriptions both work.
 
 **And note the failure is silent.** The commit is accepted, the syntax looks right, and nothing appears
@@ -202,10 +201,10 @@ and PR descriptions both work.
 
 Webhook deliveries return 401. What is the cause?
 
-- A. The secret in GitHub does not match the receiver's `GITHUB_WEBHOOK_SECRET`
-- B. The Function App is stopped
-- C. The event type is unsupported
-- D. TLS verification failed
+- A. The secret in GitHub differs from the receiver's
+- B. The Function App receiving the webhook is stopped
+- C. The event type sent is not supported by the receiver
+- D. TLS certificate verification failed on the connection
 
 <details>
 <summary>Show answer</summary>
@@ -242,15 +241,15 @@ deployment-time failure mode worth spotting.
 
 Teams notifications stop arriving although the receiver logs success. What is the cause?
 
-- A. The Teams incoming webhook URL is no longer valid
-- B. The Function App has no outbound access
-- C. The card schema is wrong
-- D. The channel is archived
+- A. The Function App has no outbound network access
+- B. The adaptive card schema in the payload is wrong
+- C. The Teams channel has been archived by an owner
+- D. The Teams incoming webhook URL is invalid
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: D
 
 **In `challenge-06.md`:** line **878**.
 
@@ -277,9 +276,9 @@ what comes back. It isolates Teams from everything else in one command.
 Which events does the initial webhook subscribe to?
 
 - A. `push`, `pull_request`, `issues`, `deployment_status`
-- B. All events
-- C. `push` only
-- D. `workflow_run` and `release`
+- B. All events, using the wildcard subscription form instead
+- C. `push` only, filtered to the repository default branch
+- D. `workflow_run` and `release` events only
 
 <details>
 <summary>Show answer</summary>
@@ -307,15 +306,15 @@ must parse and discard.
 
 What does the `pings` endpoint do?
 
-- A. Sends a test `ping` event to confirm the webhook is reachable and configured
-- B. Checks network latency
-- C. Re-sends the last delivery
-- D. Validates the secret
+- A. It measures the network latency to the receiver
+- B. It re-sends the most recent webhook delivery
+- C. It sends a synthetic `ping` event to the receiver
+- D. It validates the configured webhook secret value
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: C
 
 **In `challenge-06.md`:** lines **154–156** and **629–631**.
 
@@ -332,7 +331,7 @@ gh api repos/{owner}/contoso-webapp/hooks/$HOOK_ID/pings --method POST
 **The receiver handles `ping` explicitly**, which matters: an unhandled event falls to `default` and
 logs "Unhandled event type" (line 633) — so without that case the test looks like a failure.
 
-**Why C is the adjacent operation.** Re-sending a specific delivery is the `attempts` endpoint at line
+**Why B is the adjacent operation.** Re-sending a specific delivery is the `attempts` endpoint at line
 186 — that is redelivery; this is a fresh synthetic event.
 
 </details>
@@ -343,15 +342,15 @@ logs "Unhandled event type" (line 633) — so without that case the test looks l
 
 How do you inspect why a webhook delivery failed?
 
-- A. Query the `deliveries` endpoint, then fetch the individual delivery for its response body
-- B. Read the repository audit log
-- C. Check the Actions run log
-- D. Enable debug logging on the hook
+- A. Read the repository's organisation audit log entries
+- B. Query `deliveries`, then fetch that delivery's body
+- C. Check the Actions run log for the workflow
+- D. Enable debug logging on the webhook itself
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: B
 
 **In `challenge-06.md`:** lines **177–183** and **824–829**.
 
@@ -380,15 +379,15 @@ the failure rather than waiting for the event to happen again.
 
 What does `repository_dispatch` use to route work to the right job?
 
-- A. `github.event.action` matched against the `types` list
-- B. The branch name
-- C. The `client_payload` size
-- D. The workflow filename
+- A. The name of the branch the dispatch targets
+- B. The size of the `client_payload` object sent
+- C. The filename of the workflow being dispatched
+- D. `github.event.action` matched against `types`
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: D
 
 **In `challenge-06.md`:** lines **202–207**.
 
@@ -419,15 +418,15 @@ error to the caller.
 
 What does `${{ github.event.client_payload.ref || 'main' }}` accomplish?
 
-- A. It checks out the ref the caller supplied, defaulting to `main`
-- B. It merges the ref into `main`
-- C. It validates the ref exists
-- D. It creates a branch
+- A. It merges the supplied ref into the `main` branch
+- B. It checks out the caller's ref, or `main`
+- C. It validates that the supplied ref actually exists
+- D. It creates a new branch from the supplied ref name
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: B
 
 **In `challenge-06.md`:** lines **211–212**.
 
@@ -452,10 +451,10 @@ API chooses what gets checked out and deployed — which is why the production j
 
 Which job in the Teams workflow fires only on a failed deployment?
 
-- A. `notify-deployment-failure`, gated on `deployment_status.state == 'failure'`
-- B. `notify-pr`
-- C. `notify-ci-failure`
-- D. All of them
+- A. `notify-deployment-failure`, on `state == 'failure'`
+- B. `notify-ci-failure`, gated on the workflow run
+- C. `notify-pr`, gated on the pull request event type fired
+- D. `notify-release`, gated on a published release
 
 <details>
 <summary>Show answer</summary>
@@ -483,15 +482,15 @@ statuses have a `state`; workflow runs have a `conclusion`** — the same two-vo
 
 What is the Teams message format used throughout this challenge?
 
-- A. An Adaptive Card inside a `message` attachment
-- B. A `MessageCard`
-- C. Plain text
-- D. Markdown
+- A. A legacy `MessageCard` payload object
+- B. Plain text supplied in the request body
+- C. Markdown rendered by the connector
+- D. An Adaptive Card in a message attachment
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: D
 
 **In `challenge-06.md`:** lines **535–542**.
 
@@ -522,9 +521,9 @@ older documentation is full of `MessageCard`.
 What makes an alert card visually urgent?
 
 - A. `"color": "Attention"` on the TextBlock
-- B. A red background
-- C. `"priority": "high"`
-- D. An exclamation mark in the title
+- B. A red background colour on the card body
+- C. `"priority": "high"` on the message envelope
+- D. An exclamation mark at the start of the title
 
 <details>
 <summary>Show answer</summary>
@@ -558,15 +557,15 @@ reads after hours are invisible; a card in the channel, visually distinct, is no
 
 How does the Function decide whether to forward a push to Teams?
 
-- A. Only when the branch is `main`
-- B. Every push
-- C. Only when more than five commits are pushed
-- D. Only on tags
+- A. On every push the webhook delivers to it
+- B. Only when more than five commits are pushed
+- C. Only when the branch the push targets is `main`
+- D. Only on pushes that create or update a tag
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: C
 
 **In `challenge-06.md`:** lines **641–658**.
 
@@ -592,15 +591,15 @@ branch name. That is the same detail as Challenge 39's federated credential subj
 
 Which header tells the receiver what kind of event it received?
 
-- A. `X-GitHub-Event`
-- B. `X-GitHub-Delivery`
-- C. `X-Hub-Signature-256`
-- D. `Content-Type`
+- A. `X-GitHub-Delivery`, unique per delivery
+- B. `X-GitHub-Event`, naming the event type
+- C. `X-Hub-Signature-256`, the payload HMAC
+- D. `Content-Type`, describing the body format
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: B
 
 **In `challenge-06.md`:** lines **599–601**.
 
@@ -628,21 +627,21 @@ and for detecting a redelivery of the same event.
 
 Which **three** are required for `AB#` linking to work? (Choose three.)
 
-- A. The Azure Boards GitHub App installed on the repository
-- B. The repository linked in Azure DevOps under Boards > GitHub connections
-- C. The app's authorisation still valid for the organisation
-- D. A PAT stored in the repository
-- E. Branch protection enabled
-- F. The work item in the Active state
+- A. A PAT for Azure DevOps stored in repository secrets
+- B. The Azure Boards GitHub App installed on the repository
+- C. Branch protection enabled on the default branch
+- D. The repository linked under Boards > GitHub connections
+- E. The work item sitting in the Active state already
+- F. The app's authorisation still valid for the organisation
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A, B, C
+### Answer: B, D, F
 
 **In `challenge-06.md`:** lines **45–46**, **62**, **906**.
 
-**A and B are the two halves of the handshake; C is the one that breaks *later*.** Break scenario 3
+**B and D are the two halves of the handshake; F is the one that breaks *later*.** Break scenario 3
 exists because an installation that worked can lose access when organisation permissions change — the
 integration was correct on the day it was built and is not correct now.
 
@@ -657,17 +656,17 @@ the app installation in GitHub.
 
 Which **three** does the webhook `deliveries` API let you do? (Choose three.)
 
-- A. List deliveries with status codes
-- B. Inspect an individual delivery's request and response
-- C. Redeliver a failed delivery
-- D. Edit the payload before redelivering
-- E. Delete a delivery
-- F. Change the secret
+- A. List deliveries together with their status codes
+- B. Edit the payload before redelivering the event
+- C. Inspect one delivery's request and response
+- D. Delete a delivery record from the history
+- E. Redeliver a delivery that previously failed
+- F. Change the webhook's shared secret value
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A, B, C
+### Answer: A, C, E
 
 **In `challenge-06.md`:** lines **177–187**.
 
@@ -680,7 +679,7 @@ gh api .../hooks/$HOOK_ID/deliveries/$DELIVERY_ID/attempts --method POST   # red
 **Redelivery is what makes a receiver outage recoverable.** Fix the endpoint, replay the events you
 missed, and no data is lost.
 
-**Why D is deliberately impossible.** The payload is signed (Q1) — an editable redelivery would either
+**Why B is deliberately impossible.** The payload is signed (Q1) — an editable redelivery would either
 break the signature or let anyone forge events through GitHub's own API.
 
 </details>
@@ -691,17 +690,17 @@ break the signature or let anyone forge events through GitHub's own API.
 
 Which **three** appear in an Adaptive Card used here? (Choose three.)
 
-- A. A `TextBlock` for the title
-- B. A `FactSet` of name/value pairs
-- C. An `Action.OpenUrl` link
-- D. An embedded image
-- E. An input form
-- F. A chart
+- A. An embedded image in the card body
+- B. A `TextBlock` holding the card title
+- C. An input form for a reply
+- D. A `FactSet` of name and value pairs
+- E. A chart rendered from metrics
+- F. An `Action.OpenUrl` link to the run
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A, B, C
+### Answer: B, D, F
 
 **In `challenge-06.md`:** lines **322–344**.
 
@@ -719,16 +718,16 @@ button. **Different vendor, identical structure**, because the requirement is th
 
 Which **two** distinguish outbound from inbound integration? (Choose two.)
 
-- A. A webhook is outbound — the platform POSTs to your URL
-- B. `repository_dispatch` is inbound — an external system POSTs to the platform
-- C. Both are initiated by the platform
-- D. Both are initiated externally
-- E. Webhooks require a payload
+- A. Both directions are initiated by the platform
+- B. A webhook is outbound — the platform POSTs to your URL
+- C. Both directions are initiated by the external system
+- D. `repository_dispatch` is inbound — the caller POSTs in
+- E. Webhooks always require a payload body
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A, B
+### Answer: B, D
 
 **In `challenge-06.md`:** lines **143–148**, **257–260**, **927**.
 
@@ -747,16 +746,16 @@ webhook proves itself with a **signature**; an inbound dispatch proves itself wi
 
 Which **two** are true of Azure DevOps service hooks? (Choose two.)
 
-- A. The subscription names a publisher, an event type, a consumer and a consumer action
-- B. Publisher inputs filter which events fire it
-- C. They can only target Teams
-- D. They are configured per repository branch
-- E. They require an Azure subscription
+- A. They can only target Microsoft Teams as a consumer
+- B. Publisher inputs filter which events fire the hook
+- C. They are configured per repository branch in Repos
+- D. They require an Azure subscription to be present
+- E. A subscription names publisher, event, consumer, action
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A, B
+### Answer: B, E
 
 **In `challenge-06.md`:** lines **468–482**.
 
@@ -769,7 +768,7 @@ Which **two** are true of Azure DevOps service hooks? (Choose two.)
 
 **Four fields describe the whole subscription: what emits, which event, what receives, and how.**
 
-**Why C is wrong and useful to know.** `consumerId: "webHooks"` with `consumerActionId: "httpRequest"`
+**Why A is wrong and useful to know.** `consumerId: "webHooks"` with `consumerActionId: "httpRequest"`
 sends to **any** HTTP endpoint — which is why this challenge points it at the same Azure Function that
 receives GitHub's webhooks (line 478). One receiver, two sources.
 
@@ -782,15 +781,15 @@ receives GitHub's webhooks (line 478). One receiver, two sources.
 Which **two** protect a webhook receiver? (Choose two.)
 
 - A. Verifying `X-Hub-Signature-256` with the shared secret
-- B. A constant-time comparison of the digests
-- C. Restricting the endpoint by IP
-- D. Requiring a query-string password
-- E. Making the function `authLevel: 'function'`
+- B. Restricting the endpoint to a range of source IPs
+- C. Requiring a password passed in the query string
+- D. A constant-time comparison of the two digests
+- E. Setting the function to `authLevel: 'function'`
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A, B
+### Answer: A, D
 
 **In `challenge-06.md`:** lines **588–591** and **606–608**.
 
@@ -798,7 +797,7 @@ Which **two** protect a webhook receiver? (Choose two.)
   return crypto.timingSafeEqual(Buffer.from(signature), Buffer.from(digest));
 ```
 
-**A proves the sender; B stops the proof being reverse-engineered by timing** (Q1).
+**A proves the sender; D stops the proof being reverse-engineered by timing** (Q1).
 
 **Why E is a real and different control worth understanding.** The functions are created with
 `--authlevel anonymous` (lines 575–578) **on purpose** — GitHub cannot add a function key to its
@@ -815,26 +814,26 @@ access logs and proxy logs; the HMAC never travels.
 
 Which **two** problems from the scenario do these integrations solve? (Choose two.)
 
-- A. PMs manually checking Boards for status
-- B. On-call missing deployment failures in unread email
-- C. Slow CI builds
-- D. Flaky tests
-- E. Large repository clone times
+- A. Slow CI builds on every pull request
+- B. PMs manually checking Boards for status
+- C. Flaky tests failing at random in CI
+- D. On-call missing deploy failures in email
+- E. Large repository clone times for new joiners
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A, B
+### Answer: B, D
 
 **In `challenge-06.md`:** line **22**, with **114–133** and **351–397**.
 
-**A is solved by `Fixes AB#`, which transitions the work item on merge** — the PM sees the state change
+**B is solved by `Fixes AB#`, which transitions the work item on merge** — the PM sees the state change
 without asking anyone.
 
-**B is solved by routing `deployment_status` failures to a Teams channel** rather than to email. The
+**D is solved by routing `deployment_status` failures to a Teams channel** rather than to email. The
 alert arrives where the team already is.
 
-**Why C, D and E belong to Challenges 35, 34 and 10.** The exam mixes symptoms across domains; attribute
+**Why A, C and E belong to Challenges 35, 34 and 10.** The exam mixes symptoms across domains; attribute
 each to its own mechanism.
 
 </details>
@@ -1276,9 +1275,9 @@ function verifySignature(payload, signature, secret) {
 }
 ```
 
-- **BLANK 1:** `sha256` / `md5` / `sha1` / `aes-256`
-- **BLANK 2:** `sha256` / `hmac` / `github` / `sig`
-- **BLANK 3:** `timingSafeEqual` / `equals` / `compare` / `isEqual`
+- **BLANK 1:** `md5` / `sha1` / `sha256` / `aes-256`
+- **BLANK 2:** `hmac` / `sha256` / `github` / `sig`
+- **BLANK 3:** `equals` / `compare` / `isEqual` / `timingSafeEqual`
 
 <details>
 <summary>Show answer</summary>
@@ -1307,8 +1306,8 @@ gh api repos/OWNER/REPO/hooks --method POST \
   --field config='{"url":"https://...","content_type":"[BLANK 1]","secret":"...","insecure_ssl":"[BLANK 2]"}'
 ```
 
-- **BLANK 1:** `json` / `form` / `xml` / `text`
-- **BLANK 2:** `0` / `1`
+- **BLANK 1:** `form` / `json` / `xml` / `text`
+- **BLANK 2:** `1` / `0`
 
 <details>
 <summary>Show answer</summary>
@@ -1341,9 +1340,9 @@ jobs:
     [BLANK 3]: production
 ```
 
-- **BLANK 1:** `repository_dispatch` / `workflow_dispatch` / `workflow_run` / `deployment`
-- **BLANK 2:** `action` / `event_type` / `type` / `client_payload.type`
-- **BLANK 3:** `environment` / `runs-on` / `concurrency` / `permissions`
+- **BLANK 1:** `workflow_dispatch` / `workflow_run` / `repository_dispatch` / `deployment`
+- **BLANK 2:** `event_type` / `action` / `type` / `client_payload.type`
+- **BLANK 3:** `runs-on` / `concurrency` / `permissions` / `environment`
 
 <details>
 <summary>Show answer</summary>
@@ -1378,8 +1377,8 @@ production.
 }
 ```
 
-- **BLANK 1:** `tfs` / `pipelines` / `boards` / `git`
-- **BLANK 2:** `webHooks` / `teams` / `slack` / `email`
+- **BLANK 1:** `pipelines` / `boards` / `tfs` / `git`
+- **BLANK 2:** `teams` / `webHooks` / `slack` / `email`
 
 <details>
 <summary>Show answer</summary>
@@ -1410,8 +1409,8 @@ switch (event) {
 }
 ```
 
-- **BLANK 1:** `x-github-event` / `x-github-delivery` / `x-hub-signature-256` / `content-type`
-- **BLANK 2:** `ping` / `test` / `hello` / `check`
+- **BLANK 1:** `x-github-delivery` / `x-hub-signature-256` / `x-github-event` / `content-type`
+- **BLANK 2:** `test` / `hello` / `check` / `ping`
 
 <details>
 <summary>Show answer</summary>
@@ -1442,8 +1441,8 @@ az functionapp config appsettings set --name $FUNCTION_APP \
   --settings [BLANK 2]="$NEW_SECRET"
 ```
 
-- **BLANK 1:** `PATCH` / `POST` / `PUT` / `DELETE`
-- **BLANK 2:** `GITHUB_WEBHOOK_SECRET` / `WEBHOOK_SECRET` / `GH_SECRET` / `TEAMS_WEBHOOK_URL`
+- **BLANK 1:** `POST` / `PATCH` / `PUT` / `DELETE`
+- **BLANK 2:** `WEBHOOK_SECRET` / `GH_SECRET` / `GITHUB_WEBHOOK_SECRET` / `TEAMS_WEBHOOK_URL`
 
 <details>
 <summary>Show answer</summary>
@@ -1505,16 +1504,15 @@ between three tools **with no cross-linking**.
 
 How is automatic work item transition achieved?
 
-- A. Install the Azure Boards GitHub App, connect the repository in Azure DevOps, and use `Fixes AB#` in
-  the PR
-- B. Install the app and use `AB#` in the PR
-- C. A workflow that calls the Azure Boards API on merge
-- D. A nightly synchronisation job
+- A. Install the app and use a bare `AB#` in the PR body
+- B. A workflow that calls the Azure Boards API on merge
+- C. Install and connect the app, then use `Fixes AB#`
+- D. A nightly job that synchronises board state
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: C
 
 **In `challenge-06.md`:** lines **45–46**, **62**, **114–132**.
 
@@ -1527,10 +1525,10 @@ Fixes AB#${WORK_ITEM_ID}" --base main
 **Both requirements are met by the same integration**: the `Fixes` keyword transitions, and the work item
 gains `GitHub Commit` and `GitHub Pull Request` relations (line 127) so it shows what touched it.
 
-**Why B is the near-miss that appears in every Boards challenge.** Bare `AB#` links without
+**Why A is the near-miss that appears in every Boards challenge.** Bare `AB#` links without
 transitioning — the PM still has to look.
 
-**Why C is real, unnecessary and worse.** You would maintain code and a credential to reproduce
+**Why B is real, unnecessary and worse.** You would maintain code and a credential to reproduce
 behaviour the integration already provides.
 
 </details>
@@ -1541,27 +1539,26 @@ behaviour the integration already provides.
 
 How should deployment failures reach the channel without flooding it?
 
-- A. A job gated on `deployment_status.state == 'failure'` posting an Adaptive Card with
-  `"color": "Attention"`
-- B. Subscribe the channel to all repository events
-- C. Post every deployment status
-- D. Email the on-call rota
+- A. Subscribe the channel to all repository events
+- B. Post every deployment status to the channel
+- C. Email the on-call rota as changes deploy
+- D. Gate on failure state, card in `Attention`
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: D
 
 **In `challenge-06.md`:** lines **351–375**.
 
 **Two requirements, two parts of the answer.** The `if:` filters to failures only; the `Attention` colour
 makes the card visually distinct from routine messages (Q14).
 
-**Why B and C recreate the problem in a new medium.** The scenario's failure at line 22 is not that email
+**Why A and B recreate the problem in a new medium.** The scenario's failure at line 22 is not that email
 is the wrong tool — it is that the signal is buried. **A Teams channel receiving everything is unread
 email with better formatting.**
 
-**Why D is what they do today.**
+**Why C is what they do today.**
 
 </details>
 
@@ -1571,16 +1568,15 @@ email with better formatting.**
 
 How should an external system trigger a staging deployment with a ref and a reason?
 
-- A. `repository_dispatch` with `event_type: deploy-staging` and a `client_payload` carrying `ref` and
-  `reason`
-- B. `workflow_dispatch`
-- C. A webhook from the external system to GitHub
-- D. A scheduled workflow that polls
+- A. `workflow_dispatch` with declared inputs for each field
+- B. `repository_dispatch` with a `client_payload` for both
+- C. A webhook from the external system into GitHub
+- D. A scheduled workflow that polls for pending requests
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: B
 
 **In `challenge-06.md`:** lines **257–260** and **216–218**.
 
@@ -1592,7 +1588,7 @@ How should an external system trigger a staging deployment with a ref and a reas
 **`client_payload` is the only mechanism here that carries arbitrary caller data**, and the workflow
 reads it at lines 216–218.
 
-**Why B is the trap** (Q25). `workflow_dispatch` is the manual trigger; it takes declared `inputs`, not
+**Why A is the trap** (Q25). `workflow_dispatch` is the manual trigger; it takes declared `inputs`, not
 a free-form payload, and it is designed for a person.
 
 **Why C inverts the direction.** A webhook is GitHub calling you.
@@ -1605,20 +1601,20 @@ a free-form payload, and it is designed for a person.
 
 Which **two** keep an external-triggered production deployment gated? (Choose two.)
 
-- A. `environment: production` on the job
-- B. Protection rules configured on that environment
-- C. A separate `event_type`
-- D. A `client_payload` flag
-- E. Restricting who holds the API token
+- A. A separate `event_type` for production deploys
+- B. `environment: production` declared on the job
+- C. A flag set inside the `client_payload` object
+- D. Protection rules configured on that environment
+- E. Restricting who holds the API token that calls
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A, B
+### Answer: B, D
 
 **In `challenge-06.md`:** line **224**, with Challenge 41's environment checks.
 
-**A names the environment; B is where the approval actually lives.** The YAML declares which environment
+**B names the environment; D is where the approval actually lives.** The YAML declares which environment
 the job targets, and the rules on that environment decide whether it proceeds — the same separation as
 Challenge 41 and Challenge 45.
 
@@ -1626,7 +1622,7 @@ Challenge 41 and Challenge 45.
 review *what was asked for*. **A caller with a valid token would otherwise deploy straight to
 production.**
 
-**Why C and D are caller-controlled** — anything in the payload can be set by whoever is calling.
+**Why A and C are caller-controlled** — anything in the payload can be set by whoever is calling.
 
 </details>
 
@@ -1636,10 +1632,10 @@ production.**
 
 How should a compromised webhook secret be rotated without a gap?
 
-- A. Generate a new secret, PATCH the GitHub webhook config, then update the Function App setting
-- B. Delete the webhook and create a new one
-- C. Remove the secret so verification is skipped while rotating
-- D. Rotate the Teams webhook URL
+- A. Generate a new secret, PATCH the hook, then the setting
+- B. Remove the secret so verification is skipped meanwhile
+- C. Delete the webhook and create a replacement hook
+- D. Rotate the Teams incoming webhook URL instead
 
 <details>
 <summary>Show answer</summary>
@@ -1651,7 +1647,7 @@ How should a compromised webhook secret be rotated without a gap?
 **PATCH rather than recreate** (Q41), so the hook ID, the event subscription and the delivery history
 survive.
 
-**Why C is the option that turns a rotation into an incident.** With `GITHUB_WEBHOOK_SECRET` unset, the
+**Why B is the option that turns a rotation into an incident.** With `GITHUB_WEBHOOK_SECRET` unset, the
 guard at line 605 is false and the receiver accepts **anything** — precisely while you know the old
 secret is compromised.
 
@@ -1670,18 +1666,17 @@ about three weeks ago. Commits still contain `Fixes AB#`, the Teams notification
 webhook deliveries are all 200. GitHub organisation administrators recently tightened third-party
 application access.
 
-What happened, and what is the fix?
+What is the most likely cause?
 
-- A. The Azure Boards GitHub App lost its authorisation when organisation app access was restricted —
-  re-authorise it and confirm the repository is still connected in Azure DevOps
-- B. The webhook secret rotated
-- C. The `Fixes` keyword was deprecated
-- D. The Teams connector expired
+- A. The webhook secret was rotated on only one side
+- B. The Boards app lost its authorisation
+- C. The `Fixes` keyword was deprecated by Azure Boards
+- D. The Teams connector expired and was not recreated
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: B
 
 **In `challenge-06.md`:** lines **897–906**.
 
@@ -1712,20 +1707,17 @@ authorisation question before a syntax one.
 A year on, the PM team never opens Boards to check status, on-call finds out about a failed deployment
 before a customer does, and a QA request can deploy to staging without anyone in the room.
 
-Explain what each integration contributed, and what actually changed.
+Which explanation best accounts for the change?
 
-- A. The Boards app plus the connection made `Fixes AB#` move work items on merge; a signed webhook let
-  one Azure Function receive events from both platforms; `repository_dispatch` let external systems ask
-  for a deployment while the environment kept production gated; and filtered Adaptive Cards put failures
-  where people already are — every link is now a by-product of work someone was doing anyway
-- B. The teams learned to check the other tools more often
-- C. More people were added to the email alias
-- D. A daily stand-up was added to share status
+- A. The teams learned to check the other tools more often
+- B. More people were added to the on-call email alias
+- C. A daily stand-up was added to share status widely
+- D. Every link is a by-product of work already being done
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: D
 
 **In `challenge-06.md`:** lines **114–133**, **588–638**, **202–228**, **351–397**.
 
