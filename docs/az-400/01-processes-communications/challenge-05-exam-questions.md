@@ -48,16 +48,15 @@ date.
 
 What is the key difference between a provisioned wiki and a code wiki in Azure DevOps?
 
-- A. Provisioned wikis support Markdown; code wikis do not
-- B. A provisioned wiki is managed internally by Azure DevOps; a code wiki is published from a repository
-  folder and follows standard Git workflows
-- C. Code wikis are read-only
-- D. Provisioned wikis require a paid licence
+- A. Provisioned wikis support Markdown; code wikis do not at all
+- B. Code wikis become read-only once published from the repo
+- C. A provisioned wiki is internal; a code wiki lives in your repo
+- D. Provisioned wikis require a paid licence per contributor
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: B
+### Answer: C
 
 **In `challenge-05.md`:** lines **110–117**.
 
@@ -85,16 +84,15 @@ code wiki** (line 117).
 
 What is the advantage of Mermaid over an image-based diagram?
 
-- A. Better visual quality
-- B. It is text, so it can be version-controlled, diffed in pull requests, and edited without external
-  tools
-- C. It supports more shapes than Visio
-- D. It renders faster
+- A. Better visual quality than a hand-drawn diagram
+- B. It supports more shapes than Visio or Lucidchart
+- C. It renders faster in the browser than an image
+- D. It is text, so it can be diffed in pull requests
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: B
+### Answer: D
 
 **In `challenge-05.md`:** lines **123** and **881**.
 
@@ -109,7 +107,7 @@ changed — and a reviewer who sees the code change without a diagram change can
 **truth over time**, which is the trade the scenario at line 22 is making after three years of Visio
 drift.
 
-**Why C is a claim nobody needs to defend.** Mermaid has fewer shapes; that is not the argument.
+**Why B is a claim nobody needs to defend.** Mermaid has fewer shapes; that is not the argument.
 
 </details>
 
@@ -119,15 +117,15 @@ drift.
 
 How does release-drafter decide which category a pull request belongs to?
 
-- A. It analyses the code changes
-- B. It matches PR **labels** against the `categories` configuration
-- C. It reads the PR title prefix
-- D. It uses the assigned milestone
+- A. It matches pull request labels against the `categories` config
+- B. It reads the Conventional Commit prefix on the PR title
+- C. It analyses which files the code changes touched
+- D. It uses the milestone assigned to the pull request
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: B
+### Answer: A
 
 **In `challenge-05.md`:** lines **284–307**.
 
@@ -146,7 +144,7 @@ categories:
 **Labels in, sections out.** Which is why Break scenario 2 exists at line 820: PRs with no labels
 produce an empty release note.
 
-**Why C is the tempting answer for anyone who just did Challenge 03.** Conventional Commit prefixes
+**Why B is the tempting answer for anyone who just did Challenge 03.** Conventional Commit prefixes
 drive `conventional-changelog` (Task 4); **labels** drive release-drafter (Task 3). **Two tools, two
 inputs, and the exam pairs them to see whether you know which is which.**
 
@@ -161,15 +159,15 @@ is the defence against the empty-notes failure.
 
 What does `conventional-changelog` do?
 
-- A. It enforces commit message format at commit time
-- B. It generates a structured `CHANGELOG.md` by parsing Conventional Commit messages from Git history
-- C. It validates that commits reference work items
-- D. It creates GitHub releases
+- A. It generates `CHANGELOG.md` by parsing commit messages
+- B. It validates that commits reference a work item
+- C. It enforces the commit message format at commit time
+- D. It creates GitHub releases from the merged pull requests
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: B
+### Answer: A
 
 **In `challenge-05.md`:** lines **403–404** and **472–495**.
 
@@ -189,7 +187,7 @@ npx conventional-changelog -p angular -i CHANGELOG.md -s -r 0
 **Read the output: the sections are the commit *types* from Challenge 03.** `feat` becomes Features,
 `fix` becomes Bug Fixes, and a `!` or `BREAKING CHANGE` footer becomes Breaking Changes.
 
-**Why A is the deliberate pairing.** Enforcing the format at commit time is **commitlint** (Challenge
+**Why C is the deliberate pairing.** Enforcing the format at commit time is **commitlint** (Challenge
 03, line 112). `conventional-changelog` is the *consumer* of that format — which is why the convention
 was worth enforcing in the first place.
 
@@ -201,15 +199,15 @@ was worth enforcing in the first place.
 
 Mermaid diagrams do not render in an Azure DevOps Wiki page. What is the likely cause?
 
-- A. Azure DevOps Wiki uses `::: mermaid` rather than triple backticks
-- B. Mermaid is not supported in Azure DevOps
-- C. The wiki must be a code wiki
-- D. Diagrams must be uploaded as images
+- A. Mermaid is not supported in Azure DevOps wikis at all
+- B. Azure DevOps uses `::: mermaid`, not triple backticks
+- C. The wiki must be a code wiki for diagrams to render
+- D. Diagrams must be uploaded as images to the wiki
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: B
 
 **In `challenge-05.md`:** lines **809–816**.
 
@@ -239,15 +237,15 @@ the wiki editor rather than assuming parity.
 
 Release-drafter produces an empty draft although PRs are merging. What is the cause?
 
-- A. PRs have no labels matching any configured category
-- B. The workflow lacks `contents: write`
-- C. The tag template is wrong
-- D. Releases are disabled
+- A. The workflow lacks the `contents: write` permission
+- B. The tag template in the config file is malformed
+- C. Releases are disabled on the repository settings
+- D. PRs carry no labels matching a configured category
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: D
 
 **In `challenge-05.md`:** lines **827–836**.
 
@@ -269,7 +267,7 @@ have found it.
 automatically from the branch name and the changed files — so the release notes stop depending on
 anyone remembering to label.
 
-**Why B would fail the job**, not empty it. This job succeeds and produces nothing.
+**Why A would fail the job**, not empty it. This job succeeds and produces nothing.
 
 </details>
 
@@ -279,10 +277,10 @@ anyone remembering to label.
 
 What does the `autolabeler` section apply labels from?
 
-- A. Changed file paths and branch names
-- B. Commit message types
-- C. The PR author
-- D. The milestone
+- A. Changed file paths and the branch name
+- B. Commit message types from the history
+- C. The pull request author's team membership
+- D. The milestone assigned to the pull request
 
 <details>
 <summary>Show answer</summary>
@@ -321,15 +319,15 @@ drive the autolabeler (Q3).
 
 What does `version-resolver` in the release-drafter config control?
 
-- A. Which label causes a major, minor or patch version bump
-- B. The Node.js version
-- C. The release-drafter action version
-- D. The changelog format
+- A. The Node.js version used by the workflow job
+- B. The release-drafter action version to pin to
+- C. Which label causes a major, minor or patch bump
+- D. The format the changelog file is written in
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: C
 
 **In `challenge-05.md`:** lines **309–323**.
 
@@ -365,15 +363,15 @@ it feeds `$RESOLVED_VERSION` in the name and tag templates at lines 273–274.
 
 What does `--generate-notes` do on `gh release create`?
 
-- A. GitHub builds release notes automatically from merged pull requests
-- B. It generates a changelog from commit messages
-- C. It creates an empty notes file
-- D. It publishes to GitHub Pages
+- A. It generates a changelog from the commit messages
+- B. GitHub builds the notes from merged pull requests
+- C. It creates an empty notes file for hand editing
+- D. It publishes the release notes to GitHub Pages
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: B
 
 **In `challenge-05.md`:** lines **380–384**.
 
@@ -402,15 +400,15 @@ narrative matters more than the list.
 
 Which trigger does the changelog workflow use?
 
-- A. `push` on tags matching `v*`
-- B. `push` to `main`
-- C. `pull_request`
-- D. `schedule`
+- A. `push` to the `main` branch after each merge
+- B. `pull_request` when a PR is opened or updated
+- C. `schedule`, running on a nightly cron entry
+- D. `push` on tags matching the `v*` pattern
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: D
 
 **In `challenge-05.md`:** lines **429–432**.
 
@@ -436,10 +434,10 @@ Challenge 03 Q4.
 
 Why does the changelog commit step end with `|| true`?
 
-- A. So the job does not fail when there is nothing to commit
-- B. To ignore push errors
-- C. To skip the commit entirely
-- D. To force the commit
+- A. So the job survives having nothing to commit
+- B. To ignore any error raised by the subsequent push
+- C. To skip the commit step entirely on every run
+- D. To force the commit through despite a conflict
 
 <details>
 <summary>Show answer</summary>
@@ -468,15 +466,15 @@ there is something to commit rather than ignoring the error either way.
 
 Where does the OpenAPI specification come from in Task 5?
 
-- A. JSDoc `@openapi` annotations in the route files, assembled by `swagger-jsdoc`
-- B. A hand-written `openapi.yaml`
-- C. Generated at runtime by the API
-- D. Exported from Postman
+- A. A hand-written `openapi.yaml` kept in the repository
+- B. Generated at runtime by the API on first request
+- C. JSDoc `@openapi` annotations read by `swagger-jsdoc`
+- D. Exported from a Postman collection during the build
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: C
 
 **In `challenge-05.md`:** lines **511–546** and **632**.
 
@@ -511,15 +509,15 @@ documents on SharePoint (line 22), which have no relationship to the code at all
 
 What triggers the API documentation workflow?
 
-- A. Pushes to `main` that touch `src/api/**` or `openapi.yaml`
-- B. Every push to `main`
-- C. Tag pushes
-- D. Pull requests
+- A. Every push to `main`, regardless of the paths changed
+- B. Pushes to `main` touching `src/api/**` or `openapi.yaml`
+- C. Tag pushes matching the `v*` release pattern
+- D. Pull requests opened or updated against `main`
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: B
 
 **In `challenge-05.md`:** lines **645–650**.
 
@@ -548,9 +546,9 @@ exactly like documentation that is up to date.
 Which permissions does the API docs workflow need to publish to GitHub Pages?
 
 - A. `pages: write` and `id-token: write`
-- B. `contents: write`
-- C. `packages: write`
-- D. `actions: write`
+- B. `packages: write` for the artifact
+- C. `contents: write` on the repository
+- D. `actions: write` for the workflow run
 
 <details>
 <summary>Show answer</summary>
@@ -583,15 +581,15 @@ usually a missing permission rather than a missing file.
 
 How is the HTML documentation generated from the OpenAPI spec?
 
-- A. `npx @redocly/cli build-docs openapi.json --output docs/api/index.html`
-- B. `npx swagger-ui`
-- C. `npm run docs`
-- D. Pages renders the JSON directly
+- A. `npx swagger-ui` against the generated spec
+- B. `npm run docs` using a local script entry
+- C. Pages renders the JSON spec file directly
+- D. `npx @redocly/cli build-docs` to an HTML file
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: D
 
 **In `challenge-05.md`:** lines **681–683**.
 
@@ -604,7 +602,7 @@ How is the HTML documentation generated from the OpenAPI spec?
 **Three steps in one job: assemble the spec from annotations, render it to HTML, upload it as a Pages
 artifact** (lines 673–688).
 
-**Why D is worth ruling out.** GitHub Pages serves static files; it does not know what OpenAPI is. The
+**Why C is worth ruling out.** GitHub Pages serves static files; it does not know what OpenAPI is. The
 `build-docs` step is what turns a machine-readable spec into something a human can read.
 
 </details>
@@ -615,15 +613,15 @@ artifact** (lines 673–688).
 
 What does the `deploy-docs` job's `environment` block accomplish?
 
-- A. It names the `github-pages` environment and surfaces the published URL on the run
-- B. It requires an approval
-- C. It sets environment variables
-- D. It selects the runner
+- A. It requires an approval before the job can run
+- B. It names `github-pages` and surfaces the published URL
+- C. It sets environment variables for the job steps
+- D. It selects which runner label the job uses
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: B
 
 **In `challenge-05.md`:** lines **693–695**.
 
@@ -640,7 +638,7 @@ environment page.**
 reviewer to `github-pages`, this job starts pausing for approval with no YAML change. That is the same
 mechanic as Challenge 41: **the YAML names the environment; the rules live on it.**
 
-**Why B is not automatic.** Naming an environment does not create an approval; it creates the place one
+**Why A is not automatic.** Naming an environment does not create an approval; it creates the place one
 could be configured.
 
 </details>
@@ -655,17 +653,17 @@ could be configured.
 
 Which **three** distinguish a code wiki from a provisioned wiki? (Choose three.)
 
-- A. It is stored in your own repository
-- B. Changes go through the standard pull request process
-- C. Access is governed by repository permissions
-- D. It cannot use Markdown
-- E. It supports only a single branch
-- F. It requires a separate licence
+- A. It cannot use Markdown for page content
+- B. It is stored in your own Git repository
+- C. It supports only a single publishing branch
+- D. Changes go through the standard PR process
+- E. It requires a separate per-user licence
+- F. Access is governed by repository permissions
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A, B, C
+### Answer: B, D, F
 
 **In `challenge-05.md`:** lines **112–116**.
 
@@ -676,10 +674,10 @@ Which **three** distinguish a code wiki from a provisioned wiki? (Choose three.)
 | Access control | Wiki permissions | Repository permissions |
 ```
 
-**E is inverted — the *provisioned* wiki is single-branch** (line 114); a code wiki can publish from any
+**C is inverted — the *provisioned* wiki is single-branch** (line 114); a code wiki can publish from any
 branch, which is how you keep a `docs` branch for a release line.
 
-**And row C has a consequence people miss.** Repository permissions mean anyone who can read the code
+**And row F has a consequence people miss.** Repository permissions mean anyone who can read the code
 can read the wiki, and anyone who can push can propose a doc change. That is usually what you want for
 technical docs and usually **not** what you want for an HR-adjacent knowledge base.
 
@@ -691,17 +689,17 @@ technical docs and usually **not** what you want for an HR-adjacent knowledge ba
 
 Which **three** Mermaid diagram types does the challenge use? (Choose three.)
 
-- A. `flowchart`
-- B. `sequenceDiagram`
-- C. `graph` with `subgraph`
-- D. `gantt`
-- E. `pie`
-- F. `erDiagram`
+- A. `gantt`, for the release schedule
+- B. `flowchart`, for the deployment pipeline
+- C. `pie`, for a share-of-traffic chart
+- D. `sequenceDiagram`, for the authentication flow
+- E. `erDiagram`, for the database schema
+- F. `graph` with `subgraph`, for the architecture
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A, B, C
+### Answer: B, D, F
 
 **In `challenge-05.md`:** lines **129**, **149**, **174–201**.
 
@@ -727,24 +725,24 @@ HTTP-only cookie.
 
 Which **three** are true of release-drafter? (Choose three.)
 
-- A. It groups PRs into categories by label
-- B. It can resolve the next version from labels
-- C. It can apply labels automatically from branch names and changed files
-- D. It parses Conventional Commit types
-- E. It publishes the release automatically
-- F. It requires a PAT
+- A. It groups pull requests into categories by label
+- B. It parses Conventional Commit types from history
+- C. It can resolve the next version number from labels
+- D. It publishes the release automatically on merge
+- E. It can apply labels from branch names and files
+- F. It requires a personal access token to run
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A, B, C
+### Answer: A, C, E
 
 **In `challenge-05.md`:** lines **284–307**, **309–323**, **325–340**.
 
-**Why D is the pairing this challenge sets up twice.** Conventional Commit **types** are parsed by
+**Why B is the pairing this challenge sets up twice.** Conventional Commit **types** are parsed by
 `conventional-changelog` (Task 4). Release-drafter reads **labels**.
 
-**Why E is a genuinely useful nuance.** Release-drafter maintains a **draft**; a human publishes it.
+**Why D is a genuinely useful nuance.** Release-drafter maintains a **draft**; a human publishes it.
 That is deliberate — the draft accumulates as PRs merge, and someone reviews the notes before they
 become public.
 
@@ -759,27 +757,27 @@ job level (line 364), because everything it touches is in this repository.
 
 Which **two** make documentation resist going stale? (Choose two.)
 
-- A. Generating the API reference from annotations in the route files
-- B. Generating the changelog from commit history
-- C. Storing diagrams as PNG exports
-- D. A quarterly documentation review meeting
-- E. A SharePoint folder with an owner
+- A. Storing every diagram as a PNG image export
+- B. A quarterly documentation review meeting
+- C. Generating the API reference from route annotations
+- D. A SharePoint folder with a named owner assigned
+- E. Generating the changelog from the commit history
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A, B
+### Answer: C, E
 
 **In `challenge-05.md`:** lines **511–546** and **403–404**.
 
 **Both are *derived*, so there is nothing to forget to update.** The API reference changes when the
 route changes; the changelog changes when commits are written.
 
-**Why D is the control Contoso probably already nominally has**, and why it fails: a quarterly review
+**Why B is the control Contoso probably already nominally has**, and why it fails: a quarterly review
 depends on someone doing an unrewarded task on a schedule, and the scenario's Visio diagrams are three
 years old (line 22) — twelve reviews that did not happen.
 
-**Why C is the specific regression to avoid.** A PNG is text's opposite: not diffable, not searchable,
+**Why A is the specific regression to avoid.** A PNG is text's opposite: not diffable, not searchable,
 and requiring the original tool to change.
 
 </details>
@@ -790,16 +788,16 @@ and requiring the original tool to change.
 
 Which **two** are required for the Pages deployment to succeed? (Choose two.)
 
-- A. `pages: write` and `id-token: write` permissions
-- B. An uploaded Pages artifact
-- C. `contents: write`
-- D. A `gh-pages` branch
-- E. A paid plan
+- A. A `gh-pages` branch in the repository
+- B. `pages: write` and `id-token: write` permissions
+- C. `contents: write` on the repository
+- D. An uploaded Pages artifact from the build job
+- E. A paid GitHub plan for the organisation
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A, B
+### Answer: B, D
 
 **In `challenge-05.md`:** lines **652–655** and **685–688**.
 
@@ -813,7 +811,7 @@ Which **two** are required for the Pages deployment to succeed? (Choose two.)
 **Two jobs and an artifact between them.** `build-docs` uploads; `deploy-docs` (with `needs:` at line
 691) deploys what was uploaded.
 
-**Why D is the older model and a good distractor.** Publishing from a `gh-pages` branch is the classic
+**Why A is the older model and a good distractor.** Publishing from a `gh-pages` branch is the classic
 approach; this workflow uses `build_type: workflow` (line 718), where nothing is committed to a branch
 at all.
 
@@ -825,16 +823,16 @@ at all.
 
 Which **two** does the incident-response runbook contain? (Choose two.)
 
-- A. A severity table with response times and escalation paths
-- B. A Mermaid flowchart of the response steps
-- C. An OpenAPI specification
-- D. A changelog
-- E. A list of contributors
+- A. A severity table with response times and escalation
+- B. An OpenAPI specification for the payments API
+- C. A list of contributors to the repository
+- D. A Mermaid flowchart of the response steps
+- E. A changelog of recent production releases
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A, B
+### Answer: A, D
 
 **In `challenge-05.md`:** lines **764–769** and **773–787**.
 
@@ -858,27 +856,27 @@ one teams skip, and putting it in the diagram is how it stops being optional.
 
 Which **two** problems from the scenario does docs-as-code with automation solve? (Choose two.)
 
-- A. Release notes written from memory
-- B. API documentation that nobody updates
-- C. Slow build times
-- D. Merge conflicts
-- E. Missing test coverage
+- A. Build times that have grown too slow
+- B. Release notes written from memory at release time
+- C. Merge conflicts taking days to resolve
+- D. API documentation that nobody keeps updated
+- E. Missing unit test coverage on the API
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A, B
+### Answer: B, D
 
 **In `challenge-05.md`:** line **22**, with **272–344** and **511–546**.
 
-**A is solved by deriving notes from merged PRs**, so the PM writes nothing from memory. **B is solved
+**B is solved by deriving notes from merged PRs**, so the PM writes nothing from memory. **D is solved
 by generating the reference from annotations beside the code.**
 
 **The two remaining complaints in that scenario are solved by different tasks in this challenge**: two
 weeks of new-starter questions by the onboarding wiki page (lines 71–89), and three-year-old diagrams by
 Mermaid in the repository (lines 219–259).
 
-**Why C, D and E belong to other challenges** — 35, 01 and 18 respectively.
+**Why A, C and E belong to other challenges** — 35, 01 and 18 respectively.
 
 </details>
 
@@ -1308,8 +1306,8 @@ az devops wiki create \
 Requirement: publish documentation from a folder in an existing repository so changes go through pull
 requests.
 
-- **BLANK 1:** `codeWiki` / `projectWiki` / `gitWiki` / `repoWiki`
-- **BLANK 2:** `mapped-path` / `path` / `folder` / `root`
+- **BLANK 1:** `projectWiki` / `gitWiki` / `codeWiki` / `repoWiki`
+- **BLANK 2:** `path` / `mapped-path` / `folder` / `root`
 
 <details>
 <summary>Show answer</summary>
@@ -1346,9 +1344,9 @@ exclude-labels:
 
 Requirement: every merged PR appears somewhere, except ones explicitly marked to be left out.
 
-- **BLANK 1:** `labels` / `types` / `prefixes` / `branches`
-- **BLANK 2:** `*` / `other` / `none` / `misc`
-- **BLANK 3:** `skip-changelog` / `wontfix` / `draft` / `internal`
+- **BLANK 1:** `types` / `prefixes` / `branches` / `labels`
+- **BLANK 2:** `other` / `none` / `*` / `misc`
+- **BLANK 3:** `wontfix` / `skip-changelog` / `draft` / `internal`
 
 <details>
 <summary>Show answer</summary>
@@ -1380,8 +1378,8 @@ version-resolver:
   default: [BLANK 2]
 ```
 
-- **BLANK 1:** `breaking-change` / `major` / `breaking` / `incompatible`
-- **BLANK 2:** `patch` / `minor` / `major` / `none`
+- **BLANK 1:** `major` / `breaking` / `breaking-change` / `incompatible`
+- **BLANK 2:** `minor` / `major` / `none` / `patch`
 
 <details>
 <summary>Show answer</summary>
@@ -1409,8 +1407,8 @@ npx conventional-changelog -p [BLANK 1] -i CHANGELOG.md -s -r [BLANK 2]
 
 Requirement: regenerate the whole changelog from the full history, writing in place.
 
-- **BLANK 1:** `angular` / `conventional` / `semver` / `github`
-- **BLANK 2:** `0` / `1` / `all` / `-1`
+- **BLANK 1:** `conventional` / `angular` / `semver` / `github`
+- **BLANK 2:** `1` / `all` / `0` / `-1`
 
 <details>
 <summary>Show answer</summary>
@@ -1445,9 +1443,9 @@ permissions:
   [BLANK 3]: write
 ```
 
-- **BLANK 1:** `paths` / `files` / `include` / `filters`
-- **BLANK 2:** `pages` / `contents` / `packages` / `deployments`
-- **BLANK 3:** `id-token` / `actions` / `checks` / `issues`
+- **BLANK 1:** `files` / `include` / `paths` / `filters`
+- **BLANK 2:** `contents` / `pages` / `packages` / `deployments`
+- **BLANK 3:** `actions` / `checks` / `issues` / `id-token`
 
 <details>
 <summary>Show answer</summary>
@@ -1478,8 +1476,8 @@ flowchart TD
 
 Requirement: render a diagram on an **Azure DevOps Wiki** page.
 
-- **BLANK 1:** `:::` / three backticks / `~~~` / `<mermaid>`
-- **BLANK 2:** `:::` / three backticks / `</mermaid>` / *(nothing)*
+- **BLANK 1:** three backticks / `:::` / `~~~` / `<mermaid>`
+- **BLANK 2:** three backticks / `</mermaid>` / `:::` / *(nothing)*
 
 <details>
 <summary>Show answer</summary>
@@ -1543,15 +1541,15 @@ consistent structure**.
 
 Where should the onboarding guide live, and where should the API design notes live?
 
-- A. Onboarding in a provisioned wiki; API notes in a code wiki or `/docs` in the repository
-- B. Both in a provisioned wiki
-- C. Both in the repository
-- D. Both on SharePoint
+- A. Both in a provisioned wiki, edited in the browser
+- B. Onboarding in a provisioned wiki; API notes in the repo
+- C. Both in the repository, under a `/docs` folder
+- D. Both on SharePoint, with a named document owner
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: B
 
 **In `challenge-05.md`:** lines **42**, **94** and **117**.
 
@@ -1574,21 +1572,21 @@ the approver changes.
 
 How should architecture diagrams satisfy "show what changed when the system changes"?
 
-- A. Mermaid committed to the repository, so the diagram diffs in the same pull request
-- B. Visio files committed to the repository
-- C. PNG exports attached to wiki pages
-- D. Diagrams redrawn at each quarterly review
+- A. Visio files committed alongside the source code
+- B. PNG exports attached to the relevant wiki pages
+- C. Mermaid committed so the diagram diffs in the PR
+- D. Diagrams redrawn at each quarterly review meeting
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: C
 
 **In `challenge-05.md`:** lines **123** and **219–259**.
 
 **"Show what changed" is a requirement about *diffs*, and only text diffs.**
 
-**Why B is the near-miss that catches people.** Committing the Visio file gives you version history and
+**Why A is the near-miss that catches people.** Committing the Visio file gives you version history and
 a binary blob — Git can store it and cannot show you what changed inside it, so a reviewer sees "the
 diagram changed" and not how.
 
@@ -1603,27 +1601,27 @@ update.
 
 How should release notes be produced?
 
-- A. Release-drafter with categories, a version resolver and an autolabeler, maintaining a draft
-- B. The PM continues writing them, stored in the wiki
-- C. `--generate-notes` on every release, with no configuration
-- D. A weekly email summarising merges
+- A. The PM continues writing them, stored in the team wiki
+- B. `--generate-notes` on every release, with no config
+- C. A weekly email summarising the merges that landed
+- D. Release-drafter with categories, resolver and autolabeler
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: D
 
 **In `challenge-05.md`:** lines **272–370**.
 
 **The autolabeler is what removes the last human step** (Q7). Without it the categories depend on
 labelling discipline, and Break scenario 2 is the result.
 
-**Why C is a defensible second choice worth understanding.** `--generate-notes` needs no config at all
+**Why B is a defensible second choice worth understanding.** `--generate-notes` needs no config at all
 and produces a flat list of merged PRs. It satisfies "without anyone writing them" — it just gives up
-categories, version resolution and exclusions. **If the exam adds "grouped by type", C stops being
+categories, version resolution and exclusions. **If the exam adds "grouped by type", B stops being
 sufficient.**
 
-**Why B is the failure being replaced**, relocated.
+**Why A is the failure being replaced**, relocated.
 
 </details>
 
@@ -1633,23 +1631,23 @@ sufficient.**
 
 Which **two** keep the API reference current? (Choose two.)
 
-- A. `@openapi` annotations in the route files, assembled by `swagger-jsdoc`
-- B. A workflow triggered by pushes touching `src/api/**`
-- C. A quarterly export from Postman
-- D. A manually maintained `openapi.yaml`
-- E. A link to the staging Swagger UI
+- A. A quarterly export from a Postman collection
+- B. A manually maintained `openapi.yaml` in the repo
+- C. `@openapi` annotations assembled by `swagger-jsdoc`
+- D. A link to the Swagger UI on the staging environment
+- E. A workflow triggered by pushes touching `src/api/**`
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A, B
+### Answer: C, E
 
 **In `challenge-05.md`:** lines **511–546** and **645–650**.
 
-**A ties the documentation to the code; B ties the *publish* to the change.** Either alone leaves a gap:
+**C ties the documentation to the code; E ties the *publish* to the change.** Either alone leaves a gap:
 perfect annotations that are never rebuilt, or a rebuild of a spec nobody updated.
 
-**Why E is genuinely useful and fails the "stable URL" requirement.** A staging Swagger UI is current and
+**Why D is genuinely useful and fails the "stable URL" requirement.** A staging Swagger UI is current and
 points at an environment that may be down, redeployed or unreachable to the API's consumers.
 
 </details>
@@ -1660,15 +1658,15 @@ points at an environment that may be down, redeployed or unreachable to the API'
 
 How is the documentation made reachable at a stable URL?
 
-- A. GitHub Pages with `build_type: workflow`, deploying the rendered artifact
-- B. A link to the repository folder
-- C. An attachment on a wiki page
-- D. A shared drive
+- A. A link to the rendered folder in the repository
+- B. An attachment uploaded to a wiki page
+- C. A shared network drive the team can reach
+- D. GitHub Pages with `build_type: workflow`
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: D
 
 **In `challenge-05.md`:** lines **714–727** and **690–699**.
 
@@ -1679,7 +1677,7 @@ gh api repos/{owner}/{repo}/pages --jq '{url: .html_url, status: .status, build_
 **Pages gives a fixed public URL that survives every rebuild**, and the environment block at lines
 693–695 surfaces it on each run.
 
-**Why B fails for the audience.** A `/docs` folder renders raw Markdown for people with repository
+**Why A fails for the audience.** A `/docs` folder renders raw Markdown for people with repository
 access — which excludes the API consumers the reference exists for.
 
 </details>
@@ -1692,18 +1690,17 @@ Nine months later, the team notices that `CHANGELOG.md` contains only the two mo
 although it once held two years of history. The changelog job is green on every tag. The platform team
 recently trimmed CI checkout times across all workflows.
 
-What happened, and what is the fix?
+What is the most likely cause?
 
-- A. The changelog job now runs on a shallow clone, so `-r 0` regenerates from one commit and the job
-  commits the truncated file over the real one — restore `fetch-depth: 0`
-- B. `conventional-changelog` was upgraded
-- C. Commits stopped following the convention
-- D. The tag pattern no longer matches
+- A. `conventional-changelog` was upgraded to a new major
+- B. The job now runs on a shallow clone, so `-r 0` truncates
+- C. Commits stopped following the Conventional Commit format
+- D. The tag pattern in the trigger no longer matches releases
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: B
 
 **In `challenge-05.md`:** lines **443**, **454** and **460–462**.
 
@@ -1722,7 +1719,7 @@ a little more of the record while reporting success.
 **`-r 0` is the amplifier.** It means *regenerate all releases*, so the output is not appended to what
 exists — it **replaces** it.
 
-**Why B and C would leave the file intact.** A parsing failure produces missing *entries*, not a
+**Why A and C would leave the file intact.** A parsing failure produces missing *entries*, not a
 truncated *history*, and D would mean the job never ran at all.
 
 **The durable lesson: a workflow that writes back to the repository is a workflow whose inputs must be
@@ -1738,16 +1735,12 @@ the same rule as commitlint in Challenge 03.
 A year on, a new developer is productive in two days, the release notes write themselves, and the API
 reference is trusted enough that support links to it.
 
-Explain what each piece contributed, and what actually changed.
+Which explanation best accounts for the change?
 
-- A. The provisioned wiki answered the questions new starters ask; Mermaid in the repository made
-  diagrams change with the system; release-drafter derived notes from PRs people were opening anyway;
-  `conventional-changelog` turned commit messages into a grouped history; and annotations plus Pages made
-  the API reference a function of the code — every artifact is now derived from work that was already
-  happening
-- B. The team started caring about documentation
-- C. A technical writer was hired
-- D. Quarterly reviews were made mandatory
+- A. Every artifact is derived from work already happening
+- B. A dedicated technical writer was hired for the team
+- C. The team started caring more about writing documentation
+- D. Quarterly documentation reviews were made mandatory
 
 <details>
 <summary>Show answer</summary>
