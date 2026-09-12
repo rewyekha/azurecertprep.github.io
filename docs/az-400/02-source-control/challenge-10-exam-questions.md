@@ -47,15 +47,15 @@ clones taking **over four hours**, push timeouts, and CI runners out of disk.
 
 A developer clones a repository with `GIT_LFS_SKIP_SMUDGE=1`. What do the `.psd` files contain?
 
-- A. Empty files
-- B. Text pointer files with the LFS object ID and size
-- C. Corrupted binary data
-- D. Nothing — the files are absent
+- A. Empty zero-byte files at each tracked path
+- B. Corrupted binary data that will not open
+- C. Nothing at all — the files are absent from disk
+- D. Text pointer files with the object ID and size
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: B
+### Answer: D
 
 **In `challenge-10.md`:** lines **139–143** and **501**.
 
@@ -83,15 +83,15 @@ need 50 GB of textures, so skipping the smudge makes the checkout fast and cheap
 
 After `git lfs migrate import --include="*.fbx" --everything`, what must the rest of the team do?
 
-- A. Run `git lfs install`
-- B. Run `git pull`
-- C. Re-clone, because history was rewritten
-- D. Delete local `.fbx` files and check out again
+- A. Re-clone, because the history has been rewritten
+- B. Run `git lfs install` on each workstation
+- C. Run `git pull` to pick up the migrated files
+- D. Delete local `.fbx` files and check them out again
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: C
+### Answer: A
 
 **In `challenge-10.md`:** lines **122–123** and **512**.
 
@@ -103,7 +103,7 @@ After `git lfs migrate import --include="*.fbx" --everything`, what must the res
 **`--everything` rewrites every commit that touched a migrated file type**, so every SHA downstream
 changes — the same mechanic as `git filter-repo` in Challenge 11.
 
-**Why B actively makes it worse.** A `git pull` against rewritten history tries to merge two unrelated
+**Why C actively makes it worse.** A `git pull` against rewritten history tries to merge two unrelated
 versions of the same project, producing a tangle of duplicate commits.
 
 **Note the less disruptive alternative at line 127**: `--include-ref=refs/heads/main` migrates one branch
@@ -117,16 +117,15 @@ rather than all history — still a rewrite, smaller blast radius.
 
 What is the primary advantage of git-fat over Git LFS?
 
-- A. Better performance on large files
-- B. Native GitHub and Azure DevOps integration
-- C. Any storage backend you control — S3, rsync, custom — without depending on the host's LFS
-  implementation
-- D. Built-in file locking
+- A. Better performance on very large binary files
+- B. Any storage backend you control, like S3 or rsync
+- C. Native integration with GitHub and Azure DevOps
+- D. Built-in file locking for shared binary assets
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: C
+### Answer: B
 
 **In `challenge-10.md`:** lines **321** and **523**.
 
@@ -137,7 +136,7 @@ What is the primary advantage of git-fat over Git LFS?
 **You own the storage, so you own the cost model and the quotas** — which matters when 50 GB of assets
 would otherwise be billed per gigabyte of bandwidth (line 239).
 
-**Why B and D are LFS's advantages, offered as git-fat's.** Line 322 gives native integration to LFS;
+**Why C and D are LFS's advantages, offered as git-fat's.** Line 322 gives native integration to LFS;
 line 323 gives file locking to LFS and explicitly **No** to git-fat.
 
 **And the trade is stated plainly in the table**: git-fat is self-managed setup, self-managed bandwidth,
@@ -153,14 +152,14 @@ control.**
 An artist locks `character.fbx` and goes on holiday. Another artist needs it urgently. What is correct?
 
 - A. Delete and recreate the file to bypass the lock
-- B. `git lfs unlock --path="character.fbx" --force`, which needs maintain or admin permission
-- C. Disable LFS locking on the repository
-- D. Edit locally and wait
+- B. Disable LFS locking on the whole repository
+- C. `git lfs unlock --force`, with maintain rights
+- D. Edit locally and wait for the artist to return
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: B
+### Answer: C
 
 **In `challenge-10.md`:** lines **361–362** and **534**.
 
@@ -172,7 +171,7 @@ git lfs unlock assets/textures/hero_diffuse.psd --force
 **`--force` is the documented emergency procedure**, and the permission requirement is what stops it
 being routine — breaking someone's lock is a decision, not a convenience.
 
-**Why C is the over-correction.** Disabling locking to solve one stuck lock removes the protection for
+**Why B is the over-correction.** Disabling locking to solve one stuck lock removes the protection for
 every binary in the repository.
 
 **And line 534 adds the governance point worth remembering**: the team should agree a **lock duration
@@ -186,15 +185,15 @@ policy** and a delegation path, so the emergency is rare.
 
 Cloned `.psd` files contain pointer text. What is the fix?
 
-- A. `git lfs pull`, or install LFS then `git lfs fetch --all` and `git lfs checkout`
-- B. Re-clone with `--depth 1`
-- C. Run `git gc`
-- D. Delete `.gitattributes`
+- A. Re-clone the repository with `--depth 1`
+- B. Run `git gc` to repack the local objects
+- C. Delete `.gitattributes` and re-checkout
+- D. `git lfs pull`, or install LFS then checkout
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: D
 
 **In `challenge-10.md`:** lines **432–441**.
 
@@ -213,7 +212,7 @@ checkout explicitly.
 
 **And `file` is the verification** (line 444): `Adobe Photoshop Image` means real content, not a pointer.
 
-**Why D would make it permanent.** Deleting `.gitattributes` removes the tracking rules, so the next
+**Why C would make it permanent.** Deleting `.gitattributes` removes the tracking rules, so the next
 commit stores raw binaries in Git.
 
 </details>
@@ -224,16 +223,15 @@ commit stores raw binaries in Git.
 
 A push fails with "This repository is over its data quota". Which options address it?
 
-- A. Buy data packs, restrict fetch with include and exclude, use a custom LFS server, or cache LFS
-  objects in CI
-- B. Delete the repository history
-- C. Convert LFS files back to normal files
-- D. Increase the runner disk size
+- A. Delete the repository history and start from scratch
+- B. Data packs, fetch filters, custom server, CI caching
+- C. Convert the LFS files back into normal Git files
+- D. Increase the disk size on the CI runners
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: B
 
 **In `challenge-10.md`:** lines **469–485**.
 
@@ -266,8 +264,8 @@ same objects:
 Where are LFS tracking rules stored?
 
 - A. `.gitattributes`
-- B. `.gitignore`
-- C. `.lfsconfig`
+- B. `.lfsconfig`
+- C. `.gitignore`
 - D. `.git/config`
 
 <details>
@@ -304,9 +302,9 @@ which would corrupt a binary.
 What does `--lockable` add to a tracking pattern?
 
 - A. Matching files are checked out read-only until locked
-- B. The files cannot be deleted
-- C. The files are encrypted
-- D. Only admins can edit them
+- B. Matching files cannot be deleted from the working tree
+- C. Matching files are encrypted at rest on the LFS server
+- D. Only repository administrators can edit the files
 
 <details>
 <summary>Show answer</summary>
@@ -339,15 +337,15 @@ into something you trip over at exactly the right moment.
 
 Why does locking exist for binary files specifically?
 
-- A. Binary files cannot be merged, so concurrent edits mean one person's work is lost
-- B. Binaries are too large to merge quickly
-- C. Git refuses to store two versions
-- D. LFS servers do not support branching
+- A. Binaries are too large to merge in reasonable time
+- B. Git refuses to store two versions of a binary
+- C. LFS servers do not support branching of objects
+- D. Binaries cannot merge, so concurrent edits lose work
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: D
 
 **In `challenge-10.md`:** line **332**.
 
@@ -370,15 +368,15 @@ of resolving it afterwards.
 
 What does `git lfs migrate info --everything` do?
 
-- A. Reports which file types consume the most space across history, without changing anything
-- B. Migrates all files to LFS
-- C. Uploads files to the LFS server
-- D. Deletes large files
+- A. It migrates every file in history into LFS
+- B. It uploads the matched objects to the LFS server
+- C. It reports which file types use the most space
+- D. It deletes large files from the repository history
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: C
 
 **In `challenge-10.md`:** lines **115–120**.
 
@@ -401,15 +399,15 @@ extension, which catches large files whose type you did not think of.
 
 What does `git lfs ls-files` show?
 
-- A. Files currently tracked by LFS, with their object IDs
-- B. All files in the repository
-- C. Locked files
-- D. Files pending upload
+- A. Every file in the repository working tree
+- B. Files currently tracked by LFS, with object IDs
+- C. Files currently locked, with their owner
+- D. Files staged and pending upload to the server
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: B
 
 **In `challenge-10.md`:** lines **133–136**.
 
@@ -434,10 +432,10 @@ now pointers rather than blobs.
 
 What do `git reflog expire` and `git gc --prune=now` accomplish after a migration?
 
-- A. They remove the old large objects from the local repository so the size actually drops
-- B. They upload objects to LFS
-- C. They rebuild the index
-- D. They verify the migration
+- A. They remove the old large objects so size drops
+- B. They rebuild the index after the history rewrite
+- C. They verify that the migration completed correctly
+- D. They upload the migrated objects to the LFS server
 
 <details>
 <summary>Show answer</summary>
@@ -473,15 +471,15 @@ of pointers.
 
 What does `lfs: false` on `actions/checkout` do?
 
-- A. It skips downloading LFS content during checkout
-- B. It disables LFS for the repository
-- C. It removes `.gitattributes`
-- D. It fails the build if LFS files exist
+- A. It disables LFS for the entire repository
+- B. It skips downloading LFS content at checkout
+- C. It removes `.gitattributes` from the checkout
+- D. It fails the build if any LFS files exist
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: B
 
 **In `challenge-10.md`:** lines **261–268**.
 
@@ -509,16 +507,15 @@ video out.
 
 What is the difference between `git lfs fetch` and `git lfs pull`?
 
-- A. `fetch` downloads objects into `.git/lfs`; `pull` also replaces the working-copy pointers with
-  content
-- B. They are identical
-- C. `fetch` is for remotes, `pull` is for local
-- D. `pull` uploads
+- A. They are identical commands with two names
+- B. `fetch` targets remotes; `pull` targets local
+- C. `fetch` downloads; `pull` also checks out
+- D. `pull` uploads objects; `fetch` downloads them
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: C
 
 **In `challenge-10.md`:** lines **438–441**.
 
@@ -543,15 +540,15 @@ one of them errors.
 
 Which storage limits does the challenge cite for GitHub LFS on the free tier?
 
-- A. 1 GB storage and 1 GB bandwidth per month
-- B. 5 GB storage, unlimited bandwidth
-- C. 50 GB storage
-- D. Unlimited for public repositories
+- A. 5 GB storage with unlimited bandwidth
+- B. 50 GB storage, billed per gigabyte over
+- C. Unlimited for public repositories only
+- D. 1 GB storage and 1 GB bandwidth per month
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: D
 
 **In `challenge-10.md`:** lines **237–243**.
 
@@ -577,10 +574,10 @@ appear.
 
 What does the pre-push hook at Task 7 enforce?
 
-- A. It blocks a push that modifies a lockable file the pusher does not hold a lock on
-- B. It locks files automatically
-- C. It warns and continues
-- D. It rejects all binary changes
+- A. It blocks pushing a lockable file with no lock held
+- B. It locks the modified files automatically on push
+- C. It warns about the missing lock and continues
+- D. It rejects every push that contains a binary change
 
 <details>
 <summary>Show answer</summary>
@@ -618,21 +615,21 @@ not enforcement** — the same distinction as Challenge 43.
 
 Which **three** are true of Git LFS? (Choose three.)
 
-- A. It replaces tracked files with text pointers in the repository
-- B. Tracking rules live in `.gitattributes` and must be committed
-- C. It provides built-in file locking
-- D. It reduces the number of commits in history
-- E. It speeds up a repository that is large because of history depth
-- F. It requires a custom storage backend
+- A. It replaces tracked files with text pointers in the repo
+- B. It reduces the number of commits in the history
+- C. Rules live in `.gitattributes`, which must be committed
+- D. It speeds up a repo that is large due to history depth
+- E. It provides built-in file locking for binaries
+- F. It requires you to run a custom storage backend
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A, B, C
+### Answer: A, C, E
 
 **In `challenge-10.md`:** lines **139–143**, **98–107**, **323**.
 
-**Why D and E are the Scalar confusion, and this is the paper's central trap.** LFS shrinks the
+**Why B and D are the Scalar confusion, and this is the paper's central trap.** LFS shrinks the
 repository by moving **file content** out of it. A repository that is slow because it has 500,000 commits
 or a million files is unaffected — that is Scalar, partial clone and sparse-checkout (Challenge 12).
 
@@ -646,17 +643,17 @@ or a million files is unaffected — that is Scalar, partial clone and sparse-ch
 
 Which **three** does `.gitattributes` do for an LFS-tracked type? (Choose three.)
 
-- A. `filter=lfs` swaps content for a pointer on commit and back on checkout
-- B. `diff=lfs` and `merge=lfs` stop Git attempting textual diff or merge
-- C. `-text` disables line-ending conversion
-- D. It compresses the file
-- E. It sets the file read-only
-- F. It uploads the file
+- A. It compresses the file before storage
+- B. `filter=lfs` swaps content for a pointer and back
+- C. It sets the file read-only on checkout
+- D. `diff=lfs` and `merge=lfs` stop textual diff or merge
+- E. It uploads the file to the LFS server
+- F. `-text` disables line-ending conversion
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A, B, C
+### Answer: B, D, F
 
 **In `challenge-10.md`:** line **173**.
 
@@ -667,7 +664,7 @@ Which **three** does `.gitattributes` do for an LFS-tracked type? (Choose three.
 **Four attributes, three jobs, and `-text` is the one people overlook.** Without it, Git may treat the
 file as text and rewrite CRLF to LF on checkout — which **corrupts a binary silently**.
 
-**Why E is the separate `lockable` attribute** (line 341), appended to the same line when you use
+**Why C is the separate `lockable` attribute** (line 341), appended to the same line when you use
 `git lfs track --lockable`.
 
 </details>
@@ -679,23 +676,23 @@ file as text and rewrite CRLF to LF on checkout — which **corrupts a binary si
 Which **three** reduce LFS bandwidth in CI? (Choose three.)
 
 - A. `lfs: false` on checkout, then a targeted `git lfs pull`
-- B. `GIT_LFS_SKIP_SMUDGE: 1` for jobs that need no assets
-- C. Caching `.git/lfs` between runs
-- D. Increasing the runner size
-- E. Cloning with `--depth 1`
-- F. Deleting `.gitattributes` in CI
+- B. Increasing the size and disk of the CI runner
+- C. `GIT_LFS_SKIP_SMUDGE: 1` for jobs needing no assets
+- D. Cloning with `--depth 1` to limit history
+- E. Caching `.git/lfs` between workflow runs
+- F. Deleting `.gitattributes` inside the CI job
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A, B, C
+### Answer: A, C, E
 
 **In `challenge-10.md`:** lines **261–274** and **480–485**.
 
-**Three techniques, three different savings.** A downloads a subset, B downloads nothing, C downloads
+**Three techniques, three different savings.** A downloads a subset, C downloads nothing, E downloads
 nothing **again**.
 
-**Why E is the Challenge 12 confusion in miniature.** `--depth 1` limits how much **history** you fetch;
+**Why D is the Challenge 12 confusion in miniature.** `--depth 1` limits how much **history** you fetch;
 it does nothing about the size of the LFS objects for the commit you did check out.
 
 **Why F would break the checkout** — without the rules, the pointer files are not recognised and never
@@ -709,24 +706,24 @@ resolved.
 
 Which **two** are true of LFS file locking? (Choose two.)
 
-- A. `--lockable` makes files read-only until locked
-- B. `git lfs unlock --force` requires maintain or admin permission
-- C. Locks expire automatically after 24 hours
-- D. Locking works for text files only
-- E. Locks prevent cloning
+- A. Locks expire automatically after 24 hours
+- B. `--lockable` makes files read-only until locked
+- C. Locking works for text files only, not binaries
+- D. `git lfs unlock --force` needs maintain or admin
+- E. Locks prevent other users from cloning
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A, B
+### Answer: B, D
 
 **In `challenge-10.md`:** lines **371–378** and **361–362**.
 
-**Why C is the feature people assume exists**, and line 534 is careful about it: the team should
+**Why A is the feature people assume exists**, and line 534 is careful about it: the team should
 *consider* lock expiration **"if supported by their LFS server"**. It is not a guaranteed capability, and
 assuming it is how a lock survives a two-week holiday.
 
-**Why D inverts the purpose entirely.** Locking exists **because** binaries cannot be merged (Q9); text
+**Why C inverts the purpose entirely.** Locking exists **because** binaries cannot be merged (Q9); text
 files need no lock precisely because Git can merge them.
 
 </details>
@@ -737,16 +734,16 @@ files need no lock precisely because Git can merge them.
 
 Which **two** are advantages of Git LFS over git-fat, per the comparison table? (Choose two.)
 
-- A. Native integration with GitHub and Azure DevOps
-- B. Built-in file locking
-- C. Any storage backend
-- D. No bandwidth quotas
-- E. Lower storage cost
+- A. Any storage backend of your choosing
+- B. No bandwidth quotas on the hosted server
+- C. Native integration with GitHub and Azure DevOps
+- D. Lower storage cost at scale than the host
+- E. Built-in file locking for binaries
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A, B
+### Answer: C, E
 
 **In `challenge-10.md`:** lines **322–323** and **327**.
 
@@ -770,16 +767,16 @@ infrastructure; git-fat if 50 GB of bandwidth per month makes the provider's pri
 
 Which **two** are required after `git lfs migrate import --everything`? (Choose two.)
 
-- A. A force push, coordinated with the team
-- B. Every other clone re-cloned or hard-reset
-- C. Running `git lfs install` on the server
-- D. Deleting `.gitattributes`
-- E. Re-tagging every release
+- A. Running `git lfs install` on the server side
+- B. A force push, coordinated with the whole team
+- C. Deleting `.gitattributes` after the migration
+- D. Re-tagging every release against new SHAs
+- E. Every other clone re-cloned or hard-reset
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A, B
+### Answer: B, E
 
 **In `challenge-10.md`:** lines **145–149** and **512**.
 
@@ -793,7 +790,7 @@ git lfs pull
 **`--force-with-lease` rather than `--force`** — the same safety property as Challenge 07 Q21: it refuses
 if the remote moved since your last fetch.
 
-**And E is the consequence worth thinking about even though it is not required.** Rewriting history
+**And D is the consequence worth thinking about even though it is not required.** Rewriting history
 changes commit SHAs, so **existing tags now point at commits that are no longer on any branch**. The
 migration does not break the tags; it orphans what they reference — which is why a migration is a
 coordinated event rather than a Tuesday afternoon.
@@ -807,15 +804,15 @@ coordinated event rather than a Tuesday afternoon.
 Which **two** verify that a migration worked? (Choose two.)
 
 - A. `git lfs ls-files` lists the files with object IDs
-- B. `cat` on a tracked file shows the three-line pointer
-- C. `git lfs locks` returns entries
-- D. `git status` shows no changes
-- E. `git log` shows fewer commits
+- B. `git lfs locks` returns entries for the files
+- C. `git status` reports a clean working tree
+- D. `cat` on a tracked file shows the three-line pointer
+- E. `git log` shows fewer commits than before
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A, B
+### Answer: A, D
 
 **In `challenge-10.md`:** lines **133–143**.
 
@@ -1075,7 +1072,7 @@ Match each repository problem to the right tool.
 | Two artists overwriting the same asset |  |
 | CI runners filling their disk with assets |  |
 
-**Options:** Git LFS · git-fat · `lfs: false` + targeted pull + cache · LFS file locking · **Scalar / partial clone** (Challenge 12) · **Sparse-checkout** (Challenge 12)
+**Options:** Git LFS · git-fat · `lfs: false` + targeted pull + cache · LFS file locking · Scalar / partial clone (Challenge 12) · Sparse-checkout (Challenge 12)
 
 <details>
 <summary>Show answer</summary>
@@ -1219,7 +1216,7 @@ Match each LFS-versus-git-fat row to the winner.
 | Bandwidth cost control |  |
 | Setup and maintenance effort |  |
 
-**Options:** Git LFS · **Git LFS** (lower) · git-fat
+**Options:** Git LFS · Git LFS (lower) · git-fat
 
 <details>
 <summary>Show answer</summary>
@@ -1254,9 +1251,9 @@ The decision is usually made by the bandwidth bill (Q15) rather than by features
 
 Requirement: LFS-tracked, no line-ending conversion, and read-only until locked.
 
-- **BLANK 1:** `lfs` / `fat` / `binary` / `large`
-- **BLANK 2:** `-text` / `text` / `binary` / `nodiff`
-- **BLANK 3:** `lockable` / `locked` / `readonly` / `exclusive`
+- **BLANK 1:** `fat` / `binary` / `lfs` / `large`
+- **BLANK 2:** `text` / `-text` / `binary` / `nodiff`
+- **BLANK 3:** `locked` / `readonly` / `exclusive` / `lockable`
 
 <details>
 <summary>Show answer</summary>
@@ -1283,9 +1280,9 @@ git lfs migrate [BLANK 2] --include="*.psd,*.fbx,*.png,*.wav" --everything
 git lfs migrate import --[BLANK 3]=1mb --everything
 ```
 
-- **BLANK 1:** `info` / `import` / `export` / `status`
-- **BLANK 2:** `import` / `info` / `push` / `track`
-- **BLANK 3:** `above` / `over` / `min-size` / `larger-than`
+- **BLANK 1:** `import` / `info` / `export` / `status`
+- **BLANK 2:** `info` / `push` / `import` / `track`
+- **BLANK 3:** `over` / `min-size` / `larger-than` / `above`
 
 <details>
 <summary>Show answer</summary>
@@ -1315,10 +1312,10 @@ git lfs unlock assets/textures/hero_diffuse.psd --[BLANK 4]
 
 Requirement: make the type lockable, take a lock, list all locks, then break someone else's lock.
 
-- **BLANK 1:** `lockable` / `lock` / `exclusive` / `binary`
-- **BLANK 2:** `lock` / `claim` / `reserve` / `hold`
-- **BLANK 3:** `locks` / `lock --list` / `status` / `ls-locks`
-- **BLANK 4:** `force` / `admin` / `override` / `steal`
+- **BLANK 1:** `lock` / `exclusive` / `lockable` / `binary`
+- **BLANK 2:** `claim` / `lock` / `reserve` / `hold`
+- **BLANK 3:** `lock --list` / `status` / `ls-locks` / `locks`
+- **BLANK 4:** `admin` / `override` / `force` / `steal`
 
 <details>
 <summary>Show answer</summary>
@@ -1348,9 +1345,9 @@ owner and timestamp (lines 351–353) — the ID is what `--id=1234` unlocks (li
 
 Requirement: skip the bulk download, then fetch only source assets.
 
-- **BLANK 1:** `false` / `true`
-- **BLANK 2:** `include` / `only` / `path` / `filter`
-- **BLANK 3:** `exclude` / `ignore` / `skip` / `not`
+- **BLANK 1:** `true` / `false`
+- **BLANK 2:** `only` / `path` / `include` / `filter`
+- **BLANK 3:** `ignore` / `exclude` / `skip` / `not`
 
 <details>
 <summary>Show answer</summary>
@@ -1384,9 +1381,9 @@ git gc --[BLANK 2]
 git count-objects -[BLANK 3]
 ```
 
-- **BLANK 1:** `now` / `never` / `30.days` / `all`
-- **BLANK 2:** `prune=now` / `aggressive` / `auto` / `force`
-- **BLANK 3:** `vH` / `a` / `s` / `l`
+- **BLANK 1:** `never` / `30.days` / `now` / `all`
+- **BLANK 2:** `aggressive` / `auto` / `force` / `prune=now`
+- **BLANK 3:** `a` / `vH` / `s` / `l`
 
 <details>
 <summary>Show answer</summary>
@@ -1420,9 +1417,9 @@ echo "*.psd filter=[BLANK 2] -text" >> .gitattributes
 git fat [BLANK 3]
 ```
 
-- **BLANK 1:** `s3` / `rsync` / `aws` / `storage`
-- **BLANK 2:** `fat` / `lfs` / `s3` / `binary`
-- **BLANK 3:** `push` / `upload` / `sync` / `commit`
+- **BLANK 1:** `rsync` / `aws` / `s3` / `storage`
+- **BLANK 2:** `lfs` / `fat` / `s3` / `binary`
+- **BLANK 3:** `upload` / `sync` / `commit` / `push`
 
 <details>
 <summary>Show answer</summary>
@@ -1478,25 +1475,25 @@ abandoning Git**.
 
 How is "new binary commits must not add to the pack" achieved for **every** developer?
 
-- A. `git lfs track` for each type, with `.gitattributes` committed to the repository
-- B. Each developer runs `git lfs track` locally
-- C. A `.gitignore` entry for binaries
-- D. A pre-commit hook on each machine
+- A. Each developer runs `git lfs track` on their own machine
+- B. A `.gitignore` entry excluding the binary types
+- C. `git lfs track` per type, with `.gitattributes` committed
+- D. A pre-commit hook installed on each machine
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: C
 
 **In `challenge-10.md`:** lines **59–107**.
 
 **"Without configuring anything themselves" is the clause that selects A.** `.gitattributes` travels with
 the clone, so the rules apply to anyone who checks out the repository.
 
-**Why B is what the challenge warns about at line 105** in capitals. Local-only rules mean the developer
+**Why A is what the challenge warns about at line 105** in capitals. Local-only rules mean the developer
 who joined last week commits a 200 MB `.psd` as a normal blob, and nobody notices until the pack grows.
 
-**Why C removes the file from version control entirely** — the assets must be versioned, just not stored
+**Why B removes the file from version control entirely** — the assets must be versioned, just not stored
 inline.
 
 </details>
@@ -1507,23 +1504,22 @@ inline.
 
 How does the existing 50 GB actually shrink?
 
-- A. `git lfs migrate import` for the heaviest types, force-push with lease, team re-clones, then reflog
-  expire and `gc --prune=now`
-- B. `git lfs track` going forward
-- C. `git gc --aggressive`
-- D. Deleting old branches
+- A. `git lfs track` applied going forward only, no rewrite
+- B. Migrate, force-push, re-clone, then expire and prune
+- C. `git gc --aggressive` run on every clone
+- D. Deleting old branches that reference the assets
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: B
 
 **In `challenge-10.md`:** lines **124–162**.
 
 **Three phases, and all three are required.** Migration rewrites the history, the force push and re-clone
 propagate it, and the reflog expiry plus prune reclaim the disk.
 
-**Why B is the difference between "stop growing" and "shrink"** — the requirement is explicit about
+**Why A is the difference between "stop growing" and "shrink"** — the requirement is explicit about
 wanting both.
 
 **Why C alone does nothing.** The old blobs are still **reachable** through the reflog and, before the
@@ -1537,26 +1533,26 @@ rewrite, through the commits themselves — `gc` will not delete what is referen
 
 Which **two** protect artists from overwriting each other, and what makes it discoverable? (Choose two.)
 
-- A. `git lfs track --lockable`, so files check out read-only
-- B. `git lfs lock` before editing, with `git lfs locks` showing the owner
-- C. Branch protection on `main`
-- D. A PR template reminder
-- E. `.gitignore` for assets
+- A. Branch protection configured on `main`
+- B. `git lfs track --lockable`, so files check out read-only
+- C. A pull request template reminding artists to lock
+- D. `git lfs lock` before editing; `git lfs locks` shows owner
+- E. A `.gitignore` entry covering the asset directories
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A, B
+### Answer: B, D
 
 **In `challenge-10.md`:** lines **336–353** and **371–378**.
 
-**A is what makes it discoverable.** The read-only bit surfaces at the moment the artist opens the file
+**B is what makes it discoverable.** The read-only bit surfaces at the moment the artist opens the file
 — before any work has been done — rather than at push time when four hours are already invested.
 
-**B is the workflow itself**, and `git lfs locks` gives the answer to "who has this?" without asking in
+**D is the workflow itself**, and `git lfs locks` gives the answer to "who has this?" without asking in
 chat.
 
-**Why C guards the wrong thing.** Branch protection stops unreviewed code reaching `main`; it cannot stop
+**Why A guards the wrong thing.** Branch protection stops unreviewed code reaching `main`; it cannot stop
 two people editing the same binary in parallel, because both edits are legitimate changes to the branch.
 
 </details>
@@ -1567,26 +1563,25 @@ two people editing the same binary in parallel, because both edits are legitimat
 
 How should the CI requirements be met?
 
-- A. `lfs: false` on checkout, `git lfs pull` with include and exclude for jobs that need assets,
-  `GIT_LFS_SKIP_SMUDGE` for jobs that do not, and a cache of `.git/lfs`
-- B. Increase the runner disk size
-- C. Clone with `--depth 1`
-- D. Disable LFS in CI
+- A. Increase the disk size on every CI runner
+- B. Clone with `--depth 1` in every workflow
+- C. Disable LFS entirely inside the CI environment
+- D. Skip by default, pull selectively, cache LFS
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: D
 
 **In `challenge-10.md`:** lines **261–274** and **480–485**.
 
 **Three requirements, three mechanisms in one answer.** Skip by default, pull selectively, cache between
 runs.
 
-**Why B treats the symptom at a cost that scales with the asset library** — and the scenario's failure is
+**Why A treats the symptom at a cost that scales with the asset library** — and the scenario's failure is
 disk exhaustion (line 19), which a larger disk defers rather than fixes.
 
-**Why C is the recurring confusion** (Q19): depth limits **history**, not the size of the objects for the
+**Why B is the recurring confusion** (Q19): depth limits **history**, not the size of the objects for the
 commit you checked out.
 
 </details>
@@ -1597,10 +1592,10 @@ commit you checked out.
 
 The team is considering git-fat instead. Which requirement would they lose?
 
-- A. File locking
-- B. Versioned binaries
-- C. Pointer files in Git
-- D. The ability to use S3
+- A. Built-in file locking
+- B. Versioned binary files
+- C. Pointer files stored in Git
+- D. The ability to use S3 storage
 
 <details>
 <summary>Show answer</summary>
@@ -1632,19 +1627,17 @@ Six months after the migration, the repository has grown back to 22 GB. `.gitatt
 correct, LFS is working for most of the team, and `git lfs ls-files` shows thousands of tracked files. A
 new studio was acquired and its artists joined three months ago.
 
-What happened, and what is the fix?
+What is the most likely cause?
 
-- A. The new artists cloned before LFS was installed on their machines, so the smudge and clean filters
-  never ran and their commits stored raw binaries — install LFS, migrate the affected commits, and add a
-  server-side check
-- B. `.gitattributes` was deleted
-- C. LFS quota was exceeded
-- D. `gc` was never run
+- A. `.gitattributes` was deleted during the acquisition
+- B. The LFS storage quota was exceeded and pushes fell back to Git
+- C. New artists cloned without LFS installed, so no filter ran
+- D. `git gc` was never run after the original migration
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: C
 
 **In `challenge-10.md`:** lines **42–43** and **105**.
 
@@ -1677,21 +1670,17 @@ server-side or CI check** that fails when a commit adds a large blob that should
 A year on, clones take four minutes, pushes never time out, CI runs on a small runner, and no artist has
 lost work to an overwrite.
 
-Explain what each piece contributed, and what actually changed.
+Which explanation best accounts for the change?
 
-- A. LFS moved file **content** out of the pack while keeping the files versioned; migration plus reflog
-  expiry shrank the existing 50 GB; committed `.gitattributes` made the behaviour universal rather than
-  per-machine; lockable tracking turned a merge problem Git cannot solve into a coordination problem it
-  does not need to; and CI-side skipping, filtering and caching stopped the same objects being downloaded
-  repeatedly
-- B. The team started committing fewer assets
-- C. The office network was upgraded
-- D. Larger CI runners were purchased
+- A. The team started committing fewer binary assets
+- B. Content left the pack; locking replaced merging
+- C. The office network connection was upgraded
+- D. Larger CI runners were purchased for the builds
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: B
 
 **In `challenge-10.md`:** lines **19**, **139–162**, **105–107**, **332**, **261–274**.
 
