@@ -46,15 +46,15 @@ repositories**.
 
 Which package types does GitHub Packages support?
 
-- A. npm, Maven, NuGet, Docker, RubyGems
-- B. npm only
-- C. npm and Docker only
-- D. npm, Maven and pip
+- A. npm and Docker container images only
+- B. npm, Maven, NuGet, Docker and RubyGems
+- C. npm packages only, no other ecosystem
+- D. npm, Maven and pip, but not NuGet
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: B
 
 **In `challenge-13.md`:** line **425**.
 
@@ -78,15 +78,15 @@ the shape of a well-made wrong answer.
 
 What is the maximum number of upstream sources in a single Azure Artifacts feed?
 
-- A. 1
-- B. 5
-- C. Unlimited
-- D. 10
+- A. 1 upstream source per feed
+- B. 5 upstream sources per feed
+- C. 10 upstream sources per feed
+- D. No hard limit per feed
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: C
+### Answer: D
 
 **In `challenge-13.md`:** line **436**.
 
@@ -108,10 +108,10 @@ an internal package always wins over a public one with the same name.
 
 Which platform provides native package vulnerability scanning?
 
-- A. Azure Artifacts with Defender for Cloud
-- B. GitHub Packages with Dependabot
-- C. Both
-- D. Neither
+- A. Azure Artifacts with Defender for Cloud only
+- B. GitHub Packages with Dependabot only
+- C. Both platforms, through different tooling
+- D. Neither platform without a third-party scanner
 
 <details>
 <summary>Show answer</summary>
@@ -140,15 +140,15 @@ repositories (Challenge 45). **Detect on both; remediate automatically on one.**
 
 What happens the first time a package from an upstream source is requested?
 
-- A. It is fetched from upstream on every request
-- B. A copy is saved to the local feed
+- A. A copy is saved into the local feed cache
+- B. It is fetched from upstream on every request
 - C. It appears only in the prerelease view
-- D. It requires manual approval
+- D. It requires manual approval before use
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: B
+### Answer: A
 
 **In `challenge-13.md`:** lines **283–286**.
 
@@ -173,15 +173,15 @@ still requires the upstream to be reachable.
 
 `npm publish` to GitHub Packages returns 403. Which cause relates to the package name?
 
-- A. The package scope does not match the repository owner
-- B. The version already exists
-- C. The registry is down
-- D. The package is too large
+- A. The version already exists in the registry
+- B. The registry is temporarily unavailable
+- C. The package tarball exceeds the size limit
+- D. The scope does not match the repository owner
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: D
 
 **In `challenge-13.md`:** lines **360–366**.
 
@@ -205,15 +205,15 @@ constraint tied to the project; the **feed URL** determines where the package go
 
 A workflow fails to publish with 403. Which permission is missing?
 
-- A. `packages: write`
-- B. `contents: write`
+- A. `contents: write`
+- B. `packages: write`
 - C. `id-token: write`
 - D. `actions: write`
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: B
 
 **In `challenge-13.md`:** lines **135–137** and **353–358**.
 
@@ -243,15 +243,15 @@ rather than relied upon.
 
 What does the `publishConfig.registry` field in `package.json` do?
 
-- A. Directs `npm publish` to that registry regardless of the default
-- B. Sets the registry for installs
-- C. Authenticates to the registry
-- D. Sets the package visibility
+- A. It sets the registry used for installs
+- B. It authenticates the client to the registry
+- C. It directs `npm publish` to that registry
+- D. It sets the package's visibility level
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: C
 
 **In `challenge-13.md`:** lines **52–54**.
 
@@ -265,7 +265,7 @@ What does the `publishConfig.registry` field in `package.json` do?
 uses whatever registry the local `.npmrc` or global config happens to name — and a mis-set default
 publishes an internal library to **npmjs.com, publicly**.
 
-**Why B is the separate mechanism.** Installs are directed by the scope line in `.npmrc` (line 63):
+**Why A is the separate mechanism.** Installs are directed by the scope line in `.npmrc` (line 63):
 `@contoso:registry=...`. **Publishing and consuming are configured in different places**, and the exam
 tests which is which.
 
@@ -277,16 +277,15 @@ tests which is which.
 
 What does `@contoso:registry=https://npm.pkg.github.com` accomplish?
 
-- A. Only `@contoso`-scoped packages resolve to GitHub Packages; everything else uses the default
-  registry
-- B. All packages resolve to GitHub Packages
-- C. It authenticates the scope
-- D. It creates the scope
+- A. Every package resolves to GitHub Packages, not npmjs
+- B. It authenticates the `@contoso` scope
+- C. It creates the `@contoso` scope on the registry
+- D. Only `@contoso` packages resolve there; others default
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: D
 
 **In `challenge-13.md`:** line **63**.
 
@@ -307,10 +306,10 @@ Azure Artifacts routes **everything through the feed** and proxies outward.
 
 What does `always-auth=true` do in the Azure Artifacts `.npmrc`?
 
-- A. Sends credentials on every request, including reads
-- B. Caches the token
-- C. Refreshes the token
-- D. Requires MFA
+- A. Sends credentials on every request, reads included
+- B. Caches the token between npm invocations
+- C. Refreshes the token when it is close to expiry
+- D. Requires multi-factor authentication for publish
 
 <details>
 <summary>Show answer</summary>
@@ -340,15 +339,15 @@ through it, including public packages fetched via upstream.
 Which Azure Artifacts feed role can consume packages **and** save packages from upstream sources, but
 cannot publish?
 
-- A. Collaborator
-- B. Reader
-- C. Contributor
-- D. Owner
+- A. Reader, consume only
+- B. Collaborator, consume and cache
+- C. Contributor, publish too
+- D. Owner, full control
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: B
 
 **In `challenge-13.md`:** lines **242–245**.
 
@@ -373,15 +372,15 @@ that must not publish.
 
 What do Azure Artifacts **views** provide?
 
-- A. A way to expose only promoted package versions to consumers, from one feed
-- B. A separate feed per environment
-- C. Package scanning
-- D. Access control per package
+- A. A separate feed for each deployment environment
+- B. Package vulnerability scanning scoped to a view
+- C. Exposing only promoted versions from one feed
+- D. Access control applied per individual package
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: C
 
 **In `challenge-13.md`:** lines **249–274**.
 
@@ -410,15 +409,15 @@ challenge.
 
 How is a package version promoted to the `release` view?
 
-- A. A POST adding `release` to the version's `views` array
-- B. Republishing with a new version number
-- C. Copying it to another feed
-- D. Editing `package.json`
+- A. Republishing it under a new version number
+- B. Copying the version into a separate feed
+- C. Editing the version field in `package.json`
+- D. A POST adding `release` to the version's views
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: D
 
 **In `challenge-13.md`:** lines **270–274**.
 
@@ -429,7 +428,7 @@ How is a package version promoted to the `release` view?
 **The version is not moved or rebuilt — a label is added.** The same immutable artifact is now visible in
 both views, which is exactly what you want: **the thing you tested is the thing you ship.**
 
-**Why B is the anti-pattern this prevents.** Rebuilding for release produces a different artifact from
+**Why A is the anti-pattern this prevents.** Rebuilding for release produces a different artifact from
 the one that passed testing — the same principle as Challenge 28's build-once-deploy-many.
 
 </details>
@@ -440,10 +439,10 @@ the one that passed testing — the same principle as Challenge 28's build-once-
 
 Why place an internal upstream source **before** a public one?
 
-- A. So an internal package wins over a public package with the same name
-- B. For faster resolution
-- C. To reduce cost
-- D. It is required syntax
+- A. So an internal package beats a same-named public one
+- B. For faster resolution of the most common packages
+- C. To reduce the cost of upstream bandwidth
+- D. It is required by the upstream configuration syntax
 
 <details>
 <summary>Show answer</summary>
@@ -470,15 +469,15 @@ security property expressed as an array order.
 
 What does `--scope project` do when creating a feed?
 
-- A. Scopes the feed to one project rather than the whole organisation
-- B. Sets the npm scope
-- C. Limits package types
-- D. Sets permissions
+- A. It sets the npm scope used for publishing
+- B. It scopes the feed to one project, not the org
+- C. It limits which package types the feed accepts
+- D. It sets the default permissions on the feed
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: B
 
 **In `challenge-13.md`:** lines **155–159**.
 
@@ -504,15 +503,15 @@ that may live in different projects; a project-scoped feed would need explicit s
 
 How does the NuGet push authenticate to Azure Artifacts?
 
-- A. A PAT supplied to `dotnet nuget add source`, with `--api-key az` on the push
-- B. A NuGet API key
-- C. Azure AD interactive login
-- D. No authentication
+- A. A NuGet API key generated on the feed
+- B. Azure AD interactive login on the agent
+- C. A PAT on the source, with `--api-key az` on push
+- D. No authentication for a project-scoped feed
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: C
 
 **In `challenge-13.md`:** lines **211–225**.
 
@@ -539,15 +538,15 @@ a service connection on a developer machine.
 
 Which setting makes a GitHub package visible to all organisation members?
 
-- A. `visibility=internal`
-- B. `visibility=public`
-- C. `visibility=private`
-- D. `visibility=organization`
+- A. `visibility=public`
+- B. `visibility=private`
+- C. `visibility=organization`
+- D. `visibility=internal`
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: D
 
 **In `challenge-13.md`:** lines **111–112**.
 
@@ -562,7 +561,7 @@ gh api --method PUT /orgs/contoso/packages/npm/auth-sdk/visibility \
 **`internal` is the correct setting for Contoso's shared libraries** — all 15 service teams need them,
 and nobody outside should.
 
-**Why D is the plausible invention.** The word for "everyone in the org" is `internal`, not
+**Why C is the plausible invention.** The word for "everyone in the org" is `internal`, not
 `organization` — which is the sort of vocabulary detail the exam checks.
 
 </details>
@@ -577,17 +576,17 @@ and nobody outside should.
 
 Which **three** package types does GitHub Packages support? (Choose three.)
 
-- A. npm
-- B. NuGet
-- C. Docker container images
-- D. pip
-- E. Cargo
-- F. Composer
+- A. pip (Python)
+- B. npm (JavaScript)
+- C. Cargo (Rust)
+- D. NuGet (.NET)
+- E. Composer (PHP)
+- F. Docker (containers)
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A, B, C
+### Answer: B, D, F
 
 **In `challenge-13.md`:** line **425**.
 
@@ -605,23 +604,23 @@ Contoso's future would need Azure Artifacts (which supports Python feeds) or a t
 Which **three** are Azure Artifacts feed roles? (Choose three.)
 
 - A. Reader
-- B. Collaborator
-- C. Contributor
-- D. Publisher
-- E. Consumer
+- B. Publisher
+- C. Collaborator
+- D. Consumer
+- E. Contributor
 - F. Maintainer
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A, B, C
+### Answer: A, C, E
 
 **In `challenge-13.md`:** lines **242–245**.
 
 **Owner is the fourth.** Four roles, and the one that carries information is **Collaborator** — consume,
 plus save from upstream, without publishing (Q10).
 
-**Why D, E and F are plausible-sounding inventions.** They are the words you would guess if you had not
+**Why B, D and F are plausible-sounding inventions.** They are the words you would guess if you had not
 read the list, which is precisely why they are offered.
 
 </details>
@@ -632,26 +631,26 @@ read the list, which is precisely why they are offered.
 
 Which **three** are true of upstream sources? (Choose three.)
 
-- A. The first request fetches from upstream and caches locally
-- B. Cached packages survive an upstream outage
-- C. Priority order decides which source wins for the same package name
-- D. They require manual approval per package
-- E. They are limited to five per feed
-- F. They only work for npm
+- A. They require manual approval per package
+- B. The first request fetches from upstream and caches
+- C. They are limited to five sources per feed
+- D. Cached packages survive an upstream outage
+- E. They only work for the npm ecosystem
+- F. Priority order decides which source wins a name
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A, B, C
+### Answer: B, D, F
 
 **In `challenge-13.md`:** lines **283–285**, **290**, **436**.
 
-**A and B are the resilience argument; C is the security argument** (Q13).
+**B and D are the resilience argument; F is the security argument** (Q13).
 
-**Why F is refuted by the challenge itself** — nuget.org is configured as an upstream at lines 180–187,
+**Why E is refuted by the challenge itself** — nuget.org is configured as an upstream at lines 180–187,
 alongside npmjs at 167–174.
 
-**And why D matters as a distraction.** Nothing approves a package on first fetch. If you want approval,
+**And why A matters as a distraction.** Nothing approves a package on first fetch. If you want approval,
 that is a separate control — which is Challenge 15's allow and deny lists.
 
 </details>
@@ -662,23 +661,23 @@ that is a separate control — which is Challenge 15's allow and deny lists.
 
 Which **two** distinguish GitHub Packages from Azure Artifacts in this challenge? (Choose two.)
 
-- A. Azure Artifacts has views for promoting package quality
-- B. GitHub Packages requires the scope to match the repository owner
-- C. Only Azure Artifacts supports npm
-- D. Only GitHub Packages supports NuGet
+- A. Only Azure Artifacts supports npm packages
+- B. Azure Artifacts has views for promoting quality
+- C. Only GitHub Packages supports NuGet packages
+- D. GitHub Packages requires scope to match the owner
 - E. Only GitHub Packages offers vulnerability scanning
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A, B
+### Answer: B, D
 
 **In `challenge-13.md`:** lines **247–274** and **362**.
 
 **These are the two real differences.** Views are a capability Azure Artifacts has and GitHub Packages
 does not; scope-to-owner is a constraint GitHub Packages has and Azure Artifacts does not.
 
-**Why C, D and E are all false** — both support npm and NuGet (lines 150, 425), and both scan (Q3).
+**Why A, C and E are all false** — both support npm and NuGet (lines 150, 425), and both scan (Q3).
 
 **Which is the honest framing for the recommendation**: the platforms overlap heavily, so the decision
 rests on **where the consumers and permissions already are**, not on a feature matrix.
@@ -692,15 +691,15 @@ rests on **where the consumers and permissions already are**, not on a feature m
 Which **two** authenticate npm to a private registry? (Choose two.)
 
 - A. An `_authToken` line in `.npmrc` for the registry host
-- B. `NODE_AUTH_TOKEN` supplied to `npm publish` in a workflow
-- C. `publishConfig.registry` in `package.json`
-- D. The `@scope:registry` line
-- E. `npm login --scope`
+- B. `publishConfig.registry` in `package.json`
+- C. `NODE_AUTH_TOKEN` supplied to `npm publish` in CI
+- D. The `@scope:registry` line in `.npmrc`
+- E. `npm login --scope` on the developer machine
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A, B
+### Answer: A, C
 
 **In `challenge-13.md`:** lines **64** and **147**.
 
@@ -716,7 +715,7 @@ Which **two** authenticate npm to a private registry? (Choose two.)
 **Two forms of the same credential**, chosen by context: a file on a developer machine, an environment
 variable in CI.
 
-**Why C and D are *routing*, not authentication** (Q7, Q8) — they say where to go, not who you are. That
+**Why B and D are *routing*, not authentication** (Q7, Q8) — they say where to go, not who you are. That
 separation is the cleanest way to reason about a 401 versus a 404.
 
 **And `actions/setup-node` with `registry-url`** (line 143) is what writes the `.npmrc` for the runner, so
@@ -730,23 +729,23 @@ separation is the cleanest way to reason about a 401 versus a 404.
 
 Which **two** does the publish workflow require? (Choose two.)
 
-- A. `permissions: packages: write`
-- B. `registry-url` on `actions/setup-node`
-- C. `contents: write`
-- D. `id-token: write`
-- E. A PAT stored as a secret
+- A. `contents: write` in the permissions block
+- B. `permissions: packages: write` on the job
+- C. `id-token: write` in the permissions block
+- D. A PAT stored as a repository secret
+- E. `registry-url` on `actions/setup-node`
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A, B
+### Answer: B, E
 
 **In `challenge-13.md`:** lines **135–147**.
 
-**A grants the built-in token the right to publish; B configures npm to know where.** Without B, npm
+**B grants the built-in token the right to publish; E configures npm to know where.** Without E, npm
 publishes to the default registry — or fails, depending on `publishConfig`.
 
-**Why E is unnecessary here and necessary elsewhere.** `secrets.GITHUB_TOKEN` suffices because the
+**Why D is unnecessary here and necessary elsewhere.** `secrets.GITHUB_TOKEN` suffices because the
 package belongs to **this repository's** organisation. Publishing to a **different** organisation's
 registry would need a PAT (Challenge 40's reach rule).
 
@@ -758,16 +757,16 @@ registry would need a PAT (Challenge 40's reach rule).
 
 Which **two** causes of a GitHub Packages 403 are configuration in the repository? (Choose two.)
 
-- A. Missing `packages: write` in the workflow
-- B. Package scope not matching the repository owner
-- C. GitHub Packages being offline
-- D. The package exceeding a size limit
-- E. Rate limiting
+- A. GitHub Packages being temporarily offline
+- B. The package tarball exceeding the size limit
+- C. Missing `packages: write` in the workflow
+- D. Rate limiting on the publish endpoint
+- E. Package scope not matching the repository owner
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A, B
+### Answer: C, E
 
 **In `challenge-13.md`:** lines **340–342**.
 
@@ -778,7 +777,7 @@ Which **two** causes of a GitHub Packages 403 are configuration in the repositor
 4. Token does not have `write:packages` scope
 ```
 
-**Four listed causes; A and B live in the repository, while 3 and 4 live in the developer's environment.**
+**Four listed causes; C and E live in the repository, while 3 and 4 live in the developer's environment.**
 
 **That split is the diagnostic order.** If it fails in CI, check the workflow's permissions and the
 package name. If it fails locally, check `.npmrc` and the token scopes (line 406).
@@ -1211,8 +1210,8 @@ authentication — and knowing which half a line belongs to halves the search.
 
 Requirement: publish to GitHub Packages under the `contoso` organisation.
 
-- **BLANK 1:** `@contoso/auth-sdk` / `contoso-auth-sdk` / `@auth/contoso-sdk` / `auth-sdk`
-- **BLANK 2:** `publishConfig` / `publish` / `registry` / `distConfig`
+- **BLANK 1:** `contoso-auth-sdk` / `@auth/contoso-sdk` / `@contoso/auth-sdk` / `auth-sdk`
+- **BLANK 2:** `publish` / `publishConfig` / `registry` / `distConfig`
 
 <details>
 <summary>Show answer</summary>
@@ -1240,8 +1239,8 @@ registry cannot accidentally push an internal library to npmjs (Q7).
 
 Requirement: only Contoso-scoped packages come from GitHub Packages; everything else from npmjs.
 
-- **BLANK 1:** `@contoso:registry` / `registry` / `scope` / `@contoso`
-- **BLANK 2:** `_authToken` / `token` / `auth` / `password`
+- **BLANK 1:** `registry` / `scope` / `@contoso` / `@contoso:registry`
+- **BLANK 2:** `token` / `_authToken` / `auth` / `password`
 
 <details>
 <summary>Show answer</summary>
@@ -1268,7 +1267,7 @@ registry=https://pkgs.dev.azure.com/contoso/ContosoServices/_packaging/contoso-p
 //pkgs.dev.azure.com/.../npm/registry/:_authToken=${AZURE_DEVOPS_PAT}
 ```
 
-- **BLANK 1:** `always-auth` / `strict-ssl` / `save-exact` / `auth-required`
+- **BLANK 1:** `strict-ssl` / `save-exact` / `always-auth` / `auth-required`
 
 <details>
 <summary>Show answer</summary>
@@ -1303,10 +1302,10 @@ through an authenticated feed.
           [BLANK 4]: ${{ secrets.GITHUB_TOKEN }}
 ```
 
-- **BLANK 1:** `read` / `write`
-- **BLANK 2:** `write` / `read`
-- **BLANK 3:** `registry-url` / `registry` / `npm-registry` / `scope`
-- **BLANK 4:** `NODE_AUTH_TOKEN` / `NPM_TOKEN` / `GITHUB_TOKEN` / `AUTH_TOKEN`
+- **BLANK 1:** `write` / `read`
+- **BLANK 2:** `read` / `write`
+- **BLANK 3:** `registry` / `npm-registry` / `scope` / `registry-url`
+- **BLANK 4:** `NPM_TOKEN` / `GITHUB_TOKEN` / `NODE_AUTH_TOKEN` / `AUTH_TOKEN`
 
 <details>
 <summary>Show answer</summary>
@@ -1338,8 +1337,8 @@ az rest --method post \
   }'
 ```
 
-- **BLANK 1:** `upstreamsources` / `views` / `permissions` / `packages`
-- **BLANK 2:** `upstreamSourceType` / `type` / `visibility` / `scope`
+- **BLANK 1:** `views` / `upstreamsources` / `permissions` / `packages`
+- **BLANK 2:** `type` / `visibility` / `upstreamSourceType` / `scope`
 
 <details>
 <summary>Show answer</summary>
@@ -1370,8 +1369,8 @@ az rest --method post \
 
 Requirement: promote a tested version so organisation consumers can see it.
 
-- **BLANK 1:** `add` / `replace` / `move` / `copy`
-- **BLANK 2:** `release` / `prerelease` / `latest` / `stable`
+- **BLANK 1:** `replace` / `move` / `add` / `copy`
+- **BLANK 2:** `prerelease` / `latest` / `stable` / `release`
 
 <details>
 <summary>Show answer</summary>
@@ -1427,11 +1426,10 @@ dependencies**, **access control per team**, and **support for npm and NuGet**.
 
 Which platform best fits the requirements, and what is the deciding factor?
 
-- A. Azure Artifacts — one feed serves npm and NuGet, upstreams give a single auditable path, and views
-  gate which versions consumers see
-- B. GitHub Packages — it is simpler
-- C. Both, split by language
-- D. Neither; use a third-party registry
+- A. Azure Artifacts — one feed, upstreams, views for gating
+- B. GitHub Packages — it is the simpler of the two platforms
+- C. Both platforms, split by language ecosystem
+- D. Neither; a third-party registry for both ecosystems
 
 <details>
 <summary>Show answer</summary>
@@ -1458,23 +1456,22 @@ types, two audit trails, for no capability gained.
 
 How should public packages reach builds through "a single, auditable path"?
 
-- A. Configure npmjs and nuget.org as upstream sources on the feed, and point every project's registry at
-  the feed
-- B. Let each project use npmjs and nuget.org directly
-- C. Mirror the public registries nightly
-- D. Vendor dependencies into each repository
+- A. Let each project use npmjs and nuget.org directly
+- B. Mirror the public registries nightly into the feed
+- C. Upstreams on the feed; every project points at it
+- D. Vendor every dependency into each repository
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: C
 
 **In `challenge-13.md`:** lines **167–187** and **195–197**.
 
 **One registry URL in every configuration, and every public package arrives cached and recorded.** That
 is the audit trail — the feed's contents *are* the list of what the organisation consumes.
 
-**Why C is real work that solves less.** A nightly mirror copies packages nobody uses and lags behind
+**Why B is real work that solves less.** A nightly mirror copies packages nobody uses and lags behind
 ones they need; an upstream fetches **on demand** and caches exactly what was asked for.
 
 **And D is the practice being replaced**, in a new form — vendoring is copy-paste with a build step.
@@ -1487,23 +1484,23 @@ ones they need; an upstream fetches **on demand** and caches exactly what was as
 
 Which **two** satisfy "consumers cannot publish, but can still pull new public packages"? (Choose two.)
 
-- A. Grant consuming teams the Collaborator role
-- B. Grant publishing teams the Contributor role
-- C. Grant consuming teams Reader
-- D. Grant everyone Contributor
-- E. Grant consuming teams Owner
+- A. Grant consuming teams the Reader role
+- B. Grant consuming teams the Collaborator role
+- C. Grant every team the Contributor role
+- D. Grant publishing teams the Contributor role
+- E. Grant consuming teams the Owner role
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A, B
+### Answer: B, D
 
 **In `challenge-13.md`:** lines **242–245**.
 
 **Collaborator is the exact role the requirement describes** — consume, plus save from upstream, without
 publishing.
 
-**Why C fails the second half, and this is the subtle part.** A Reader can install what the feed already
+**Why A fails the second half, and this is the subtle part.** A Reader can install what the feed already
 holds. The **first** person to request a new public package triggers a save into the feed, and Reader
 cannot do that — so their `npm install` of a new dependency fails with a permissions error that reads
 like an outage (Q10).
@@ -1516,22 +1513,22 @@ like an outage (Q10).
 
 How is "only tested versions may reach consuming services" enforced?
 
-- A. Publish every build into the feed, and promote a version into the `release` view after testing
-- B. Publish only tested builds
-- C. Delete untested versions
-- D. Use a naming convention
+- A. Publish only builds that have already been tested
+- B. Publish every build; promote to `release` when tested
+- C. Delete untested versions from the feed nightly
+- D. Use a naming convention to mark tested versions
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: B
 
 **In `challenge-13.md`:** lines **249–274**.
 
 **Publish freely, expose deliberately.** The `prerelease` view is private and holds everything; `release`
 is organisation-visible and holds only promoted versions.
 
-**Why B sounds equivalent and is not.** If only tested builds are published, the library team has nowhere
+**Why A sounds equivalent and is not.** If only tested builds are published, the library team has nowhere
 to share a candidate with an early adopter — so they either publish it anyway or share a tarball, which
 is copy-paste again.
 
@@ -1545,26 +1542,26 @@ is copy-paste again.
 
 Which **two** protect builds operationally? (Choose two.)
 
-- A. The upstream cache, so a public registry outage does not stop builds
-- B. Internal upstream sources listed before public ones
-- C. Pinning every dependency to an exact version
-- D. A nightly full mirror
-- E. Vendoring dependencies
+- A. The upstream cache, so an outage does not stop builds
+- B. Pinning every dependency to an exact version
+- C. A nightly full mirror of the public registries
+- D. Internal upstream sources listed before public ones
+- E. Vendoring dependencies into each repository
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A, B
+### Answer: A, D
 
 **In `challenge-13.md`:** lines **285** and **290**.
 
-**A is the availability requirement; B is the integrity one** — the public registry being down, and the
+**A is the availability requirement; D is the integrity one** — the public registry being down, and the
 public registry being hostile.
 
-**B is dependency confusion in one line of configuration.** If `@contoso/auth-sdk` also exists on npmjs
+**D is dependency confusion in one line of configuration.** If `@contoso/auth-sdk` also exists on npmjs
 and public is checked first, your build installs a stranger's package under your own name.
 
-**Why C is good practice that addresses neither.** A pinned version still has to be **fetched** from
+**Why B is good practice that addresses neither.** A pinned version still has to be **fetched** from
 somewhere, and a pin does not tell you which registry answered.
 
 </details>
@@ -1577,18 +1574,17 @@ Ten months in, a build for `payment-service` fails with `404 Not Found` for `@co
 The feed holds the package, other services resolve it fine, and the version exists. The payment team was
 recently moved into a new Azure DevOps project.
 
-What happened, and what is the fix?
+What is the most likely cause?
 
-- A. The feed is project-scoped, so the new project has no access — either grant the team access to the
-  feed, or make the feed organisation-scoped
-- B. The version was unpublished
-- C. The upstream source was removed
-- D. The team's PAT expired
+- A. The version was unpublished from the feed
+- B. The upstream source was removed from the feed config
+- C. The team's personal access token expired
+- D. The feed is project-scoped; the new project cannot see it
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: D
 
 **In `challenge-13.md`:** lines **155–159**.
 
@@ -1606,7 +1602,7 @@ changed.
 no path to it — and Azure Artifacts returns **404 rather than 403**, because it does not confirm the
 existence of feeds you cannot see. **That is why the error reads like a missing package.**
 
-**Why D would give 401**, and why B and C would break **every** consumer, not one team.
+**Why C would give 401**, and why A and B would break **every** consumer, not one team.
 
 **The fix depends on intent.** If the libraries are genuinely organisation-wide — and four libraries
 shared by 15 services are — the feed should be **organisation-scoped**. If the scoping is deliberate,
@@ -1624,16 +1620,12 @@ unknown number of projects" answers it.
 A year on, no team copies source between repositories, a public registry outage passes unnoticed, and
 consuming services only ever see promoted library versions.
 
-Explain what each choice contributed, and what actually changed.
+Which explanation best accounts for the change?
 
-- A. One feed serving npm and NuGet replaced copy-paste with versioned consumption; upstream sources made
-  every public package arrive through one auditable, cached path; internal-first priority made an
-  internal name unspoofable; views separated *published* from *promoted*; and role separation let teams
-  consume without publishing — the shared libraries became a **product** with versions rather than a
-  folder to copy
-- B. Teams were told to stop copying code
+- A. The libraries became a versioned product, not a folder
+- B. Teams were told to stop copying source between repos
 - C. A code review rule banned duplicated files
-- D. The libraries were merged into a mono-repo
+- D. The libraries were merged into a single mono-repo
 
 <details>
 <summary>Show answer</summary>
