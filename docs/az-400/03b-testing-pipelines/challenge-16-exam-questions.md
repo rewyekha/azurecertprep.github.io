@@ -49,15 +49,15 @@ month** breaking production checkout.
 
 What does `fail-fast: false` accomplish in a matrix strategy?
 
-- A. It prevents the workflow running if a combination is invalid
-- B. It lets all matrix combinations finish even when one fails
-- C. It runs combinations sequentially
-- D. It skips reporting for failed combinations
+- A. It stops the workflow if a combination is invalid
+- B. It runs the matrix combinations sequentially
+- C. It suppresses reporting for failed combinations
+- D. It lets every combination finish when one fails
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: B
+### Answer: D
 
 **In `challenge-16.md`:** lines **55–58**.
 
@@ -74,7 +74,7 @@ matrix that is exactly wrong — you want to know **which** versions pass.
 **Read line 571's reasoning**: testing across three Node versions is pointless if a failure on 18 hides
 whether 20 and 22 are fine. **One run should give you the full compatibility picture.**
 
-**Why C is a different setting.** Parallelism is controlled by `max-parallel`, not by `fail-fast`.
+**Why B is a different setting.** Parallelism is controlled by `max-parallel`, not by `fail-fast`.
 
 </details>
 
@@ -84,15 +84,15 @@ whether 20 and 22 are fine. **One run should give you the full compatibility pic
 
 Which configuration ensures the PostgreSQL service container is ready before steps run?
 
-- A. `ports: ['5432:5432']`
-- B. `options: --health-cmd="pg_isready" --health-interval=10s --health-retries=5`
-- C. `needs: postgres`
-- D. `services.postgres.ready: true`
+- A. `options:` with `--health-cmd` and `--health-retries`
+- B. `ports: ['5432:5432']` published on the service
+- C. `needs: postgres` declared on the job
+- D. `services.postgres.ready: true` on the job
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: B
+### Answer: A
 
 **In `challenge-16.md`:** lines **146–150**.
 
@@ -107,7 +107,7 @@ Which configuration ensures the PostgreSQL service container is ready before ste
 **`options:` passes Docker health-check arguments**, and GitHub Actions waits for the health check to
 pass before starting the job's steps.
 
-**Why A is necessary and not sufficient.** Publishing the port makes the database **reachable**; it says
+**Why B is necessary and not sufficient.** Publishing the port makes the database **reachable**; it says
 nothing about whether it is **accepting connections yet**.
 
 **And note the honest caveat at line 499**: even with health checks, the challenge still adds an explicit
@@ -122,14 +122,14 @@ wait loop — because the container being healthy is not the same as *your* test
 Which Azure Pipelines task publishes JUnit results to the Tests tab?
 
 - A. `PublishPipelineArtifact@1`
-- B. `PublishTestResults@2`
-- C. `PublishCodeCoverageResults@2`
+- B. `PublishCodeCoverageResults@2`
+- C. `PublishTestResults@2`
 - D. `DownloadBuildArtifacts@1`
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: B
+### Answer: C
 
 **In `challenge-16.md`:** lines **390–395**.
 
@@ -158,10 +158,10 @@ files, and merging them gives one test run rather than three competing ones.
 
 What is the primary purpose of k6 thresholds in CI?
 
-- A. To set the number of virtual users
-- B. To define pass/fail criteria that determine k6's exit code
-- C. To configure stage durations
-- D. To specify which endpoints to test
+- A. To set the number of virtual users per stage
+- B. To define pass/fail criteria for k6's exit code
+- C. To configure how long each stage runs
+- D. To specify which endpoints the script tests
 
 <details>
 <summary>Show answer</summary>
@@ -195,15 +195,15 @@ correctness under load via `checks`.
 
 Integration tests fail in CI with `ECONNREFUSED 127.0.0.1:5432` but pass locally. What is the cause?
 
-- A. The service container is running but not yet accepting connections when migrations start
-- B. The port is not published
-- C. The password is wrong
-- D. PostgreSQL is not installed on the runner
+- A. The service port is not published to the host
+- B. The database password in the secret is wrong
+- C. The container is up but not accepting connections yet
+- D. PostgreSQL is not installed on the hosted runner image
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: C
 
 **In `challenge-16.md`:** lines **495–499**.
 
@@ -234,15 +234,15 @@ one was created seconds ago.
 
 Unit tests fail on Node.js 22 with `TypeError: fetch is not defined`. What is the cause and fix?
 
-- A. A polyfill conflicts with the built-in `fetch`; guard the polyfill with a `typeof` check
-- B. Node 22 removed `fetch`
-- C. The matrix is misconfigured
-- D. `npm ci` failed
+- A. Node 22 removed the global `fetch` API entirely
+- B. The matrix is misconfigured for Node 22
+- C. `npm ci` failed to install the `undici` polyfill
+- D. A polyfill collides with built-in `fetch`; guard it
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: D
 
 **In `challenge-16.md`:** lines **501–503** and **527–534**.
 
@@ -258,7 +258,7 @@ if (typeof globalThis.fetch === 'undefined') {
 **The guard makes the setup version-agnostic**, which is the whole point of testing across a matrix: the
 code must work on all three, not be tuned to one.
 
-**Why B is the opposite of the truth.** Newer Node versions **added** `fetch` as a global — the polyfill
+**Why A is the opposite of the truth.** Newer Node versions **added** `fetch` as a global — the polyfill
 was written for older ones and now collides.
 
 **And this is the value the matrix delivers.** A single-version pipeline on Node 20 would never have found
@@ -272,15 +272,15 @@ it, and the failure would appear when someone upgraded production.
 
 Load tests report a 100% failure rate although the application starts. What is the cause?
 
-- A. k6 begins before the server has bound to the port; `sleep 5` is insufficient on a loaded runner
-- B. The thresholds are too strict
-- C. The database is empty
-- D. k6 is not installed
+- A. The thresholds are set far too strictly
+- B. k6 starts before the server binds the port
+- C. The database has not been seeded with data
+- D. k6 is not installed on the hosted runner
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: B
 
 **In `challenge-16.md`:** lines **505–507**.
 
@@ -309,10 +309,10 @@ all 30 attempts falls through silently and k6 runs against a dead server anyway.
 
 What does `npm start &` followed by a readiness loop accomplish?
 
-- A. It backgrounds the server so the job can continue, then waits until it actually responds
-- B. It runs the server in a container
-- C. It restarts the server on failure
-- D. It runs the server after the tests
+- A. It backgrounds the server, then waits for a response
+- B. It runs the server inside a service container
+- C. It restarts the server whenever it exits
+- D. It runs the server only after the tests finish
 
 <details>
 <summary>Show answer</summary>
@@ -343,15 +343,15 @@ What does `npm start &` followed by a readiness loop accomplish?
 
 What does `coverageThreshold` in the Jest config enforce?
 
-- A. Jest exits non-zero when branches, functions, lines or statements fall below 80%
-- B. It reports coverage
-- C. It sets the report format
-- D. It excludes files from coverage
+- A. It reports coverage figures in the test output
+- B. It sets the format of the coverage report
+- C. It excludes files from the coverage measure
+- D. Jest exits non-zero when a metric falls below 80%
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: D
 
 **In `challenge-16.md`:** lines **109–116**.
 
@@ -381,15 +381,15 @@ it **fail**.
 
 Why does the config list `cobertura` among the coverage reporters?
 
-- A. Azure Pipelines' coverage task consumes Cobertura XML
-- B. It is more accurate
-- C. It is required by Jest
-- D. It produces HTML
+- A. It is more accurate than the lcov format
+- B. It is required by Jest for any coverage report
+- C. Azure Pipelines' coverage task reads Cobertura
+- D. It produces the browsable HTML report
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: C
 
 **In `challenge-16.md`:** lines **117** and **398–400**.
 
@@ -417,15 +417,15 @@ in one run, rather than running the tests twice.
 
 Why does the unit-test job upload coverage only when `matrix.node-version == 20`?
 
-- A. Three identical coverage reports are redundant; one canonical version is enough
-- B. Coverage only works on Node 20
-- C. Node 18 and 22 do not produce coverage
-- D. It reduces test time
+- A. Coverage collection only works on Node 20
+- B. Three identical reports are redundant; one suffices
+- C. Node 18 and 22 do not produce coverage output
+- D. It reduces the overall test execution time noticeably
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: B
 
 **In `challenge-16.md`:** lines **86–91**.
 
@@ -454,10 +454,10 @@ artifact after the version:
 
 What does `if: always()` on the test-results upload accomplish?
 
-- A. The results are uploaded even when the test step failed
-- B. It retries the upload
-- C. It uploads on schedule
-- D. It ignores errors
+- A. Results upload even when the test step failed
+- B. It retries the upload until it succeeds
+- C. It uploads on a fixed schedule regardless
+- D. It ignores errors from the upload action
 
 <details>
 <summary>Show answer</summary>
@@ -487,15 +487,15 @@ failing run is the only one whose results anyone needs.
 
 Why does the integration test use `--forceExit`?
 
-- A. Jest exits even when an open handle — a database pool or server socket — keeps the process alive
-- B. It skips cleanup
-- C. It runs tests faster
-- D. It ignores failures
+- A. It skips the `afterAll` cleanup hooks after the run
+- B. It runs the integration suite faster
+- C. It ignores any failing integration tests
+- D. Jest exits despite an open handle keeping it alive
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: D
 
 **In `challenge-16.md`:** line **176**.
 
@@ -521,15 +521,15 @@ fails rather than silently being created.
 
 What does the k6 `stages` block define?
 
-- A. A ramp: 30s up to 20 users, 1m up to 50, 30s back to zero
-- B. Test durations only
-- C. Three separate tests
-- D. Threshold windows
+- A. Only the total test duration in three parts
+- B. Three separate tests run one after another
+- C. A ramp: 30s to 20 users, 1m to 50, 30s to zero
+- D. The windows over which thresholds are evaluated
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: C
 
 **In `challenge-16.md`:** lines **199–203**.
 
@@ -555,15 +555,15 @@ unfinished, which shows up as errors that are an artifact of the test rather tha
 
 What does `checks: ['rate>0.99']` in the thresholds measure?
 
-- A. The proportion of functional `check()` assertions that passed
-- B. HTTP status codes
-- C. Request duration
-- D. The number of virtual users
+- A. The distribution of HTTP status codes in the responses
+- B. The share of functional `check()` assertions passed
+- C. The request duration at the 99th percentile
+- D. The number of virtual users active at once
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: B
 
 **In `challenge-16.md`:** lines **207** and **222–225**.
 
@@ -588,15 +588,15 @@ is exactly the kind of degradation that breaks a checkout flow (line 23).
 
 How does the Azure Pipelines equivalent express the Node version matrix?
 
-- A. Named matrix entries each setting a `nodeVersion` variable
-- B. A list under `strategy.matrix`
-- C. Three separate jobs
-- D. A parameter
+- A. A list of values under the `strategy.matrix` key
+- B. Three separate jobs, one per version
+- C. A pipeline parameter with three values
+- D. Named matrix entries, each setting `nodeVersion`
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: D
 
 **In `challenge-16.md`:** lines **366–373**.
 
@@ -628,16 +628,16 @@ and why the variable is referenced as `$(nodeVersion)` (line 378), not as a matr
 Which **three** layers make up the testing pyramid in this challenge? (Choose three.)
 
 - A. Unit tests — fast, isolated, no external dependencies
-- B. Integration tests — API endpoints against a real PostgreSQL database
-- C. Load tests — performance baseline under expected traffic
-- D. Manual exploratory tests
-- E. Security scans
-- F. Smoke tests in production
+- B. Manual exploratory tests run before each release
+- C. Integration tests — endpoints against real PostgreSQL
+- D. Security scans of the built container image
+- E. Load tests — a performance baseline under traffic
+- F. Smoke tests run in production after each deploy
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A, B, C
+### Answer: A, C, E
 
 **In `challenge-16.md`:** lines **29–31**.
 
@@ -658,21 +658,21 @@ never runs after a cheap failure.
 
 Which **three** does the unit-test job produce or configure? (Choose three.)
 
-- A. A matrix across Node 18, 20 and 22
-- B. JUnit XML results uploaded per matrix leg
-- C. An lcov coverage report uploaded once
-- D. A PostgreSQL service container
-- E. A running application server
-- F. k6 thresholds
+- A. A PostgreSQL service container with health check
+- B. A matrix across Node 18, 20 and 22 in parallel
+- C. A running application server on port 3000
+- D. JUnit XML results uploaded per matrix leg
+- E. k6 thresholds on latency and error rate
+- F. An lcov coverage report uploaded once
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A, B, C
+### Answer: B, D, F
 
 **In `challenge-16.md`:** lines **55–91**.
 
-**D, E and F belong to the layers above** — the service container to integration (line 137), the server
+**A, C and E belong to the layers above** — the service container to integration (line 137), the server
 and k6 to load (lines 273–293).
 
 **And that separation is the pyramid expressed as infrastructure.** The unit job needs **nothing** beyond
@@ -687,16 +687,16 @@ Node, which is why it runs three times in parallel and finishes first.
 Which **three** does the integration test job require that the unit job does not? (Choose three.)
 
 - A. A PostgreSQL service container with a health check
-- B. Database migrations
-- C. Seed data
-- D. A matrix strategy
-- E. k6
-- F. `fail-fast: false`
+- B. A matrix strategy across Node versions
+- C. Database migrations run before the tests
+- D. k6 installed and available on the runner
+- E. Seed data loaded after the migration step
+- F. `fail-fast: false` set on the matrix strategy
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A, B, C
+### Answer: A, C, E
 
 **In `challenge-16.md`:** lines **137–150** and **165–173**.
 
@@ -721,23 +721,23 @@ there are fewer of them than unit tests.
 
 Which **two** turn a test run into a **gate** rather than a report? (Choose two.)
 
-- A. `coverageThreshold` in the Jest config
-- B. k6 `thresholds` producing a non-zero exit code
-- C. `PublishTestResults@2`
-- D. Uploading results as artifacts
-- E. Posting a PR comment
+- A. `PublishTestResults@2` to the Tests tab
+- B. Uploading the results as build artifacts
+- C. `coverageThreshold` in the Jest config
+- D. Posting a summary comment on the PR
+- E. k6 `thresholds` producing a non-zero exit
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A, B
+### Answer: C, E
 
 **In `challenge-16.md`:** lines **109–116** and **204–208**.
 
 **Both cause a **non-zero exit**, which fails the step.** That is the mechanism; everything else in this
 challenge reports.
 
-**Why C, D and E are all valuable and none of them blocks.** Publishing makes results visible in the Tests
+**Why A, B and D are all valuable and none of them blocks.** Publishing makes results visible in the Tests
 tab, artifacts preserve them, and the PR comment (lines 331–344) puts a summary where reviewers are.
 **Visibility is not enforcement** — and as always, even a failing job gates only when it is a required
 check (Challenge 08).
@@ -751,26 +751,26 @@ check (Challenge 08).
 Which **two** correctly fix a CI-only readiness failure? (Choose two.)
 
 - A. A retry loop polling `pg_isready` before migrations
-- B. A retry loop polling `/health` before k6, ending with a failing `curl -f`
-- C. Increasing `sleep` from 5 to 30 seconds
-- D. Re-running the job on failure
-- E. Removing the health check
+- B. Increasing `sleep` from 5 to 30 seconds
+- C. Re-running the job automatically on failure
+- D. A `/health` poll before k6, ending in `curl -f`
+- E. Removing the health check from the service
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A, B
+### Answer: A, D
 
 **In `challenge-16.md`:** lines **515–521** and **541–551**.
 
 **Both **check a condition** rather than waiting a guessed interval**, so they adapt to a runner that is
 having a bad day.
 
-**Why C fails in both directions.** It is too short when the runner is loaded and wastes 25 seconds on
+**Why B fails in both directions.** It is too short when the runner is loaded and wastes 25 seconds on
 every run when it is not — and the failure it produces is intermittent, which is the hardest kind to
 diagnose (Challenge 34).
 
-**Why D hides the bug and doubles the cost**, and E removes the only synchronisation that exists.
+**Why C hides the bug and doubles the cost**, and E removes the only synchronisation that exists.
 
 </details>
 
@@ -780,16 +780,16 @@ diagnose (Challenge 34).
 
 Which **two** are true of the `report-results` job? (Choose two.)
 
-- A. It needs all three test jobs
-- B. It requires `pull-requests: write`
-- C. It runs on every push
-- D. It blocks the merge
+- A. It runs on every push to any branch
+- B. It needs all three test jobs to complete
+- C. It blocks the merge when tests fail
+- D. It requires `pull-requests: write`
 - E. It replaces `PublishTestResults@2`
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A, B
+### Answer: B, D
 
 **In `challenge-16.md`:** lines **312–316**.
 
@@ -805,7 +805,7 @@ Which **two** are true of the `report-results` job? (Choose two.)
 **And the `if:` at line 313 restricts it to pull requests**, because there is no PR to comment on for a
 push to `main`.
 
-**Why D is the recurring distinction.** A comment informs. **Nothing here refuses a merge** — that comes
+**Why C is the recurring distinction.** A comment informs. **Nothing here refuses a merge** — that comes
 from the test jobs failing and being required checks.
 
 </details>
@@ -817,15 +817,15 @@ from the test jobs failing and being required checks.
 Which **two** Azure Pipelines tasks does the equivalent pipeline use for reporting? (Choose two.)
 
 - A. `PublishTestResults@2` with `mergeTestResults: true`
-- B. `PublishCodeCoverageResults@2` conditioned on one matrix leg
-- C. `PublishPipelineArtifact@1` for JUnit results
-- D. `DownloadBuildArtifacts@1`
-- E. `PublishBuildArtifacts@1` for coverage
+- B. `PublishPipelineArtifact@1` for the JUnit results
+- C. `DownloadBuildArtifacts@1` for the coverage file
+- D. `PublishCodeCoverageResults@2` on one matrix leg
+- E. `PublishBuildArtifacts@1` for the coverage report
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A, B
+### Answer: A, D
 
 **In `challenge-16.md`:** lines **390–401**.
 
@@ -839,7 +839,7 @@ Which **two** Azure Pipelines tasks does the equivalent pipeline use for reporti
 **The condition mirrors the GitHub Actions `if:` at line 87** — one canonical coverage report from the
 matrix, not three (Q11).
 
-**Why C is the wrong task for the payload.** An artifact preserves a file; **`PublishTestResults@2`
+**Why B is the wrong task for the payload.** An artifact preserves a file; **`PublishTestResults@2`
 parses** it into the Tests tab with pass and fail counts, history and flaky-test detection.
 
 **And `PublishPipelineArtifact@1` is used correctly** at line 467 — for the k6 JSON, which nothing parses.
@@ -1265,8 +1265,8 @@ it exists only because thresholds are configured.
           [BLANK 2]: 'npm'
 ```
 
-- **BLANK 1:** `fail-fast` / `continue-on-error` / `max-parallel` / `strict`
-- **BLANK 2:** `cache` / `registry-url` / `scope` / `always-auth`
+- **BLANK 1:** `continue-on-error` / `max-parallel` / `fail-fast` / `strict`
+- **BLANK 2:** `registry-url` / `cache` / `scope` / `always-auth`
 
 <details>
 <summary>Show answer</summary>
@@ -1300,8 +1300,8 @@ the leg fail honestly while the others finish.
           --health-retries=5
 ```
 
-- **BLANK 1:** `5432:5432` / `5432` / `localhost:5432` / `0:5432`
-- **BLANK 2:** `pg_isready` / `psql` / `pg_ctl` / `healthcheck`
+- **BLANK 1:** `5432` / `localhost:5432` / `0:5432` / `5432:5432`
+- **BLANK 2:** `psql` / `pg_isready` / `pg_ctl` / `healthcheck`
 
 <details>
 <summary>Show answer</summary>
@@ -1336,8 +1336,8 @@ authenticates, so a transient auth failure would report the container as unhealt
 
 Requirement: enforce the hardest coverage metric, and emit a format Azure Pipelines can publish.
 
-- **BLANK 1:** `branches` / `files` / `paths` / `modules`
-- **BLANK 2:** `cobertura` / `html` / `json` / `clover`
+- **BLANK 1:** `files` / `paths` / `branches` / `modules`
+- **BLANK 2:** `html` / `json` / `clover` / `cobertura`
 
 <details>
 <summary>Show answer</summary>
@@ -1372,9 +1372,9 @@ export const options = {
 };
 ```
 
-- **BLANK 1:** `0` / `50` / `100` / `20`
-- **BLANK 2:** `p(95)` / `avg` / `max` / `med`
-- **BLANK 3:** `rate` / `count` / `sum` / `pct`
+- **BLANK 1:** `50` / `0` / `100` / `20`
+- **BLANK 2:** `avg` / `max` / `p(95)` / `med`
+- **BLANK 3:** `count` / `sum` / `pct` / `rate`
 
 <details>
 <summary>Show answer</summary>
@@ -1406,8 +1406,8 @@ regardless of how many requests the run makes.
           curl [BLANK 1] http://localhost:3000/health || [BLANK 2]
 ```
 
-- **BLANK 1:** `-f` / `-s` / `-v` / `-L`
-- **BLANK 2:** `exit 1` / `true` / `continue` / `echo "warning"`
+- **BLANK 1:** `-s` / `-f` / `-v` / `-L`
+- **BLANK 2:** `true` / `continue` / `exit 1` / `echo "warning"`
 
 <details>
 <summary>Show answer</summary>
@@ -1440,10 +1440,10 @@ an application bug.
 
 Requirement: one merged test run in the Tests tab, published even when tests fail.
 
-- **BLANK 1:** `PublishTestResults@2` / `PublishPipelineArtifact@1` /
-  `PublishCodeCoverageResults@2` / `PublishBuildArtifacts@1`
-- **BLANK 2:** `mergeTestResults` / `failTaskOnFailedTests` / `publishRunAttachments` / `mergeResults`
-- **BLANK 3:** `always()` / `succeeded()` / `failed()` / `succeededOrFailed()`
+- **BLANK 1:** `PublishPipelineArtifact@1` / `PublishCodeCoverageResults@2` /
+  `PublishTestResults@2` / `PublishBuildArtifacts@1`
+- **BLANK 2:** `failTaskOnFailedTests` / `publishRunAttachments` / `mergeTestResults` / `mergeResults`
+- **BLANK 3:** `succeeded()` / `failed()` / `succeededOrFailed()` / `always()`
 
 <details>
 <summary>Show answer</summary>
@@ -1499,16 +1499,15 @@ layer."** The application is a **Node.js Express API with a PostgreSQL backend**
 
 How should the three layers be sequenced, and why?
 
-- A. Unit → integration → load, chained with `needs:`, so an expensive layer never runs after a cheap
-  failure
-- B. All three in parallel
-- C. Load → integration → unit
-- D. One job running everything
+- A. All three layers in parallel for the fastest feedback
+- B. Unit → integration → load, chained with `needs:`
+- C. Load → integration → unit, most expensive first
+- D. One job running every layer on a single runner
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: B
 
 **In `challenge-16.md`:** lines **134**, **236**, **312**.
 
@@ -1523,7 +1522,7 @@ How should the three layers be sequenced, and why?
 **Fail fast and cheaply.** A broken unit test means the integration job's database setup and the load
 job's several minutes are certainly wasted.
 
-**Why B is defensible on wall-clock and wrong on cost.** Running all three in parallel gives faster
+**Why A is defensible on wall-clock and wrong on cost.** Running all three in parallel gives faster
 feedback when everything passes and burns the full cost on every failure — and on three deployments a day
 that is the common case during a bad week.
 
@@ -1538,10 +1537,10 @@ integration layer a service container the unit layer does not need.
 
 How is "a real database, not a mock" satisfied without shared-state flakiness?
 
-- A. A PostgreSQL service container per job, with a health check, an explicit wait, migrations and seeds
-- B. A shared staging database
-- C. An in-memory SQLite substitute
-- D. Mocks
+- A. A per-job service container, migrated and seeded
+- B. A shared staging database all runs connect to
+- C. An in-memory SQLite substitute for faster runs
+- D. Mocks of the data repository layer
 
 <details>
 <summary>Show answer</summary>
@@ -1569,21 +1568,21 @@ catch.
 Which **two** stop intermittent CI timing failures? (Choose two.)
 
 - A. A `pg_isready` retry loop before migrations
-- B. A `/health` polling loop before k6, ending in `curl -f ... || exit 1`
-- C. A longer fixed `sleep`
-- D. Automatic job re-runs
-- E. Removing the load test
+- B. A longer fixed `sleep` before each step
+- C. Automatic job re-runs on any failure
+- D. A `/health` poll before k6, ending in `curl -f`
+- E. Removing the load test from the pipeline
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A, B
+### Answer: A, D
 
 **In `challenge-16.md`:** lines **515–521** and **541–551**.
 
 **Both replace a guess with a **check**, and both fail loudly when the condition never becomes true.**
 
-**Why D is the most damaging of the wrong answers.** Automatic re-runs make intermittent failures
+**Why C is the most damaging of the wrong answers.** Automatic re-runs make intermittent failures
 invisible, so a genuine race and a genuine bug become indistinguishable — and the pipeline's signal is
 destroyed (Challenge 34).
 
@@ -1595,15 +1594,15 @@ destroyed (Challenge 34).
 
 How is a Node 22 compatibility problem made visible before production upgrades?
 
-- A. A matrix across 18, 20 and 22 with `fail-fast: false`, and version-agnostic test setup
-- B. Testing on Node 20 only
-- C. Upgrading production first
-- D. A separate nightly job on Node 22
+- A. Testing on Node 20 only, the production version
+- B. Upgrading production first and watching for errors
+- C. A matrix across 18, 20 and 22 with `fail-fast: false`
+- D. A separate nightly job running on Node 22 alone
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: C
 
 **In `challenge-16.md`:** lines **55–58** and **527–534**.
 
@@ -1623,23 +1622,23 @@ cancels the 22 leg and hides the very thing you were testing for.
 
 Which **two** enforce the requirements rather than reporting on them? (Choose two.)
 
-- A. Jest `coverageThreshold` at 80%
-- B. k6 `thresholds` on latency, error rate and checks
-- C. `PublishTestResults@2`
-- D. The PR summary comment
-- E. Uploading artifacts with `if: always()`
+- A. `PublishTestResults@2` to the Tests tab
+- B. Jest `coverageThreshold` at 80% on all four metrics
+- C. The PR summary comment from `report-results`
+- D. Uploading artifacts with `if: always()`
+- E. k6 `thresholds` on latency, error rate and checks
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A, B
+### Answer: B, E
 
 **In `challenge-16.md`:** lines **109–116** and **204–208**.
 
 **Both exit non-zero, which fails the step** (Q20). The other three make results **visible**, which is the
 "results must reach reviewers" requirement and a different one.
 
-**And the third requirement — "results visible even when the run fails" — is E's job**, which is why
+**And the third requirement — "results visible even when the run fails" — is D's job**, which is why
 `if: always()` is not optional on reporting steps.
 
 **Three requirements, two mechanisms, no overlap.** The exam expects you to keep them apart.
@@ -1655,18 +1654,17 @@ weeks, including through a release that measurably slowed checkout in production
 executes, and the JSON artifact is uploaded each time. A workflow refactor around that date consolidated
 several `options` blocks.
 
-What happened, and what is the fix?
+What is the most likely cause?
 
-- A. The `thresholds` block was dropped in the refactor, so k6 always exits zero — restore the thresholds
-  and treat them as the job's acceptance criteria
-- B. k6 stopped being installed
-- C. The server was not starting
-- D. The database was empty
+- A. k6 stopped being installed on the runner
+- B. The application server was not starting
+- C. The test database was left empty after seeding
+- D. The `thresholds` block was dropped in the refactor
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: D
 
 **In `challenge-16.md`:** lines **204–208** and **604**.
 
@@ -1684,7 +1682,7 @@ release that demonstrably regressed performance is not measuring anything.
 **Without thresholds, k6 reports metrics and exits zero regardless** (Q4). The step goes green, the
 artifact uploads, and nothing in the run indicates that P95 doubled.
 
-**Why B, C and D would all fail loudly.** Missing k6 fails the install step; a dead server produces the
+**Why A, B and C would all fail loudly.** Missing k6 fails the install step; a dead server produces the
 100% failure rate from the break scenario; an empty database fails the checks — **all three are visible,
 and none matches "passes every time".**
 
@@ -1700,16 +1698,12 @@ either protecting nothing or measuring nothing, and the two are indistinguishabl
 A year on, checkout regressions are caught before merge, the pipeline has not produced an intermittent
 failure in months, and a reviewer sees the full test picture in the pull request.
 
-Explain what each layer contributed, and what actually changed.
+Which explanation best accounts for the change?
 
-- A. Unit tests across a version matrix caught logic and runtime-compatibility errors in seconds;
-  integration tests against a per-run database caught query and contract breakage a mock cannot; k6
-  thresholds turned performance into a pass/fail criterion; readiness loops removed the CI-only races
-  that would otherwise have trained the team to re-run; and published results plus a PR summary put all
-  of it where the decision is made
-- B. The team started writing more tests
-- C. Deployments were reduced to once a week
-- D. A manual QA stage was added before release
+- A. Each layer gates what the one below cannot catch
+- B. The team started writing many more tests
+- C. Deployments were reduced to once per week
+- D. A manual QA stage was added before each release
 
 <details>
 <summary>Show answer</summary>

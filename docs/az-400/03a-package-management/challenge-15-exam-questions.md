@@ -52,10 +52,10 @@ remediation taking **weeks** because nobody knew which services were affected.
 Dependabot is set to `weekly` with `open-pull-requests-limit: 5`, and 8 dependencies are outdated. What
 happens?
 
-- A. 8 PRs open at once
-- B. 5 PRs open and the remaining 3 are queued
-- C. 5 PRs open and the other 3 are ignored permanently
-- D. The configuration is invalid
+- A. All 8 pull requests open at once
+- B. 5 open and the remaining 3 are queued
+- C. 5 open and the other 3 are ignored for good
+- D. The configuration is rejected as invalid
 
 <details>
 <summary>Show answer</summary>
@@ -85,15 +85,15 @@ arrive.
 
 Which action blocks a pull request that introduces a known vulnerability?
 
-- A. `actions/codeql-action`
-- B. `actions/dependency-review-action`
-- C. `github/dependabot-action`
-- D. `actions/security-scan`
+- A. `actions/codeql-action` for the source
+- B. `github/dependabot-action` for updates
+- C. `actions/security-scan` for the image
+- D. `actions/dependency-review-action`
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: B
+### Answer: D
 
 **In `challenge-15.md`:** lines **296–299**.
 
@@ -121,15 +121,15 @@ introduces, not the pre-existing backlog.
 
 With NuGet package source mapping configured, what happens to a package matching no pattern?
 
-- A. It is downloaded from all sources
-- B. The restore **fails**
+- A. The restore fails outright
+- B. It is downloaded from every source
 - C. It falls back to nuget.org
-- D. It uses the first source
+- D. It uses the first source listed
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: B
+### Answer: A
 
 **In `challenge-15.md`:** line **502**.
 
@@ -157,14 +157,14 @@ A team wants critical CVEs remediated automatically and everything else reviewed
 configuration achieves it?
 
 - A. `interval: daily` with `open-pull-requests-limit: 1`
-- B. Enable Dependabot **security updates**, and configure **version updates** with `ignore` rules
-- C. `fail-on-severity: critical` in the dependency review action
-- D. `groups` batching all non-critical updates
+- B. `fail-on-severity: critical` in dependency review
+- C. Security updates on; version updates with `ignore`
+- D. `groups` batching all the non-critical updates
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: B
+### Answer: C
 
 **In `challenge-15.md`:** line **513**.
 
@@ -176,7 +176,7 @@ always automatic) and version updates (scheduled, configurable).
 **The two features answer the two halves of the requirement.** Security updates are automatic and
 immediate; version updates are where you apply judgement.
 
-**Why C is the right idea in the wrong place.** Dependency review gates a **pull request**; it does not
+**Why B is the right idea in the wrong place.** Dependency review gates a **pull request**; it does not
 remediate an existing vulnerability, and it does nothing on the default branch.
 
 **And note "always automatic"** — security updates do not wait for your `schedule`. That is precisely why
@@ -190,15 +190,15 @@ they are the emergency channel.
 
 A Dependabot PR bumping `@contoso/auth-sdk` from 1.2.0 to 2.0.0 breaks the build. What is the root cause?
 
-- A. A breaking API change across a major version boundary
-- B. A network failure
-- C. A lockfile conflict
-- D. A missing peer dependency
+- A. A transient network failure during the install
+- B. A lockfile conflict with the base branch
+- C. A missing peer dependency in the tree
+- D. A breaking API change across a major boundary
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: D
 
 **In `challenge-15.md`:** lines **372** and **381**.
 
@@ -224,15 +224,15 @@ The `validateToken` method was renamed to `verifyToken` in version 2.0.0.
 
 Which Dependabot setting stops major bumps of a named package?
 
-- A. `ignore` with `update-types: ["version-update:semver-major"]`
-- B. `open-pull-requests-limit: 0`
-- C. `schedule.interval: monthly`
-- D. `allow: production`
+- A. `open-pull-requests-limit: 0` on the ecosystem
+- B. `ignore` with `update-types: [semver-major]`
+- C. `schedule.interval: monthly` on the ecosystem
+- D. `allow: production` restricting the scope
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: B
 
 **In `challenge-15.md`:** lines **399–401**.
 
@@ -245,7 +245,7 @@ Which Dependabot setting stops major bumps of a named package?
 **`ignore` is per update-type, so minor and patch keep flowing.** That is the point: you are deferring a
 migration, not freezing the package.
 
-**Why B is the blunt instrument** — it disables the ecosystem entirely, including the security-relevant
+**Why A is the blunt instrument** — it disables the ecosystem entirely, including the security-relevant
 patches.
 
 **And the same construct appears at line 79** for `Microsoft.Extensions.*`, using a **wildcard** in
@@ -259,15 +259,15 @@ patches.
 
 What is the difference between `~1.2.0` and `^1.2.0`?
 
-- A. Tilde allows patch updates; caret allows minor and patch
-- B. Tilde allows minor; caret allows major
-- C. They are identical
-- D. Tilde pins exactly
+- A. Tilde allows minor; caret allows major
+- B. They are identical range operators
+- C. Tilde allows patch; caret allows minor too
+- D. Tilde pins to the exact version stated
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: C
 
 **In `challenge-15.md`:** lines **406–423**.
 
@@ -296,10 +296,10 @@ The range protects every install; the ignore rule only stops the PR being opened
 
 Which Dependabot ecosystems does the configuration cover?
 
-- A. npm, NuGet, Docker, GitHub Actions
-- B. npm only
-- C. npm and NuGet
-- D. npm, pip, Maven
+- A. npm, NuGet, Docker and GitHub Actions
+- B. npm only, in the root directory
+- C. npm and NuGet in their directories
+- D. npm, pip and Maven for all services
 
 <details>
 <summary>Show answer</summary>
@@ -325,15 +325,15 @@ because the manifest lives where the project lives.
 
 What does `groups` accomplish in the Dependabot configuration?
 
-- A. It batches related updates into one PR, isolating the ones that need attention
-- B. It groups repositories
-- C. It groups reviewers
-- D. It sets priority
+- A. It groups the repositories Dependabot scans
+- B. It groups the reviewers assigned to each PR
+- C. It sets the priority order of updates
+- D. It batches related updates into one PR
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: D
 
 **In `challenge-15.md`:** lines **60–70** and **450–464**.
 
@@ -365,15 +365,15 @@ reviewer can merge dev-tooling churn without thinking hard about it.
 
 What does `dismissed_reason=tolerable_risk` record?
 
-- A. A justified dismissal, with a comment explaining why the alert does not apply
-- B. That the vulnerability is fixed
-- C. That the package was removed
-- D. That the alert was a duplicate
+- A. That the vulnerability has been fixed
+- B. A justified dismissal with a comment
+- C. That the package was removed entirely
+- D. That the alert was a duplicate of another
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: B
 
 **In `challenge-15.md`:** lines **152–155**.
 
@@ -401,15 +401,15 @@ reopen itself — which is why the reason must be specific enough to re-evaluate
 
 Which severity filter returns only critical and high open alerts?
 
-- A. `/orgs/contoso/dependabot/alerts?severity=critical,high&state=open`
-- B. `--jq 'select(.severity > 7)'`
-- C. `?filter=high`
-- D. `--severity high`
+- A. `--jq 'select(.severity > 7)'`
+- B. `?filter=high` on the alerts endpoint
+- C. `?severity=critical,high&state=open`
+- D. `--severity high` on the `gh` command
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: C
 
 **In `challenge-15.md`:** lines **145–146**.
 
@@ -432,10 +432,10 @@ plan.
 
 What does `fail-on-severity: high` do in the dependency review action?
 
-- A. Fails the check when the PR introduces a vulnerability of high severity or above
-- B. Warns on high severity
-- C. Ignores anything below high
-- D. Sets the alert threshold
+- A. Fails the check on high severity or above
+- B. Warns on high severity but lets it pass
+- C. Ignores anything below high severity
+- D. Sets the Dependabot alert threshold
 
 <details>
 <summary>Show answer</summary>
@@ -466,15 +466,15 @@ vulnerability merge, which is usually the wrong trade for a threshold nobody rev
 
 What does `deny-licenses: GPL-2.0-only, GPL-3.0-only, AGPL-3.0-only` prevent?
 
-- A. Merging a PR that introduces a dependency under a copyleft licence
-- B. A vulnerable dependency
-- C. Publishing the package
-- D. Using the licence in your own code
+- A. Merging a PR with a vulnerable dependency
+- B. Publishing the package to the registry
+- C. Using those licences in your own source
+- D. Merging a PR adding a copyleft dependency
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: D
 
 **In `challenge-15.md`:** line **300**.
 
@@ -495,15 +495,15 @@ unusable — the risk is a licensing obligation, not an exploit.
 
 What does `allow-ghsas: GHSA-xxxx-yyyy-zzzz` do?
 
-- A. Permits a specific advisory to pass, as a documented exception
-- B. Allows all advisories
-- C. Ignores GitHub Security Advisories
-- D. Blocks that advisory
+- A. It allows every advisory through the gate
+- B. It permits one named advisory as an exception
+- C. It ignores GitHub Security Advisories entirely
+- D. It blocks the named advisory from merging
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: B
 
 **In `challenge-15.md`:** line **301**.
 
@@ -525,15 +525,15 @@ the category.
 
 What does the npm allow-list `.npmrc` at Task 6 accomplish?
 
-- A. All packages resolve through approved feeds rather than public npm directly
-- B. It blocks specific packages
-- C. It scans for vulnerabilities
-- D. It pins versions
+- A. It blocks specific named packages
+- B. It scans installs for vulnerabilities
+- C. All packages resolve via approved feeds
+- D. It pins every dependency to a version
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: C
 
 **In `challenge-15.md`:** lines **315–319**.
 
@@ -552,7 +552,7 @@ Artifacts feed** — which reaches public npm through an upstream (Challenge 13)
 **The gain is a chokepoint.** Every package the organisation consumes passes through a feed you control,
 so it can be cached, audited and scanned in one place.
 
-**Why B is a different control** — that is the banned-package check at lines 353–361.
+**Why A is a different control** — that is the banned-package check at lines 353–361.
 
 </details>
 
@@ -562,15 +562,15 @@ so it can be cached, audited and scanned in one place.
 
 What does the banned-package check at Task 6 do?
 
-- A. Fails the build if a named package appears in the lockfile
-- B. Removes the package
-- C. Warns the developer
-- D. Updates the package
+- A. Removes the package from the lockfile
+- B. Warns the developer and continues
+- C. Updates the package to a safe version
+- D. Fails the build if a named package is found
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: D
 
 **In `challenge-15.md`:** lines **353–361**.
 
@@ -601,17 +601,17 @@ scenario's second complaint at line 24.
 
 Which **three** are true of Dependabot's two features? (Choose three.)
 
-- A. Security updates trigger immediately on a CVE publication
-- B. Version updates run on the configured schedule
-- C. Security updates are automatic and not schedule-driven
-- D. Version updates only fire for vulnerabilities
-- E. Security updates require `.github/dependabot.yml`
-- F. They are the same feature
+- A. Security updates trigger immediately on a CVE
+- B. Version updates only fire for vulnerabilities
+- C. Version updates run on the configured schedule
+- D. Security updates require `dependabot.yml`
+- E. Security updates are automatic, not scheduled
+- F. They are the same feature under two names
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A, B, C
+### Answer: A, C, E
 
 **In `challenge-15.md`:** lines **118** and **513**.
 
@@ -620,11 +620,11 @@ Security alerts differ from version updates. They trigger immediately when a new
 affects your dependency tree.
 ```
 
-**E is the misconception that leaves teams unprotected.** Security alerts are enabled at the repository or
+**D is the misconception that leaves teams unprotected.** Security alerts are enabled at the repository or
 organisation level (lines 106, 123–132) — **the config file is only for version updates.** Delete
 `dependabot.yml` and alerts keep working.
 
-**And D inverts the purpose of version updates.** They keep the tree current **regardless** of
+**And B inverts the purpose of version updates.** They keep the tree current **regardless** of
 vulnerabilities, which is what makes the eventual security fix a small change.
 
 </details>
@@ -635,27 +635,27 @@ vulnerabilities, which is what makes the eventual security fix a small change.
 
 Which **three** Dependabot behaviours can `.github/dependabot.yml` control? (Choose three.)
 
-- A. Schedule and timezone
-- B. Concurrent PR limit
-- C. `ignore` rules by dependency and update type
-- D. Whether CVEs are detected
-- E. The severity of an advisory
-- F. Which repositories are scanned
+- A. Whether CVEs are detected at all
+- B. Schedule interval and timezone
+- C. The severity of an advisory
+- D. The concurrent pull request limit
+- E. Which repositories are scanned
+- F. `ignore` rules by dependency and update type
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A, B, C
+### Answer: B, D, F
 
 **In `challenge-15.md`:** lines **46–51** and **78–80**.
 
 **Plus reviewers, labels, commit-message prefix and groups** (lines 52–70) — the file is entirely about
 **how updates are proposed**.
 
-**D and E are properties of the advisory database**, not of your configuration. You cannot configure a
+**A and C are properties of the advisory database**, not of your configuration. You cannot configure a
 vulnerability into or out of existence; you can only choose how to respond.
 
-**F is organisation-level** (lines 129–132), including
+**E is organisation-level** (lines 129–132), including
 `dependabot_alerts_enabled_for_new_repositories` — which is the setting that stops the next repository
 starting unprotected.
 
@@ -668,20 +668,20 @@ starting unprotected.
 Which **three** are preventive controls rather than detective ones? (Choose three.)
 
 - A. `dependency-review-action` with `warn-only: false`
-- B. NuGet package source mapping
-- C. The banned-package lockfile check
-- D. Dependabot alerts
-- E. The quarterly security audit
+- B. Dependabot alerts on the default branch
+- C. NuGet package source mapping, fail-closed
+- D. The quarterly security audit review
+- E. The banned-package lockfile check
 - F. The org-wide alert listing query
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A, B, C
+### Answer: A, C, E
 
 **In `challenge-15.md`:** lines **296–303**, **333–342**, **353–361**.
 
-**All three refuse something**: a merge, a download, a build. D, E and F all report on something that has
+**All three refuse something**: a merge, a download, a build. B, D and F all report on something that has
 already happened.
 
 **And that split is the scenario's whole problem.** Contoso had only detection — a **quarterly** audit —
@@ -698,16 +698,16 @@ given mechanism provides.
 
 Which **two** address the license compliance requirement? (Choose two.)
 
-- A. `license-checker --failOn "GPL-2.0-only;GPL-3.0-only;AGPL-3.0-only;SSPL-1.0"`
-- B. `deny-licenses` on the dependency review action
-- C. Dependabot security updates
-- D. Trivy
-- E. CodeQL
+- A. Dependabot security updates on the tree
+- B. Trivy scanning of the built image
+- C. `license-checker --failOn` for copyleft licences
+- D. CodeQL analysis of the source code
+- E. `deny-licenses` on the dependency review action
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A, B
+### Answer: C, E
 
 **In `challenge-15.md`:** lines **234–235** and **300**.
 
@@ -718,7 +718,7 @@ inside dependency review.
 is not permitted-by-default — it is unassessable, and shipping it is a legal unknown rather than a
 legal risk.
 
-**Why C, D and E all scan for the wrong thing.** Vulnerability tools ask *is this dangerous*; licensing
+**Why A, B and D all scan for the wrong thing.** Vulnerability tools ask *is this dangerous*; licensing
 asks *may we ship it* (Q13).
 
 </details>
@@ -729,16 +729,16 @@ asks *may we ship it* (Q13).
 
 Which **two** stop a package arriving from an unapproved source? (Choose two.)
 
-- A. NuGet `packageSourceMapping` patterns
-- B. An `.npmrc` that routes all installs through approved feeds
-- C. `fail-on-severity: high`
-- D. `open-pull-requests-limit`
-- E. Dependabot `ignore` rules
+- A. `fail-on-severity: high` on dependency review
+- B. NuGet `packageSourceMapping` patterns per source
+- C. `open-pull-requests-limit` on Dependabot
+- D. An `.npmrc` routing installs through approved feeds
+- E. Dependabot `ignore` rules for majors
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A, B
+### Answer: B, D
 
 **In `challenge-15.md`:** lines **333–342** and **315–316**.
 
@@ -759,23 +759,23 @@ configurable; the pipeline's `nuget.config` is committed.
 
 Which **two** did the Break scenario's team lack? (Choose two.)
 
-- A. Grouping, so routine updates do not hide the risky one
-- B. `ignore` rules for major bumps on critical internal packages
-- C. Dependabot itself
-- D. A test suite
-- E. A vulnerability scanner
+- A. Grouping, so routine updates do not hide risky ones
+- B. Dependabot itself on the repository
+- C. A test suite that exercises the SDK
+- D. `ignore` rules for majors on critical packages
+- E. A vulnerability scanner in the pipeline
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A, B
+### Answer: A, D
 
 **In `challenge-15.md`:** lines **389–401** and **450–464**.
 
 **Twelve open PRs with no visual distinction** (line 376) is the failure. Grouping the minors and patches
 makes the major bump the only ungrouped PR — impossible to miss.
 
-**Why C and D are refuted by the scenario itself.** Dependabot opened the PR and **CI caught the break**
+**Why B and C are refuted by the scenario itself.** Dependabot opened the PR and **CI caught the break**
 (line 372) — both worked. The gap was triage.
 
 **And that is a genuinely useful framing for the exam**: a control can function perfectly and still fail,
@@ -789,16 +789,16 @@ if its output is unreadable.
 
 Which **two** does the Microsoft Security DevOps task provide in Azure Pipelines? (Choose two.)
 
-- A. Dependency scanning via the `dependencies` category
-- B. Results published as a build artifact from `.gdn`
-- C. Automatic dependency update PRs
-- D. License compliance
-- E. CodeQL analysis
+- A. Automatic dependency update pull requests
+- B. Dependency scanning via the `dependencies` category
+- C. License compliance checks on manifests
+- D. CodeQL analysis of the application source
+- E. Results published as a build artifact from `.gdn`
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A, B
+### Answer: B, E
 
 **In `challenge-15.md`:** lines **183–192**.
 
@@ -816,7 +816,7 @@ Which **two** does the Microsoft Security DevOps task provide in Azure Pipelines
 **Publishing `.gdn` is what makes the findings visible** — without it the scan runs and the results stay
 on the agent (Challenge 45 Q6).
 
-**Why C is the genuine platform gap.** Azure DevOps **detects** vulnerable dependencies; it does not open
+**Why A is the genuine platform gap.** Azure DevOps **detects** vulnerable dependencies; it does not open
 Dependabot-style upgrade PRs. **That automation is GitHub-side**, and it is the difference that matters
 when choosing where a repository lives.
 
@@ -1215,7 +1215,7 @@ Match each scanner to what it inspects.
 | Microsoft Security DevOps |  |
 | CodeQL |  |
 
-**Options:** **Code you wrote** (Challenge 44) · Declared licences of production dependencies · Dependencies in an Azure Pipeline, with eslint and trivy · The lockfile, for named packages · What this PR adds, base against head · Your dependency tree against advisories
+**Options:** Code you wrote (Challenge 44) · Declared licences of production dependencies · Dependencies in an Azure Pipeline, with eslint and trivy · The lockfile, for named packages · What this PR adds, base against head · Your dependency tree against advisories
 
 <details>
 <summary>Show answer</summary>
@@ -1256,9 +1256,9 @@ updates:
 
 Requirement: weekly npm updates, at most ten open pull requests at a time.
 
-- **BLANK 1:** `npm` / `nodejs` / `javascript` / `yarn`
-- **BLANK 2:** `weekly` / `daily` / `monthly` / `hourly`
-- **BLANK 3:** `open-pull-requests-limit` / `max-prs` / `pr-limit` / `concurrency`
+- **BLANK 1:** `nodejs` / `javascript` / `npm` / `yarn`
+- **BLANK 2:** `daily` / `weekly` / `monthly` / `hourly`
+- **BLANK 3:** `max-prs` / `pr-limit` / `concurrency` / `open-pull-requests-limit`
 
 <details>
 <summary>Show answer</summary>
@@ -1286,9 +1286,9 @@ The four here are `npm`, `nuget`, `docker` and `github-actions`.
 
 Requirement: allow minor and patch updates to that family, but never a major bump.
 
-- **BLANK 1:** `ignore` / `deny` / `exclude` / `block`
-- **BLANK 2:** `update-types` / `versions` / `semver` / `levels`
-- **BLANK 3:** `semver-major` / `semver-minor` / `major` / `breaking`
+- **BLANK 1:** `deny` / `ignore` / `exclude` / `block`
+- **BLANK 2:** `versions` / `semver` / `update-types` / `levels`
+- **BLANK 3:** `semver-minor` / `major` / `breaking` / `semver-major`
 
 <details>
 <summary>Show answer</summary>
@@ -1320,9 +1320,9 @@ classification Dependabot uses to label its PRs.
 
 Requirement: block the merge on high or critical vulnerabilities.
 
-- **BLANK 1:** `high` / `critical` / `moderate` / `low`
-- **BLANK 2:** `warn-only` / `fail-fast` / `continue-on-error` / `strict`
-- **BLANK 3:** `base.sha` / `head.sha` / `merge_commit_sha` / `number`
+- **BLANK 1:** `critical` / `high` / `moderate` / `low`
+- **BLANK 2:** `fail-fast` / `continue-on-error` / `warn-only` / `strict`
+- **BLANK 3:** `head.sha` / `base.sha` / `merge_commit_sha` / `number`
 
 <details>
 <summary>Show answer</summary>
@@ -1352,8 +1352,8 @@ UNKNOWN=$(license-checker --production --[BLANK 2] | wc -l)
 if [ "$UNKNOWN" -gt 0 ]; then exit 1; fi
 ```
 
-- **BLANK 1:** `failOn` / `deny` / `banned` / `exclude`
-- **BLANK 2:** `unknown` / `missing` / `unlicensed` / `null`
+- **BLANK 1:** `deny` / `banned` / `failOn` / `exclude`
+- **BLANK 2:** `missing` / `unknown` / `unlicensed` / `null`
 
 <details>
 <summary>Show answer</summary>
@@ -1387,8 +1387,8 @@ passed — it has not been **assessed**, which is a different and worse position
 
 Requirement: internal packages may come only from the internal feed.
 
-- **BLANK 1:** `packageSourceMapping` / `packageSources` / `packageRestore` / `sourceMapping`
-- **BLANK 2:** `Contoso.*` / `*` / `Microsoft.*` / `Contoso`
+- **BLANK 1:** `packageSources` / `packageRestore` / `sourceMapping` / `packageSourceMapping`
+- **BLANK 2:** `*` / `Microsoft.*` / `Contoso.*` / `Contoso`
 
 <details>
 <summary>Show answer</summary>
@@ -1417,8 +1417,8 @@ gh api --method PATCH /repos/contoso/auth-service/dependabot/alerts/42 \
   --field dismissed_comment="This code path is not reachable in our configuration"
 ```
 
-- **BLANK 1:** `dismissed` / `closed` / `resolved` / `ignored`
-- **BLANK 2:** `dismissed_reason` / `reason` / `justification` / `resolution`
+- **BLANK 1:** `closed` / `dismissed` / `resolved` / `ignored`
+- **BLANK 2:** `reason` / `justification` / `resolution` / `dismissed_reason`
 
 <details>
 <summary>Show answer</summary>
@@ -1475,10 +1475,10 @@ vulnerable dependencies.** Developers are **unaware which transitive dependencie
 
 How is "a new CVE must be known immediately" satisfied?
 
-- A. Dependabot **security alerts**, enabled organisation-wide including for new repositories
+- A. Dependabot security alerts, enabled org-wide
 - B. Dependabot version updates on a daily schedule
-- C. The quarterly audit, run monthly
-- D. A dependency review action
+- C. The quarterly audit, run monthly instead
+- D. A dependency review action on every pull request
 
 <details>
 <summary>Show answer</summary>
@@ -1510,22 +1510,22 @@ creation, without anyone remembering.
 
 How do you find every affected service in one operation?
 
-- A. `gh api "/orgs/contoso/dependabot/alerts?severity=critical,high&state=open"`
-- B. Query each of the 15 repositories in turn
-- C. Read the spreadsheet
-- D. Ask each team
+- A. Query each of the fifteen repositories one at a time
+- B. Read the spreadsheet the audit produced
+- C. `gh api /orgs/contoso/dependabot/alerts?severity=...`
+- D. Ask each service team to check their alerts
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: C
 
 **In `challenge-15.md`:** lines **145–146**.
 
 **The `/orgs/` endpoint is the difference between minutes and weeks**, and it answers the scenario's
 fourth complaint directly (line 26).
 
-**Why B works and is not "one operation"** — and it misses any repository nobody remembered to include,
+**Why A works and is not "one operation"** — and it misses any repository nobody remembered to include,
 which is how the audit found a third affected service nobody expected.
 
 **And the output at line 146 formats repository, package, severity and CVE per line**, which is a
@@ -1539,23 +1539,23 @@ remediation worklist rather than a data dump.
 
 Which **two** prevent a vulnerable or copyleft dependency entering the codebase? (Choose two.)
 
-- A. `dependency-review-action` with `fail-on-severity: high` and `warn-only: false`
-- B. `deny-licenses` on the same action, plus a `license-checker` job on manifest changes
-- C. Dependabot alerts
-- D. The quarterly audit
-- E. Grouping updates
+- A. `dependency-review-action` with `warn-only: false`
+- B. Dependabot alerts on the default branch
+- C. The quarterly security audit of every service
+- D. `deny-licenses` plus a `license-checker` job
+- E. Grouping routine updates into one PR
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A, B
+### Answer: A, D
 
 **In `challenge-15.md`:** lines **296–305** and **214–245**.
 
 **Both are gates on the pull request**, which is the only point where "entering the codebase" can be
 prevented.
 
-**Why C is the control that runs one step too late.** An alert fires **after** the dependency is in the
+**Why B is the control that runs one step too late.** An alert fires **after** the dependency is in the
 default branch — useful, and by definition not prevention (Q19).
 
 **And note the licence job's path filter** (lines 217–221): it runs when `package.json`, the lockfile or a
@@ -1569,23 +1569,22 @@ default branch — useful, and by definition not prevention (Q19).
 
 How is "applying a security patch must be a small change" satisfied?
 
-- A. Dependabot version updates keeping the tree current, with `ignore` rules only for majors on critical
-  internal packages
-- B. Pinning every dependency to an exact version
-- C. Updating only when a CVE appears
-- D. Quarterly bulk upgrades
+- A. Pinning every dependency to an exact version
+- B. Routine version updates, with narrow `ignore` rules
+- C. Updating only when a CVE is published against a package
+- D. Quarterly bulk upgrades of every dependency
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: B
 
 **In `challenge-15.md`:** lines **44–70** and **399–401**.
 
 **A tree that is weeks behind takes a version bump; a tree that is years behind takes a project.** That is
 the whole argument for routine version updates, and it is the scenario's "weeks to remediate" (line 26).
 
-**Why B is the intuition that causes the problem** (Q25). Exact pins feel safe and guarantee the tree
+**Why A is the intuition that causes the problem** (Q25). Exact pins feel safe and guarantee the tree
 drifts further behind every month — so the eventual mandatory security fix spans several majors.
 
 **And the `ignore` rules are deliberately narrow**: majors, on named critical packages only. Everything
@@ -1599,15 +1598,15 @@ else keeps flowing.
 
 How is a breaking major update made distinguishable at a glance?
 
-- A. Group minor and patch updates so a major bump is the only ungrouped PR
-- B. Label every PR
-- C. Reduce the PR limit
-- D. Review PRs daily
+- A. Label every Dependabot pull request by type
+- B. Reduce the open pull request limit to two
+- C. Review Dependabot pull requests every day
+- D. Group minor and patch; majors stand alone
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: D
 
 **In `challenge-15.md`:** lines **450–464**.
 
@@ -1618,7 +1617,7 @@ This ensures major version bumps appear as individual PRs that are easy to ident
 **Grouping works by making the risky PR *structurally* different**, not by adding information a reviewer
 must read.
 
-**Why B is genuinely useful and insufficient.** Dependabot already labels its PRs (lines 54–56); twelve
+**Why A is genuinely useful and insufficient.** Dependabot already labels its PRs (lines 54–56); twelve
 labelled PRs still look alike in a list.
 
 **And that is the Break scenario's actual failure** (Q22): both the bot and CI worked perfectly, and the
@@ -1634,18 +1633,17 @@ Seven months in, the security team notices that no dependency-review check has f
 for four months, although Dependabot alerts show fourteen high-severity vulnerabilities were introduced
 and later fixed in that period. The workflow runs on every pull request and reports a summary comment.
 
-What happened, and what is the fix?
+What is the most likely cause?
 
-- A. `warn-only` was set to `true`, or the job was never added as a required status check — so the review
-  reports and never blocks; restore `warn-only: false` and require the check in branch protection
-- B. The action version is outdated
-- C. `fail-on-severity` was set to `critical`
-- D. Dependabot alerts were misconfigured
+- A. The dependency review action version is outdated
+- B. `warn-only: true`, or the check is not required
+- C. `fail-on-severity` was set to `critical` only
+- D. Dependabot alerts were misconfigured for the org
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: B
 
 **In `challenge-15.md`:** lines **303** and Challenge 08's required-checks rule.
 
@@ -1676,16 +1674,12 @@ comment", it is not a gate.
 A year on, a newly published CVE is triaged the same morning, every affected service is named in one
 query, and no GPL dependency has entered a proprietary service.
 
-Explain what each control contributed, and what actually changed.
+Which explanation best accounts for the change?
 
-- A. Security alerts made detection event-driven rather than quarterly; the org-wide query turned "which
-  services?" into one operation; dependency review and licence checks moved the decision to the pull
-  request, before the dependency exists in the branch; source mapping made the registry a chokepoint; and
-  routine version updates kept the tree close enough that a patch is a bump — the programme moved from
-  **finding** problems to **refusing** them
-- B. The team became more careful about dependencies
-- C. More frequent audits were scheduled
-- D. Fewer third-party packages were used
+- A. The programme moved from finding problems to refusing them
+- B. The team became more careful about adding dependencies
+- C. More frequent security audits were scheduled
+- D. Fewer third-party packages were used overall
 
 <details>
 <summary>Show answer</summary>
