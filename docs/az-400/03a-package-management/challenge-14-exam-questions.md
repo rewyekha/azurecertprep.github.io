@@ -85,15 +85,15 @@ to sort correctly as strings.
 A team releases an internal API gateway monthly and wants the version to say **when** rather than **what
 changed**. Which strategy?
 
-- A. SemVer with pre-release tags
-- B. CalVer with `YYYY.MM`
+- A. CalVer with a `YYYY.MM` scheme
+- B. SemVer with pre-release tags
 - C. Auto-incrementing build numbers
 - D. The commit SHA as the version
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: B
+### Answer: A
 
 **In `challenge-14.md`:** lines **118–125**.
 
@@ -107,7 +107,7 @@ CalVer works well for:
 **All three bullets match the question.** An internal gateway on a monthly train, where the operational
 question is "which month's build is running?"
 
-**Why A is right for a library and wrong here.** SemVer's value is telling a consumer whether an upgrade
+**Why B is right for a library and wrong here.** SemVer's value is telling a consumer whether an upgrade
 breaks them — and a deployed service has no consumers reading its version to decide that.
 
 **Why C and D fail the "when" requirement.** Build 4,271 and `a1b2c3d` both identify a build uniquely and
@@ -122,15 +122,15 @@ neither tells you anything without a lookup.
 Which Azure Pipelines expression provides an **atomic** auto-incrementing integer that prevents
 collisions between parallel runs?
 
-- A. `$(Build.BuildId)`
-- B. `$[counter(variables['prefix'], 0)]`
-- C. `$(Rev:r)`
-- D. `$(System.JobAttempt)`
+- A. `$(Build.BuildId)`, unique per organisation
+- B. `$(Rev:r)`, the daily revision suffix
+- C. `$[counter(variables['prefix'], 0)]`
+- D. `$(System.JobAttempt)`, the retry count
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: B
+### Answer: C
 
 **In `challenge-14.md`:** lines **269** and **471**.
 
@@ -192,15 +192,15 @@ if the new method **broke** an existing one.
 Two pipelines merge to `main` seconds apart, both compute `1.3.0`, and the second publish fails with 403.
 What is the root cause?
 
-- A. Both runs read the same git state before either pushed a new tag
-- B. The registry was down
-- C. The token expired
-- D. The package name was wrong
+- A. The registry was temporarily unavailable at publish
+- B. The publishing token had expired before the push
+- C. The package name was misspelled in `package.json`
+- D. Both runs read the same state before either tagged
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: D
 
 **In `challenge-14.md`:** line **378**.
 
@@ -226,15 +226,15 @@ you least want to debug it.
 
 Which fix eliminates the race **entirely** rather than working around it?
 
-- A. GitVersion in `ContinuousDeployment` mode, appending the commit count since the last tag
-- B. Retry with an incremented patch
-- C. Publishing more slowly
-- D. Manual version bumps
+- A. Retry the publish with an incremented patch number
+- B. Publishing more slowly to avoid overlap
+- C. GitVersion `ContinuousDeployment` mode per commit
+- D. Manual version bumps by the release manager
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: C
 
 **In `challenge-14.md`:** lines **423–433**.
 
@@ -251,10 +251,10 @@ This avoids the race entirely because each commit produces a distinct version.
 **The version is derived from the commit, not from a shared counter** — so two commits cannot produce the
 same version no matter how close together they land.
 
-**Why B is listed as Fix 3 and marked below Fix 4** (line 423 says "recommended"). Retry works and it
+**Why A is listed as Fix 3 and marked below Fix 4** (line 423 says "recommended"). Retry works and it
 publishes a version nobody predicted, so the tag, the changelog and the artifact can disagree.
 
-**Why C is not a fix.** It reduces the probability of a race without removing it, which is the definition
+**Why B is not a fix.** It reduces the probability of a race without removing it, which is the definition
 of a latent bug.
 
 </details>
@@ -265,15 +265,15 @@ of a latent bug.
 
 What does build metadata after `+` affect?
 
-- A. Nothing — it does not affect version precedence
-- B. The major version
-- C. Pre-release ordering
-- D. Package visibility
+- A. It bumps the major version component
+- B. Nothing — it does not affect precedence
+- C. It changes the pre-release ordering
+- D. It sets the package's visibility level
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: B
 
 **In `challenge-14.md`:** lines **53–57**.
 
@@ -301,15 +301,15 @@ about.
 
 Which npm command produces `2.1.0-beta.0` from `2.0.0`?
 
-- A. `npm version preminor --preid=beta`
-- B. `npm version prerelease`
-- C. `npm version minor`
-- D. `npm version prepatch`
+- A. `npm version prerelease --preid=beta`
+- B. `npm version minor --preid=beta`
+- C. `npm version prepatch --preid=beta`
+- D. `npm version preminor --preid=beta`
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: D
 
 **In `challenge-14.md`:** lines **82–86**.
 
@@ -336,15 +336,15 @@ npm version prerelease
 
 How do you override a NuGet package version at build time?
 
-- A. `dotnet pack --configuration Release /p:Version=1.2.0-beta.1`
-- B. Editing `.csproj` before every build
-- C. `dotnet nuget push --version`
+- A. Editing the `.csproj` before every build
+- B. `dotnet nuget push --version` at publish time
+- C. `dotnet pack /p:Version=1.2.0-beta.1`
 - D. An environment variable named `VERSION`
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: C
 
 **In `challenge-14.md`:** line **109**.
 
@@ -358,7 +358,7 @@ touching it.
 **Which is what makes CI versioning possible.** The `.csproj` holds a sensible default for a local build;
 the pipeline supplies the computed version at pack time — the same value GitVersion produces at line 255.
 
-**Why B is what teams do first and why it fails.** Editing the file in CI means committing it, which
+**Why A is what teams do first and why it fails.** Editing the file in CI means committing it, which
 means a commit per build, which triggers the build again.
 
 </details>
@@ -369,15 +369,15 @@ means a commit per build, which triggers the build again.
 
 What does `versioningScheme: byEnvVar` do in the `DotNetCoreCLI@2` pack task?
 
-- A. Takes the package version from the named environment variable
-- B. Uses the build number
-- C. Uses the date
-- D. Increments automatically
+- A. It uses the pipeline's build number as the version
+- B. It reads the version from the named variable
+- C. It uses the current date as the version
+- D. It increments the version automatically each run
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: B
 
 **In `challenge-14.md`:** lines **281–282**.
 
@@ -441,15 +441,15 @@ expanded (Challenge 22).
 
 What does `##vso[build.updatebuildnumber]` do?
 
-- A. Renames the pipeline run to the calculated version
-- B. Sets the package version
-- C. Increments the build counter
-- D. Creates a tag
+- A. It sets the package version for the pack task
+- B. It increments the pipeline's build counter
+- C. It renames the pipeline run to the version
+- D. It creates a git tag carrying the version
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: C
 
 **In `challenge-14.md`:** line **307**.
 
@@ -472,15 +472,15 @@ called** in the UI; the second sets a **variable** later steps consume.
 
 What does GitVersion's `mode: ContinuousDeployment` provide?
 
-- A. A unique version per commit, by appending the commit count since the last tag
-- B. Deployment automation
-- C. Automatic tagging
-- D. Continuous integration triggers
+- A. Deployment automation to each environment
+- B. Automatic tagging of every commit on `main`
+- C. Continuous integration triggers on push
+- D. A unique version per commit via commit count
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: D
 
 **In `challenge-14.md`:** lines **203** and **425–431**.
 
@@ -501,15 +501,15 @@ means any commit can be published and deployed without a human choosing a number
 
 Why does the GitVersion workflow use `fetch-depth: 0`?
 
-- A. GitVersion reads the full history and tags to compute the version
-- B. To fetch submodules
-- C. To speed up checkout
-- D. To include all branches for merging
+- A. To fetch submodules alongside the checkout
+- B. GitVersion reads full history and tags to compute
+- C. To speed up the checkout on a large repository
+- D. To include every branch for merge detection
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: B
 
 **In `challenge-14.md`:** lines **235–237**.
 
@@ -569,15 +569,15 @@ metadata — which is how two artifacts of the same build end up labelled differ
 
 Which artifact versioning strategy gives the best **traceability** to source?
 
-- A. `$(Build.BuildId)-<short sha>` as the image tag
-- B. `latest`
-- C. The date only
-- D. A random GUID
+- A. The `latest` tag, updated on every push
+- B. The build date alone as the image tag
+- C. A random GUID generated for each build
+- D. `$(Build.BuildId)-<sha>` as the image tag
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: D
 
 **In `challenge-14.md`:** lines **340–343**.
 
@@ -589,7 +589,7 @@ Which artifact versioning strategy gives the best **traceability** to source?
 **Two identifiers, two questions answered.** The build ID finds the pipeline run — logs, artifacts,
 approvals. The SHA finds the source — the commit, the PR, the work item (Challenge 03's chain).
 
-**Why B is the tag that makes rollback impossible.** `latest` is a moving pointer; "redeploy what we had
+**Why A is the tag that makes rollback impossible.** `latest` is a moving pointer; "redeploy what we had
 yesterday" has no answer if that is all you tagged.
 
 **And note strategy 1 at line 331 pushes *both***: the SemVer tag **and** `latest`. Immutable for
@@ -608,23 +608,23 @@ rollback, mutable for convenience.
 Which **three** describe SemVer components? (Choose three.)
 
 - A. MAJOR increments for incompatible API changes
-- B. MINOR increments for backward-compatible new functionality
-- C. PATCH increments for backward-compatible bug fixes
-- D. MAJOR increments monthly
-- E. PATCH increments per build
-- F. MINOR encodes the release date
+- B. MAJOR increments on a fixed monthly schedule
+- C. MINOR increments for backward-compatible features
+- D. PATCH increments once for every build run
+- E. PATCH increments for backward-compatible bug fixes
+- F. MINOR encodes the month of the release date
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A, B, C
+### Answer: A, C, E
 
 **In `challenge-14.md`:** lines **35–37**.
 
 **Every component describes **compatibility**, not time and not effort.** A one-line change that breaks an
 API is a MAJOR; a two-month feature that breaks nothing is a MINOR.
 
-**Why D, E and F are CalVer and build-number thinking** grafted onto SemVer — and they are how the
+**Why B, D and F are CalVer and build-number thinking** grafted onto SemVer — and they are how the
 scenario's teams ended up with `20240115` and random build numbers (line 21).
 
 </details>
@@ -635,24 +635,24 @@ scenario's teams ended up with `20240115` and random build numbers (line 21).
 
 Which **three** are true of pre-release versions? (Choose three.)
 
-- A. They are appended after a hyphen
-- B. `alpha < beta < rc` in precedence
-- C. A release outranks any pre-release of the same version
-- D. They sort above the release
-- E. They are ignored by package managers
-- F. They cannot be published
+- A. They sort above the corresponding release
+- B. They are appended after a hyphen separator
+- C. They are ignored by package managers
+- D. `alpha < beta < rc` in precedence order
+- E. They cannot be published to a registry
+- F. A release outranks any pre-release of it
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A, B, C
+### Answer: B, D, F
 
 **In `challenge-14.md`:** lines **41–49**.
 
-**D is the exact inversion of C**, and it is the option that catches people who reason "release candidate
+**A is the exact inversion of F**, and it is the option that catches people who reason "release candidate
 sounds later than release".
 
-**Why E overstates a real behaviour.** Package managers do not **ignore** pre-releases — they do not
+**Why C overstates a real behaviour.** Package managers do not **ignore** pre-releases — they do not
 **select** them by default for a range like `^1.0.0`. Ask for `1.0.0-rc.1` explicitly and you get it.
 
 </details>
@@ -663,21 +663,21 @@ sounds later than release".
 
 Which **three** situations suit CalVer? (Choose three.)
 
-- A. Applications where API compatibility is not the primary concern
-- B. Products on a time-based release train
-- C. Internal services where deployment timing matters most
-- D. A shared library consumed by 15 services
-- E. An SDK with a public API
+- A. Applications where API compatibility is secondary
+- B. A shared library consumed by fifteen services
+- C. Products released on a time-based release train
+- D. An SDK with a public, documented API surface
+- E. Internal services where deploy timing matters most
 - F. A package with automated dependency updates
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A, B, C
+### Answer: A, C, E
 
 **In `challenge-14.md`:** lines **122–125**.
 
-**D, E and F are all the same case: something with consumers who must reason about upgrade risk.**
+**B, D and F are all the same case: something with consumers who must reason about upgrade risk.**
 
 **F is the sharpest of the three.** Automated dependency updates — Dependabot's `semver-major`,
 `semver-minor`, `semver-patch` classification (Challenge 44) — **require** SemVer. A CalVer package
@@ -694,23 +694,23 @@ policies."*
 
 Which **two** produce a unique version per pipeline run without a race? (Choose two.)
 
-- A. Azure Pipelines `counter()`
-- B. GitVersion in `ContinuousDeployment` mode
-- C. Reading the latest git tag and adding one
-- D. A hard-coded version in `package.json`
-- E. The current date
+- A. Reading the latest git tag and adding one
+- B. Azure Pipelines `counter()` expression
+- C. A hard-coded version in `package.json`
+- D. GitVersion in `ContinuousDeployment` mode
+- E. The current calendar date as the version
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A, B
+### Answer: B, D
 
 **In `challenge-14.md`:** lines **382–389** and **423–433**.
 
 **Two different mechanisms, same guarantee.** The counter is **atomic server-side state**; GitVersion is
 **derived from the commit**, which is unique by construction.
 
-**Why C is the Break scenario itself** (Q5), and **why E fails on the same day** — two runs on 15 June
+**Why A is the Break scenario itself** (Q5), and **why E fails on the same day** — two runs on 15 June
 both compute `2024.06.15`, which is why line 132 appends the run number.
 
 </details>
@@ -721,20 +721,20 @@ both compute `2024.06.15`, which is why line 132 appends the run number.
 
 Which **two** are true of build metadata? (Choose two.)
 
-- A. It follows a `+` sign
-- B. It does not affect precedence
-- C. It replaces the pre-release identifier
-- D. It increments the patch
-- E. It is required by SemVer
+- A. It replaces the pre-release identifier
+- B. It increments the patch component
+- C. It follows a `+` sign in the version
+- D. It is required by the SemVer specification
+- E. It does not affect version precedence
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A, B
+### Answer: C, E
 
 **In `challenge-14.md`:** lines **53–57**.
 
-**Why C is refuted by the second example on line 57**: `1.0.0-beta.1+build.42` carries both, and they are
+**Why A is refuted by the second example on line 57**: `1.0.0-beta.1+build.42` carries both, and they are
 independent — the pre-release sets precedence, the metadata carries traceability.
 
 **And the practical use is at line 359**: `1.2.0+build.42.sha.a1b2c3d` identifies exactly which run and
@@ -749,15 +749,15 @@ which commit produced an artifact, while remaining **version 1.2.0** to every re
 Which **two** does the Azure Pipelines version block compose? (Choose two.)
 
 - A. `patchVersion` from an atomic `counter()`
-- B. `packageVersion` from major, minor and patch
-- C. The image tag
-- D. The build number
-- E. The artifact path
+- B. The container image tag for the registry
+- C. The pipeline's own run build number
+- D. `packageVersion` from major, minor and patch
+- E. The published artifact's storage path
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A, B
+### Answer: A, D
 
 **In `challenge-14.md`:** lines **267–270**.
 
@@ -781,16 +781,16 @@ noticing. **Bump the minor and the counter resets**, because it is now keyed on 
 
 Which **two** artifact tagging practices does the challenge recommend together? (Choose two.)
 
-- A. An immutable SemVer tag
-- B. A mutable `latest` tag alongside it
-- C. Only `latest`
-- D. A random GUID per build
+- A. Only a `latest` tag on every push
+- B. An immutable SemVer tag on the image
+- C. A random GUID generated for every build
+- D. A mutable `latest` tag alongside it
 - E. Overwriting the SemVer tag on rebuild
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A, B
+### Answer: B, D
 
 **In `challenge-14.md`:** lines **330–333**.
 
@@ -1224,9 +1224,9 @@ npm version [BLANK 2]      # backward-compatible new feature
 npm version [BLANK 3]      # breaking change
 ```
 
-- **BLANK 1:** `patch` / `minor` / `major` / `prerelease`
-- **BLANK 2:** `minor` / `patch` / `preminor` / `major`
-- **BLANK 3:** `major` / `premajor` / `minor` / `breaking`
+- **BLANK 1:** `minor` / `major` / `patch` / `prerelease`
+- **BLANK 2:** `patch` / `minor` / `preminor` / `major`
+- **BLANK 3:** `premajor` / `minor` / `breaking` / `major`
 
 <details>
 <summary>Show answer</summary>
@@ -1255,8 +1255,8 @@ variables:
   packageVersion: $(majorVersion).$(minorVersion).$([BLANK 2])
 ```
 
-- **BLANK 1:** `counter` / `increment` / `buildId` / `rev`
-- **BLANK 2:** `patchVersion` / `counter` / `Build.BuildId` / `Rev:r`
+- **BLANK 1:** `increment` / `buildId` / `counter` / `rev`
+- **BLANK 2:** `counter` / `patchVersion` / `Build.BuildId` / `Rev:r`
 
 <details>
 <summary>Show answer</summary>
@@ -1284,8 +1284,8 @@ automatically.
     versionSuffix: '[BLANK 2]'
 ```
 
-- **BLANK 1:** `` (empty) / `-release` / `-main` / `-stable`
-- **BLANK 2:** `-rc.$(Build.BuildId)` / `-alpha.$(Build.BuildId)` / `-beta` / `` (empty)
+- **BLANK 1:** `-release` / `-main` / `` (empty) / `-stable`
+- **BLANK 2:** `-alpha.$(Build.BuildId)` / `-rc.$(Build.BuildId)` / `-beta` / `` (empty)
 
 <details>
 <summary>Show answer</summary>
@@ -1319,10 +1319,10 @@ branches:
     increment: [BLANK 4]
 ```
 
-- **BLANK 1:** `ContinuousDeployment` / `ContinuousDelivery` / `Mainline` / `Automatic`
-- **BLANK 2:** `Patch` / `Minor` / `Major` / `None`
-- **BLANK 3:** `alpha` / `beta` / `rc` / `dev`
-- **BLANK 4:** `None` / `Patch` / `Minor` / `Major`
+- **BLANK 1:** `ContinuousDelivery` / `Mainline` / `ContinuousDeployment` / `Automatic`
+- **BLANK 2:** `Minor` / `Patch` / `Major` / `None`
+- **BLANK 3:** `beta` / `rc` / `dev` / `alpha`
+- **BLANK 4:** `Patch` / `Minor` / `None` / `Major`
 
 <details>
 <summary>Show answer</summary>
@@ -1349,9 +1349,9 @@ IMAGE_TAG="$(Build.BuildId)-${SHORT_SHA}"
 echo "##vso[[BLANK 2]]$IMAGE_TAG"
 ```
 
-- **BLANK 1:** `7` / `8` / `40` / `12`
-- **BLANK 2:** `task.setvariable variable=imageTag` / `build.updatebuildnumber` /
-  `task.logissue type=warning` / `artifact.upload`
+- **BLANK 1:** `8` / `7` / `40` / `12`
+- **BLANK 2:** `build.updatebuildnumber` / `task.logissue type=warning` /
+  `task.setvariable variable=imageTag` / `artifact.upload`
 
 <details>
 <summary>Show answer</summary>
@@ -1377,7 +1377,7 @@ VERSION="1.2.0[BLANK 1]build.${GITHUB_RUN_NUMBER}.sha.${GITHUB_SHA:0:7}"
 # Output: 1.2.0+build.42.sha.a1b2c3d
 ```
 
-- **BLANK 1:** `+` / `-` / `.` / `_`
+- **BLANK 1:** `-` / `.` / `+` / `_`
 
 <details>
 <summary>Show answer</summary>
@@ -1433,26 +1433,25 @@ when incompatible libraries share a major version, **no automated dependency upd
 
 Which scheme should the four shared libraries use, and why?
 
-- A. SemVer — MAJOR, MINOR and PATCH tell a consumer whether an upgrade is safe, and let update tooling
-  classify it
-- B. CalVer — it is simpler and needs no judgement
-- C. Build numbers — they are always unique
-- D. The commit SHA — it is exact
+- A. CalVer — it is simpler and needs no engineering judgement
+- B. Build numbers — they are always unique
+- C. SemVer — it tells consumers whether an upgrade is safe
+- D. The commit SHA — it is exact and unambiguous
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: C
 
 **In `challenge-14.md`:** lines **34–37** and **25**.
 
 **Two of the three library requirements are the same requirement stated twice** — a human reading the
 version and a bot reading it both need the compatibility signal, and only SemVer carries one.
 
-**Why B is genuinely simpler and fails both.** "Needs no judgement" is the appeal and also the defect: the
+**Why A is genuinely simpler and fails both.** "Needs no judgement" is the appeal and also the defect: the
 judgement — *is this breaking?* — is the information consumers need.
 
-**Why C and D identify a build uniquely and communicate nothing.** Uniqueness is necessary; it is not
+**Why B and D identify a build uniquely and communicate nothing.** Uniqueness is necessary; it is not
 sufficient.
 
 </details>
@@ -1463,15 +1462,15 @@ sufficient.
 
 Which scheme should the deployed applications use?
 
-- A. CalVer, with a run number appended so two builds on the same day differ
-- B. CalVer alone
-- C. SemVer
-- D. `latest`
+- A. CalVer alone, with the date as the whole version
+- B. CalVer with a run number appended for same-day runs
+- C. SemVer, so that consumers can classify upgrades
+- D. `latest`, updated on every successful deploy
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: B
 
 **In `challenge-14.md`:** lines **122–125** and **130–132**.
 
@@ -1484,7 +1483,7 @@ VERSION="${CALVER}.${BUILD_NUMBER}"
 **Both application requirements are in the answer**: the date communicates *when*, and the run number
 satisfies *two runs on the same day must differ*.
 
-**Why B fails the second requirement** — and it fails it on exactly the busy days when it matters.
+**Why A fails the second requirement** — and it fails it on exactly the busy days when it matters.
 
 **And note the `:-0` default** on line 131: outside CI, `GITHUB_RUN_NUMBER` is unset, so the script
 produces a valid version locally rather than a malformed one.
@@ -1497,10 +1496,10 @@ produces a valid version locally rather than a malformed one.
 
 How is "concurrent runs must never compute the same version" satisfied?
 
-- A. An atomic `counter()` in Azure Pipelines, or GitVersion `ContinuousDeployment` in GitHub Actions
-- B. Reading the newest tag and adding one
-- C. Publishing sequentially
-- D. Retrying on 403
+- A. An atomic `counter()` or GitVersion per commit
+- B. Reading the newest tag and adding one to it
+- C. Publishing packages strictly sequentially
+- D. Retrying the publish whenever it returns 403
 
 <details>
 <summary>Show answer</summary>
@@ -1527,19 +1526,19 @@ manually.
 Which **two** make an image traceable and rollback-able? (Choose two.)
 
 - A. A tag combining the build ID and the short SHA
-- B. An immutable SemVer or CalVer tag pushed alongside `latest`
-- C. `latest` only
-- D. A random GUID
+- B. A `latest` tag only, with no other tag
+- C. A random GUID applied as the only image tag
+- D. An immutable SemVer or CalVer tag alongside `latest`
 - E. Retagging the version onto each rebuild
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A, B
+### Answer: A, D
 
 **In `challenge-14.md`:** lines **330–333** and **340–342**.
 
-**A answers *where did this come from*; B answers *what do I redeploy*.** Both requirements are on the
+**A answers *where did this come from*; D answers *what do I redeploy*.** Both requirements are on the
 list and neither tag serves both purposes.
 
 **Why E is the practice that quietly destroys rollback** (Q23). If `1.2.0` can be retagged, "redeploy
@@ -1553,15 +1552,15 @@ list and neither tag serves both purposes.
 
 How is "a published version must always refer to the same artifact" enforced?
 
-- A. Registry immutability — a version cannot be republished; ship a new version instead
-- B. A code review rule
-- C. Deleting and republishing carefully
-- D. A naming convention
+- A. A code review rule against republishing
+- B. Deleting and carefully republishing the version
+- C. A naming convention marking published versions
+- D. Registry immutability — ship a new version instead
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: D
 
 **In `challenge-14.md`:** line **372**.
 
@@ -1572,7 +1571,7 @@ npm ERR! You cannot publish over the previously published versions: 1.3.0
 **The registry enforces it, which is why it holds under pressure.** A convention would last until the
 first urgent defect (Q26).
 
-**Why C is the workaround that breaks consumers.** Even where a registry permits unpublishing, a consumer
+**Why B is the workaround that breaks consumers.** Even where a registry permits unpublishing, a consumer
 whose lockfile pins `1.3.0` now has a hash that matches nothing — their reproducible build stops
 reproducing.
 
@@ -1591,18 +1590,17 @@ differs each time. Consumers pinned to `^2.0.0` stopped receiving updates. The p
 run, GitVersion is configured correctly, and CI checkout settings were recently standardised across all
 repositories.
 
-What happened, and what is the fix?
+What is the most likely cause?
 
-- A. The standardisation applied a shallow checkout, so GitVersion sees no tags and versions from zero —
-  restore `fetch-depth: 0`
-- B. The `GitVersion.yml` was deleted
-- C. The registry rejected the 2.x versions
-- D. Consumers changed their ranges
+- A. The `GitVersion.yml` was deleted from the repository
+- B. Standardisation applied a shallow checkout, so no tags
+- C. The registry rejected the 2.x versions as duplicates
+- D. Consumers changed their declared version ranges
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: B
 
 **In `challenge-14.md`:** lines **235–237**.
 
@@ -1636,16 +1634,12 @@ the history**, and the failure is almost always green.
 A year on, any deployed artifact can be traced to a commit and a run, consumers upgrade libraries with
 confidence, and Dependabot opens classified update pull requests automatically.
 
-Explain what each choice contributed, and what actually changed.
+Which explanation best accounts for the change?
 
-- A. SemVer on libraries gave consumers and tooling a compatibility signal; CalVer plus a run number gave
-  applications a meaningful, unique release identifier; atomic counters and commit-derived versions
-  removed the concurrency race; immutable published versions made rollback and audit trustworthy; and
-  build-ID-plus-SHA tags linked every artifact to its source — the version stopped being a number someone
-  chose and became a **fact derived from the change**
-- B. Teams agreed to be more consistent
+- A. The version became a fact derived from the change
+- B. Teams agreed to be more consistent about versioning
 - C. A versioning policy document was published
-- D. Releases were made less frequent
+- D. Releases were made less frequent across the board
 
 <details>
 <summary>Show answer</summary>
