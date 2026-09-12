@@ -54,14 +54,14 @@ The `deploy-production` job must wait for two named reviewers. Which part of the
 happen?
 
 - A. The `needs:` list naming the three upstream jobs
-- B. `environment: name: production`, combined with required reviewers configured **on that environment**
-- C. The `if:` condition restricting the job to pushes on `main`
-- D. The `uses: ./.github/actions/quality-gate` step
+- B. The `if:` condition restricting the job to pushes on `main`
+- C. The `uses: ./.github/actions/quality-gate` step
+- D. `environment: name: production`, with reviewers set on it
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: B
+### Answer: D
 
 **In `challenge-17.md`:** lines **293–295**, and the environment configuration at lines **44–48**.
 
@@ -81,10 +81,10 @@ a reviewer team that no longer exists — is invisible to anyone reading `qualit
 **Why A is a different constraint.** `needs:` sequences jobs. It says "these must succeed first", and it
 says nothing about humans. **Both must be satisfied** (line 606), which is the point of Q18.
 
-**Why C narrows *when* the job is considered at all** — pushes to `main` only — but a job that is
+**Why B narrows *when* the job is considered at all** — pushes to `main` only — but a job that is
 considered still has to clear the environment.
 
-**Why D runs *inside* the job**, so it can only be reached after every gate above has already let the job
+**Why C runs *inside* the job**, so it can only be reached after every gate above has already let the job
 start.
 
 </details>
@@ -95,15 +95,15 @@ start.
 
 In the environment creation call, what does `wait_timer=5` do?
 
-- A. The job fails if nobody approves within 5 minutes
-- B. The job is held for 5 minutes after all other protection rules are satisfied
-- C. The gate is re-evaluated every 5 minutes
-- D. Reviewers are reminded every 5 minutes
+- A. The job is held 5 minutes once other rules pass
+- B. The job fails if nobody approves within 5 minutes
+- C. The gate re-evaluates every 5 minutes
+- D. Reviewers receive a reminder every 5 minutes
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: B
+### Answer: A
 
 **In `challenge-17.md`:** line **46**.
 
@@ -121,7 +121,7 @@ eligible and the moment it actually runs. It exists so somebody has a window to 
 (line 471) is the re-evaluation interval for a **gate**. A GitHub wait timer waits **once**; an Azure
 gate asks **repeatedly**. Confusing the two is the trap in Q28.
 
-**Why A inverts it.** Nothing times out the reviewers here. The environment protection timeout in GitHub
+**Why B inverts it.** Nothing times out the reviewers here. The environment protection timeout in GitHub
 is a separate, much longer window; the wait timer never fails a job.
 
 **And the fix at line 582 sets `wait_timer=0`** — because in the break scenario an excessive timer was
@@ -135,15 +135,15 @@ part of what made the job look permanently stuck (line 551).
 
 Which `--coverageReporters` value makes the `jq '.total.lines.pct'` extraction possible?
 
-- A. `lcov`
-- B. `json-summary`
-- C. `text`
-- D. `cobertura`
+- A. `lcov` for tooling
+- B. `text` for the log
+- C. `json-summary` for `jq`
+- D. `cobertura` for Azure
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: B
+### Answer: C
 
 **In `challenge-17.md`:** lines **82** and **86–89**.
 
@@ -159,7 +159,7 @@ totals file the gate reads. Two reporters are requested precisely because they s
 **Why A is the other one, and it is not parseable this way.** `lcov` produces a per-file trace for
 tooling and the uploaded artifact (lines 91–95); `jq` cannot read it.
 
-**Why C is for humans** — a table printed in the log, gone when the run is deleted.
+**Why B is for humans** — a table printed in the log, gone when the run is deleted.
 
 **Why D is the Azure Pipelines payload.** `PublishCodeCoverageResults@2` at line 399 wants
 `cobertura-coverage.xml`. Right format, wrong platform for this step.
@@ -218,15 +218,15 @@ a scanner's exit code is the only part of it a pipeline can act on.
 
 Why does the dependency audit step end its `npm audit` command with `|| true`?
 
-- A. To ignore vulnerabilities entirely
-- B. So npm's own exit code does not fail the step before the JSON has been parsed and the counts reported
-- C. Because `npm audit` cannot write JSON otherwise
-- D. To retry the audit on failure
+- A. To ignore any vulnerabilities the audit reports
+- B. Because `npm audit` cannot write JSON otherwise
+- C. To retry the audit automatically on failure
+- D. So the script, not npm, decides whether the step fails
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: B
+### Answer: D
 
 **In `challenge-17.md`:** lines **107–116**.
 
@@ -254,7 +254,7 @@ is. Here it is followed **four lines later** by a check that fails harder and sa
 **Read it as a rule: `|| true` is safe only when something after it can still fail.** A `|| true` with no
 subsequent check is how a security scan quietly stops mattering.
 
-**Why C is false** — `--json` writes to stdout regardless of exit code — **and D describes `--retry`**,
+**Why B is false** — `--json` writes to stdout regardless of exit code — **and C describes `--retry`**,
 which is not present.
 
 </details>
@@ -265,15 +265,15 @@ which is not present.
 
 Which permission must the job declare so `github/codeql-action/upload-sarif` succeeds?
 
-- A. `contents: write`
-- B. `security-events: write`
+- A. `security-events: write`
+- B. `contents: write`
 - C. `actions: write`
 - D. `packages: write`
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: B
+### Answer: A
 
 **In `challenge-17.md`:** lines **99–101** and the knowledge check at line **628**.
 
@@ -291,7 +291,7 @@ rather than only in the job log.
 `permissions:` at all **replaces** the default token scopes for that job. Naming only
 `security-events: write` would leave the job unable to check out the repository.
 
-**Why A, C and D are the plausible neighbours.** `contents: write` pushes commits and creates releases;
+**Why B, C and D are the plausible neighbours.** `contents: write` pushes commits and creates releases;
 `actions: write` manipulates workflow runs and caches; `packages: write` publishes to GitHub Packages.
 None of them touch code scanning.
 
@@ -306,15 +306,15 @@ the *upload*, not to the scanner.
 
 Why does the SARIF upload step carry `if: always()`?
 
-- A. To upload even when the scan step failed the job — which is exactly when there are findings
-- B. To make the upload run before the scan
-- C. Because SARIF uploads are slow
-- D. To retry the upload
+- A. To make the upload run before the scan step
+- B. To upload even when the scan failed the job
+- C. Because SARIF uploads are slow to complete
+- D. To retry the upload until it succeeds
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: B
 
 **In `challenge-17.md`:** lines **128–132**, repeated at lines **499–503**.
 
@@ -332,7 +332,7 @@ finding (Q4), so without `always()` the upload is skipped **precisely on the run
 **The result is perverse and very hard to notice**: clean scans populate the Security tab, dirty scans
 leave it empty. The tab looks reassuring because it only ever receives good news.
 
-**Why B misreads `always()` as ordering.** Step order is textual; `if:` only decides whether a step runs.
+**Why A misreads `always()` as ordering.** Step order is textual; `if:` only decides whether a step runs.
 
 **Why C and D are inventions** — `always()` says nothing about duration and performs no retries.
 
@@ -349,14 +349,14 @@ In `.github/actions/quality-gate/action.yml`, which key is mandatory on every `r
 required in a workflow file?
 
 - A. `id:`
-- B. `shell:`
-- C. `working-directory:`
-- D. `continue-on-error:`
+- B. `working-directory:`
+- C. `continue-on-error:`
+- D. `shell:`
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: B
+### Answer: D
 
 **In `challenge-17.md`:** lines **232–238**.
 
@@ -378,7 +378,7 @@ to load with a validation error — before a single line of the script runs.
 224–230 refers to `steps.evaluate.outputs.*`. Drop the id and the outputs break; drop `shell:` and the
 whole action breaks.
 
-**Why C and D are ordinary optional keys** on any step, composite or not.
+**Why B and C are ordinary optional keys** on any step, composite or not.
 
 **Memorise the trio that identifies a composite action**: `runs.using: 'composite'`, `runs.steps`, and
 `shell:` on every `run`.
@@ -398,15 +398,15 @@ outputs:
     value: ${{ steps.evaluate.outputs.passed }}
 ```
 
-- A. It sets an environment variable for later jobs
-- B. It exposes a step's output as an output of the action, so the calling workflow can read it
+- A. It exposes a step output as the action's output
+- B. It sets an environment variable for later jobs
 - C. It fails the action if the value is false
 - D. It writes the value to the job summary
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: B
+### Answer: A
 
 **In `challenge-17.md`:** lines **224–230**.
 
@@ -417,7 +417,7 @@ outputs:
 **Why C is the tempting answer, and it is a different mechanism entirely.** Nothing in the `outputs:`
 block can fail anything. The failure comes from `exit 1` at line 280 — see Q10.
 
-**Why A confuses outputs with `GITHUB_ENV`.** Outputs are per-step values passed by reference; env vars
+**Why B confuses outputs with `GITHUB_ENV`.** Outputs are per-step values passed by reference; env vars
 are process variables. Outputs cross job boundaries when a job declares them (line 65); env vars do not.
 
 **Why D describes `$GITHUB_STEP_SUMMARY`**, which this challenge does not use.
@@ -434,9 +434,9 @@ relies on it failing. That is worth seeing: **the outputs are documentation; the
 Coverage comes back at 62% against a threshold of 80. What stops the deployment?
 
 - A. The `outputs.gate-passed` value being `false`
-- B. `exit 1` at the end of the composite action's script
-- C. The environment's required reviewers
-- D. The `needs:` list
+- B. `exit 1` at the end of the action's script
+- C. The environment's required reviewers holding it
+- D. The `needs:` list of upstream jobs failing
 
 <details>
 <summary>Show answer</summary>
@@ -475,15 +475,15 @@ The deploy job passes `security-scan-passed: ${{ needs['security-scan'].result =
 job's `needs:` list and no `if: always()`, what will this expression always evaluate to when the step
 runs?
 
-- A. `false` when any test fails
-- B. `true` — because a failed dependency skips the job entirely, so the step never runs otherwise
-- C. It depends on the environment approval
-- D. `null` until the scan completes
+- A. `false` when any upstream test fails
+- B. It depends on the environment approval
+- C. `null` until the security scan completes
+- D. `true` — a failed dependency skips the job
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: B
+### Answer: D
 
 **In `challenge-17.md`:** lines **291** and **312**.
 
@@ -502,7 +502,7 @@ not a live decision.
 must then inspect `needs.*.result` for `'success'`, `'failure'`, `'cancelled'` or `'skipped'` itself.
 
 **Why A inverts the logic** — a failing test skips the deploy job rather than passing `false` into it —
-**and why D invents a state.** Contexts are resolved when the step is evaluated, not left pending.
+**and why C invents a state.** Contexts are resolved when the step is evaluated, not left pending.
 
 </details>
 
@@ -512,15 +512,15 @@ must then inspect `needs.*.result` for `'success'`, `'failure'`, `'cancelled'` o
 
 In Azure Pipelines, what happens when a pre-deployment gate evaluation returns a negative result?
 
-- A. The deployment is cancelled immediately
-- B. The gate is re-evaluated at the configured interval until it passes or the timeout is reached
-- C. The pipeline fails and must be manually restarted
+- A. The gate polls at the interval until it passes or times out
+- B. The deployment is cancelled immediately with an error
+- C. The pipeline fails and must be restarted by hand
 - D. The result is logged and the deployment proceeds
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: B
+### Answer: A
 
 **In `challenge-17.md`:** lines **468–475**, and the knowledge check at line **617**.
 
@@ -559,14 +559,14 @@ The Azure Pipelines health gate uses `successCriteria: "eq(root['status'], 'heal
 returns `{"status": "ok"}`. What is the observable behaviour?
 
 - A. The gate fails immediately with a clear error
-- B. The gate re-evaluates every five minutes and never passes, blocking the deployment until timeout
-- C. The gate is skipped because the criteria do not match
-- D. The deployment proceeds with a warning
+- B. The gate is skipped because the criteria do not match
+- C. The gate polls every five minutes and never passes
+- D. The deployment proceeds with a warning logged
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: B
+### Answer: C
 
 **In `challenge-17.md`:** lines **465** and **545–547**.
 
@@ -587,7 +587,7 @@ is "in progress", which is the same thing the UI shows during a legitimate wait.
 **And line 575 states the discipline directly:** always verify gate criteria against the **actual**
 endpoint response before enabling the gate. Call the endpoint, read the JSON, then write the expression.
 
-**Why A is what everyone expects and none of them get**, and why C and D describe systems that fail open.
+**Why A is what everyone expects and none of them get**, and why B and D describe systems that fail open.
 A gate that fails open would not be a gate.
 
 </details>
@@ -599,16 +599,15 @@ A gate that fails open would not be a gate.
 The `deploy-production` job never starts. Everything else is green and two reviewers have approved. What
 is Issue 1?
 
-- A. The environment does not exist
-- B. `deploy-production` is listed as a required status check on `main`, but it only runs after a merge to
-  `main` — so the PR waits for a check that cannot run until it merges
-- C. The `needs:` list is circular
-- D. The runner has no capacity
+- A. The `production` environment does not exist yet
+- B. The `needs:` list contains a circular reference
+- C. The runner pool has no available capacity for it
+- D. The job is a required check but only runs post-merge
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: B
+### Answer: D
 
 **In `challenge-17.md`:** lines **541–543**, and the knowledge check at line **639**.
 
@@ -626,7 +625,7 @@ gh api repos/contoso-ltd/ecommerce-api/branches/main/protection \
   --field required_pull_request_reviews='{"required_approving_review_count":2}'
 ```
 
-**Why C is the right instinct pointed at the wrong object.** The `needs:` graph is a clean chain; the
+**Why B is the right instinct pointed at the wrong object.** The `needs:` graph is a clean chain; the
 cycle is between **branch protection** and **trigger conditions**, which live in different systems and
 are never displayed together.
 
@@ -641,15 +640,15 @@ request.** Anything gated on `push` to the protected branch can never satisfy it
 
 Which Azure Pipelines task runs Microsoft Defender for DevOps scanning?
 
-- A. `MicrosoftSecurityDevOps@1`
-- B. `PublishCodeCoverageResults@2`
+- A. `PublishCodeCoverageResults@2`
+- B. `MicrosoftSecurityDevOps@1`
 - C. `SecurityScan@2`
 - D. `AzureSecurityCenter@1`
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: B
 
 **In `challenge-17.md`:** lines **409–412**.
 
@@ -670,7 +669,7 @@ harness that runs several analysers; **categories choose which ones**.
 **Why C and D do not exist as task names.** Both sound right, which is the point — the exam manufactures
 plausible task identifiers, and the defence is having read the real one.
 
-**Why B is a real task doing something unrelated** — publishing a cobertura report, line 399.
+**Why A is a real task doing something unrelated** — publishing a cobertura report, line 399.
 
 </details>
 
@@ -681,15 +680,15 @@ plausible task identifiers, and the defence is having read the real one.
 Contoso's third requirement is that **at least two team members approve** the change. Where is that
 enforced?
 
-- A. Only in branch protection, via `required_approving_review_count`
-- B. Only on the environment, via required reviewers
-- C. In both places — they are different approvals at different moments, and the challenge configures both
-- D. In the composite quality-gate action
+- A. In both places — different approvals, different moments
+- B. Only in branch protection's review count
+- C. Only on the environment, via its required reviewers
+- D. In the composite quality-gate action's script
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: C
+### Answer: A
 
 **In `challenge-17.md`:** line **47** (environment reviewers), line **564**
 (`required_pull_request_reviews`), and lines **437** (two reviewers from `release-approvers`).
@@ -725,17 +724,17 @@ are branch protection; approvals on *deployments* are environments.
 
 Which **three** jobs must succeed before `deploy-production` is eligible to run? (Choose three.)
 
-- A. `test-and-coverage`
-- B. `security-scan`
-- C. `performance-baseline`
-- D. `defender-scan`
-- E. `report-results`
-- F. `BuildAndTest`
+- A. `defender-scan`
+- B. `test-and-coverage`
+- C. `report-results`
+- D. `security-scan`
+- E. `BuildAndTest`
+- F. `performance-baseline`
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A, B, C
+### Answer: B, D, F
 
 **In `challenge-17.md`:** line **291**.
 
@@ -746,12 +745,12 @@ Which **three** jobs must succeed before `deploy-production` is eligible to run?
 **Read the `needs:` list, not the requirement list.** Contoso mandates five conditions (lines 26–30), but
 only three jobs are wired as dependencies.
 
-**Why D is the interesting omission.** `defender-scan` is added in Task 6 (line 483) and satisfies
+**Why A is the interesting omission.** `defender-scan` is added in Task 6 (line 483) and satisfies
 requirement 5 — yet it is **not** in `needs:`. As written, a critical Defender finding fails its own job
 and the deployment proceeds anyway. That is a genuine defect in the challenge's workflow and a
 first-class exam scenario: **a gate nobody depends on is not a gate.**
 
-**Why F is the Azure Pipelines job** (line 381), a different file entirely.
+**Why E is the Azure Pipelines job** (line 381), a different file entirely.
 
 </details>
 
@@ -762,17 +761,17 @@ first-class exam scenario: **a gate nobody depends on is not a gate.**
 `deploy-production` starts only when several independent conditions all hold. Which **three** are they?
 (Choose three.)
 
-- A. Every job in `needs:` completed successfully
-- B. The `if:` expression is true — a push, on `refs/heads/main`
-- C. The `production` environment's protection rules are satisfied
-- D. The composite quality-gate action returned `gate-passed: true`
-- E. Coverage was published to the Azure DevOps Tests tab
-- F. The SARIF upload succeeded
+- A. Every job in `needs:` completed successfully first
+- B. The composite action returned `gate-passed: true`
+- C. The `if:` expression is true — a push on `refs/heads/main`
+- D. Coverage was published to the Azure DevOps Tests tab
+- E. The `production` environment's rules are satisfied
+- F. The SARIF upload step succeeded
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A, B, C
+### Answer: A, C, E
 
 **In `challenge-17.md`:** lines **291–295**, and the knowledge check at line **606**.
 
@@ -787,10 +786,10 @@ first-class exam scenario: **a gate nobody depends on is not a gate.**
 `needs:` is the dependency graph, `if:` is the trigger filter, and the environment adds approvals, wait
 timers and branch policy from outside the file.
 
-**Why D is after the fact.** The composite action runs at line 307 — **inside** the job. It can stop a
+**Why B is after the fact.** The composite action runs at line 307 — **inside** the job. It can stop a
 deployment, but it cannot stop a job from starting.
 
-**Why E belongs to the other platform**, and **why F is a reporting step** whose success or failure
+**Why D belongs to the other platform**, and **why F is a reporting step** whose success or failure
 concerns the Security tab, not the deployment.
 
 **The exam phrases this as "what must be satisfied".** The answer is never one mechanism. It is the
@@ -804,27 +803,27 @@ dependency graph *and* the condition *and* the environment.
 
 Which **two** mechanisms inside `security-scan` can actually fail the job? (Choose two.)
 
-- A. The explicit `exit 1` after counting critical and high vulnerabilities
-- B. Trivy's `exit-code: '1'`
-- C. `format: 'sarif'`
-- D. The `upload-sarif` step
+- A. `format: 'sarif'` on the Trivy step
+- B. The explicit `exit 1` after counting vulnerabilities
+- C. The `upload-sarif` step with `if: always()`
+- D. Trivy's `exit-code: '1'` input
 - E. `permissions: security-events: write`
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A, B
+### Answer: B, D
 
 **In `challenge-17.md`:** lines **113–116** and **124**.
 
 **Both produce a non-zero exit, and nothing else in the job does.** Everything else selects, formats or
 publishes.
 
-**Why D looks like a candidate and is not.** It carries `if: always()` (line 130), so it runs after a
+**Why C looks like a candidate and is not.** It carries `if: always()` (line 130), so it runs after a
 failure — but uploading findings does not create one. If Trivy exits 0 with fifty medium findings, they
 land in the Security tab and the job is green.
 
-**Why C and E are prerequisites for D**, not decisions.
+**Why A and E are prerequisites for C**, not decisions.
 
 **The pattern to internalise: two independent scanners, two independent exit codes.** `npm audit` covers
 declared dependencies from the lockfile; Trivy scans the filesystem. They overlap and neither subsumes
@@ -839,16 +838,16 @@ the other, which is why the challenge runs both in one job.
 Which **three** thresholds does `load-tests/gate-check.js` declare? (Choose three.)
 
 - A. `http_req_duration: ['p(95)<200']`
-- B. `http_req_failed: ['rate<0.01']`
-- C. `checks: ['rate>0.99']`
-- D. `vus: 20`
-- E. `duration: '30s'`
+- B. `vus: 20` virtual users
+- C. `http_req_failed: ['rate<0.01']`
+- D. `duration: '30s'` run length
+- E. `checks: ['rate>0.99']`
 - F. `iterations: 1000`
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A, B, C
+### Answer: A, C, E
 
 **In `challenge-17.md`:** lines **335–343**.
 
@@ -864,7 +863,7 @@ export const options = {
 };
 ```
 
-**Thresholds are acceptance criteria; `vus` and `duration` are the load profile.** D and E describe *what
+**Thresholds are acceptance criteria; `vus` and `duration` are the load profile.** B and D describe *what
 traffic is generated* — twenty virtual users for thirty seconds — and neither can fail anything.
 
 **Only the `thresholds` block controls k6's exit code**, and therefore whether the
@@ -887,17 +886,17 @@ tail that users actually complain about. `p(95)<200` says: **nineteen requests i
 The deployment is blocked indefinitely. Which **three** root causes does the solution identify? (Choose
 three.)
 
-- A. A circular dependency between branch protection and the deployment job's trigger
-- B. The Azure Pipelines health gate's success criteria not matching the API's actual response
-- C. An environment reviewer team ID that no longer exists, combined with an excessive wait timer
-- D. Insufficient runner capacity
-- E. A missing `security-events: write` permission
-- F. Coverage below the 80% threshold
+- A. Insufficient runner capacity for the deploy job
+- B. A circular dependency between protection and the trigger
+- C. A missing `security-events: write` permission
+- D. The Azure health gate's criteria not matching the response
+- E. Coverage falling below the 80% threshold
+- F. A vanished reviewer team ID, plus a long wait timer
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A, B, C
+### Answer: B, D, F
 
 **In `challenge-17.md`:** lines **541–551**.
 
@@ -905,11 +904,11 @@ three.)
 diagnosis. It is the state every gate uses while it has not yet said yes, so it covers a deadlock, a
 never-satisfiable criterion and a stale reference equally well.
 
-**Why F contradicts the evidence.** Line 527 records coverage at 85%. Two reviewers approved (line 529),
+**Why E contradicts the evidence.** Line 527 records coverage at 85%. Two reviewers approved (line 529),
 performance passed (line 528), the security scan reported success (line 526) — the observations at lines
 525–531 exist to eliminate exactly these guesses.
 
-**Why E would produce a loud, specific error** — a failed upload step — not silence.
+**Why C would produce a loud, specific error** — a failed upload step — not silence.
 
 **And Issue 3 has a detail worth quoting**: GitHub **silently skips** the review requirement when the
 referenced team is gone (line 551). A protection rule pointing at nothing does not fail closed and does
@@ -924,16 +923,16 @@ not warn. It simply stops protecting.
 After Fix 1, which **three** contexts remain as required status checks on `main`? (Choose three.)
 
 - A. `test-and-coverage`
-- B. `security-scan`
-- C. `performance-baseline`
-- D. `deploy-production`
-- E. `quality-gate`
+- B. `deploy-production`
+- C. `security-scan`
+- D. `quality-gate`
+- E. `performance-baseline`
 - F. `DeployProd`
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A, B, C
+### Answer: A, C, E
 
 **In `challenge-17.md`:** line **562**.
 
@@ -944,14 +943,14 @@ After Fix 1, which **three** contexts remain as required status checks on `main`
 **All three run on `pull_request` events** (lines 56–60), so they can report a status against the PR's
 head commit. That is the qualification — not importance, not severity.
 
-**Why D is precisely what Fix 1 removes**, and re-adding it recreates the deadlock (Q14, Q26).
+**Why B is precisely what Fix 1 removes**, and re-adding it recreates the deadlock (Q14, Q26).
 
 **Note `"strict":true` alongside them.** That is the "require branches to be up to date before merging"
 setting: the PR must be rebased or merged onto the latest `main` before the checks count. It costs a
 re-run on every base update and it is what stops two independently-green PRs from combining into a broken
 `main`.
 
-**Why E is the composite action's directory name**, not a check, and **why F is the Azure Pipelines
+**Why D is the composite action's directory name**, not a check, and **why F is the Azure Pipelines
 deployment job**.
 
 </details>
@@ -963,16 +962,16 @@ deployment job**.
 Besides approvals, which **two** check types does the challenge configure on the Azure DevOps `production`
 environment? (Choose two.)
 
-- A. An Azure Monitor alerts gate
-- B. An Invoke REST API health check gate
-- C. A branch control check
-- D. A business hours check
-- E. An exclusive lock
+- A. A branch control check on the source
+- B. A business hours deployment window check
+- C. An Azure Monitor alerts gate
+- D. An exclusive lock on the environment
+- E. An Invoke REST API health check
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A, B
+### Answer: C, E
 
 **In `challenge-17.md`:** lines **437–439**.
 
@@ -986,7 +985,7 @@ environment? (Choose two.)
 and "is the API healthy?" are questions no CI job can answer, because their answers change minute by
 minute — which is exactly why they are polled rather than evaluated once.
 
-**Why C, D and E are real Azure DevOps checks not used here.** Branch control restricts which branches may
+**Why A, B and D are real Azure DevOps checks not used here.** Branch control restricts which branches may
 deploy — the equivalent of GitHub's `deployment_branch_policy` at line 48. Business hours confines
 deployments to a window. Exclusive lock prevents concurrent runs against the same environment. Knowing
 they exist is useful; the question asks what **this** challenge configures.
@@ -1684,7 +1683,7 @@ they configure?
 - A. `required_pull_request_reviews` with a count of 2
 - B. Required reviewers on the `production` environment
 - C. A `needs:` entry for a manual-approval job
-- D. `enforce_admins=true`
+- D. `enforce_admins=true` on the protected branch
 
 <details>
 <summary>Show answer</summary>
@@ -1716,14 +1715,14 @@ The release manager asks: "Can the pipeline pause a release automatically while 
 resume on its own once the alert clears?" Which platform feature does that?
 
 - A. A GitHub environment wait timer
-- B. An Azure Pipelines Azure Monitor alerts gate
-- C. A required status check
-- D. A branch control check
+- B. A required status check on the branch
+- C. A branch control check on the environment
+- D. An Azure Pipelines Azure Monitor alerts gate
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: B
+### Answer: D
 
 **In `challenge-17.md`:** line **438**, with the polling model at lines **468–474**.
 
@@ -1734,10 +1733,10 @@ human involvement.
 **Why A waits a fixed interval and then proceeds regardless.** A wait timer does not know what production
 is doing.
 
-**Why C is evaluated once per commit.** A status check is a fact about a build, not about the running
+**Why B is evaluated once per commit.** A status check is a fact about a build, not about the running
 system.
 
-**Why D restricts which branch may deploy** — the Azure DevOps equivalent of line 48.
+**Why C restricts which branch may deploy** — the Azure DevOps equivalent of line 48.
 
 **This is the clearest illustration of the paper's opening sentence.** The question "is production
 healthy right now" has an answer that changes on its own, so it must be asked **repeatedly**. No
@@ -1752,15 +1751,15 @@ one-shot mechanism can express it.
 A developer adds Defender for DevOps exactly as shown in Task 6 and reports that critical findings still do
 not stop a production deployment. Why?
 
-- A. `security-events: write` is missing
-- B. The `defender-scan` job is not in `deploy-production`'s `needs:` list
-- C. SARIF upload failed
-- D. Defender findings are advisory only
+- A. `defender-scan` is missing from `needs:` on deploy
+- B. `security-events: write` is missing from the job
+- C. The SARIF upload failed on the runner
+- D. Defender findings are advisory only by design
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: B
+### Answer: A
 
 **In `challenge-17.md`:** lines **291** and **483–514**.
 
@@ -1774,7 +1773,7 @@ exam-realistic scenario in the file: **every part works, the wiring is missing.*
 **The fix is one list entry**, plus adding `defender-scan` to the required status checks at line 562 so it
 also blocks the merge.
 
-**Why A and C would produce loud errors** in the upload step rather than a silently permitted deployment,
+**Why B and C would produce loud errors** in the upload step rather than a silently permitted deployment,
 and **why D is false** — the job's own `exit 1` proves the findings are treated as blocking.
 
 </details>
@@ -1786,9 +1785,8 @@ and **why D is false** — the job's own `exit 1` proves the findings are treate
 Coverage is reported at 85% and the gate passes, yet a null-check branch that was never executed by any
 test ships and causes an incident. What does this demonstrate?
 
-- A. The threshold should be raised to 95%
-- B. Line coverage measures which lines **ran**, not which behaviours were **verified** — and branch
-  coverage is what would have caught the untested path
+- A. The line-coverage threshold should be raised to 95%
+- B. Line coverage measures execution, not verification
 - C. `json-summary` reported the wrong figure
 - D. Coverage should be measured after deployment
 
@@ -1821,15 +1819,15 @@ be executed, and the reason Challenge 18 exists.
 The Azure DevOps team reports that a release has been "in progress" for nine hours with no error. The
 health endpoint returns HTTP 200. Where do you look first?
 
-- A. Runner capacity
-- B. The gate's `successCriteria` expression, compared against the endpoint's actual response body
-- C. The `dependsOn` list on the deployment stage
-- D. The service connection's credentials
+- A. Runner capacity available for the deployment stage
+- B. The `dependsOn` list on the deployment stage
+- C. The gate's `successCriteria` against the real response
+- D. The service connection's credentials and scope
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: B
+### Answer: C
 
 **In `challenge-17.md`:** lines **465**, **545–547**, **575**.
 
@@ -1844,7 +1842,7 @@ the one error message it will ever produce.
 **Why A is the reflex answer to "slow" and the wrong one for "waiting".** No agent is running; the
 deployment has not been dispatched.
 
-**Why D would fail the request**, giving a non-200 and a visible gate error, and **why C would have
+**Why D would fail the request**, giving a non-200 and a visible gate error, and **why B would have
 prevented the stage from starting at all** rather than leaving it in progress.
 
 </details>
@@ -1856,15 +1854,15 @@ prevented the stage from starting at all** rather than leaving it in progress.
 Contoso wants a single reusable check that several repositories can call to evaluate coverage, security
 and performance results together. Which approach matches Task 2?
 
-- A. A composite action with typed inputs and outputs, ending in `exit 1` when any gate fails
-- B. A reusable workflow called with `uses:` at job level
-- C. A branch protection rule
-- D. A required status check
+- A. A reusable workflow called with `uses:` at job level
+- B. A composite action with typed inputs, ending in `exit 1`
+- C. A branch protection rule on each repository
+- D. A required status check on each repository
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: A
+### Answer: B
 
 **In `challenge-17.md`:** lines **203–282**.
 
@@ -1872,7 +1870,7 @@ and performance results together. Which approach matches Task 2?
 publishes declared outputs (lines 224–230), and — critically — **can fail the calling job** with a
 non-zero exit.
 
-**Why B is a real and often better mechanism** for whole-job reuse, and it is not what Task 2 builds. A
+**Why A is a real and often better mechanism** for whole-job reuse, and it is not what Task 2 builds. A
 reusable workflow is called at job level and brings its own runner; a composite action runs as steps
 inside a job you already have, which is what a gate evaluated mid-job needs.
 
@@ -1890,16 +1888,15 @@ That keeps the expensive work in parallel jobs and the decision in one cheap, te
 
 Write the one-sentence rule that would have prevented all three issues in the break scenario.
 
-- A. Always run security scans before deployment
-- B. Every gate must be verified against reality — that the check runs on the event that must be
-  blocked, that its criteria match the actual response, and that its references still resolve
-- C. Increase timeouts so gates have time to pass
-- D. Reduce the number of gates
+- A. Always run security scans before any deployment
+- B. Increase timeouts so gates have time to pass
+- C. Every gate must be verified against what it gates
+- D. Reduce the number of gates in the pipeline
 
 <details>
 <summary>Show answer</summary>
 
-### Answer: B
+### Answer: C
 
 **In `challenge-17.md`:** lines **541–551**, **575**, **586–590**.
 
@@ -1920,7 +1917,7 @@ dry run would have flagged any of them, because each is a statement about someth
 gh api orgs/contoso-ltd/teams/release-approvers/members --jq '.[].login'
 ```
 
-**Why C treats a permanent failure as a slow one** — the gate at line 545 would not pass in a year — and
+**Why B treats a permanent failure as a slow one** — the gate at line 545 would not pass in a year — and
 **why D throws away the mandate** rather than fixing the plumbing.
 
 </details>

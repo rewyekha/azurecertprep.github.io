@@ -406,7 +406,7 @@ In the branch-based pre-release pipeline, what suffix does a `feature/` branch p
 - A. `-alpha.$(Build.BuildId)`
 - B. `-rc.$(Build.BuildId)`
 - C. `-dev.$(Build.BuildId)`
-- D. Empty
+- D. An empty suffix, no identifier
 
 <details>
 <summary>Show answer</summary>
